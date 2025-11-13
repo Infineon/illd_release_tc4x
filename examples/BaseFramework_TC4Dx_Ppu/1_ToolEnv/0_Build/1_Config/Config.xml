@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<root xmlns="http://www.infineon.com/BifacesConfig"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.infineon.com/BifacesConfig BifacesConfig.xsd ">
+	
+	<!-- Primary architecture configuration -->
+	<primaryArchitecture name= "Tricore" />
+	
+	<!-- Architecture congfigurations -->
+	<architecture name="Tricore" primaryToolchain= "Gnuc">
+		<!-- Target congfigurations -->
+		<target name="Tc" enable="true">
+			<output type="elf" enable="true" fileName="$(PROJ_NAME)_Tc.elf" tool="Ld"/>
+			<output type="hex" enable="true" fileName="$(PROJ_NAME)_Tc.hex" tool="Hex">
+				<input siblingTypes= "elf" useObjects="false" />
+			</output>
+			<output type="srec" enable="false" fileName="$(PROJ_NAME)_Tc.srec" tool="Srec">
+				<input siblingTypes= "elf" useObjects="false" />
+			</output>
+			<output type="lib" enable="false" fileName="$(PROJ_NAME)_Tc.a" tool="Ar"></output>
+		</target>
+		<target name="Tc0" enable="false">
+			<output type="elf" enable="true" fileName="$(PROJ_NAME)_Tc0.elf" tool="Ld"/>
+			<output type="hex" enable="true" fileName="$(PROJ_NAME)_Tc0.hex" tool="Hex">
+				<input siblingTypes= "elf" useObjects="false" />
+			</output>
+			<output type="srec" enable="false" fileName="$(PROJ_NAME)_Tc0.srec" tool="Srec">
+				<input siblingTypes= "elf" useObjects="false" />
+			</output>
+			<output type="lib" enable="false" fileName="$(PROJ_NAME)_Tc.a" tool="Ar"></output>
+		</target>
+		<target name="Tc1" enable="false">
+			<output type="elf" enable="true" fileName="$(PROJ_NAME)_Tc1.elf" tool="Ld"/>
+			<output type="hex" enable="true" fileName="$(PROJ_NAME)_Tc1.hex" tool="Hex">
+				<input siblingTypes= "elf" useObjects="false" />
+			</output>
+			<output type="srec" enable="false" fileName="$(PROJ_NAME)_Tc1.srec" tool="Srec">
+				<input siblingTypes= "elf" useObjects="false" />
+			</output>
+			<output type="lib" enable="false" fileName="$(PROJ_NAME)_Tc.a" tool="Ar"></output>
+		</target>
+		<target name="Tc2" enable="false">
+			<output type="elf" enable="true" fileName="$(PROJ_NAME)_Tc2.elf" tool="Ld"/>
+			<output type="hex" enable="true" fileName="$(PROJ_NAME)_Tc2.hex" tool="Hex">
+				<input siblingTypes= "elf" useObjects="false" />
+			</output>
+			<output type="srec" enable="false" fileName="$(PROJ_NAME)_Tc2.srec" tool="Srec">
+				<input siblingTypes= "elf" useObjects="false" />
+			</output>
+			<output type="lib" enable="false" fileName="$(PROJ_NAME)_Tc.a" tool="Ar"></output>
+		</target>
+		<target name="Tc3" enable="false">
+			<output type="elf" enable="true" fileName="$(PROJ_NAME)_Tc3.elf" tool="Ld"/>
+			<output type="hex" enable="true" fileName="$(PROJ_NAME)_Tc3.hex" tool="Hex">
+				<input siblingTypes= "elf" useObjects="false" />
+			</output>
+			<output type="srec" enable="false" fileName="$(PROJ_NAME)_Tc3.srec" tool="Srec">
+				<input siblingTypes= "elf" useObjects="false" />
+			</output>
+			<output type="lib" enable="false" fileName="$(PROJ_NAME)_Tc.a" tool="Ar"></output>
+		</target>
+		<target name="Tc4" enable="false">
+			<output type="elf" enable="true" fileName="$(PROJ_NAME)_Tc4.elf" tool="Ld"/>
+			<output type="hex" enable="true" fileName="$(PROJ_NAME)_Tc4.hex" tool="Hex">
+				<input siblingTypes= "elf" useObjects="false" />
+			</output>
+			<output type="srec" enable="false" fileName="$(PROJ_NAME)_Tc4.srec" tool="Srec">
+				<input siblingTypes= "elf" useObjects="false" />
+			</output>
+			<output type="lib" enable="false" fileName="$(PROJ_NAME)_Tc.a" tool="Ar"></output>
+		</target>
+		<target name="Tc5" enable="false">
+			<output type="elf" enable="true" fileName="$(PROJ_NAME)_Tc5.elf" tool="Ld"/>
+			<output type="hex" enable="true" fileName="$(PROJ_NAME)_Tc5.hex" tool="Hex">
+				<input siblingTypes= "elf" useObjects="false" />
+			</output>
+			<output type="srec" enable="false" fileName="$(PROJ_NAME)_Tc5.srec" tool="Srec">
+				<input siblingTypes= "elf" useObjects="false" />
+			</output>
+			<output type="lib" enable="false" fileName="$(PROJ_NAME)_Tc.a" tool="Ar"></output>
+		</target>		
+		<!-- Toolchain configurations -->
+		<toolchain name="Gnuc" enable="true"
+			path="$(B_GNUC_TRICORE_PATH)\bin"
+			configFolder="$(B_CONFIG_FILES_FOLDER)/Config_Tricore_Gnuc"
+			configFiles="1_ToolEnv/0_Build/1_Config/Config.mk, Config_Gnuc.mk"
+			verbose="false">
+			<tool name="Cc" type="COMPILER" command="tricore-gcc">
+				<optionSet id="Common">
+					$(B_GNUC_TRICORE_CC_OPTIONS)
+				</optionSet>
+				<optionSet id="Cpp">$(B_GNUC_TRICORE_CPP_OPTIONS)</optionSet>
+				<argument
+					template="{kw:options} @{kw:incpaths_listfile} -c ${kw:lt} -o $@ -save-temps=obj -MMD" />
+			</tool>
+			<tool name="Cc1" type="OTHER"
+				path="$(B_GNUC_TRICORE_PATH)/bin" command="tricore-gcc">
+<!-- This is required for generated c files -->
+				<optionSet id="Common">
+					$(B_GNUC_TRICORE_CC_OPTIONS)
+				</optionSet>
+				<argument
+					template="{kw:options} @{kw:incpaths_listfile} -c $(@:.o=.c) -o $@ -save-temps=obj -MMD" />
+			</tool>
+			<tool name="As" type="ASSEMBLER" command="tricore-gcc">
+				<optionSet id="Common">
+					$(B_GNUC_TRICORE_ASM_OPTIONS)
+				</optionSet>
+				<argument
+					template="{kw:options} @{kw:incpaths_listfile} -c ${kw:lt} -o $@" />
+			</tool>
+			<tool name="Ld" type="LINKER" command="tricore-g++">
+				<optionSet id="Common">
+					$(B_GNUC_TRICORE_LD_OPTIONS)
+				</optionSet>
+				<argument
+					template="@{kw:objfiles_listfile} {kw:custobjfiles} $(B_GNUC_TRICORE_LIB_INC) $(B_GNUC_TRICORE_LIBS) -o $@" />
+				<argument
+					template="{kw:options} -Wl,-T {kw:linkerfile} -Wl,-Map={kw:mapfile} -Wl,--extmap=a" />
+			</tool>
+			<tool name="Hex" type="OTHER" command="tricore-objcopy" >
+				<argument template="${kw:lt} -O ihex $@" />
+			</tool>
+			<tool name="Srec" type="OTHER" command="tricore-objcopy" >
+				<argument template="${kw:lt} -O srec $@" />
+			</tool>
+			<tool name="Ar" type="ARCHIVER" command="tricore-ar" >
+				<argument template="rcs $@ @{kw:objfiles_listfile}" />
+			</tool>
+		</toolchain>
+		<toolchain name="Gcc" enable="true"
+			path="$(B_GCC_TRICORE_PATH)\bin"
+			configFolder="$(B_CONFIG_FILES_FOLDER)/Config_Tricore_Gcc"
+			configFiles="1_ToolEnv/0_Build/1_Config/Config.mk, Config_Gcc.mk"
+			verbose="false">
+			<tool name="Cc" type="COMPILER" command="tricore-elf-gcc">
+				<optionSet id="Common">
+					$(B_GCC_TRICORE_CC_OPTIONS)
+				</optionSet>
+				<optionSet id="Cpp">$(B_GCC_TRICORE_CPP_OPTIONS)</optionSet>
+				<argument
+					template="{kw:options} @{kw:incpaths_listfile} -c ${kw:lt} -o $@ -save-temps=obj -MMD" />
+			</tool>
+			<tool name="Cc1" type="OTHER"
+				path="$(B_GCC_TRICORE_PATH)/bin" command="tricore-elf-gcc">
+<!-- This is required for generated c files -->
+				<optionSet id="Common">
+					$(B_GCC_TRICORE_CC_OPTIONS)
+				</optionSet>
+				<argument
+					template="{kw:options} @{kw:incpaths_listfile} -c $(@:.o=.c) -o $@ -save-temps=obj -MMD" />
+			</tool>
+			<tool name="As" type="ASSEMBLER" command="tricore-elf-gcc">
+				<optionSet id="Common">
+					$(B_GCC_TRICORE_ASM_OPTIONS)
+				</optionSet>
+				<argument
+					template="{kw:options} @{kw:incpaths_listfile} -c ${kw:lt} -o $@" />
+			</tool>
+			<tool name="Ld" type="LINKER" command="tricore-elf-g++">
+				<optionSet id="Common">
+					$(B_GCC_TRICORE_LD_OPTIONS)
+				</optionSet>
+				<argument
+					template="@{kw:objfiles_listfile} {kw:custobjfiles} $(B_GCC_TRICORE_LIB_INC) $(B_GCC_TRICORE_LIBS) -o $@" />
+				<argument
+					template="{kw:options} -T {kw:linkerfile} -Wl,-Map={kw:mapfile} -Wl,--extmap=a" />
+			</tool>
+			<tool name="Hex" type="OTHER" command="tricore-elf-objcopy" >
+				<argument template="${kw:lt} -O ihex $@" />
+			</tool>
+			<tool name="Srec" type="OTHER" command="tricore-elf-objcopy" >
+				<argument template="${kw:lt} -O srec $@" />
+			</tool>
+			<tool name="Ar" type="ARCHIVER" command="tricore-elf-ar" >
+				<argument template="rcs $@ @{kw:objfiles_listfile}" />
+			</tool>
+		</toolchain>
+		<toolchain name="Hightec" enable="true"
+			path="$(B_HIGHTEC_TRICORE_PATH)\bin"
+			configFolder="$(B_CONFIG_FILES_FOLDER)/Config_Tricore_Hightec"
+			configFiles="1_ToolEnv/0_Build/1_Config/Config.mk, Config_Hightec.mk"
+			verbose="false">
+			<tool name="Cc" type="COMPILER" command="clang">
+				<optionSet id="Common">
+					$(B_HIGHTEC_TRICORE_CC_OPTIONS)
+				</optionSet>
+				<optionSet id="Cpp">$(B_HIGHTEC_TRICORE_CPP_OPTIONS)</optionSet>
+				<argument
+					template="{kw:options} @{kw:incpaths_listfile} -c ${kw:lt} -o $@ -save-temps=obj -MMD" />
+			</tool>
+			<tool name="Cc1" type="OTHER"
+				path="$(B_HIGHTEC_TRICORE_PATH)/bin" command="clang">
+<!-- This is required for generated c files -->
+				<optionSet id="Common">
+					$(B_HIGHTEC_TRICORE_CC_OPTIONS)
+				</optionSet>
+				<argument
+					template="{kw:options} @{kw:incpaths_listfile} -c $(@:.o=.c) -o $@ -save-temps=obj -MMD" />
+			</tool>
+			<tool name="As" type="ASSEMBLER" command="clang">
+				<optionSet id="Common">
+					$(B_HIGHTEC_TRICORE_ASM_OPTIONS)
+				</optionSet>
+				<argument
+					template="{kw:options} @{kw:incpaths_listfile} -c ${kw:lt} -o $@" />
+			</tool>
+			<tool name="Ld" type="LINKER" command="clang">
+				<optionSet id="Common">
+					$(B_HIGHTEC_TRICORE_LD_OPTIONS)
+				</optionSet>
+				<argument
+					template="-Wl,@{kw:objfiles_listfile} {kw:custobjfiles} $(B_HIGHTEC_TRICORE_LIB_INC) $(B_HIGHTEC_TRICORE_LIBS) -o $@" />
+				<argument
+					template="{kw:options} -Wl,-T {kw:linkerfile} -Wl,-Map={kw:mapfile}" />
+			</tool>
+			<tool name="Hex" type="OTHER" command="llvm-objcopy" >
+				<argument template="${kw:lt} -O ihex $@" />
+			</tool>
+			<tool name="Srec" type="OTHER" command="llvm-objcopy" >
+				<argument template="${kw:lt} -O srec $@" />
+			</tool>
+			<tool name="Ar" type="ARCHIVER" command="llvm-ar" >
+				<argument template="rcs $@ @{kw:objfiles_listfile}" />
+			</tool>
+		</toolchain>
+		<toolchain name="Tasking" enable="true"
+			path="$(B_TASKING_TRICORE_PATH)\bin"
+			configFolder="$(B_CONFIG_FILES_FOLDER)/Config_Tricore_Tasking"
+			configFiles="1_ToolEnv/0_Build/1_Config/Config.mk, Config_Tasking.mk">
+			<tool name="Cc" type="COMPILER" command="cctc"
+				nextTools="DepConv">
+				<optionSet id="Common">
+					$(B_TASKING_TRICORE_CC_OPTIONS)
+				</optionSet>
+				<argument
+					template="-o $@ ${kw:lt} --dep-file=$(@:.o=.dep) -c {kw:options}" />
+				<argument template="-f {kw:incpaths_listfile}" />
+			</tool>
+			<tool name="As" type="ASSEMBLER" command="cctc"
+				nextTools="DepConv">
+				<optionSet id="Common">
+					$(B_TASKING_TRICORE_ASM_OPTIONS)
+				</optionSet>
+				<argument
+					template="-o $@ ${kw:lt} --dep-file=$(@:.o=.dep) -c {kw:options} -f {kw:incpaths_listfile}" />
+			</tool>
+			<tool name="Cc1" type="OTHER" command="cctc"
+				nextTools="As1">
+				<!-- This is required for generated c files -->
+				<optionSet id="Common">
+					$(B_TASKING_TRICORE_CC_OPTIONS)
+				</optionSet>
+				<argument
+					template="-o $@ $(@:.o=.c) -c {kw:options}" />
+				<argument template="-f {kw:incpaths_listfile}" />
+			</tool>
+			<tool name="As1" type="OTHER" command="cctc"><!-- This is required for generated asm files -->
+				<optionSet id="Common">
+					$(B_TASKING_TRICORE_ASM_OPTIONS)
+				</optionSet>
+				<argument template="-o $@ $(@:.o=.src) -c {kw:options}" />
+			</tool>
+			<tool name="DepConv" type="OTHER" command="sed" path=" ">
+				<argument
+					template="-e 's/\($(subst .,\.,$(@F)) *:\)/$(subst /,\/,$(@D))\/\\1/g' -e 's/\\\/\//g' -e '/\\{kw:dq}/d' $(@:.o=.dep)"
+					index="0" />
+				<argument
+					template="{kw:gt} $(@:.o=.d) ; rm -f $(@:.o=.dep)"
+					index="1" />
+			</tool>
+			<tool name="Ld" type="LINKER" command="cctc">
+				<optionSet id="Common">
+					$(B_TASKING_TRICORE_LD_OPTIONS)
+				</optionSet>
+				<argument
+					template="-f {kw:objfiles_listfile} {kw:custobjfiles} $(B_TASKING_TRICORE_LIB_INC) $(B_TASKING_TRICORE_LIBS) -o $@:elf {kw:options} --map-file --lsl-file={kw:linkerfile}" />
+			</tool>
+			<tool name="Hex" type="OTHER" command="cctc">
+				<optionSet id="Common">
+					$(B_TASKING_TRICORE_LD_OPTIONS)
+				</optionSet>
+				<argument
+					template="-f {kw:objfiles_listfile} {kw:custobjfiles} $(B_TASKING_TRICORE_LIB_INC) $(B_TASKING_TRICORE_LIBS) -o $@:IHEX {kw:options} --lsl-file={kw:linkerfile}" />
+			</tool>
+			<tool name="Srec" type="OTHER" command="cctc">
+				<optionSet id="Common">
+					$(B_TASKING_TRICORE_LD_OPTIONS)
+				</optionSet>
+				<argument
+					template="-f {kw:objfiles_listfile} {kw:custobjfiles} $(B_TASKING_TRICORE_LIB_INC) $(B_TASKING_TRICORE_LIBS) -o $@:SREC {kw:options} --lsl-file={kw:linkerfile}" />
+			</tool>
+			<tool name="Ar" type="ARCHIVER" command="artc">
+				<argument template="-rc $@ -f {kw:objfiles_listfile}" />
+			</tool>
+		</toolchain>
+		<toolchain name="Windriver" enable="true"
+			path="$(B_WINDRIVER_TRICORE_PATH)\bin"
+			configFolder="$(B_CONFIG_FILES_FOLDER)/Config_Tricore_Windriver"
+			configFiles="1_ToolEnv/0_Build/1_Config/Config.mk, Config_Windriver.mk">
+			<tool name="Cc" type="COMPILER" command="dcc">
+                 <optionSet id="Common">
+                      $(B_WINDRIVER_TRICORE_CC_OPTIONS)
+                 </optionSet>
+                 <optionSet id="Cpp">
+                      $(B_WINDRIVER_TRICORE_CPP_OPTIONS)
+                  </optionSet>
+                  <argument template="{kw:options} @{kw:incpaths_listfile} -c ${kw:lt} -o $@ -Xmake-dependency=4 -Xmake-dependency-savefile=$(@:.o=.d)" />
+            </tool>
+			<tool name="Cc1" type="OTHER" command="dcc">
+				<optionSet id="Common">
+					$(B_WINDRIVER_TRICORE_CC_OPTIONS)
+				</optionSet>
+				<argument
+					template="{kw:options} @{kw:incpaths_listfile} -c $(@:.o=.c) -o $@ -Xmake-dependency=4 -Xmake-dependency-savefile=$(@:.o=.d)" />
+			</tool>
+			<tool name="As" type="ASSEMBLER" command="das">
+				<optionSet id="Common">
+					$(B_WINDRIVER_TRICORE_ASM_OPTIONS)
+				</optionSet>
+				<argument
+					template="{kw:options} @{kw:incpaths_listfile} -o $@ -Xmake-dependency=4 -Xmake-dependency-savefile=$(@:.o=.d) ${kw:lt}" />
+			</tool>
+			<tool name="Ld" type="LINKER" command="dld">
+				<optionSet id="Common">
+					$(B_WINDRIVER_TRICORE_LD_OPTIONS)
+				</optionSet>
+				<argument
+					template="{kw:options} -m6 {kw:linkerfile} -@O={kw:mapfile} -o $@ @{kw:objfiles_listfile} {kw:custobjfiles} $(B_WINDRIVER_TRICORE_LIBS) $(B_WINDRIVER_TRICORE_LIB_INC)" />
+			</tool>
+			<tool name="Hex" type="OTHER" command="ddump">
+				<argument template="-R -o $@ ${kw:lt}" />
+			</tool>
+			<tool name="Srec" type="OTHER" command="ddump">
+				<argument template="-R -o $@ ${kw:lt}" />
+			</tool>
+			<tool name="Ar" type="ARCHIVER" command="dar">
+				<argument
+					template="-rc $@ @{kw:objfiles_listfile} {kw:custobjfiles}" />
+			</tool>
+		</toolchain>
+		<toolchain name="Ghs" enable="true"
+			path="$(B_GHS_TRICORE_PATH)"
+			configFolder="$(B_CONFIG_FILES_FOLDER)/Config_Tricore_Ghs"
+			configFiles="1_ToolEnv/0_Build/1_Config/Config.mk, Config_Ghs.mk">
+			<tool name="Cc" type="COMPILER" command="cxtri">
+				<optionSet id="Common">
+					$(B_GHS_TRICORE_CC_OPTIONS)
+				</optionSet>
+				<argument
+					template="{kw:options}  ${kw:lt} -c @{kw:incpaths_listfile} -o $@ -keepasmfiles -asmfile_dir=$(@D) --make_depends" />
+			</tool>
+			<tool name="Cc1" type="OTHER" command="cxtri">
+				<optionSet id="Common">
+					$(B_GHS_TRICORE_CC_OPTIONS)
+				</optionSet>
+				<argument
+					template="{kw:options} @{kw:incpaths_listfile} -c $(@:.o=.c) -o $@ -keepasmfiles -asmfile_dir=$(@D)" />
+			</tool>
+			<tool name="As" type="ASSEMBLER" command="cxtri">
+				<optionSet id="Common">
+					$(B_GHS_TRICORE_ASM_OPTIONS)
+				</optionSet>
+				<argument
+					template="{kw:options} -c ${kw:lt} -o $@ @{kw:incpaths_listfile} -preprocess_assembly_files" />
+			</tool>
+			<tool name="Ld" type="LINKER" command="cxtri">
+				<optionSet id="Common">
+					$(B_GHS_TRICORE_LD_OPTIONS)
+				</optionSet>
+				<argument
+					template='{kw:options} -T {kw:linkerfile} -map={kw:mapfile} -o $@  $(B_GHS_TRICORE_LIBS) $(B_GHS_TRICORE_LIB_INC) @{kw:objfiles_listfile} {kw:custobjfiles}' ></argument>
+			</tool>
+			<tool name="Hex" type="OTHER" command="gsrec">
+				<argument template="-hex386 ${kw:lt} -o $@" />
+			</tool>
+			<tool name="Srec" type="OTHER" command="gsrec">
+				<argument template="${kw:lt} -o $@" />
+			</tool>
+			<tool name="Ar" type="ARCHIVER" command="ax">
+				<argument template="-rc $@ {kw:objfiles} {kw:custobjfiles}" />
+			</tool>
+		</toolchain>
+	</architecture>
+	<architecture name="ArcEV" primaryToolchain= "Metaware">
+				<target name="Ppu">
+			<output type="elf" enable="true" 
+				fileName="$(PROJ_NAME)_Ppu.elf" tool="Ld" />
+			<output type="hex" enable="true" 
+				fileName="$(PROJ_NAME)_Ppu.hex" tool="Hex" >
+				<input siblingTypes= "elf" useObjects="false" />
+			</output>
+			<output type="srec" enable="true" 
+				fileName="$(PROJ_NAME)_Ppu.srec" tool="Srec" >
+				<input siblingTypes= "elf" useObjects="false" />
+			</output>
+			<output type="txt" enable="true" 
+				tool="DsAsm"		
+				fileName="$(PROJ_NAME)_Ppu.txt">
+				<input useObjects="false"
+					siblingTypes="elf" />
+			</output>
+		</target>
+		<toolchain name="Metaware" enable="true"
+			path="$(B_METAWARE_ARCEV_PATH)\bin"
+			configFolder="$(B_CONFIG_FILES_FOLDER)/Config_ArcEV_Metaware"
+			configFiles="1_ToolEnv/0_Build/1_Config/Config.mk, Config_Metaware.mk" >
+			<tool name="Cc" type="COMPILER" command="ccac" >
+				<optionSet id="Common">
+					$(B_METAWARE_ARCEV_CC_OPTIONS)
+				</optionSet>
+				<optionSet id="KernelOpt">
+					$(B_METAWARE_ARCEV_CC_OPTIONS_KERNEL)
+				</optionSet>
+				<argument
+					template='-c {kw:options} -Hdepend=$(@D) -Hmakeof=$(@:.o=.d) $(B_GEN_EXT_INCLUDE_PATHS) @{kw:incpaths_listfile} -o $@ ${kw:lt}' />
+			</tool>
+			<tool name="As" type="ASSEMBLER" command="ccac">
+				<optionSet id="Common">
+					$(B_METAWARE_ARCEV_AS_OPTIONS)
+				</optionSet>
+				<argument template="-c {kw:options} @{kw:incpaths_listfile} -o $@ ${kw:lt}" />
+			</tool>
+			<tool name="Ld" type="LINKER" command="ccac" >
+				<optionSet id="Common">
+					$(B_METAWARE_ARCEV_LD_OPTIONS)
+				</optionSet>
+				<argument index="0"
+					template="{kw:options} {kw:linkerfile} -Hkeepasm -Hldopt=-Coutput={kw:mapfile} -o $@" />
+				<argument index="1"
+					template="@{kw:objfiles_listfile} {kw:custobjfiles} $(B_METAWARE_ARCEV_LIB_INC) $(B_METAWARE_ARCEV_LIBS)" />
+			</tool>
+			<tool name="DepConv" type="OTHER" command="cp" path="">
+				<argument template="$(@:.o=.u) $(@:.o=.d); rm -f $(@:.o=.u)" />
+			</tool>
+			<tool name="Hex" type="OTHER" command="elf2hex">
+				<argument template="-I -o $@ ${kw:lt}" />
+			</tool>
+			<tool name="Srec" type="OTHER" command="elf2hex">
+				<argument template="-m -o $@ ${kw:lt}" />
+			</tool>
+			<tool name="Ar" type="OTHER" command="arac">
+				<argument template="-r $@ ${kw:lt} {kw:objfiles}" />
+			</tool>
+			<tool name="DsAsm" type="OTHER" command="elfdump">
+				<argument template="-z ${kw:lt} -o $@" /></tool>
+		</toolchain>
+		<toolchain name="Tasking" enable="true"
+			path="$(B_TASKING_ARCEV_PATH)\bin"
+			configFolder="$(B_CONFIG_FILES_FOLDER)/Config_ArcEV_Tasking"
+			configFiles="1_ToolEnv/0_Build/1_Config/Config.mk, Config_Tasking.mk">
+			<tool name="Cc" type="COMPILER" command="ccarc"
+				nextTools="DepConv">
+				<optionSet id="Common">
+					$(B_TASKING_ARCEV_CC_OPTIONS)
+				</optionSet>
+				<argument
+					template="-o $@ ${kw:lt} --dep-file=$(@:.o=.dep) -c {kw:options}" />
+				<argument template="-f {kw:incpaths_listfile}" />
+			</tool>
+			<tool name="As" type="ASSEMBLER" command="ccarc"
+				nextTools="DepConv">
+				<optionSet id="Common">
+					$(B_TASKING_ARCEV_ASM_OPTIONS)
+				</optionSet>
+				<argument
+					template="-o $@ ${kw:lt} --dep-file=$(@:.o=.dep) -c {kw:options} -f {kw:incpaths_listfile}" />
+			</tool>
+			<tool name="DepConv" type="OTHER" command="sed" path=" ">
+				<argument
+					template="-e 's/\($(subst .,\.,$(@F)) *:\)/$(subst /,\/,$(@D))\/\\1/g' -e 's/\\\/\//g' -e '/\\{kw:dq}/d' $(@:.o=.dep)"
+					index="0" />
+				<argument
+					template="{kw:gt} $(@:.o=.d) ; rm -f $(@:.o=.dep)"
+					index="1" />
+			</tool>
+			<tool name="Ld" type="LINKER" command="ccarc">
+				<optionSet id="Common">
+					$(B_TASKING_ARCEV_LD_OPTIONS)
+				</optionSet>
+				<argument
+					template="-f {kw:objfiles_listfile} {kw:custobjfiles} $(B_TASKING_ARCEV_LIB_INC) $(B_TASKING_ARCEV_LIBS) -o $@:elf {kw:options} --map-file --lsl-file={kw:linkerfile}" />
+			</tool>
+			<tool name="Hex" type="OTHER" command="ccarc">
+				<optionSet id="Common">
+					$(B_TASKING_ARCEV_LD_OPTIONS)
+				</optionSet>
+				<argument
+					template="-f {kw:objfiles_listfile} {kw:custobjfiles} $(B_TASKING_ARCEV_LIB_INC) $(B_TASKING_ARCEV_LIBS) -o $@:IHEX {kw:options} --lsl-file={kw:linkerfile}" />
+			</tool>
+			<tool name="Srec" type="OTHER" command="ccarc">
+				<optionSet id="Common">
+					$(B_TASKING_ARCEV_LD_OPTIONS)
+				</optionSet>
+				<argument
+					template="-f {kw:objfiles_listfile} {kw:custobjfiles} $(B_TASKING_ARCEV_LIB_INC) $(B_TASKING_ARCEV_LIBS) -o $@:SREC {kw:options} --lsl-file={kw:linkerfile}" />
+			</tool>
+			<tool name="Ar" type="ARCHIVER" command="artc">
+				<argument template="-rc $@ -f {kw:objfiles_listfile}" />
+			</tool>
+			<tool name="DsAsm" type="OTHER" command="elfdump" verbose="false">
+				<argument template="-d -n ${kw:lt} >> $@" />
+			</tool>
+		</toolchain>
+	</architecture>
+	<sourceFolder paths="../../src/Libraries" />
+	
+	<specificInclude
+		internalPaths="*/Sfr/*, */Libraries/*/Tricore, */Libraries/*/Platform/Compilers, */Libraries/*/CpuGeneric, */Libraries/Infra/Ipc, */Libraries/*/ArcEV, */Libraries/*/Scr, */Libraries/*/_PinMap"
+		externalPaths="${B_METAWARE_SPEED_PATH}/include/speed/drivers/hal,${B_METAWARE_SPEED_PATH}/include/speed/util,${B_METAWARE_SPEED_PATH}/include/speed/drivers/stu,${B_METAWARE_SPEED_PATH}/include/speed/services/notify,${B_METAWARE_SPEED_PATH}/include/speed/services/control ,${B_METAWARE_SPEED_PATH}/include/speed/services/messaging ,${B_METAWARE_SPEED_PATH}/include/speed/drivers/memaccess,${B_METAWARE_SPEED_PATH}/include/speed/services/execution ,${B_METAWARE_SPEED_PATH}/include/speed/drivers/stu"></specificInclude>
+	<selection enable="true">
+			<discard files="*/Infra/Ipc/*,*/Sfr/TC4Ex/*,*/Sfr/TC4Zx/*,*/Sfr/TC44x/*,*/Sfr/TC45x/*,*/Sfr/TC46x/*,*/Sfr/TC48x/*,*/Sfr/TC49x/*,*/Sfr/TC49xN/*,*/Scr/*" />
+		<selection enable="true"><!--File selections for target Tc-->
+			<discard files="*/ArcEV/**/Sfr/TC4Ex/*,*/Sfr/TC4Zx/*,*/Sfr/TC44x/*,*/Sfr/TC45x/*,*/Sfr/TC46x/*,*/Sfr/TC48x/*,*/Sfr/TC49x/*,*/Sfr/TC49xN/*,*/Scr/*" />
+			<use files="*/Sfr/TC4Dx/*, */CpuGeneric/*, */Tricore/*" />
+			<assign targets="Tricore/Tc" />
+		</selection>
+		<selection><!--Selection of files for the ARCEV architecture -->
+			<discard files="*/Scr/*,*/Comm/*, */Math/*, */Time/*,*/Tricore/*,*/StdIf/*, */SysSe/*, */Sfr/TC4Ex/*, */Sfr/TC4Zx/*, */Sfr/TC44x/*, */Sfr/TC45x/*, */Sfr/TC46x/*, */Sfr/TC48x/*, */Sfr/TC49x/*, */Sfr/TC49xN/*" />
+			<use files="*/Sfr/TC4Dx/*,*/ArcEV/*, */CpuGeneric/*" />
+			<assign targets="ArcEV/Ppu" />
+			<selection>
+				<use files="*/ArcEV/ppu/*.cl" />
+				<assign optionSets="ArcEV/Metaware/Cc/KernelOpt" />
+			</selection>
+		</selection>
+		<selection enable="false"> <!--File selections for target Tc0-->
+			<discard files="*Ssw_Tc1.*, *Ssw_Tc2.*, *Ssw_Tc3.*, *Ssw_Tc4.*, *Ssw_Tc5.*, */ArcEV/*" />
+			<discard files="*Cpu1_Main.*, *Cpu2_Main.*, *Cpu3_Main.*, *Cpu4_Main.*, *Cpu5_Main.*" />
+			<assign targets="Tricore/Tc0" />
+		</selection>
+		<selection enable="false"> <!--File selections for target Tc1-->
+			<discard files="*Ssw_Tc0.*, *Ssw_Tc2.*, *Ssw_Tc3.*, *Ssw_Tc4.*, *Ssw_Tc5.*,*Bmhd.*,*/ArcEV/*" />
+			<discard files="*Cpu0_Main.*, *Cpu2_Main.*, *Cpu3_Main.*, *Cpu4_Main.*, *Cpu5_Main.*" />
+			<assign targets="Tricore/Tc1" />
+		</selection>
+		<selection enable="false"> <!--File selections for target Tc2-->
+			<discard files="*Ssw_Tc0.*, *Ssw_Tc1.*, *Ssw_Tc3.*, *Ssw_Tc4.*, *Ssw_Tc5.*, *Bmhd.*, */ArcEV/*" />
+			<discard files="*Cpu0_Main.*, *Cpu1_Main.*, *Cpu3_Main.*, *Cpu4_Main.*, *Cpu5_Main.*" />
+			<assign targets="Tricore/Tc2" />
+		</selection>
+		<selection enable="false"> <!--File selections for target Tc3-->
+			<discard files="*Ssw_Tc0.*, *Ssw_Tc1.*, *Ssw_Tc2.*, *Ssw_Tc4.*, *Ssw_Tc5.*, *Bmhd.*, */ArcEV/*" />
+			<discard files="*Cpu0_Main.*, *Cpu1_Main.*, *Cpu2_Main.*, *Cpu4_Main.*, *Cpu5_Main.*" />
+			<assign targets="Tricore/Tc3" />
+		</selection>
+		<selection enable="false"> <!--File selections for target Tc4-->
+			<discard files="*Ssw_Tc0.*, *Ssw_Tc1.*, *Ssw_Tc2.*, *Ssw_Tc3.*, *Ssw_Tc5.*, *Bmhd.*, */ArcEV/*" />
+			<discard files="*Cpu0_Main.*, *Cpu1_Main.*, *Cpu2_Main.*, *Cpu3_Main.*, *Cpu5_Main.*" />
+			<assign targets="Tricore/Tc4" />
+		</selection>
+		<selection enable="false"> <!--File selections for target Tc5-->
+			<discard files="*Ssw_Tc0.*, *Ssw_Tc1.*, *Ssw_Tc2.*, *Ssw_Tc3.*, *Ssw_Tc4.*, *Bmhd.*, */ArcEV/*" />
+			<discard files="*Cpu0_Main.*, *Cpu1_Main.*, *Cpu2_Main.*, *Cpu3_Main.*, *Cpu4_Main.*" />
+			<assign targets="Tricore/Tc5" />
+		</selection>										
+	</selection>
+</root>
