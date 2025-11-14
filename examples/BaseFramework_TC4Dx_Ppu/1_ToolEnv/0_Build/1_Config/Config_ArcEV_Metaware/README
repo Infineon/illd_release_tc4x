@@ -1,0 +1,10 @@
+The MetaWare environment needs to be set up for TC4Dx:
+
+- Type Win+r and enter command "cmd /V:ON /k C:\<MetaWare-path>\setup.bat"
+- Metware version 1.1 :
+ Build PPU libraries for TC4D with the command:"build -ca -sc tc4dx_system -e BUILD_CONFIG=TC4D_PPU -e BUILD_TYPE=debug"
+Note : Include the mwlib library. Need to include during compilation.
+
+- Metware version 2.0 :
+ Build PPU libraries for TC4D with the command:"build -ca -sc tc4dx_system -e BUILD_CONFIG=TC4DA_PPU -e BUILD_TYPE=debug"
+Note : mwlib is missing. Need to removed during compilation.
