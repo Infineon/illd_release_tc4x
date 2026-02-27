@@ -3,7 +3,7 @@
  * \brief PMS  basic functionality
  * \ingroup IfxLld_Pms
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -133,6 +133,7 @@
 /** \addtogroup IfxLld_Pms_Std_Pm_Enumerations
  * \{ */
 /** \brief Exposes the optons for minimum duration between standby entry and Wakeup.If any wakeup request comes up before this time is elapsed after standby entry, then it's ignored.
+ * Definition in PMS_PMSWCR.B.BLNKFIL
  */
 typedef enum
 {
@@ -178,7 +179,7 @@ typedef enum
 #endif /* #if IFXPMS_IS_CORE_POWER_DOMAIN_AVAILABLE */
 
 /** \brief The Digital filter enable/disabled
- * As defined in Ifx_PMS.PMSW.CR0.B.ESRxDFEN and Ifx_PMS.PMSW.CR0.B.PINxDFEN
+ * Definition in Ifx_PMS.PMSW.CR0.B.ESRxDFEN and Ifx_PMS.PMSW.CR0.B.PINxDFEN
  */
 typedef enum
 {
@@ -191,6 +192,8 @@ typedef enum
 } IfxPmsPm_DigitalFilter;
 
 /** \brief Options for whether to use digital filtering while reading wake-up pulse on PinA,PinB,ESR0 and ESR1 pins.
+ * Definition in Ifx_PMS.WAKEUP.CON0.B.ESR2DFEN, Ifx_PMS.WAKEUP.CON0.B.PINCDFEN, Ifx_PMS.WAKEUP.CON1.B.ESR0DFEN,
+ * Ifx_PMS.WAKEUP.CON1.B.ESR1DFEN, Ifx_PMS.WAKEUP.CON1.B.PINADFEN, Ifx_PMS.WAKEUP.CON0.B.PINBDFE
  */
 typedef enum
 {
@@ -199,7 +202,7 @@ typedef enum
 } IfxPmsPm_DigitalFilterConfiguration;
 
 /** \brief Enumeration for DTS analog enable/Disable
- * As defined in DTS_CON.B.EN
+ * Definition in Ifx_PMS.DTS.CON.B.EN
  */
 typedef enum
 {
@@ -207,7 +210,8 @@ typedef enum
     IfxPmsPm_Dts_enable  = 1   /**< \brief Enable DTS analog circuitry */
 } IfxPmsPm_Dts;
 
-/** \brief Enumeration for DTS ADC conversion start/stop
+/** \brief Enumeration for DTS ADC conversion start/stop.
+ * Definition in Ifx_PMS.DTS.CON.B.START
  */
 typedef enum
 {
@@ -224,7 +228,7 @@ typedef enum
 } IfxPmsPm_DtsPeakTemp;
 
 /** \brief Enumeratin for DTS warning enable/disbale
- * As defined in DTS_CON.B.WRNEN
+ * Definition in Ifx_PMS.DTS.CON.B.WRNEN
  */
 typedef enum
 {
@@ -257,7 +261,8 @@ typedef enum
     IfxPmsPm_PadStateRequest_tristate            = 1   /**< \brief Set pads to tristate */
 } IfxPmsPm_PadStateRequest;
 
-/** \brief Enumeration for trigger event
+/** \brief Enumeration for trigger event.
+ * Definition in Ifx_PMS_PMSWCR0.B.ESR0EDCON, Ifx_PMS_PMSWCR0.B.ESR1EDCON, Ifx_PMS_PMSWCR0.B.PINAEDCON and Ifx_PMS_PMSWCR0.B.PINBEDCON
  */
 typedef enum
 {
@@ -275,7 +280,8 @@ typedef enum
     IfxPmsPm_PinStateRequest_resetOutput = 1  /**< \brief Set the ESR0 pin pad to Pull down */
 } IfxPmsPm_PinStateRequest;
 
-/** \brief Enumeration for PORST digital filter enable
+/** \brief Enumeration for PORST digital filter enable.
+ * Definition in Ifx_PMS.PAD.CON.B.PORSTDFEN
  */
 typedef enum
 {
@@ -318,7 +324,8 @@ typedef enum
 } IfxPmsPm_PowerSwitchCLockDivider;
 #endif /* #if IFXPMS_IS_POWER_DOWN_MODE_AVAILABLE */
 
-/** \brief Enumeration for Enable/Disable RTC
+/** \brief Enumeration for Enable/Disable RTC.
+ * Definition in Ifx_PMS.RTC.CON0.B.RTCEN
  */
 typedef enum
 {
@@ -326,7 +333,8 @@ typedef enum
     IfxPmsPm_Rtc_enable  = 1   /**< \brief Enable RTC */
 } IfxPmsPm_Rtc;
 
-/** \brief Enumeration for Rtc clock source
+/** \brief Enumeration for Rtc clock source.
+ * Definition in Ifx_PMS.RTC.CON0.B.RTCCLKSEL
  */
 typedef enum
 {
@@ -334,7 +342,8 @@ typedef enum
     IfxPmsPm_RtcClk_32Khz = 1   /**< \brief Rtc clock source to be 32Khz */
 } IfxPmsPm_RtcClk;
 
-/** \brief RTC Comparator
+/** \brief RTC Comparator.
+ * Definition in Ifx_PMS.RTC.CON0.B.RTCWKPSEL
  */
 typedef enum
 {
@@ -439,7 +448,7 @@ typedef enum
 } IfxPmsPm_RtcOutput;
 
 /** \brief Enumeration describing SCR boot mode.
- * As defined in SCR_CON0.SCRCFG
+ * Definition in Ifx_PMS.SCR.CON0.B.SCRCFG
  */
 typedef enum
 {
@@ -452,6 +461,7 @@ typedef enum
 } IfxPmsPm_ScrBootMode;
 
 /** \brief Defines Clocking options for SCR in SCR_CON0.
+ * Definition in Ifx_PMS.SCR.CON0.B.SCRCLKSEL
  */
 typedef enum
 {
@@ -658,9 +668,9 @@ typedef struct
  */
 typedef struct
 {
-    uint16 threshold;        /**< \brief Temperature-sensing mode warning threshold */
-    uint8  hysteresis;       /**< \brief Temperature-sensing mode warning hysteresis */
-    uint8  filter;           /**< \brief Temperature-sensing mode warning filter */
+    uint16 threshold;        /**< \brief Temperature-sensing mode warning threshold. Range: 0 to 0x7FF */
+    uint8  hysteresis;       /**< \brief Temperature-sensing mode warning hysteresis. Range: 0 to 0xFF */
+    uint8  filter;           /**< \brief Temperature-sensing mode warning filter. Range: 0 to 0xF */
 } IfxPmsPm_DtsLimitConfig;
 
 /** \brief PAD configuration
@@ -691,7 +701,7 @@ typedef struct
  */
 typedef struct
 {
-    boolean                       enableScr;                  /**< \brief Whether to enable SCR or not. */
+    boolean                       enableScr;                  /**< \brief Whether to enable SCR or not. Range: TRUE SCR is enabled, FALSE SCR is disabled. */
     IfxPmsPm_ScrTriggerTransition scrTriggerTransition;       /**< \brief Options for SCR trigger transition from STDBY1 to STDBY0 */
     IfxPmsPm_ScrClocking          scrClockSupply;             /**< \brief Options for SCR clock supply */
 } IfxPmsPm_ScrConfig;
@@ -700,7 +710,8 @@ typedef struct
  */
 typedef struct
 {
-    boolean                             enableVddextdcPowerDown;       /**< \brief Enable power down of Vddextdc during standby mode */
+    boolean                             enableVddextdcPowerDown;       /**< \brief Enable power down of Vddextdc during standby mode. Range: TRUE Enable powering down of VDDEXTDC during standby modes,
+     	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	FALSE Disable powering down of VDDEXTDC during standby modes. */
 #if IFXPMS_DLMU_SUPPORT_FOR_STANDBY_POWER_SUPPLY
     IfxPmsPm_StandbyRamSupply           standbyRamBlock;               /**< \brief Options for which part of the DLMU can be provided supply during standby. */
 #endif /* #if IFXPMS_DLMU_SUPPORT_FOR_STANDBY_POWER_SUPPLY */
@@ -717,23 +728,24 @@ typedef struct
 {
     float32                          vextUnderVoltageThreshold;         /**< \brief Undervoltage threshold for VddEXT */
     float32                          vddUnderVoltageThreshold;          /**< \brief Undervoltage threshold for VDD */
-    uint8                            vextFilter;                        /**< \brief VMONS_VxxCON.FILTER+1 consecutive threshold violations to trigger OV?UV event */
-    uint8                            vddFilter;                         /**< \brief VMONS_VxxCON.FILTER+1 consecutive threshold violations to trigger OV?UV event */
+    uint8                            vextFilter;                        /**< \brief VMONS_VxxCON.FILTER+1 consecutive threshold violations to trigger OV?UV event. Range: 0 to 0xF */
+    uint8                            vddFilter;                         /**< \brief VMONS_VxxCON.FILTER+1 consecutive threshold violations to trigger OV?UV event. Range: 0 to 0xF */
     IfxPmsEvr_UnderVoltageMonitoring vextUnderVoltageMode;              /**< \brief Vddext Under-Voltage Monitoring Mode */
     IfxPmsEvr_UnderVoltageMonitoring vddUnderVoltageMode;               /**< \brief Vdd Under-Voltage Monitoring Mode */
-    boolean                          enableStandbyOnVextRampDown;       /**< \brief Enable Standby On VddEXT Ramp Down */
-    boolean                          enableStandbyOnVddRampDown;        /**< \brief Enable Standby On VDD Ramp Down */
+    boolean                          enableStandbyOnVextRampDown;       /**< \brief Enable Standby On VddEXT Ramp Down. Range: TRUE Enable Vdd/Vddext under voltage threshold and mode configuration,
+     	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 FALSE Disable Vdd/Vddext under voltage threshold and mode configuration */
+    boolean                          enableStandbyOnVddRampDown;        /**< \brief Enable Standby On VDD Ramp Down. Range: TRUE Enable standby on VDD ramp down, FALSE Disable standby on VDD ramp down */
 } IfxPmsPm_VoltageConfig;
 
 /** \brief Wakeup configuration
  */
 typedef struct
 {
-    boolean                                  enableWakeupOnScr;         /**< \brief Enable wake-up on request from SCR */
-    boolean                                  enableWakeupOnPorst;       /**< \brief Enable wake-up on PORST pin assertion */
-    boolean                                  enableWakeupOnPinA;        /**< \brief Enable wake-up on PINA */
-    boolean                                  enableWakeupOnEsr0;        /**< \brief Enable wake-up on ESR0 */
-    boolean                                  enableWakeupOnEsr1;        /**< \brief Enable wake-up on ESR1 */
+    boolean                                  enableWakeupOnScr;         /**< \brief Enable wake-up on request from SCR. Range: TRUE Enable, FALSE Disable */
+    boolean                                  enableWakeupOnPorst;       /**< \brief Enable wake-up on PORST pin assertion. Range: TRUE Enable, FALSE Disable */
+    boolean                                  enableWakeupOnPinA;        /**< \brief Enable wake-up on PINA. Range: TRUE Enable, FALSE Disable */
+    boolean                                  enableWakeupOnEsr0;        /**< \brief Enable wake-up on ESR0. Range: TRUE Enable, FALSE Disable */
+    boolean                                  enableWakeupOnEsr1;        /**< \brief Enable wake-up on ESR1. Range: TRUE Enable, FALSE Disable */
     IfxPmsPm_WakeupEventsModeConfig          wakeupEvent;               /**< \brief Wakeup event mode configuration */
     IfxPmsPm_WakeupEventsDigitlaFilterConfig eventFilterConfig;         /**< \brief Wakeup pins digital filter configuration */
     IfxPmsPm_WakeupEventsTriggerConfig       edgeTrigger;               /**< \brief Wakeup pins edge trigger configuration */
@@ -762,7 +774,7 @@ typedef struct
 {
     void  *src;        /**< \brief Source Address pointer. */
     void  *dest;       /**< \brief Destination Address pointer */
-    uint32 size;       /**< \brief Size of data to copy */
+    uint32 size;       /**< \brief Size of data to copy. Range: 0 to 0xFFFFFFFF */
 } IfxPmsPm_MemoryConfig;
 
 #if IFXPMS_IS_POWER_DOWN_MODE_AVAILABLE
@@ -784,13 +796,13 @@ typedef struct
  */
 typedef struct
 {
-    boolean            oscEnable;          /**< \brief RTC Oscillator Enable/Disable.Set TRUE for 32Khz clock */
-    boolean            ampRegEnable;       /**< \brief Amplitude Regulation for RTC */
+    boolean            oscEnable;          /**< \brief RTC Oscillator Enable/Disable.Set TRUE for 32Khz clock. Range: TRUE Enable, FALSE Disable */
+    boolean            ampRegEnable;       /**< \brief Amplitude Regulation for RTC. Range: TRUE Enable, FALSE Disable */
     IfxPmsPm_RtcGain   gainSel;            /**< \brief RTC gain selection */
-    boolean            hystEnable;         /**< \brief Hysteresis Enable/Disable */
+    boolean            hystEnable;         /**< \brief Hysteresis Enable/Disable. Range: TRUE Enable, FALSE Disable */
     IfxPmsPm_RtcOutput rtcOutSel;          /**< \brief RTC Output to Pins and Timers */
-    boolean            enableRtc;          /**< \brief RTC enable/disable */
-    uint16             clockDivider;       /**< \brief RTC clock divider */
+    boolean            enableRtc;          /**< \brief RTC enable/disable. Range: TRUE Enable, FALSE Disable */
+    uint16             clockDivider;       /**< \brief RTC clock divider. Range: 0 to 0xFFFF */
 } IfxPmsPm_RtcClockConfig;
 
 /** \brief RTC compare configuration
@@ -801,16 +813,16 @@ typedef struct
     IfxPmsPm_RtcMsize  mSize1;        /**< \brief Compare Size for CMP1 */
     IfxPmsPm_RtcMstart mStart0;       /**< \brief Start Bit Location for CMP0 */
     IfxPmsPm_RtcMstart mStart1;       /**< \brief Start Bit Location for CMP1 */
-    uint32             cmpVal0;       /**< \brief Compare vlaue for CMP0 */
-    uint32             cmpVal1;       /**< \brief Compare vlaue for CMP1 */
+    uint32             cmpVal0;       /**< \brief Compare vlaue for CMP0. Range: 0 to 0xFFFF */
+    uint32             cmpVal1;       /**< \brief Compare vlaue for CMP1. Range: 0 to 0xFFFF */
 } IfxPmsPm_RtcCmpConfig;
 
 /** \brief RTC 64 bit timer capture
  */
 typedef struct
 {
-    uint32 lowerPart;       /**< \brief Lower 32 bit timer capture value */
-    uint32 upperPart;       /**< \brief Upper 32 bit timer capture value */
+    uint32 lowerPart;       /**< \brief Lower 32 bit timer capture value. Range: 0 to 0xFFFFFFFF */
+    uint32 upperPart;       /**< \brief Upper 32 bit timer capture value. Range: 0 to 0xFFFFFFFF */
 } IfxPmsPm_RtcTimerCaptureType;
 
 /** \brief Configurable Standby options
@@ -831,10 +843,10 @@ typedef struct
  */
 typedef struct
 {
-    uint32            reloadValue;       /**< \brief Reload value for Wut. */
+    uint32            reloadValue;       /**< \brief Reload value for Wut. Range: 0 to 0xFF */
     IfxPmsPm_WutClock clockDiv;          /**< \brief Wut Clock */
     IfxPmsPm_WutMode  mode;              /**< \brief Wut mode */
-    boolean           enableWut;         /**< \brief Enable/Disable WUT timer */
+    boolean           enableWut;         /**< \brief Enable/Disable WUT timer. Range: TRUE Enable, FALSE Disable */
 } IfxPmsPm_WutConfig;
 
 /** \} */
@@ -846,15 +858,18 @@ typedef struct
 /*-------------------------Global Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief This function will initialize the configuration structure with default values.
- * NOTE:
+/**
+ * \brief This function will initialize the configuration structure with default values.
+ * \note:
  *
  * 1. Default values of vextUnderVoltageThreshold and vddUnderVoltageThreshold in the StandbyConfig structure are set to 0.
  * Set it to appropriate levels(depending on application) before calling IfxPmsPm_startStandbySequenceInFlash().
  * 2. Common API is implemented for entering standby with only Vddevrsb supplied and both supplied.
  * 3. Configuring values as per the standby entry should be taken care by the user.
- * \param standbyConfig Configurable options for Standby Mode
- * \return None
+ *
+ * \param[inout] standbyConfig Configurable options for Standby Mode.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -886,7 +901,8 @@ typedef struct
  */
 IFX_EXTERN void IfxPmsPm_initStandbyConfig(IfxPmsPm_StandbyConfig *standbyConfig);
 
-/** \brief The function will perform the following things of standby sequence.
+/**
+ * \brief The function will perform the following things of standby sequence.
  *  - Standby entry is enabled for events. Overrun and wakeup flags are cleared.
  *  - Disable standby SMU. Set IRADIS bit
  *  - UVVAL and UVMOD values are set for Vddext and Vdd
@@ -896,16 +912,19 @@ IFX_EXTERN void IfxPmsPm_initStandbyConfig(IfxPmsPm_StandbyConfig *standbyConfig
  * - Common Application Hook is provided for disabling of interrupts,placing other CPU to idle and disabling of other CPU watchdog
  * -  Application hook is provided to disable the peripheral module clocks. IFXPMS_DISABLE_ALL_MODULES_STANDBY
  * - Application hook is provided to set the clock dividers and switching the clock to 100Mhz. IFXPMS_CLOCK_REDUCTION
- * \param pms Pointer to pms module
- * \param standbyConfig Configuration structure with initialized Standby configuration options
- * \return None
  *
- * \see IfxPmsPm_initStandbyConfig()
+ * \param[inout] pms           Pointer to pms module.
+ * \param[inout] standbyConfig Configuration structure with initialized Standby configuration options.
+ *
+ * \retval None
+ *
+ * \ref IfxPmsPm_initStandbyConfig()
  *
  */
 IFX_EXTERN void IfxPmsPm_startStandbySequenceInFlash(Ifx_PMS *pms, IfxPmsPm_StandbyConfig *standbyConfig);
 
-/** \brief The function will perform the following things of standby sequence
+/**
+ * \brief The function will perform the following things of standby sequence.
  *  - Disabling reset possibilities.
  *  - Writeback to the DCache of master cpu.
  *  - Standby mode, SCR, blanking filter and PAD related configurations
@@ -915,32 +934,44 @@ IFX_EXTERN void IfxPmsPm_startStandbySequenceInFlash(Ifx_PMS *pms, IfxPmsPm_Stan
  *  - If the entry is software triggered then only the application hooks should be configured.
  *  - Writeback of the other CPU DCache should be taken care by the user.
  *  - Application hook for disabling the Flash.IFXPMS_DISABLE_FLASH
- * \param pms Pointer to PMS module.
- * \param standbyConfig Configuration structure with initialized Standby configuration options
- * \return None
+ *
+ * \param[inout] pms 		   Pointer to PMS module.
+ * \param[in]    standbyConfig Configuration structure with initialized Standby configuration options.
+ *
+ * \retval None
  *
  * \see IfxPmsPm_initStandbyConfig()
  *
  */
 IFX_EXTERN void IfxPmsPm_continueStandbySequenceInRAM(Ifx_PMS *pms, IfxPmsPm_StandbyConfig *standbyConfig);
 
-/** \brief Standby mode entry trigger on Software request.
- * \return None
+/**
+ * \brief Standby mode entry trigger on Software request.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxPmsPm_standbyModeEntry(void);
 
-/** \brief Copies data from a source address to a destination address.
- * \param srcAddr Pointer to source address
- * \param destAddr Pointer to destination address
- * \param dataSize The size of the data to be copied in bytes.
- * \return None
+/**
+ * \brief Copies data from a source address to a destination address.
+ *
+ * \param[in]    srcAddr  Pointer to source address.
+ * \param[in]    destAddr Pointer to destination address.
+ * \param[inout] dataSize The size of the data to be copied in bytes.
+ * 						  Range: 0 to 0xFFFFFFFF
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxPmsPm_copyData(void *srcAddr, void *destAddr, uint32 dataSize);
 
-/** \brief Configures the standby entries for power management.
- * \param pms Pointer to PMS module.
- * \param trigger Selection for standby entries..
- * \return None
+/**
+ * \brief Configures the standby entries for power management.
+ *
+ * \param[inout] pms     Pointer to PMS module.
+ * \param[in]    trigger Selection for standby entries.
+ * 						 Range: \ref IfxPmsPm_StandbyTriggerMode
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxPmsPm_configureStandbyEntries(Ifx_PMS *pms, IfxPmsPm_StandbyTriggerMode trigger);
 
@@ -953,12 +984,14 @@ IFX_EXTERN void IfxPmsPm_configureStandbyEntries(Ifx_PMS *pms, IfxPmsPm_StandbyT
 /*-------------------------Inline Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Function to Enable/Disable RTC
- * \param pms Pointer to PMS module SFR
- * \param enable Enable/DIsable RTC
- *  0 --> Disable RTC
- *  1 --> Enable RTC
- * \return None
+/**
+ * \brief Function to Enable/Disable RTC.
+ *
+ * \param[inout] pms    Pointer to PMS module SFR.
+ * \param[in]    enable Enable/DIsable RTC.
+ * 						Range: \ref IfxPmsPm_Rtc. 0 --> Disable RTC, 1 --> Enable RTC.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -968,9 +1001,12 @@ IFX_EXTERN void IfxPmsPm_configureStandbyEntries(Ifx_PMS *pms, IfxPmsPm_StandbyT
  */
 IFX_INLINE void IfxPmsPm_enableRtc(Ifx_PMS *pms, IfxPmsPm_Rtc enable);
 
-/** \brief Returns 64 bit read timer value
- * \param pms Pointer to PMS module SFR
- * \return RTC 64 bit timer value
+/**
+ * \brief Returns 64 bit read timer value.
+ *
+ * \param[in] pms Pointer to PMS module SFR.
+ *
+ * \retval RTC 64 bit timer value.
  *
  * Coding example:
  * \code
@@ -981,12 +1017,14 @@ IFX_INLINE void IfxPmsPm_enableRtc(Ifx_PMS *pms, IfxPmsPm_Rtc enable);
  */
 IFX_INLINE IfxPmsPm_RtcTimerCaptureType IfxPmsPm_readRtcTotalTimerValue(Ifx_PMS *pms);
 
-/** \brief Function to Enable/Disable Wakeup timer.
- * \param pms Pointer to PMS module Sfr
- * \param enable Enable/Disable WUT
- * 0 --> Disable WUT
- * 1 --> Enable WUT
- * \return None
+/**
+ * \brief Function to Enable/Disable Wakeup timer.
+ *
+ * \param[inout] pms    Pointer to PMS module Sfr.
+ * \param[in]    enable Enable/Disable WUT.
+ * 						Range: \ref IfxPmsPm_Wut, 0 --> Disable WUT, 1 --> Enable WUT.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -996,9 +1034,12 @@ IFX_INLINE IfxPmsPm_RtcTimerCaptureType IfxPmsPm_readRtcTotalTimerValue(Ifx_PMS 
  */
 IFX_INLINE void IfxPmsPm_enableWut(Ifx_PMS *pms, IfxPmsPm_Wut enable);
 
-/** \brief Returns WUT 24bit counter value
- * \param pms Pointer to PMS module sfr
- * \return WUT counter value
+/**
+ * \brief Returns WUT 24bit counter value.
+ *
+ * \param[in] pms Pointer to PMS module sfr.
+ *
+ * \retval uint32 WUT counter value. Range: 0 to 0xFFFFFFFF
  *
  * Coding example:
  * \code
@@ -1009,9 +1050,12 @@ IFX_INLINE void IfxPmsPm_enableWut(Ifx_PMS *pms, IfxPmsPm_Wut enable);
  */
 IFX_INLINE uint32 IfxPmsPm_getWutCounterValue(Ifx_PMS *pms);
 
-/** \brief Returns WUT operating mode
- * \param pms Pointer to PMS module sfr
- * \return WUT mode
+/**
+ * \brief Returns WUT operating mode.
+ *
+ * \param[in] pms Pointer to PMS module sfr.
+ *
+ * \retval IfxPmsPm_WutMode WUT mode. Range: \ref IfxPmsPm_WutMode
  *
  * \code
  *   if(IfxPmsPm_getWutMode(&MODULE_PMS) == IfxPmsPm_WutMode_autoReload)
@@ -1023,9 +1067,12 @@ IFX_INLINE uint32 IfxPmsPm_getWutCounterValue(Ifx_PMS *pms);
  */
 IFX_INLINE IfxPmsPm_WutMode IfxPmsPm_getWutMode(Ifx_PMS *pms);
 
-/** \brief Gets the run status of the Watchdog Timer (WUT) in the Power Management System (PMS).
- * \param pms Pointer to PMS module sfr
- * \return WUT Run status
+/**
+ * \brief Gets the run status of the Watchdog Timer (WUT) in the Power Management System (PMS).
+ *
+ * \param[in] pms Pointer to PMS module sfr.
+ *
+ * \retval WUT Run status.
  *  0 --> Wake-up timer (WUT) is inactive
  *  1 --> Wake-up timer (WUT) is active.
  *
@@ -1039,10 +1086,14 @@ IFX_INLINE IfxPmsPm_WutMode IfxPmsPm_getWutMode(Ifx_PMS *pms);
  */
 IFX_INLINE boolean IfxPmsPm_getWutRunStatus(Ifx_PMS *pms);
 
-/** \brief Function to set trim value for RTC
- * \param pms Pointer to PMS module sfr
- * \param offset signed offset to be added to RTC_CMP1
- * \return None
+/**
+ * \brief Function to set trim value for RTC.
+ *
+ * \param[inout] pms    Pointer to PMS module sfr.
+ * \param[in]    offset signed offset to be added to RTC_CMP1.
+ * 						Range: 0 to 0xFFFF
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1052,10 +1103,14 @@ IFX_INLINE boolean IfxPmsPm_getWutRunStatus(Ifx_PMS *pms);
  */
 IFX_INLINE void IfxPmsPm_setRtcOffset(Ifx_PMS *pms, uint16 offset);
 
-/** \brief Function to get wakeup event status
- * \param pms Pointer to PMS module SFR
- * \param event Wakeup event selection
- * \return FALSE - No wakeup event
+/**
+ * \brief Function to get wakeup event status.
+ *
+ * \param[in]    pms   Pointer to PMS module SFR.
+ * \param[inout] event Wakeup event selection.
+ * 					   Range: \ref IfxPmsPm_WakeupEvent
+ *
+ * \retval FALSE - No wakeup event
  * TRUE - Wakeup event detected
  *
  * Coding example:
@@ -1067,10 +1122,14 @@ IFX_INLINE void IfxPmsPm_setRtcOffset(Ifx_PMS *pms, uint16 offset);
  */
 IFX_INLINE boolean IfxPmsPm_getWakeupEventStatus(Ifx_PMS *pms, IfxPmsPm_WakeupEvent event);
 
-/** \brief Clears the specified wakeup event status in the power management system.
- * \param pms Pointer to PMS module SFR
- * \param event selection of event which is to be cleared
- * \return None
+/**
+ * \brief Clears the specified wakeup event status in the power management system.
+ *
+ * \param[inout] pms   Pointer to PMS module SFR.
+ * \param[in]    event selection of event which is to be cleared.
+ * 					   Range: \ref IfxPmsPm_WakeupEvent
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1080,10 +1139,14 @@ IFX_INLINE boolean IfxPmsPm_getWakeupEventStatus(Ifx_PMS *pms, IfxPmsPm_WakeupEv
  */
 IFX_INLINE void IfxPmsPm_clearWakeupEventStatus(Ifx_PMS *pms, IfxPmsPm_WakeupEvent event);
 
-/** \brief Function to clear all wakeup event status of given register.
- * \param pms Pointer to PMS module SFR
- * \param reg selection of event status register
- * \return None
+/**
+ * \brief Function to clear all wakeup event status of given register.
+ *
+ * \param[inout] pms Pointer to PMS module SFR.
+ * \param[in]    reg selection of event status register.
+ * 					 Range: \ref IfxPmsPm_WakeupReg
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1094,13 +1157,16 @@ IFX_INLINE void IfxPmsPm_clearWakeupEventStatus(Ifx_PMS *pms, IfxPmsPm_WakeupEve
  */
 IFX_INLINE void IfxPmsPm_clearWakeupEventStatusReg(Ifx_PMS *pms, IfxPmsPm_WakeupReg reg);
 
-/** \brief Function to Enable/Disable 32khz oscillator as RTC input.
+/**
+ * \brief Function to Enable/Disable 32khz oscillator as RTC input.
  * NOTE : Oscillator need max 5s to start up as per DS.
- * \param pms Pointer to PMS module SFR
- * \param enable Enable/DIsable oscillator
- *  IfxPmsPm_Rtc_disable --> Disable oscillator
- *  IfxPmsPm_Rtc_enable --> Enable oscillator
- * \return None
+ *
+ * \param[inout] pms    Pointer to PMS module SFR.
+ * \param[in]    enable Enable/DIsable oscillator.
+ * 						Range: \ref IfxPmsPm_Rtc
+ *  								IfxPmsPm_Rtc_disable --> Disable oscillator
+ *  								IfxPmsPm_Rtc_enable --> Enable oscillator
+ * \retval None
  *
  * Coding example:
  *  \code
@@ -1111,10 +1177,14 @@ IFX_INLINE void IfxPmsPm_clearWakeupEventStatusReg(Ifx_PMS *pms, IfxPmsPm_Wakeup
 IFX_INLINE void IfxPmsPm_enableRtcOscillator(Ifx_PMS *pms, IfxPmsPm_Rtc enable);
 
 #if IFXPMS_IS_RTC_CLOCK_SOURCE_AVAILABLE
-/** \brief Function to select RTC clock source.
- * \param pms Pointer to PMS module SFR
- * \param clkSrc clock source
- * \return None
+/**
+ * \brief Function to select RTC clock source.
+ *
+ * \param[inout] pms    Pointer to PMS module SFR.
+ * \param[in]    clkSrc Clock source.
+ * 						Range: \ref IfxPmsPm_RtcClk
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1128,18 +1198,25 @@ IFX_INLINE void IfxPmsPm_enableRtcOscillator(Ifx_PMS *pms, IfxPmsPm_Rtc enable);
 IFX_INLINE void IfxPmsPm_selectRtcClockSource(Ifx_PMS *pms, IfxPmsPm_RtcClk clkSrc);
 #endif /* #if IFXPMS_IS_RTC_CLOCK_SOURCE_AVAILABLE */
 
-/** \brief API to check if WUT enabled or not
- * \param pms Pointer to PMS module sfr
- * \return WUT Enable status
+/**
+ * \brief API to check if WUT enabled or not.
+ *
+ * \param[in] pms Pointer to PMS module sfr.
+ *
+ * \retval WUT Enable status,
  *  0 --> Wake-up timer (WUT) is disabled
  *  1 --> Wake-up timer (WUT) is enabled.
  */
 IFX_INLINE boolean IfxPmsPm_isWutEnabled(Ifx_PMS *pms);
 
-/** \brief Function to select RTC wakeup
- * \param pms Pointer to PMS module sfr
- * \param rtcWkp selection for RTC wakeup on CMP0/CMP1
- * \return None
+/**
+ * \brief Function to select RTC wakeup.
+ *
+ * \param[inout] pms    Pointer to PMS module sfr.
+ * \param[in]    rtcWkp Selection for RTC wakeup on CMP0/CMP1.
+ * 						Range: \ref IfxPmsPm_RtcCmp
+ *
+ * \retval None
  */
 IFX_INLINE void IfxPmsPm_selectRtcWakeup(Ifx_PMS *pms, IfxPmsPm_RtcCmp rtcWkp);
 
@@ -1147,17 +1224,23 @@ IFX_INLINE void IfxPmsPm_selectRtcWakeup(Ifx_PMS *pms, IfxPmsPm_RtcCmp rtcWkp);
 /*-------------------------Global Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Wakeup Configuration for Standby sequence.
- * \param pms Pointer to PMS module
- * \param wakeupConfig Pointer to Wakeup Configuration Structure
- * \return None
+/**
+ * \brief Wakeup Configuration for Standby sequence.
+ *
+ * \param[in] pms          Pointer to PMS module.
+ * \param[in] wakeupConfig Pointer to Wakeup Configuration Structure.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxPmsPm_configureWakeup(Ifx_PMS *pms, IfxPmsPm_WakeupConfig *wakeupConfig);
 
-/** \brief API will configure Wakeup timer with given configuration
- * \param pms Pointer to PMS module
- * \param wutConfig Configuration for Wut.
- * \return None
+/**
+ * \brief API will configure Wakeup timer with given configuration.
+ *
+ * \param[inout] pms       Pointer to PMS module.
+ * \param[in]    wutConfig Configuration for Wut.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1172,10 +1255,13 @@ IFX_EXTERN void IfxPmsPm_configureWakeup(Ifx_PMS *pms, IfxPmsPm_WakeupConfig *wa
  */
 IFX_EXTERN void IfxPmsPm_wutConfiguration(Ifx_PMS *pms, IfxPmsPm_WutConfig *wutConfig);
 
-/** \brief API will configure RTC clock with given configuration
- * \param pms Pointer to PMS module
- * \param rtcClkConfig Clock related configuration for RTC
- * \return None
+/**
+ * \brief API will configure RTC clock with given configuration.
+ *
+ * \param[inout] pms          Pointer to PMS module.
+ * \param[in]    rtcClkConfig Clock related configuration for RTC.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1212,10 +1298,13 @@ IFX_EXTERN void IfxPmsPm_wutConfiguration(Ifx_PMS *pms, IfxPmsPm_WutConfig *wutC
  */
 IFX_EXTERN void IfxPmsPm_rtcClockConfiguration(Ifx_PMS *pms, IfxPmsPm_RtcClockConfig *rtcClkConfig);
 
-/** \brief API will configure RTC compare registers with given configuration.
- * \param pms Pointer to PMS module
- * \param rtcCmpConfig RTC compare operation configuration
- * \return None
+/**
+ * \brief API will configure RTC compare registers with given configuration.
+ *
+ * \param[inout] pms          Pointer to PMS module.
+ * \param[in]    rtcCmpConfig RTC compare operation configuration.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1241,10 +1330,14 @@ IFX_EXTERN void IfxPmsPm_rtcCmpConfiguration(Ifx_PMS *pms, IfxPmsPm_RtcCmpConfig
 /*-------------------------Inline Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Configuration of PORST digital filter.
- * \param pms Pointer to PMS module.
- * \param filterConfig PORST digital filter enable value.
- * \return None
+/**
+ * \brief Configuration of PORST digital filter.
+ *
+ * \param[inout] pms          Pointer to PMS module.
+ * \param[in]    filterConfig PORST digital filter enable value.
+ * 							  Range: \ref IfxPmsPm_PorstDigitalFilter
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1258,11 +1351,16 @@ IFX_INLINE void IfxPmsPm_porstdigitalfilter(Ifx_PMS *pms, IfxPmsPm_PorstDigitalF
 /*-------------------------Global Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Digital filter enable/disable for ESR0,ESR1,ESR2,PINA,PINB and PINC
- * \param pms Pointer to PMS module
- * \param event Digital filter enable/disable for ESR2,PINC,ESR0,ESR1,PINA and PINB event
- * \param config Configuration to enable digital filter or bypass.
- * \return None
+/**
+ * \brief Digital filter enable/disable for ESR0,ESR1,ESR2,PINA,PINB and PINC.
+ *
+ * \param[inout] pms    Pointer to PMS module.
+ * \param[in]    event  Digital filter enable/disable for ESR2,PINC,ESR0,ESR1,PINA and PINB event.
+ * 						Range: \ref IfxPmsPm_DigitalFilter
+ * \param[in]    config Configuration to enable digital filter or bypass.
+ * 						Range: \ref IfxPmsPm_DigitalFilterConfiguration
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1281,10 +1379,14 @@ IFX_EXTERN void IfxPmsPm_digitalFilterEnableDisable(Ifx_PMS *pms, IfxPmsPm_Digit
 /*-------------------------Inline Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Enable DTS analog circuitry
- * \param pms Pointer to PMS module
- * \param enable Enable/Disable DTS
- * \return None
+/**
+ * \brief Enable DTS analog circuitry.
+ *
+ * \param[inout] pms    Pointer to PMS module.
+ * \param[in]    enable Enable/Disable DTS.
+ * 						Range: \ref IfxPmsPm_Dts
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1294,10 +1396,14 @@ IFX_EXTERN void IfxPmsPm_digitalFilterEnableDisable(Ifx_PMS *pms, IfxPmsPm_Digit
  */
 IFX_INLINE void IfxPmsPm_dtsEnable(Ifx_PMS *pms, IfxPmsPm_Dts enable);
 
-/** \brief Start DTS conversion
- * \param pms Pointer to PMS module
- * \param enable START/STOP DTS conversion
- * \return None
+/**
+ * \brief Start DTS conversion.
+ *
+ * \param[inout] pms    Pointer to PMS module.
+ * \param[in]    enable START/STOP DTS conversion.
+ * 						Range: \ref IfxPmsPm_DtsAdcConversion
+ *
+ * \retval None
  *
  * \code
  *   IfxPmsPm_dtsStartAdcConversion(&MODULE_PMS, IfxPmsPm_DtsAdcConversion_start);
@@ -1306,10 +1412,13 @@ IFX_INLINE void IfxPmsPm_dtsEnable(Ifx_PMS *pms, IfxPmsPm_Dts enable);
  */
 IFX_INLINE void IfxPmsPm_dtsStartAdcConversion(Ifx_PMS *pms, IfxPmsPm_DtsAdcConversion enable);
 
-/** \brief Enable DTS warning
- * \param pms Pointer to PMS module
- * \param enable Enable/Disable DTS warning
- * \return None
+/**
+ * \brief Enable DTS warning.
+ *
+ * \param[inout] pms    Pointer to PMS module.
+ * \param[in]    enable Enable/Disable DTS warning.
+ * 						Range: \ref IfxPmsPm_DtsWarning
+ * \retval None
  *
  * \code
  *   IfxPmsPm_dtsWarningEnable(&MODULE_PMS, IfxPmsPm_DtsWarning_enable);
@@ -1318,9 +1427,12 @@ IFX_INLINE void IfxPmsPm_dtsStartAdcConversion(Ifx_PMS *pms, IfxPmsPm_DtsAdcConv
  */
 IFX_INLINE void IfxPmsPm_dtsWarningEnable(Ifx_PMS *pms, IfxPmsPm_DtsWarning enable);
 
-/** \brief Reset Peak temperature detector
- * \param pms Pointer to PMS module
- * \return None
+/**
+ * \brief Reset Peak temperature detector.
+ *
+ * \param[inout] pms Pointer to PMS module.
+ *
+ * \retval None
  *
  * \code
  *   IfxPmsPm_dtsResetPeakTmpDetector(&MODULE_PMS);
@@ -1329,9 +1441,13 @@ IFX_INLINE void IfxPmsPm_dtsWarningEnable(Ifx_PMS *pms, IfxPmsPm_DtsWarning enab
  */
 IFX_INLINE void IfxPmsPm_dtsResetPeakTmpDetector(Ifx_PMS *pms);
 
-/** \brief Returns last measured DTS temperature
- * \param pms Pointer to PMS module
- * \return Last measured temperature result.
+/**
+ * \brief Returns last measured DTS temperature.
+ *
+ * \param[in] pms Pointer to PMS module.
+ *
+ * \retval uint16 Last measured temperature result.
+ * 				  Range: 0 to 0xFFF
  *
  * \code
  * uint16 result;
@@ -1341,9 +1457,12 @@ IFX_INLINE void IfxPmsPm_dtsResetPeakTmpDetector(Ifx_PMS *pms);
  */
 IFX_INLINE uint16 IfxPmsPm_getDtsTemperatureResult(Ifx_PMS *pms);
 
-/** \brief Returns last measured DTS temperature in kelvin
- * \param pms Pointer to PMS module
- * \return Last measured temperature result in Kelvin
+/**
+ * \brief Returns last measured DTS temperature in kelvin.
+ *
+ * \param[in] pms Pointer to PMS module.
+ *
+ * \retval float32 Last measured temperature result in Kelvin.
  *
  * \code
  * float32 result;
@@ -1353,9 +1472,13 @@ IFX_INLINE uint16 IfxPmsPm_getDtsTemperatureResult(Ifx_PMS *pms);
  */
 IFX_INLINE float32 IfxPmsPm_getDtsTemperatureResultKv(Ifx_PMS *pms);
 
-/** \brief Returns PEAK temperature
- * \param pms Pointer to PMS module
- * \return Peak temperature
+/**
+ * \brief Returns PEAK temperature.
+ *
+ * \param[in] pms Pointer to PMS module.
+ *
+ * \retval uint16 Peak temperature.
+ * 				  Range: 0 to 0xFFF
  *
  * \code
  * uint16 result;
@@ -1365,9 +1488,12 @@ IFX_INLINE float32 IfxPmsPm_getDtsTemperatureResultKv(Ifx_PMS *pms);
  */
 IFX_INLINE uint16 IfxPmsPm_getDtsPeakTemperature(Ifx_PMS *pms);
 
-/** \brief Returns DTS Peak temperature in kelvin
- * \param pms Pointer to PMS module sfr.
- * \return Peak temperature result in Kelvin
+/**
+ * \brief Returns DTS Peak temperature in kelvin.
+ *
+ * \param[in] pms Pointer to PMS module sfr.
+ *
+ * \retval float32 Peak temperature result in Kelvin
  *
  * \code
  * float32 result;
@@ -1377,9 +1503,12 @@ IFX_INLINE uint16 IfxPmsPm_getDtsPeakTemperature(Ifx_PMS *pms);
  */
 IFX_INLINE float32 IfxPmsPm_getDtsPeakTemperatureKv(Ifx_PMS *pms);
 
-/** \brief Returns DTS analog circuitry is Ready or Busy
- * \param pms Pointer to PMS module sfr
- * \return DTS status
+/**
+ * \brief Returns DTS analog circuitry is Ready or Busy.
+ *
+ * \param[in] pms Pointer to PMS module sfr.
+ *
+ * \retval DTS status,
  * 0 --> DTS is busy (Disabled or starting up)
  * 1 --> DTS is ready (completed startup)
  *
@@ -1397,10 +1526,13 @@ IFX_INLINE boolean IfxPmsPm_getDtsStatus(Ifx_PMS *pms);
 /*-------------------------Global Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Configure DTS limit for Upper,lower and TDS
- * \param pms Pointer to PMS module
- * \param dtsConfig Pointer to DTS configuration
- * \return None
+/**
+ * \brief Configure DTS limit for Upper,lower and TDS.
+ *
+ * \param[inout] pms       Pointer to PMS module.
+ * \param[in]    dtsConfig Pointer to DTS configuration.
+ *
+ * \retval None
  *
  * \code
  * IfxPmsPm_DtsLimitConfig lowerConfig;
@@ -1433,17 +1565,22 @@ IFX_EXTERN void IfxPmsPm_configureDts(Ifx_PMS *pms, IfxPmsPm_DtsConfig *dtsConfi
 /*-------------------------Inline Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Function to request SCR reset.
- * \param pms Pointer to PMS module SFR
- * \return None
+/**
+ * \brief Function to request SCR reset.
+ *
+ * \param[inout] pms Pointer to PMS module SFR.
+ *
+ * \retval None
  */
 IFX_INLINE void IfxPmsPm_resetScr(Ifx_PMS *pms);
 
-/** \brief Function to enable/disable SCR reset when warm PORST is asserted.
- * \param pms Pointer to PMS module SFR
- * \param enable TRUE --> Enable SCR reset on warm PORST
- * FALSE --> Disable SCR reset on warm PORST
- * \return None
+/**
+ * \brief Function to enable/disable SCR reset when warm PORST is asserted.
+ *
+ * \param[inout] pms    Pointer to PMS module SFR.
+ * \param[in]    enable TRUE --> Enable SCR reset on warm PORST,
+ * 						FALSE --> Disable SCR reset on warm PORST.
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1453,71 +1590,103 @@ IFX_INLINE void IfxPmsPm_resetScr(Ifx_PMS *pms);
  */
 IFX_INLINE void IfxPmsPm_enableScrResetOnPorst(Ifx_PMS *pms, boolean enable);
 
-/** \brief Function to enable SCR.
- * \param pms Pointer to PMS module SFR
- * \return None
+/**
+ * \brief Function to enable SCR.
+ *
+ * \param[inout] pms Pointer to PMS module SFR.
+ *
+ * \retval None
  */
 IFX_INLINE void IfxPmsPm_enableScr(Ifx_PMS *pms);
 
-/** \brief Function to disable SCR.
- * \param pms Pointer to PMS module Sfr
- * \return None
+/**
+ * \brief Function to disable SCR.
+ *
+ * \param[inout] pms Pointer to PMS module Sfr.
+ *
+ * \retval None
  */
 IFX_INLINE void IfxPmsPm_disableScr(Ifx_PMS *pms);
 
-/** \brief Function to change SCR bootmode.
+/**
+ * \brief Function to change SCR bootmode.
  * User should call IfxPmsPm_resetScr function to start off SCR in the chosen mode.
- * \param pms Pointer to PMS module sfr.
- * \param bootMode SCR boot mode selection
- * \return None
+ *
+ * \param[inout] pms      Pointer to PMS module sfr.
+ * \param[in]    bootMode SCR boot mode selection.
+ * 						  Range: \ref IfxPmsPm_ScrBootMode
+ *
+ * \retval None
  */
 IFX_INLINE void IfxPmsPm_changeScrBootMode(Ifx_PMS *pms, IfxPmsPm_ScrBootMode bootMode);
 
-/** \brief Function to configure SCR clock.(SCR_CON0.SCRCLKSEL)
- * \param pms Pointer to PMS module sfr.
- * \param scrClk Scr clock selection.
- * \return None
+/**
+ * \brief Function to configure SCR clock.(SCR_CON0.SCRCLKSEL).
+ *
+ * \param[inout] pms    Pointer to PMS module sfr.
+ * \param[in]    scrClk Scr clock selection.
+ * 						Range: \ref IfxPmsPm_ScrClocking
+ *
+ * \retval None
  */
 IFX_INLINE void IfxPmsPm_configureScrClock(Ifx_PMS *pms, IfxPmsPm_ScrClocking scrClk);
 
-/** \brief Function to check if SCR enabled.
- * \param pms Pointer to PMS module SFR
- * \return Return
+/**
+ * \brief Function to check if SCR enabled.
+ *
+ * \param[in] pms Pointer to PMS module SFR.
+ *
+ * \retval Return,
  * TRUE --> SCR enabled
  * FALSE --> SCR disabled
  */
 IFX_INLINE boolean IfxPmsPm_isScrEnabled(Ifx_PMS *pms);
 
-/** \brief Function to trigger interrupt to SCR from PMS/CPUx.
+/**
+ * \brief Function to trigger interrupt to SCR from PMS/CPUx.
  * Note : Scr should be enabled to do the trigger interrupt to SCR. if not write access is blocked.
- * \param pms Pointer to PMS module SFR
- * \return Return
+ *
+ * \param[inout] pms Pointer to PMS module SFR
+ *
+ * \retval IfxPmsPm_Status Return,
  * IfxPmsPm_Status_success --> Operation successful
  * IfxPmsPm_Status_failed  --> Operation failed. (SCR not enabled)
  */
 IFX_INLINE IfxPmsPm_Status IfxPmsPm_triggerInterruptToScr(Ifx_PMS *pms);
 
-/** \brief Function to send message to SCR from PMS.
- * Note : Scr should be enabled to do the data exchange (SCR_CON0.SCREN = 1), if not write access is blocked.
- * \param pms Pointer to PMS module sfr.
- * \param messageToScr Message to SCR.
- * \return Returns
+/**
+ * \brief Function to send message to SCR from PMS.
+ * \note : Scr should be enabled to do the data exchange (SCR_CON0.SCREN = 1), if not write access is blocked.
+ *
+ * \param[inout] pms          Pointer to PMS module sfr.
+ * \param[in]    messageToScr Message to SCR.
+ * 							  Range: 0 to 0xFF
+ *
+ * \retval IfxPmsPm_Status Returns,
  * IfxPmsPm_Status_success --> Operation successful
  * IfxPmsPm_Status_failed  --> Operation failed. (SCR not enabled)
  */
 IFX_INLINE IfxPmsPm_Status IfxPmsPm_sendMessageToScr(Ifx_PMS *pms, uint8 messageToScr);
 
-/** \brief Function to read message sent from SCR to tricore (SCR_STAT.SCRINT).
- * \param pms Pointer to PMS module sfr.
- * \return Return read message from SCR. (SCR_STAT.SCRINT)
+/**
+ * \brief Function to read message sent from SCR to tricore (SCR_STAT.SCRINT).
+ *
+ * \param[in] pms Pointer to PMS module sfr.
+ *
+ * \retval uint8 Return read message from SCR. (SCR_STAT.SCRINT)
+ * 				 Range: 0 to 0xFF
  */
 IFX_INLINE uint8 IfxPmsPm_readMessageFromScr(Ifx_PMS *pms);
 
-/** \brief Function to clear SCR status flags.
+/**
+ * \brief Function to clear SCR status flags.
  * Note : Scr should be enabled to clear Scr status, if not write access is blocked.
- * \param pms Pointer to PMS module sfr.
- * \param scrFlag Scr flag selection
- * \return Returns
+ *
+ * \param[inout] pms     Pointer to PMS module sfr.
+ * \param[in]    scrFlag Scr flag selection.
+ * 						 Range: \ref IfxPmsPm_ScrFlag
+ *
+ * \retval Returns,
  * IfxPmsPm_Status_success --> Operation successful
  * IfxPmsPm_Status_failed  --> Operation failed. (SCR not enabled)
  */
@@ -1527,12 +1696,16 @@ IFX_INLINE IfxPmsPm_Status IfxPmsPm_clearScrStatusFlag(Ifx_PMS *pms, IfxPmsPm_Sc
 /*-------------------------Global Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Function to initialize the SCR.
- * \param bootMode SCR boot mode selection
- * \param enableReset TRUE --> Enable reset on warm PORST.
- * FALSE --> Disable reset on warm PORST.
- * \param xram Memory configuration to copy the data to XRAM.
- * \return FALSE --> SCR initialization successful
+/**
+ * \brief Function to initialize the SCR.
+ *
+ * \param[in] bootMode 	  SCR boot mode selection.
+ * 						  Range: \ref IfxPmsPm_ScrBootMode
+ * \param[in] enableReset TRUE --> Enable reset on warm PORST.
+ * 						  FALSE --> Disable reset on warm PORST.
+ * \param[inout] xram 	  Memory configuration to copy the data to XRAM.
+ *
+ * \retval FALSE --> SCR initialization successful,
  * TRUE --> SCRT initialization failed.
  *
  * Coding example:
@@ -1544,10 +1717,13 @@ IFX_INLINE IfxPmsPm_Status IfxPmsPm_clearScrStatusFlag(Ifx_PMS *pms, IfxPmsPm_Sc
  */
 IFX_EXTERN boolean IfxPmsPm_initScr(IfxPmsPm_ScrBootMode bootMode, boolean enableReset, IfxPmsPm_MemoryConfig *xram);
 
-/** \brief Function to copy SCR source code to Xram memory
- * \param srcAddress Source Address of memory
- * \param size Size of data in bytes
- * \return None
+/**
+ * \brief Function to copy SCR source code to Xram memory.
+ *
+ * \param[in]    srcAddress Source Address of memory.
+ * \param[inout] size       Size of data in bytes.
+ *							Range: 0 to 0xFFFF
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1563,10 +1739,14 @@ IFX_EXTERN void IfxPmsPm_copyScrProgram(void *srcAddress, uint16 size);
 /*-------------------------Inline Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Function to clear given interrupt status flag.
- * \param pms Pointer to PMS module SFR
- * \param interrupt Select interrupt
- * \return None
+/**
+ * \brief Function to clear given interrupt status flag.
+ *
+ * \param[inout] pms       Pointer to PMS module SFR.
+ * \param[in]    interrupt Select interrupt.
+ * 						   Range: \ref IfxPmsPm_Interrupt
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1576,9 +1756,12 @@ IFX_EXTERN void IfxPmsPm_copyScrProgram(void *srcAddress, uint16 size);
  */
 IFX_INLINE void IfxPmsPm_clearInterruptStatusFlags(Ifx_PMS *pms, IfxPmsPm_Interrupt interrupt);
 
-/** \brief Function to clear all interrupt status flag of INT0_STAT.
- * \param pms Pointer to PMS module SFR
- * \return None
+/**
+ * \brief Function to clear all interrupt status flag of INT0_STAT.
+ *
+ * \param[inout] pms Pointer to PMS module SFR.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1593,9 +1776,12 @@ IFX_INLINE void IfxPmsPm_clearInterruptStatusReg(Ifx_PMS *pms);
 /******************************************************************************/
 
 #if IFXPMS_IS_POWER_DOWN_MODE_AVAILABLE
-/** \brief Function will initialize the power gating configuration structure with default values
- * \param config Pointer to configuration structure
- * \return None
+/**
+ * \brief Function will initialize the power gating configuration structure with default values.
+ *
+ * \param[inout] config Pointer to configuration structure.
+ *
+ * \retval None
  *
  * \code
  * IfxPmsPm_PowerGatingConfig config;
@@ -1607,10 +1793,13 @@ IFX_INLINE void IfxPmsPm_clearInterruptStatusReg(Ifx_PMS *pms);
  */
 IFX_EXTERN void IfxPmsPm_initPowerDownConfig(IfxPmsPm_PowerGatingConfig *config);
 
-/** \brief Function will configure the power domain switch and enable the power down for core power domain
- * \param pms Pointer to PMS module sfr.
- * \param config Pointer to the configuration structure
- * \return None
+/**
+ * \brief Function will configure the power domain switch and enable the power down for core power domain.
+ *
+ * \param[inout] pms    Pointer to PMS module sfr.
+ * \param[in]    config Pointer to the configuration structure.
+ *
+ * \retval None
  *
  * \code
  * IfxPmsPm_PowerGatingConfig config;
@@ -1623,10 +1812,14 @@ IFX_EXTERN void IfxPmsPm_initPowerDownConfig(IfxPmsPm_PowerGatingConfig *config)
  */
 IFX_EXTERN void IfxPmsPm_initandEnablePowerDown(Ifx_PMS *pms, IfxPmsPm_PowerGatingConfig *config);
 
-/** \brief Function will trigger the power down for requested power domain
- * \param pms Pointer to PMS module sfr
- * \param powerDomain Power down will be requested for given core power domain.
- * \return Returns power down trigger status
+/**
+ * \brief Function will trigger the power down for requested power domain.
+ *
+ * \param[inout] pms         Pointer to PMS module sfr.
+ * \param[in]    powerDomain Power down will be requested for given core power domain.
+ * 							 Range: \ref IfxPmsPm_CorePowerDomain
+ *
+ * \retval Returns power down trigger status,
  * 0 --> Power down was requested
  * 1 --> Power down was not requested.Power down enable should be enabled before power down request.
  *
@@ -1644,10 +1837,13 @@ IFX_EXTERN void IfxPmsPm_initandEnablePowerDown(Ifx_PMS *pms, IfxPmsPm_PowerGati
  */
 IFX_EXTERN boolean IfxPmsPm_powerDownTrigger(Ifx_PMS *pms, IfxPmsPm_CorePowerDomain powerDomain);
 
-/** \brief Function will initialize and  trigger power down for multiple power domains.
- * \param pms Pointer to PMS module sfr.
- * \param config Pointer to power gating configuration structure
- * \return None
+/**
+ * \brief Function will initialize and  trigger power down for multiple power domains.
+ *
+ * \param[inout] pms    Pointer to PMS module sfr.
+ * \param[in]    config Pointer to power gating configuration structure.
+ *
+ * \retval None
  *
  * \code
  *   IfxPmsPm_PowerGatingConfig config;

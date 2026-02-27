@@ -3,9 +3,9 @@
  * \brief PMS  basic functionality
  * \ingroup IfxLld_Pms
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-11-01 10:43:19
  *
  *
  *                                 IMPORTANT NOTICE
@@ -139,6 +139,7 @@ typedef enum
 } IfxPmsEvr_DriftMonitorVoltageSource;
 
 /** \brief Enumeration for Switching frequency division factor for external synchronisation.
+ * Definition in Ifx_PMS.EVRC.CON3.B.SYNCDIVFAC
  */
 typedef enum
 {
@@ -151,6 +152,7 @@ typedef enum
 } IfxPmsEvr_ExtSyncSwitchingFreqDivFactor;
 
 /** \brief Enumeration for over voltage monitoring mode
+ * Definition in Ifx_PMS.VMONS.VDDCON.B.OVMOD
  */
 typedef enum
 {
@@ -441,6 +443,7 @@ typedef enum
 } IfxPmsEvr_StatusRegister;
 
 /** \brief Enumeartion for Synchronisation Input Multiplexer
+ * Definition in Ifx_PMS.EVRC.CON3.B.SYNCMUXSEL
  */
 typedef enum
 {
@@ -450,6 +453,7 @@ typedef enum
 } IfxPmsEvr_SyncInputMultiplexer;
 
 /** \brief Enumeration for over voltage monitoring mode
+ * Definition in Ifx_PMS.VMONS.VDDCON.B.UVMOD
  */
 typedef enum
 {
@@ -468,15 +472,15 @@ typedef enum
 typedef struct
 {
     volatile void *regAddr;       /**< \brief Register Address to be updated. */
-    uint32         value;         /**< \brief Register value to be updated. */
-    uint32         mask;          /**< \brief Mask to select the bit fields to be updated. */
+    uint32         value;         /**< \brief Register value to be updated. Range: 0 to 0xFFFFFFFF */
+    uint32         mask;          /**< \brief Mask to select the bit fields to be updated. Range: 0 to 0xFFFFFFFF */
 } IfxPmsEvr_StepDownRegulatorRegConfig;
 
 typedef struct
 {
-    uint8                                           numOfRegisters;      /**< \brief Number of Register. */
+    uint8                                           numOfRegisters;      /**< \brief Number of Register. Range: 0 to 0xFF */
     IFX_CONST IfxPmsEvr_StepDownRegulatorRegConfig *regConfig;           /**< \brief Register configuration. */
-    uint32                                          waitInMicroSec;      /**< \brief Wait in microseconds. */
+    uint32                                          waitInMicroSec;      /**< \brief Wait in microseconds. Range: 0 to 0xFFFFFFFF */
 } IfxPmsEvr_InitSequencePhase;
 
 /** \brief Register configuration
@@ -484,7 +488,7 @@ typedef struct
 typedef struct
 {
     volatile void *reg;          /**< \brief Register address */
-    uint32         value;        /**< \brief Value to be written to register */
+    uint32         value;        /**< \brief Value to be written to register. Range: 0 to 0xFFFFFFFF */
 } IfxPmsEvr_RegConfig;
 
 /** \addtogroup IfxLld_Pms_Std_Evr_Module
@@ -493,13 +497,15 @@ typedef struct
  */
 typedef struct
 {
-    uint16                                  samplingFactor;       /**< \brief Regulator Switching Frequency EVRC_CON1.SDFREQ */
-    uint8                                   freqSprdValue;        /**< \brief Frequency spreading configuration. EVRC_CON1.SDFREQSPRD */
-    uint8                                   hystWindow;           /**< \brief Hysteresis Window. EVRC_CON1.SYNCHYST */
-    uint8                                   maxDeviation;         /**< \brief Maximum Deviation of the Synchronization Input Frequency.EVRC_CON1.SYNMAXDEV */
+    uint16                                  samplingFactor;       /**< \brief Regulator Switching Frequency EVRC_CON1.SDFREQ. Range: SDFREQ = 125 for fDCDC = 0.8MHz, SDFREQ = 222 for fDCDC = 0.45MHz, SDFREQ = 55 for f DCDC = 1.82MHz */
+    uint8                                   freqSprdValue;        /**< \brief Frequency spreading configuration. EVRC_CON1.SDFREQSPRD. Range: 00B: no spreading,  01B: [-1, 0] clock periods randomly added to TDCDC (i.e. 1/fDCDC),
+     	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	    10B: [-2, +1] clock periods randomly added to TDCDC (i.e. 1/fDCDC), 11B: [-4, +3] clock periods randomly added to TDCDC (i.e. 1/fDCDC ). */
+    uint8                                   hystWindow;           /**< \brief Hysteresis Window. EVRC_CON1.SYNCHYST. Range: 0 to 0x3F */
+    uint8                                   maxDeviation;         /**< \brief Maximum Deviation of the Synchronization Input Frequency.EVRC_CON1.SYNMAXDEV. Range: 0 to 0x7F */
     IfxPmsEvr_SyncInputMultiplexer          syncInput;            /**< \brief Synchronisation Input Multiplexer.EVRC_CON3.SYNCMUXSEL */
     IfxPmsEvr_ExtSyncSwitchingFreqDivFactor divider;              /**< \brief Switching frequency division factor for external synchronisation.EVRC_CON3.SYNCDIVFAC */
-    boolean                                 dcdcSyncInput;        /**< \brief EVRC Input Synchronization Enable/Disable.EVRC_CON3.SYNCIN */
+    boolean                                 dcdcSyncInput;        /**< \brief EVRC Input Synchronization Enable/Disable.EVRC_CON3.SYNCIN. Range: TRUE Synchronization of EVRC switching gate outputs to external input
+																	    signal is enabled, FALSE Synchronization of EVRC switching gate outputs to external input signal is disabled. */
 } IfxPmsEvr_DcdcConfig;
 
 /** \} */
@@ -510,11 +516,13 @@ typedef struct
  */
 typedef struct
 {
-    float32 underVoltage;             /**< \brief Under Voltage threshold value in milli Volts . */
+    float32 underVoltage;             /**< \brief Under Voltage threshold value in milli Volts */
     float32 overVoltage;              /**< \brief Over Voltage threshold value in mili Volts */
-    uint8   filter;                   /**< \brief Alarm Spike Filter */
-    boolean underVoltageEnable;       /**< \brief Under Voltage Alarm Enable. */
-    boolean overVoltageEnable;        /**< \brief Over Voltage Alarm Enable. */
+    uint8   filter;                   /**< \brief Alarm Spike Filter. Range: 0 to 0xF */
+    boolean underVoltageEnable;       /**< \brief Under Voltage Alarm Enable. Range: TRUE An alarm trigger signal is generated and forwarded depending on
+										   the configured threshold value, No alarm trigger signal is generated. */
+    boolean overVoltageEnable;        /**< \brief Over Voltage Alarm Enable. Range: TRUE An alarm trigger signal is generated and forwarded depending on
+										   the configured threshold value, FALSE No alarm trigger signal is generated. */
 } IfxPmsEvr_PrimaryMonitorConfig;
 
 /** \brief Configuration of Secondary monitor
@@ -523,7 +531,7 @@ typedef struct
 {
     float32                          underVoltage;           /**< \brief Under Voltage threshold value in milli Volt */
     float32                          overVoltage;            /**< \brief Over Voltage threshold value in milli Volts */
-    uint8                            filter;                 /**< \brief Secondary ADC Supply Filter */
+    uint8                            filter;                 /**< \brief Secondary ADC Supply Filter. Range: 0 to 0xF */
     IfxPmsEvr_UnderVoltageMonitoring underVoltageMode;       /**< \brief Under-Voltage Monitoring Mode */
     IfxPmsEvr_OverVoltageMonitoring  overVoltageMode;        /**< \brief Over-Voltage Monitoring Mode */
 } IfxPmsEvr_SecondaryMonitorConfig;
@@ -532,10 +540,11 @@ typedef struct
  */
 typedef struct
 {
-    boolean                      tristateEnable_All;           /**< \brief Tristate Enable for all Pads */
-    boolean                      tristateEnable_Standby;       /**< \brief Tristate Enable for Standby Pads */
-    boolean                      esr0PullDown;                 /**< \brief ESR0 Pull-Down Enable */
-    boolean                      esr2PullDown;                 /**< \brief ESR2 is Pulled Down in Case of STBY to RUN Transition */
+    boolean                      tristateEnable_All;           /**< \brief Tristate Enable for all Pads. Range: TRUE Pads are in tristate, FALSE Pads configured as inputs with weak pull-up */
+    boolean                      tristateEnable_Standby;       /**< \brief Tristate Enable for Standby Pads. Range: TRUE Pads are in tristate, FALSE Pads configured as inputs with weak pull-up */
+    boolean                      esr0PullDown;                 /**< \brief ESR0 Pull-Down Enable. Range: TRUE ESR0 in pull-down state during Standby state,
+    																FALSE ESR0 configured as tristate or pull-up (depending on ALLTRIST setting) during Standby state */
+    boolean                      esr2PullDown;                 /**< \brief ESR2 is Pulled Down in Case of STBY to RUN Transition. Range: TRUE Pulled low, FALSE  No pull low */
     IfxPmsEvr_PorstDigitalFilter digitalFilterEnable;          /**< \brief PORST Digital Filter Enable */
 } IfxPmsEvr_TristateConfig;
 
@@ -547,18 +556,20 @@ typedef struct
  */
 typedef struct
 {
-    uint16                               threshold;            /**< \brief Threshold for Peak voltage detection */
+    uint16                               threshold;            /**< \brief Threshold for Peak voltage detection. Range: 0 to 0x7FF */
     IfxPmsEvr_PeakDetectionVoltageSource source;               /**< \brief Peak detection voltage source */
-    boolean                              lpfEnable;            /**< \brief low pass filter enable. */
-    boolean                              swReset;              /**< \brief Restart the peak voltage detection cycle. */
-    boolean                              enablePeakVolt;       /**< \brief Enable/Disable peak volt detection. */
+    boolean                              lpfEnable;            /**< \brief low pass filter enable. Range: TRUE Enable the low-pass filtering of the recorded peak values,
+    															    FALSE Disable the low-pass filtering of the recorded peak values */
+    boolean                              swReset;              /**< \brief Restart the peak voltage detection cycle. Range: TRUE Application software restart the peak voltage detection cycle, FALSE otherwise */
+    boolean                              enablePeakVolt;       /**< \brief Enable/Disable peak volt detection. Range TRUE Enable peak voltage detection for respective supply,
+    																FALSE Disable peak voltage detection for respective supply */
 } IfxPmsEvr_PeakVoltageConfig;
 
 /** \} */
 
 typedef struct
 {
-    uint8                                           numOfRegisters;      /**< \brief Number of Register. */
+    uint8                                           numOfRegisters;      /**< \brief Number of Register. Range: 0 to 0xFF */
     IFX_CONST IfxPmsEvr_StepDownRegulatorRegConfig *regConfig;           /**< \brief Register configuration. */
 } IfxPmsEvr_CheckRegConfig;
 
@@ -589,14 +600,14 @@ typedef struct
 
 typedef struct
 {
-    uint8                                  numOfPhases;       /**< \brief Number of Phases. */
+    uint8                                  numOfPhases;       /**< \brief Number of Phases. Range: 0 to 0xFF */
     IFX_CONST IfxPmsEvr_InitSequencePhase *phaseConfig;       /**< \brief Phase configuration. */
 } IfxPmsEvr_InitSequence;
 
 typedef struct
 {
     IFX_CONST IfxPmsEvr_RegConfig *regConfig;       /**< \brief Register configuration */
-    uint32                         numOfReg;        /**< \brief Number of registers */
+    uint32                         numOfReg;        /**< \brief Number of registers. Range: 0 to 0xFFFFFFFF */
 } IfxPmsEvr_SecMonSupplyRailsConfig;
 
 /** \addtogroup IfxLld_Pms_Std_Evr_Module
@@ -606,8 +617,14 @@ typedef struct
 /*-------------------------Inline Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Disable Interrupts
- * \return None
+/**
+ * \brief Disable Interrupts.
+ *
+ * \param[inout] pms           Pointer to the base address of PMS registers.
+ * \param[in]    interruptType Type of interrupt to disable.
+ * 							   Range: \ref IfxPmsEvr_Interrupt
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -617,10 +634,14 @@ typedef struct
  */
 IFX_INLINE void IfxPmsEvr_disableInterrupt(Ifx_PMS *pms, IfxPmsEvr_Interrupt interruptType);
 
-/** \brief Enable Interrupts
- * \param pms Pointer to PMS Module
- * \param interruptType Select The Interrupt Type
- * \return None
+/**
+ * \brief Enable Interrupts.
+ *
+ * \param[inout] pms 		   Pointer to PMS Module.
+ * \param[in]    interruptType Select The Interrupt Type.
+ * 							   Range: \ref IfxPmsEvr_Interrupt
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -630,10 +651,14 @@ IFX_INLINE void IfxPmsEvr_disableInterrupt(Ifx_PMS *pms, IfxPmsEvr_Interrupt int
  */
 IFX_INLINE void IfxPmsEvr_enableInterrupt(Ifx_PMS *pms, IfxPmsEvr_Interrupt interruptType);
 
-/** \brief Returns the status value of peak voltage detection status register for the selected supply or the history status register of the supply.
- * \param pms Pointer to PMS module.
- * \param source Enum for Peak detection voltage source
- * \return Returns status value of Peak voltage detection status register,
+/**
+ * \brief Returns the status value of peak voltage detection status register for the selected supply or the history status register of the supply.
+ *
+ * \param[inout] pms 	Pointer to PMS module.
+ * \param[in] 	 source Enum for Peak detection voltage source.
+ * 						Range: \ref IfxPmsEvr_PeakDetectionVoltageStatus
+ *
+ * \retval uint32 Returns status value of Peak voltage detection status register. Range: 0 to 0xFFFFFFFF
  *
  * Coding example:
  * \code
@@ -644,10 +669,14 @@ IFX_INLINE void IfxPmsEvr_enableInterrupt(Ifx_PMS *pms, IfxPmsEvr_Interrupt inte
  */
 IFX_INLINE uint32 IfxPmsEvr_getPeakVoltageDetectionStatusRegister(Ifx_PMS *pms, IfxPmsEvr_PeakDetectionVoltageStatus source);
 
-/** \brief Returns the status value of drift monitor status register for the selected supply.
- * \param pms Pointer to PMS module
- * \param source Enum for drift monitor voltage source
- * \return Returns status value of drift monitor status register,
+/**
+ * \brief Returns the status value of drift monitor status register for the selected supply.
+ *
+ * \param[in] pms    Pointer to PMS module.
+ * \param[in] source Enum for drift monitor voltage source.
+ * 					 Range: \ref IfxPmsEvr_DriftMonitorVoltageSource
+ *
+ * \retval uint32 Returns status value of drift monitor status register. Range: 0 to 0x7FF
  *
  * Coding example:
  * \code
@@ -658,10 +687,15 @@ IFX_INLINE uint32 IfxPmsEvr_getPeakVoltageDetectionStatusRegister(Ifx_PMS *pms, 
  */
 IFX_INLINE uint32 IfxPmsEvr_getDriftMonitorStatusRegister(Ifx_PMS *pms, IfxPmsEvr_DriftMonitorVoltageSource source);
 
-/** \brief Return the value of the selected status register.
- * \param pms Pointer to PMS module.
- * \param reg Enum for status regsiter.
- * \return Returns status value of selected status register,
+/**
+ * \brief Return the value of the selected status register.
+ *
+ * \param[in] pms Pointer to PMS module.
+ * \param]in] reg Enum for status regsiter.
+ * 				  Range: \ref IfxPmsEvr_StatusRegister
+ *
+ * \retval uint32 Returns status value of selected status register,
+ *				  Range: TRUE Action of the status register bit, FALSE No Action,
  *
  * Coding example:
  * \code
@@ -672,9 +706,12 @@ IFX_INLINE uint32 IfxPmsEvr_getDriftMonitorStatusRegister(Ifx_PMS *pms, IfxPmsEv
  */
 IFX_INLINE uint32 IfxPmsEvr_getStatusRegister(Ifx_PMS *pms, IfxPmsEvr_StatusRegister reg);
 
-/** \brief Function clears the cold reset status register. (CLDRSTRIGL, CLDRSTRIG, CLDRSTSTAT)
- * \param pms Pointer to PMS module sfr.
- * \return None
+/**
+ * \brief Function clears the cold reset status register. (CLDRSTRIGL, CLDRSTRIG, CLDRSTSTAT)
+ *
+ * \param[inout] pms Pointer to PMS module sfr.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -688,10 +725,13 @@ IFX_INLINE void IfxPmsEvr_clearColdResetStatusRegister(Ifx_PMS *pms);
 /*-------------------------Global Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Configures the tristate settings for the PMS module.
- * \param pms Pointer to PMS module.
- * \param config Configuration for TRISTATE.
- * \return None
+/**
+ * \brief Configures the tristate settings for the PMS module.
+ *
+ * \param[inout] pms 	Pointer to PMS module.
+ * \param[in]    config Configuration for TRISTATE.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -710,10 +750,13 @@ IFX_INLINE void IfxPmsEvr_clearColdResetStatusRegister(Ifx_PMS *pms);
  */
 IFX_EXTERN void IfxPmsEvr_configureTristate(Ifx_PMS *pms, IfxPmsEvr_TristateConfig *config);
 
-/** \brief Configuration for DCDC synchronisation
- * \param pms Pointer to PMS module
- * \param dcdcConfig Pointer to DCDC configuration
- * \return 0 --> DCDC configuration was successful.
+/**
+ * \brief Configuration for DCDC synchronisation.
+ *
+ * \param[inout] pms 		Pointer to PMS module.
+ * \param[in]    dcdcConfig Pointer to DCDC configuration.
+ *
+ * \retval 0 --> DCDC configuration was successful.
  * 1 --> DCDC configuration was not successful. EVRC is off.
  *
  * Coding example:
@@ -750,11 +793,16 @@ IFX_EXTERN boolean IfxPmsEvr_dcdcConfiguration(Ifx_PMS *pms, IfxPmsEvr_DcdcConfi
 /*-------------------------Inline Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief This function enables the DCDC synchronisation for input/output
- * \param pms Pointer to PMS Module
- * \param sync Selection for input or output DCDC synchronisation enable
- * \param enabled enable/disable DC-DC synchronisation
- * \return None
+/**
+ * \brief This function enables the DCDC synchronisation for input/output.
+ *
+ * \param[inout] pms     Pointer to PMS Module.
+ * \param[in]    sync    Selection for input or output DCDC synchronisation enable.
+ * 						 Range: \ref IfxPmsEvr_DcdcSynchronization
+ * \param[in]    enabled enable/disable DC-DC synchronisation.
+ * 						 Range: TRUE Enable DC-DC synchronisation, FALSE Disable DC-DC synchronisation.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -765,9 +813,13 @@ IFX_EXTERN boolean IfxPmsEvr_dcdcConfiguration(Ifx_PMS *pms, IfxPmsEvr_DcdcConfi
  */
 IFX_INLINE void IfxPmsEvr_enableDcdcSynchronisation(Ifx_PMS *pms, IfxPmsEvr_DcdcSynchronization sync, boolean enabled);
 
-/** \brief get EVRC Regulator Voltage OK status
- * \param pms Pointer to PMS Module Space
- * \return EVRC Regulator Voltage OK status
+/**
+ * \brief get EVRC Regulator Voltage OK status.
+ *
+ * \param[in] pms Pointer to PMS Module Space.
+ *
+ * \retval boolean EVRC Regulator Voltage OK status. Range: TRUE : EVRC regulator setpoint voltage is reached and VDD voltage is ok,
+ * FALSE :EVRC regulator setpoint voltage has not been reached.
  *
  * Coding example:
  * \code
@@ -780,10 +832,23 @@ IFX_INLINE void IfxPmsEvr_enableDcdcSynchronisation(Ifx_PMS *pms, IfxPmsEvr_Dcdc
  */
 IFX_INLINE boolean IfxPmsEvr_getEvrcVoltageRegulatorStatus(Ifx_PMS *pms);
 
-/** \brief set frequency spread threshold
- * \param pms pointer to PMS module
- * \param freqSprdValue maximum frequency spreading value
- * \return None
+/**
+ * \brief set frequency spread threshold.
+ *
+ * \param[inout] pms 		   Pointer to PMS module.
+ * \param[in]	 freqSprdValue Maximum frequency spreading value.
+ *							   Range: 0x0 no frequency spreading activated
+ * 							           0x1 SDSWPRDNOM - (SDSWPRDNOM+2) switching period spread
+ * 							           0x2 (SDSWPRDNOM-2) - (SDSWPRDNOM+2) switching period spread
+ * 							           0x3 (SDSWPRDNOM-2) - (SDSWPRDNOM+4) switching period spread
+ * 							           0x4 (SDSWPRDNOM-4) - (SDSWPRDNOM+4) switching period spread
+ * 							           0x5 (SDSWPRDNOM-4) - (SDSWPRDNOM+6) switching period spread
+ * 							           0x6 (SDSWPRDNOM-6) - (SDSWPRDNOM+6) switching period spread
+ * 							           0x7 (SDSWPRDNOM-6) - (SDSWPRDNOM+8) switching period spread
+ * 							           0x8 (SDSWPRDNOM-8) - (SDSWPRDNOM+8) switching period spread
+ * 							           0x9 (SDSWPRDNOM-8) - (SDSWPRDNOM+10) switching period spread
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -793,10 +858,15 @@ IFX_INLINE boolean IfxPmsEvr_getEvrcVoltageRegulatorStatus(Ifx_PMS *pms);
  */
 IFX_INLINE void IfxPmsEvr_setFrequencySpread(Ifx_PMS *pms, uint8 freqSprdValue);
 
-/** \brief Sets the switching frequency during closed-loop PWM phase
- * \param pms Pointer to PMS Module
- * \param samplingFactor Over-sampling Factor
- * \return None
+/**
+ * \brief Sets the switching frequency during closed-loop PWM phase.
+ *
+ * \param[inout] pms 			Pointer to PMS Module.
+ * \param[in]	 samplingFactor Over-sampling Factor.
+ * 								Range: 0x37 - 1.82 MHz (100 MHz/(54+1)) SMPS switching frequency.
+ *									   0x7D - 0.8 MHz (100 MHz/(124+1)) SMPS switching frequency.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -806,10 +876,14 @@ IFX_INLINE void IfxPmsEvr_setFrequencySpread(Ifx_PMS *pms, uint8 freqSprdValue);
  */
 IFX_INLINE void IfxPmsEvr_setRegulatorSwitchingFrequency(Ifx_PMS *pms, uint16 samplingFactor);
 
-/** \brief EVRC Regulator Output Voltage Target Value
- * \param pms Pointer to PMS Module
- * \param outputVoltage The VDD output voltage in mv of the Step down regulator
- * \return None
+/**
+ * \brief EVRC Regulator Output Voltage Target Value.
+ *
+ * \param[inout] pms 		   Pointer to PMS Module.
+ * \param[in]	 outputVoltage The VDD output voltage in mv of the Step down regulator.
+ * 							   Range: 0 to 0xFF
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -819,10 +893,14 @@ IFX_INLINE void IfxPmsEvr_setRegulatorSwitchingFrequency(Ifx_PMS *pms, uint16 sa
  */
 IFX_INLINE void IfxPmsEvr_setSdRegulatorOutputLevel(Ifx_PMS *pms, float32 outputVoltage);
 
-/** \brief Sets the switching frequency divider factor for external synchronization.
- * \param pms Pointer To PMS Module
- * \param divider Switching frequency divider factor for external synchronisation
- * \return None
+/**
+ * \brief Sets the switching frequency divider factor for external synchronization.
+ *
+ * \param[inout] pms 	 Pointer To PMS Module.
+ * \param[in] 	 divider Switching frequency divider factor for external synchronisation.
+ * 						 Range: \ref IfxPmsEvr_ExtSyncSwitchingFreqDivFactor
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -832,10 +910,14 @@ IFX_INLINE void IfxPmsEvr_setSdRegulatorOutputLevel(Ifx_PMS *pms, float32 output
  */
 IFX_INLINE void IfxPmsEvr_setSwitchingFreqDivFactorForExternalsync(Ifx_PMS *pms, IfxPmsEvr_ExtSyncSwitchingFreqDivFactor divider);
 
-/** \brief Set hysteresis window for synchronization locking and unlocking.
- * \param pms Pointer To PMS Module
- * \param hystWindow Lock Unlock Hysteresis Window
- * \return None
+/**
+ * \brief Set hysteresis window for synchronization locking and unlocking.
+ *
+ * \param[inout] pms        Pointer To PMS Module.
+ * \param[in]    hystWindow Lock Unlock Hysteresis Window.
+ * 							Range: 0 to 0x3F
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -845,10 +927,13 @@ IFX_INLINE void IfxPmsEvr_setSwitchingFreqDivFactorForExternalsync(Ifx_PMS *pms,
  */
 IFX_INLINE void IfxPmsEvr_setSyncHysteresisWindow(Ifx_PMS *pms, uint8 hystWindow);
 
-/** \brief Set the maximum allowed frequency deviation of the synchronization input signal frequency.
- * \param pms Pointer To PMS Module
- * \param maxDeviation Maximum Deviation of the Synchronization Input Frequency
- * \return None
+/**
+ * \brief Set the maximum allowed frequency deviation of the synchronization input signal frequency.
+ *
+ * \param[inout] pms          Pointer To PMS Module.
+ * \param[in]    maxDeviation Maximum Deviation of the Synchronization Input Frequency.
+ *							  Range: 0 to 0x7F
+ * \retval None
  *
  * Coding example:
  * \code
@@ -858,10 +943,13 @@ IFX_INLINE void IfxPmsEvr_setSyncHysteresisWindow(Ifx_PMS *pms, uint8 hystWindow
  */
 IFX_INLINE void IfxPmsEvr_setMaxDeviationOfSyncFreq(Ifx_PMS *pms, uint8 maxDeviation);
 
-/** \brief Set synchronisation input either from GTM or eGTM inputs to be forwarded to EVRC SMPS regulator.
- * \param pms Pointer To PMS Module
- * \param syncInput Options for Synchronisation Input Multiplexer
- * \return None
+/**
+ * \brief Set synchronisation input either from GTM or eGTM inputs to be forwarded to EVRC SMPS regulator.
+ *
+ * \param[inout] pms 	   Pointer To PMS Module.
+ * \param[in]    syncInput Options for Synchronisation Input Multiplexer.
+ * 						   Range: \ref IfxPmsEvr_SyncInputMultiplexer
+ * \retval None
  *
  * Coding example:
  * \code
@@ -871,11 +959,14 @@ IFX_INLINE void IfxPmsEvr_setMaxDeviationOfSyncFreq(Ifx_PMS *pms, uint8 maxDevia
  */
 IFX_INLINE void IfxPmsEvr_selectSyncInputMultiplexer(Ifx_PMS *pms, IfxPmsEvr_SyncInputMultiplexer syncInput);
 
-/** \brief Function to get EVRC synchronization lock status
- * \param pms Pointer To PMS Module
- * \return Returns lock status
- * TRUE --> EVRC and VGATE output edge is synchronized to external DCDCSYNCI input signal.
- * FALSE --> EVRC is not currently synchronized to external DCDCSYNCI input signal.
+/**
+ * \brief Function to get EVRC synchronization lock status.
+ *
+ * \param[in] pms Pointer To PMS Module.
+ *
+ * \retval Returns lock status.
+ * TRUE: EVRC and VGATE output edge is synchronized to external DCDCSYNCI input signal.
+ * FALSE: EVRC is not currently synchronized to external DCDCSYNCI input signal.
  *
  * Coding example:
  *  \code
@@ -897,10 +988,14 @@ IFX_INLINE boolean IfxPmsEvr_getSyncLockStatus(Ifx_PMS *pms);
 /*-------------------------Inline Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Get ADC result for selected primary monitor voltage source.
- * \param pms Pointer to PMS Module
- * \param source Enumeration for Primary monitor voltage source
- * \return Returns ADC conversion result for selected supply.
+/**
+ * \brief Get ADC result for selected primary monitor voltage source.
+ *
+ * \param[in] pms 	 Pointer to PMS Module.
+ * \param[in] source Enumeration for Primary monitor voltage source.
+ * 					 Range: \ref IfxPmsEvr_PrimaryMonitorVoltageSource
+ *
+ * \retval uint16 Returns ADC conversion result for selected supply. Range: 0 to 0x7FF
  *
  * Coding example:
  * \code
@@ -911,10 +1006,14 @@ IFX_INLINE boolean IfxPmsEvr_getSyncLockStatus(Ifx_PMS *pms);
  */
 IFX_INLINE uint16 IfxPmsEvr_getPrimaryMonitorResult(Ifx_PMS *pms, IfxPmsEvr_PrimaryMonitorVoltageSource source);
 
-/** \brief Returns the status value of primary monitor status register for the  selected supply.
- * \param pms Pointer to PMS module.
- * \param source Enum for Primary monitor volatge source.
- * \return Returns status value of Primary Monitor status register,
+/**
+ * \brief Returns the status value of primary monitor status register for the  selected supply.
+ *
+ * \param[in] pms    Pointer to PMS module.
+ * \param[in] source Enum for Primary monitor volatge source.
+ * 					 Range: \ref IfxPmsEvr_PrimaryMonitorVoltageSource
+ *
+ * \retval uint32 Returns status value of Primary Monitor status register. Range: 0 to 0xFFF1FFF
  *
  * Coding example:
  * \code
@@ -925,10 +1024,14 @@ IFX_INLINE uint16 IfxPmsEvr_getPrimaryMonitorResult(Ifx_PMS *pms, IfxPmsEvr_Prim
  */
 IFX_INLINE uint32 IfxPmsEvr_getPrimaryMonitorStatusRegister(Ifx_PMS *pms, IfxPmsEvr_PrimaryMonitorVoltageSource source);
 
-/** \brief Get ADC converted result for selected primary monitor voltage source in milli Volts.
- * \param pms Pointer to PMS module.
- * \param source Enum for Primary monitor volatge source.
- * \return Primary monitor voltage conversion result.
+/**
+ * \brief Get ADC converted result for selected primary monitor voltage source in milli Volts.
+ *
+ * \param[in] pms    Pointer to PMS module.
+ * \param[in] source Enum for Primary monitor volatge source.
+ * 					 Range: \ref IfxPmsEvr_PrimaryMonitorVoltageSource
+ *
+ * \retval Primary monitor voltage conversion result.
  *
  * Coding example:
  * \code
@@ -939,11 +1042,16 @@ IFX_INLINE uint32 IfxPmsEvr_getPrimaryMonitorStatusRegister(Ifx_PMS *pms, IfxPms
  */
 IFX_INLINE float32 IfxPmsEvr_getPrimaryMonitorResultMv(Ifx_PMS *pms, IfxPmsEvr_PrimaryMonitorVoltageSource source);
 
-/** \brief Sets the primary under-voltage threshold for a specified voltage source.
- * \param pms Pointer to PMS module.
- * \param underVoltage Primary monitor under voltage threshold in millivolts.
- * \param supply Primary monitor voltage source.
- * \return None
+/**
+ * \brief Sets the primary under-voltage threshold for a specified voltage source.
+ *
+ * \param[inout] pms          Pointer to PMS module.
+ * \param[in]    underVoltage Primary monitor under voltage threshold in millivolts.
+ * 							  Range: 0 to 0x7FF
+ * \param[in]    supply       Primary monitor voltage source.
+ * 							  Range: \ref IfxPmsEvr_PrimaryMonitorVoltageSource
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -953,11 +1061,16 @@ IFX_INLINE float32 IfxPmsEvr_getPrimaryMonitorResultMv(Ifx_PMS *pms, IfxPmsEvr_P
  */
 IFX_INLINE void IfxPmsEvr_setPrimaryUnderVoltageThresholdMv(Ifx_PMS *pms, float32 underVoltage, IfxPmsEvr_PrimaryMonitorVoltageSource supply);
 
-/** \brief Set Primary monitor over voltage threshold.
- * \param pms Pointer to PMS module.
- * \param overVoltage Primary monitor over voltage threshold in milliVolts.
- * \param supply Primary monitor voltage source.
- * \return None
+/**
+ * \brief Set Primary monitor over voltage threshold.
+ *
+ * \param[inout] pms         Pointer to PMS module.
+ * \param[in]    overVoltage Primary monitor over voltage threshold in milliVolts.
+ * 							 Range: 0 to 0xFF
+ * \param[in]    supply      Primary monitor voltage source.
+ * 							 Range: \ref IfxPmsEvr_PrimaryMonitorVoltageSource
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -967,11 +1080,18 @@ IFX_INLINE void IfxPmsEvr_setPrimaryUnderVoltageThresholdMv(Ifx_PMS *pms, float3
  */
 IFX_INLINE void IfxPmsEvr_setPrimaryOverVoltageThresholdMv(Ifx_PMS *pms, float32 overVoltage, IfxPmsEvr_PrimaryMonitorVoltageSource supply);
 
-/** \brief Enable Primary monitor under voltage alarm.
- * \param pms Pointer to PMS module
- * \param supply Primary monitor voltage source
- * \param enable Enable/Disable under voltage alarm.
- * \return None
+/**
+ * \brief Enable Primary monitor under voltage alarm.
+ *
+ * \param[inout] pms    Pointer to PMS module.
+ * \param[in]    supply Primary monitor voltage source.
+ * 						Range: \ref IfxPmsEvr_PrimaryMonitorVoltageSource
+ * \param[in]    enable Enable/Disable under voltage alarm.
+ * 						Range: TRUE An alarm trigger signal is generated and forwarded depending on
+ * 						the configured threshold value.
+ * 						FALSE No alarm trigger signal is generated.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -983,11 +1103,16 @@ IFX_INLINE void IfxPmsEvr_setPrimaryOverVoltageThresholdMv(Ifx_PMS *pms, float32
  */
 IFX_INLINE void IfxPmsEvr_enablePrimaryUnderVoltageAlarm(Ifx_PMS *pms, IfxPmsEvr_PrimaryMonitorVoltageSource supply, boolean enable);
 
-/** \brief Enables or disables the primary over-voltage alarm for a specified voltage source.
- * \param pms Pointer to PMS module.
- * \param supply Primary monitor voltage source.
- * \param enable Boolean value indicating whether to enable (TRUE) or disable (FALSE) the over-voltage alarm.
- * \return None
+/**
+ * \brief Enables or disables the primary over-voltage alarm for a specified voltage source.
+ *
+ * \param[inout] pms    Pointer to PMS module.
+ * \param[in]    supply Primary monitor voltage source.
+ * 						Range: \ref IfxPmsEvr_PrimaryMonitorVoltageSource
+ * \param[in]    enable Boolean value indicating whether to enable (TRUE) or disable (FALSE) the over-voltage alarm.
+ * 						Range: TRUE Enable the over-voltage alarm, FALSE Disable the over-voltage alarm.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -999,10 +1124,14 @@ IFX_INLINE void IfxPmsEvr_enablePrimaryUnderVoltageAlarm(Ifx_PMS *pms, IfxPmsEvr
  */
 IFX_INLINE void IfxPmsEvr_enablePrimaryOverVoltageAlarm(Ifx_PMS *pms, IfxPmsEvr_PrimaryMonitorVoltageSource supply, boolean enable);
 
-/** \brief API to get primary under voltage threshold in mV.
- * \param pms Pointer to PMS module.
- * \param supply Primary monitor voltage source.
- * \return Returns primary under voltage in milli-Volts.
+/**
+ * \brief API to get primary under voltage threshold in mV.
+ *
+ * \param[in] pms    Pointer to PMS module.
+ * \param[in] supply Primary monitor voltage source.
+ * 					 Range: \ref IfxPmsEvr_PrimaryMonitorVoltageSource
+ *
+ * \retval uint16 Returns primary under voltage in milli-Volts. Range: 0 to 0x7FF
  *
  * Coding example:
  * \code
@@ -1012,10 +1141,14 @@ IFX_INLINE void IfxPmsEvr_enablePrimaryOverVoltageAlarm(Ifx_PMS *pms, IfxPmsEvr_
  */
 IFX_INLINE uint16 IfxPmsEvr_getPrimaryUnderVoltageThresholdMv(Ifx_PMS *pms, IfxPmsEvr_PrimaryMonitorVoltageSource supply);
 
-/** \brief API to get primary over voltage threshold in mV.
- * \param pms Pointer to PMS module.
- * \param supply Primary monitor voltage source.
- * \return Returns primary over voltage in milli-Volts.
+/**
+ * \brief API to get primary over voltage threshold in mV.
+ *
+ * \param[in] pms    Pointer to PMS module.
+ * \param[in] supply Primary monitor voltage source.
+ * 					 Range: \ref IfxPmsEvr_PrimaryMonitorVoltageSource
+ *
+ * \retval uint16 Returns primary over voltage in milli-Volts. Range: 0 to 0xFFF
  *
  * Coding example:
  * \code
@@ -1025,10 +1158,14 @@ IFX_INLINE uint16 IfxPmsEvr_getPrimaryUnderVoltageThresholdMv(Ifx_PMS *pms, IfxP
  */
 IFX_INLINE uint16 IfxPmsEvr_getPrimaryOverVoltageThresholdMv(Ifx_PMS *pms, IfxPmsEvr_PrimaryMonitorVoltageSource supply);
 
-/** \brief Gets the reset voltage threshold in millivolts for a specified primary monitor voltage source.
- * \param pms Pointer to PMS module.
- * \param supply Primary monitor voltage source.
- * \return Returns primary reset voltage in milli-Volts.
+/**
+ * \brief Gets the reset voltage threshold in millivolts for a specified primary monitor voltage source.
+ *
+ * \param[in] pms    Pointer to PMS module.
+ * \param[in] supply Primary monitor voltage source.
+ * 					 Range: \ref IfxPmsEvr_PrimaryMonitorVoltageSource
+ *
+ * \retval uint16 Returns primary reset voltage in milli-Volts. Range: 0 to 0x7FF
  *
  * Coding example:
  * \code
@@ -1038,19 +1175,27 @@ IFX_INLINE uint16 IfxPmsEvr_getPrimaryOverVoltageThresholdMv(Ifx_PMS *pms, IfxPm
  */
 IFX_INLINE uint16 IfxPmsEvr_getRstVoltageThresholdMv(Ifx_PMS *pms, IfxPmsEvr_PrimaryMonitorVoltageSource supply);
 
-/** \brief Sets the reset voltage threshold for a specified primary monitor voltage source.
- * \param pms Pointer to PMS module.
- * \param voltage Voltage value in mV.
- * \param supply Primary monitor voltage source.
- * \return None
+/**
+ * \brief Sets the reset voltage threshold for a specified primary monitor voltage source.
+ *
+ * \param[inout] pms     Pointer to PMS module.
+ * \param[in]    voltage Voltage value in mV.
+ * 						 Range: 0 to 0x7FF
+ * \param[in]    supply  Primary monitor voltage source.
+ * 						 Range: \ref IfxPmsEvr_PrimaryMonitorVoltageSource
+ *
+ * \retval None
  */
 IFX_INLINE void IfxPmsEvr_setRstVoltageThresholdMv(Ifx_PMS *pms, uint16 voltage, IfxPmsEvr_PrimaryMonitorVoltageSource supply);
 
-/** \brief API to get primary under voltage alarm enable status
- * \param pms Pointer to PMS module.
- * \param supply Primary monitor voltage source.
- * \return TRUE --> Under voltage alarm enabled
- *  FALSE --> Under voltage alarm disabled
+/**
+ * \brief API to get primary under voltage alarm enable status.
+ *
+ * \param[in] pms    Pointer to PMS module.
+ * \param[in] supply Primary monitor voltage source.
+ * 					 Range: \ref IfxPmsEvr_PrimaryMonitorVoltageSource
+ *
+ * \retval TRUE --> Under voltage alarm enabled, FALSE --> Under voltage alarm disabled.
  *
  * Coding example:
  * \code
@@ -1060,11 +1205,14 @@ IFX_INLINE void IfxPmsEvr_setRstVoltageThresholdMv(Ifx_PMS *pms, uint16 voltage,
  */
 IFX_INLINE boolean IfxPmsEvr_getPrimaryUnderVoltageAlarmEnabledStatus(Ifx_PMS *pms, IfxPmsEvr_PrimaryMonitorVoltageSource supply);
 
-/** \brief API to get primary over voltage alarm enable status
- * \param pms Pointer to PMS module.
- * \param supply Primary monitor voltage source.
- * \return TRUE --> Over voltage alarm enabled
- *  FALSE --> Over voltage alarm disabled
+/**
+ * \brief API to get primary over voltage alarm enable status.
+ *
+ * \param[in] pms    Pointer to PMS module.
+ * \param[in] supply Primary monitor voltage source.
+ * 					 Range: \ref IfxPmsEvr_PrimaryMonitorVoltageSource
+ *
+ * \retval TRUE --> Over voltage alarm enabled, FALSE --> Over voltage alarm disabled.
  *
  * Coding example:
  * \code
@@ -1078,11 +1226,15 @@ IFX_INLINE boolean IfxPmsEvr_getPrimaryOverVoltageAlarmEnabledStatus(Ifx_PMS *pm
 /*-------------------------Global Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Configure primary monitor for selected voltage source with configured values.
- * \param pms Pointer to PMS module.
- * \param source Enum for Primary monitor volatge source.
- * \param config Pointer to the configuration of VMONP.
- * \return None
+/**
+ * \brief Configure primary monitor for selected voltage source with configured values.
+ *
+ * \param[inout] pms    Pointer to PMS module.
+ * \param[in]    source Enum for Primary monitor volatge source.
+ * 						Range: \ref IfxPmsEvr_PrimaryMonitorVoltageSource
+ * \param[in]    config Pointer to the configuration of VMONP.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1114,11 +1266,16 @@ IFX_EXTERN void IfxPmsEvr_configurePrimaryMonitor(Ifx_PMS *pms, IfxPmsEvr_Primar
 /*-------------------------Inline Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Sets the over-voltage monitoring mode for a specified voltage supply.
- * \param pms pointer to the Module space
- * \param mode specifies the monitoring mode
- * \param supply select secondary monitor voltage source
- * \return None
+/**
+ * \brief Sets the over-voltage monitoring mode for a specified voltage supply.
+ *
+ * \param[inout] pms    Pointer to the Module space.
+ * \param[in]    mode   Specifies the monitoring mode.
+ * 						Range: \ref IfxPmsEvr_OverVoltageMonitoring
+ * \param[in]    supply Select secondary monitor voltage source.
+ * 						Range: \ref IfxPmsEvr_SecondaryMonitorVoltageSource
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1128,11 +1285,15 @@ IFX_EXTERN void IfxPmsEvr_configurePrimaryMonitor(Ifx_PMS *pms, IfxPmsEvr_Primar
  */
 IFX_INLINE void IfxPmsEvr_setOverVoltageMonitoringMode(Ifx_PMS *pms, IfxPmsEvr_OverVoltageMonitoring mode, IfxPmsEvr_SecondaryMonitorVoltageSource supply);
 
-/** \brief set Secondary Over Voltage Threshold level
- * \param pms Pointer to PMS Module
- * \param inputVoltage Over-voltage value in millivolts.
- * \param supply select secondary monitor voltage source.
- * \return None
+/**
+ * \brief set Secondary Over Voltage Threshold level.
+ *
+ * \param[inout] pms          Pointer to PMS Module.
+ * \param[in]    inputVoltage Over-voltage value in millivolts.
+ * \param[in]    supply       Select secondary monitor voltage source.
+ * 							  Range: \ref IfxPmsEvr_SecondaryMonitorVoltageSource
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1142,11 +1303,16 @@ IFX_INLINE void IfxPmsEvr_setOverVoltageMonitoringMode(Ifx_PMS *pms, IfxPmsEvr_O
  */
 IFX_INLINE void IfxPmsEvr_setSecondaryOverVoltageThresholdMv(Ifx_PMS *pms, float32 inputVoltage, IfxPmsEvr_SecondaryMonitorVoltageSource supply);
 
-/** \brief set Secondary under Voltage Threshold level
- * \param pms Pointer to PMS Module space
- * \param inputVoltage Under-voltage value in millivolts.
- * \param supply select secondary monitor voltage source.
- * \return None
+/**
+ * \brief set Secondary under Voltage Threshold level.
+ *
+ * \param[inout] pms 		  Pointer to PMS Module space.
+ * \param[in]    inputVoltage Under-voltage value in millivolts.
+ * 							  Range: 0 to 0x7FF
+ * \param[in]    supply       Select secondary monitor voltage source.
+ * 							  Range: \ref IfxPmsEvr_SecondaryMonitorVoltageSource
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1156,11 +1322,16 @@ IFX_INLINE void IfxPmsEvr_setSecondaryOverVoltageThresholdMv(Ifx_PMS *pms, float
  */
 IFX_INLINE void IfxPmsEvr_setSecondaryUnderVoltageThresholdMv(Ifx_PMS *pms, float32 inputVoltage, IfxPmsEvr_SecondaryMonitorVoltageSource supply);
 
-/** \brief Sets the under-voltage monitoring mode for a specified secondary voltage source.
- * \param pms Pointer to the PMS Module space
- * \param mode specifies the monitoring mode
- * \param supply select secondary monitor voltage source.
- * \return None
+/**
+ * \brief Sets the under-voltage monitoring mode for a specified secondary voltage source.
+ *
+ * \param[inout] pms    Pointer to the PMS Module space.
+ * \param[in]    mode   Specifies the monitoring mode.
+ * 						Range: \ref IfxPmsEvr_UnderVoltageMonitoring
+ * \param[in]    supply Select secondary monitor voltage source.
+ * 						Range: \ref IfxPmsEvr_SecondaryMonitorVoltageSource
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1170,10 +1341,14 @@ IFX_INLINE void IfxPmsEvr_setSecondaryUnderVoltageThresholdMv(Ifx_PMS *pms, floa
  */
 IFX_INLINE void IfxPmsEvr_setUnderVoltageMonitoringMode(Ifx_PMS *pms, IfxPmsEvr_UnderVoltageMonitoring mode, IfxPmsEvr_SecondaryMonitorVoltageSource supply);
 
-/** \brief Get ADC result for secondary monitor voltage source.
- * \param pms Pointer to PMS module
- * \param source Enumeration for Secondary monitor voltage source.
- * \return Returns ADC conversion result for selected supply.
+/**
+ * \brief Get ADC result for secondary monitor voltage source.
+ *
+ * \param[in] pms    Pointer to PMS module.
+ * \param[in] source Enumeration for Secondary monitor voltage source.
+ * 					 Range: \ref IfxPmsEvr_SecondaryMonitorVoltageSource
+ *
+ * \retval uint16 Returns ADC conversion result for selected supply. Range: 0 to 0x7FF
  *
  * Coding example:
  * \code
@@ -1183,10 +1358,14 @@ IFX_INLINE void IfxPmsEvr_setUnderVoltageMonitoringMode(Ifx_PMS *pms, IfxPmsEvr_
  */
 IFX_INLINE uint16 IfxPmsEvr_getSecondaryMonitorResult(Ifx_PMS *pms, IfxPmsEvr_SecondaryMonitorVoltageSource source);
 
-/** \brief Returns the status value of secondary monitor status register for the selected supply.
- * \param pms Pointer to PMS module.
- * \param source Enum for Secondary monitor volatge source.
- * \return Returns status value of Secondary Monitor status register,
+/**
+ * \brief Returns the status value of secondary monitor status register for the selected supply.
+ *
+ * \param[in] pms    Pointer to PMS module.
+ * \param[in] source Enum for Secondary monitor volatge source.
+ * 					 Range: \ref IfxPmsEvr_SecondaryMonitorVoltageSource
+ *
+ * \retval uint32 Returns status value of Secondary Monitor status register. Range: 0 to 0x7E001FFF,
  *
  * Coding example:
  * \code
@@ -1197,10 +1376,14 @@ IFX_INLINE uint16 IfxPmsEvr_getSecondaryMonitorResult(Ifx_PMS *pms, IfxPmsEvr_Se
  */
 IFX_INLINE uint32 IfxPmsEvr_getSecondaryMonitorStatusRegister(Ifx_PMS *pms, IfxPmsEvr_SecondaryMonitorVoltageSource source);
 
-/** \brief Get ADC converted result for selected secondary monitor voltage source in milli Volts.
- * \param pms Pointer to PMS module.
- * \param source Enum for Secondary monitor voltage source.
- * \return Secondary monitor voltage conversion result.
+/**
+ * \brief Get ADC converted result for selected secondary monitor voltage source in milli Volts.
+ *
+ * \param[in] pms 	 Pointer to PMS module.
+ * \param[in] source Enum for Secondary monitor voltage source.
+ * 					 Range: \ref IfxPmsEvr_SecondaryMonitorVoltageSource
+ *
+ * \retval float32 Secondary monitor voltage conversion result.
  *
  * Coding example:
  * \code
@@ -1211,10 +1394,14 @@ IFX_INLINE uint32 IfxPmsEvr_getSecondaryMonitorStatusRegister(Ifx_PMS *pms, IfxP
  */
 IFX_INLINE float32 IfxPmsEvr_getSecondaryMonitorResultMv(Ifx_PMS *pms, IfxPmsEvr_SecondaryMonitorVoltageSource source);
 
-/** \brief Get secondary monitor under voltage threshold in milli Volts.
- * \param pms Pointer to PMS module.
- * \param source Enum for Secondary monitor voltage source.
- * \return Secondary monitor under voltage in milli-volts
+/**
+ * \brief Get secondary monitor under voltage threshold in milli Volts.
+ *
+ * \param[in] pms    Pointer to PMS module.
+ * \param[in] source Enum for Secondary monitor voltage source.
+ * 					 Range: \ref IfxPmsEvr_SecondaryMonitorVoltageSource
+ *
+ * \retval uint16 Secondary monitor under voltage in milli-volts. Range: 0 to 0x7FF
  *
  * Coding example:
  * \code
@@ -1224,10 +1411,14 @@ IFX_INLINE float32 IfxPmsEvr_getSecondaryMonitorResultMv(Ifx_PMS *pms, IfxPmsEvr
  */
 IFX_INLINE uint16 IfxPmsEvr_getSecondaryUnderVoltageThresholdMv(Ifx_PMS *pms, IfxPmsEvr_SecondaryMonitorVoltageSource source);
 
-/** \brief Gets the secondary over-voltage threshold in millivolts for a specified voltage source.
- * \param pms Pointer to PMS module.
- * \param source Enum for Secondary monitor voltage source.
- * \return Secondary monitor over voltage in milli-volts
+/**
+ * \brief Gets the secondary over-voltage threshold in millivolts for a specified voltage source.
+ *
+ * \param[in] pms    Pointer to PMS module.
+ * \param[in] source Enum for Secondary monitor voltage source.
+ * 					 Range: \ref IfxPmsEvr_SecondaryMonitorVoltageSource
+ *
+ * \retval uint16 Secondary monitor over voltage in milli-volts. Range: 0 to 0xFF,
  *
  * Coding example:
  * \code
@@ -1237,10 +1428,14 @@ IFX_INLINE uint16 IfxPmsEvr_getSecondaryUnderVoltageThresholdMv(Ifx_PMS *pms, If
  */
 IFX_INLINE uint16 IfxPmsEvr_getSecondaryOverVoltageThresholdMv(Ifx_PMS *pms, IfxPmsEvr_SecondaryMonitorVoltageSource source);
 
-/** \brief Get secondary monitor over voltage monitor mode.
- * \param pms Pointer to PMS module.
- * \param supply Enum for Secondary monitor voltage source.
- * \return Returns over voltage monitor mode
+/**
+ * \brief Get secondary monitor over voltage monitor mode.
+ *
+ * \param[in] pms    Pointer to PMS module.
+ * \param[in] supply Enum for Secondary monitor voltage source.
+ * 					 Range: \ref IfxPmsEvr_SecondaryMonitorVoltageSource
+ *
+ * \retval IfxPmsEvr_OverVoltageMonitoring Returns over voltage monitor mode. Range: \ref IfxPmsEvr_OverVoltageMonitoring,
  *
  * Coding example:
  * \code
@@ -1250,10 +1445,14 @@ IFX_INLINE uint16 IfxPmsEvr_getSecondaryOverVoltageThresholdMv(Ifx_PMS *pms, Ifx
  */
 IFX_INLINE IfxPmsEvr_OverVoltageMonitoring IfxPmsEvr_getOverVoltageMonitoringMode(Ifx_PMS *pms, IfxPmsEvr_SecondaryMonitorVoltageSource supply);
 
-/** \brief Get secondary monitor under voltage monitor mode.
- * \param pms Pointer to PMS module.
- * \param supply Enum for Secondary monitor voltage source.
- * \return Returns under voltage monitor mode
+/**
+ * \brief Get secondary monitor under voltage monitor mode.
+ *
+ * \param[in] pms    Pointer to PMS module.
+ * \param[in] supply Enum for Secondary monitor voltage source.
+ * 					 Range: \ref IfxPmsEvr_SecondaryMonitorVoltageSource
+ *
+ * \retval IfxPmsEvr_UnderVoltageMonitoring Returns under voltage monitor mode. Range: \ref IfxPmsEvr_UnderVoltageMonitoring,
  *
  * Coding example:
  * \code
@@ -1267,11 +1466,15 @@ IFX_INLINE IfxPmsEvr_UnderVoltageMonitoring IfxPmsEvr_getUnderVoltageMonitoringM
 /*-------------------------Global Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Configure secondary monitor for selected voltage source with configured values.
- * \param pms Pointer to PMS module.
- * \param source Enum for Secondary monitor volatge source.
- * \param config Pointer to the configuration of VMONS.
- * \return None
+/**
+ * \brief Configure secondary monitor for selected voltage source with configured values.
+ *
+ * \param[input] pms    Pointer to PMS module.
+ * \param[in]    source Enum for Secondary monitor volatge source.
+ * 						Range: \ref IfxPmsEvr_SecondaryMonitorVoltageSource
+ * \param[in]    config Pointer to the configuration of VMONS.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1304,11 +1507,16 @@ IFX_EXTERN void IfxPmsEvr_configureSecondaryMonitor(Ifx_PMS *pms, IfxPmsEvr_Seco
 /*-------------------------Inline Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Enable/Disable the Peak detection voltage for the given supply rail.
- * \param pms Pointer to PMS module.
- * \param supply Peak detection voltage source selection for Vdd,Vddext and Vddextdc
- * \param enable enable/disable voltage peak detection
- * \return None
+/**
+ * \brief Enable/Disable the Peak detection voltage for the given supply rail.
+ *
+ * \param[inout] pms    Pointer to PMS module.
+ * \param[in]    supply Peak detection voltage source selection for Vdd,Vddext and Vddextdc.
+ * 						Rnge: \ref IfxPmsEvr_PeakDetectionVoltageSource
+ * \param[in]    enable enable/disable voltage peak detection.
+ * 						Range: TRUE Enable voltage peak detection, FALSE Disable voltage peak detection.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1318,11 +1526,16 @@ IFX_EXTERN void IfxPmsEvr_configureSecondaryMonitor(Ifx_PMS *pms, IfxPmsEvr_Seco
  */
 IFX_INLINE void IfxPmsEvr_setPeakVoltageDetectionEnable(Ifx_PMS *pms, IfxPmsEvr_PeakDetectionVoltageSource supply, boolean enable);
 
-/** \brief Enable/Disable the Low-Pass Filtering of the recorded peak values for the given supply rail.
- * \param pms Pointer to PMS module.
- * \param supply Peak detection voltage source selection for Vdd,Vddext and Vddextdc
- * \param enable enable/disable the low pass filter.
- * \return None
+/**
+ * \brief Enable/Disable the Low-Pass Filtering of the recorded peak values for the given supply rail.
+ *
+ * \param[inout] pms    Pointer to PMS module.
+ * \param[in]    supply Peak detection voltage source selection for Vdd,Vddext and Vddextdc.
+ * 						Range: \ref IfxPmsEvr_PeakDetectionVoltageSource
+ * \param[in]    enable enable/disable the low pass filter.
+ * 						Range: TRUE Enable voltage peak detection, FALSE Disable voltage peak detection.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1332,11 +1545,16 @@ IFX_INLINE void IfxPmsEvr_setPeakVoltageDetectionEnable(Ifx_PMS *pms, IfxPmsEvr_
  */
 IFX_INLINE void IfxPmsEvr_setPeakVoltageDetectionLpfEnable(Ifx_PMS *pms, IfxPmsEvr_PeakDetectionVoltageSource supply, boolean enable);
 
-/** \brief Sets the peak voltage detection threshold for the specified voltage source.
- * \param pms Pointer to PMS module.
- * \param supply Peak detection voltage source selection for Vdd,Vddext and Vddextdc
- * \param threshold Threshold value for Peak Voltage Detection.
- * \return None
+/**
+ * \brief Sets the peak voltage detection threshold for the specified voltage source.
+ *
+ * \param[inout] pms       Pointer to PMS module.
+ * \param[in]    supply    Peak detection voltage source selection for Vdd,Vddext and Vddextdc.
+ * 						   Range: \ref IfxPmsEvr_PeakDetectionVoltageSource
+ * \param[in]    threshold Threshold value for Peak Voltage Detection.
+ * 						   Range: 0 to 0x7FF
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1346,10 +1564,14 @@ IFX_INLINE void IfxPmsEvr_setPeakVoltageDetectionLpfEnable(Ifx_PMS *pms, IfxPmsE
  */
 IFX_INLINE void IfxPmsEvr_setPeakVoltageDetectionThreshold(Ifx_PMS *pms, IfxPmsEvr_PeakDetectionVoltageSource supply, uint16 threshold);
 
-/** \brief This api will restart the peak voltage detection cycle for the given supply rail.
- * \param pms Pointer to PMS module.
- * \param supply Peak detection voltage source selection for Vdd,Vddext and Vddextdc
- * \return None
+/**
+ * \brief This api will restart the peak voltage detection cycle for the given supply rail.
+ *
+ * \param[inout] pms    Pointer to PMS module.
+ * \param[in]    supply Peak detection voltage source selection for Vdd,Vddext and Vddextdc.
+ * 						Range: \ref IfxPmsEvr_PeakDetectionVoltageSource
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1359,10 +1581,14 @@ IFX_INLINE void IfxPmsEvr_setPeakVoltageDetectionThreshold(Ifx_PMS *pms, IfxPmsE
  */
 IFX_INLINE void IfxPmsEvr_setPeakVoltageDetectionReset(Ifx_PMS *pms, IfxPmsEvr_PeakDetectionVoltageSource supply);
 
-/** \brief Returns the PEAKVOLT value for the selected supply .
- * \param pms Pointer to PMS module.
- * \param supply Peak detection voltage source selection for Vdd,Vddext and Vddextdc
- * \return Returns PEAKVOLT value from PEAK.VxxSTAT.B.PEAKVOLT
+/**
+ * \brief Returns the PEAKVOLT value for the selected supply.
+ *
+ * \param[in] pms    Pointer to PMS module.
+ * \param[in] supply Peak detection voltage source selection for Vdd,Vddext and Vddextdc.
+ * 					 Range: \ref IfxPmsEvr_PeakDetectionVoltageSource
+ *
+ * \retval uint16 Returns PEAKVOLT value from PEAK.VxxSTAT.B.PEAKVOLT. Range: 0 to 0x7FF,
  *
  * Coding example:
  * \code
@@ -1373,10 +1599,14 @@ IFX_INLINE void IfxPmsEvr_setPeakVoltageDetectionReset(Ifx_PMS *pms, IfxPmsEvr_P
  */
 IFX_INLINE uint16 IfxPmsEvr_getPeakVoltageDetectedValue(Ifx_PMS *pms, IfxPmsEvr_PeakDetectionVoltageSource supply);
 
-/** \brief Returns the PEAKVOLT value for the selected supply in the  milliVolts.
- * \param pms Pointer to PMS module.
- * \param supply Peak detection voltage source selection for Vdd,Vddext and Vddextdc
- * \return Returns PEAKVOLT value in MV.
+/**
+ * \brief Returns the PEAKVOLT value for the selected supply in the  milliVolts.
+ *
+ * \param[in] pms    Pointer to PMS module.
+ * \param[in] supply Peak detection voltage source selection for Vdd,Vddext and Vddextdc.
+ * 					 Range: \ref IfxPmsEvr_PeakDetectionVoltageSource
+ *
+ * \retval float32 Returns PEAKVOLT value in MV. Range: 0 to 0x7FF,
  *
  * Coding example:
  * \code
@@ -1387,10 +1617,14 @@ IFX_INLINE uint16 IfxPmsEvr_getPeakVoltageDetectedValue(Ifx_PMS *pms, IfxPmsEvr_
  */
 IFX_INLINE float32 IfxPmsEvr_getPeakVoltageDetectedValueinMv(Ifx_PMS *pms, IfxPmsEvr_PeakDetectionVoltageSource supply);
 
-/** \brief Returns the threshold count value for the selected supply .
- * \param pms Pointer to PMS module.
- * \param supply Peak detection voltage source selection for Vdd,Vddext and Vddextdc
- * \return Returns theshold count value from PEAK.VxxSTAT.B.THRESCOUNT
+/**
+ * \brief Returns the threshold count value for the selected supply.
+ *
+ * \param[in] pms    Pointer to PMS module.
+ * \param[in] supply Peak detection voltage source selection for Vdd,Vddext and Vddextdc.
+ * 					 Range: \ref IfxPmsEvr_PeakDetectionVoltageSource
+ *
+ * \retval uint32 Returns theshold count value from PEAK.VxxSTAT.B.THRESCOUNT. Range: 0 to 0x1F,
  *
  * Coding example:
  * \code
@@ -1404,10 +1638,13 @@ IFX_INLINE uint32 IfxPmsEvr_getPeakVoltageDetectionThresCount(Ifx_PMS *pms, IfxP
 /*-------------------------Global Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Configuration of the selected supply for peak voltage detection.
- * \param pms Pointer to PMS module.
- * \param config Configuration values for peak voltage detection
- * \return None
+/**
+ * \brief Configuration of the selected supply for peak voltage detection.
+ *
+ * \param[inout] pms    Pointer to PMS module.
+ * \param[in]    config Configuration values for peak voltage detection.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1420,7 +1657,7 @@ IFX_INLINE uint32 IfxPmsEvr_getPeakVoltageDetectionThresCount(Ifx_PMS *pms, IfxP
  * IfxPmsEvr_peakVoltageDetectionConfiguration(&MODULE_PMS, &config);
  * \endcode
  *
- * \see  IfxPmsEvr_setPeakVoltageDetectionReset(), IfxPmsEvr_setPeakVoltageDetectionThreshold()
+ * \ref IfxPmsEvr_setPeakVoltageDetectionReset(), IfxPmsEvr_setPeakVoltageDetectionThreshold()
  *      IfxPmsEvr_setPeakVoltageDetectionLpfEnable(), IfxPmsEvr_setPeakVoltageDetectionEnable()
  *
  */
@@ -1435,11 +1672,16 @@ IFX_EXTERN void IfxPmsEvr_peakVoltageDetectionConfiguration(Ifx_PMS *pms, IfxPms
 /*-------------------------Inline Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Enable/Disable drift monitoring for the selected supply rail.
- * \param pms Pointer to PMS module
- * \param source Drift Monioring voltage source selection
- * \param enable Enable/Disable drift monitoring.
- * \return None
+/**
+ * \brief Enable/Disable drift monitoring for the selected supply rail.
+ *
+ * \param[inout] pms    Pointer to PMS module.
+ * \param[in]    source Drift Monioring voltage source selection.
+ * 						Range: \ref IfxPmsEvr_DriftMonitorVoltageSource
+ * \param[in]    enable Enable/Disable drift monitoring.
+ * 						Range: TRUE Enable drift monitoring, FALSE Enable drift monitoring.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1449,11 +1691,16 @@ IFX_EXTERN void IfxPmsEvr_peakVoltageDetectionConfiguration(Ifx_PMS *pms, IfxPms
  */
 IFX_INLINE void IfxPmsEvr_enableDriftMonitoring(Ifx_PMS *pms, IfxPmsEvr_DriftMonitorVoltageSource source, boolean enable);
 
-/** \brief Set drift monitoring down sampling factor for the selected supply rail.
- * \param pms Pointer to PMS module
- * \param source Drift Monioring voltage source selection
- * \param downSamplingfactor Drift monitoring downsampling factor.
- * \return None
+/**
+ * \brief Set drift monitoring down sampling factor for the selected supply rail.
+ *
+ * \param[inout] pms                Pointer to PMS module.
+ * \param[in]    source             Drift Monioring voltage source selection.
+ * 									Range: \ref IfxPmsEvr_DriftMonitorVoltageSource
+ * \param[in]    downSamplingfactor Drift monitoring downsampling factor.
+ * 									Range: 0 to 0xF
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -1463,10 +1710,14 @@ IFX_INLINE void IfxPmsEvr_enableDriftMonitoring(Ifx_PMS *pms, IfxPmsEvr_DriftMon
  */
 IFX_INLINE void IfxPmsEvr_setDriftMonitoringFactor(Ifx_PMS *pms, IfxPmsEvr_DriftMonitorVoltageSource source, uint8 downSamplingfactor);
 
-/** \brief Get drift monitoring average for the selected supply rail.
- * \param pms Pointer to PMS module
- * \param source Drift Monioring voltage source selection
- * \return Returns Average value for the selected supply.
+/**
+ * \brief Get drift monitoring average for the selected supply rail.
+ *
+ * \param[in] pms    Pointer to PMS module.
+ * \param[in] source Drift Monioring voltage source selection.
+ * 					 Range: \ref IfxPmsEvr_DriftMonitorVoltageSource
+ *
+ * \retval uint16 Returns Average value for the selected supply. Range: 0 to 0x7FF
  *
  * Coding example:
  * \code
@@ -1477,10 +1728,14 @@ IFX_INLINE void IfxPmsEvr_setDriftMonitoringFactor(Ifx_PMS *pms, IfxPmsEvr_Drift
  */
 IFX_INLINE uint16 IfxPmsEvr_getDriftMonitoringAverage(Ifx_PMS *pms, IfxPmsEvr_DriftMonitorVoltageSource source);
 
-/** \brief Get drift monitoring average voltage in mv for the selected supply rail.
- * \param pms Pointer to PMS module
- * \param source Drift Monioring voltage source selection
- * \return Returns Average value for the selected supply.
+/**
+ * \brief Get drift monitoring average voltage in mv for the selected supply rail.
+ *
+ * \param[in] pms    Pointer to PMS module.
+ * \param[in] source Drift Monioring voltage source selection.
+ * 					 Range: \ref IfxPmsEvr_DriftMonitorVoltageSource
+ *
+ * \retval float32 Returns Average value for the selected supply. Range: 0 to 0x7FF
  *
  * Coding example:
  * \code
@@ -1497,36 +1752,51 @@ IFX_INLINE float32 IfxPmsEvr_getDriftMonitoringAverageVoltageMv(Ifx_PMS *pms, If
 /*-------------------------Inline Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Function to enable MONBIST
- * \param config Pointer to the configuration structure
- * \return None
+/**
+ * \brief Function to enable MONBIST.
+ *
+ * \param[in] config Pointer to the configuration structure.
+ *
+ * \retval None
  */
 IFX_INLINE void IfxPmsEvr_startMonBist(const IfxPmsEvr_SecMonSupplyRailsConfig *config);
 
-/** \brief Function to run initialization sequence
- * \param sequence Pointer to the sequence of configuration
- * \return None
+/**
+ * \brief Function to run initialization sequence.
+ *
+ * \param[in] sequence Pointer to the sequence of configuration.
+ *
+ * \retval None
  */
 IFX_INLINE boolean IfxPmsEvr_runInitSequence(const IfxPmsEvr_InitSequence *const sequence);
 
-/** \brief Function to get delay in microseconds.
- * \param waitInMicroSec wait period in micro seconds.
- * \return None
+/**
+ * \brief Function to get delay in microseconds.
+ *
+ * \param[in] waitInMicroSec wait period in micro seconds.
+ *
+ * \retval None
  */
 IFX_INLINE void IfxPmsEvr_wait(uint32 waitInMicroSec);
 
-/** \brief Function to verify Evr values.
- * \param checkConfig wait period in micro seconds.
- * \return Returns status
+/**
+ * \brief Function to verify Evr values.
+ *
+ * \param[in] checkConfig wait period in micro seconds.
+ *
+ * \retval Returns status
  * True --> Init values configured correctly.
  * False --> Init values not configured correctly.
  */
 IFX_INLINE boolean IfxPmsEvr_areInitValuesRight(const IfxPmsEvr_CheckRegConfig *const checkConfig);
 
 #if IFXPMS_DISABLE_PRIMARY_RESET_RIF
-/** \brief API to disable primary reset for Rif.
- * \param pms Pointer to PMS module.
- * \return None
+/**
+ * \brief API to disable primary reset for Rif.
+ *
+ * \param[in] pms Pointer to PMS module.
+ *
+ * \retval None
  */
 IFX_INLINE void IfxPmsEvr_enableRifPrimaryReset(Ifx_PMS *pms);
 #endif /* #if IFXPMS_DISABLE_PRIMARY_RESET_RIF */
@@ -1535,26 +1805,36 @@ IFX_INLINE void IfxPmsEvr_enableRifPrimaryReset(Ifx_PMS *pms);
 /*-------------------------Global Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Function provides internal monitoring threshold adaption.
+/**
+ * \brief Function provides internal monitoring threshold adaption.
  * Intialization of external interface and subsequent steps has to be taken care by the application.
- * \param pms Pointer to PMS module sfr
- * \param config Pointer to configuration
- * \return Voltage identification value (VID_CON)
+ *
+ * \param[inout] pms    Pointer to PMS module sfr.
+ * \param[in]    config Pointer to configuration.
+ *
+ * \retval uint32 Voltage identification value (VID_CON).
  */
 IFX_EXTERN uint32 IfxPmsEvr_scaleExtVoltageSetup(Ifx_PMS *pms, IfxPmsEvr_ExternalVoltScalingConfig *config);
 
-/** \brief Function does internal monitoring threshold adaptation and voltage scaling trigger. API will poll for 20us for SDVOK bit to set. If it takes more than 20us error handler will be invoked if configured by the user. If the voltage scaling is successful then monitor alarms will be renabled.
- * \param pms Pointer to pms module sfr
- * \param config Evr voltage scaling configuration
- * \return Returs TRUE   --> Volage scaling is successful
- *             FALSE --> Voltage scaling not successful
+/**
+ * \brief Function does internal monitoring threshold adaptation and voltage scaling trigger. API will poll for 20us for SDVOK bit to set. If it takes more than 20us error handler will be invoked if configured by the user. If the voltage scaling is successful then monitor alarms will be renabled.
+ *
+ * \param[inout] pms    Pointer to pms module sfr.
+ * \param[in]    config Evr voltage scaling configuration.
+ *
+ * \retval Returs TRUE --> Volage scaling is successful,
+ * FALSE --> Voltage scaling not successful.
  */
 IFX_EXTERN boolean IfxPmsEvr_scaleEvrVoltage(Ifx_PMS *pms, IfxPmsEvr_EvrcVoltScalingConfig *config);
 
-/** \brief Enable voltage rail in ASSW.
- * \param pms Pointer to PMS Module space
- * \param supply select primary monitor voltage source. Refer User Manual for valid supply source.
- * \return TRUE --> Returns TRUE if supply selected is valid for the API.
+/**
+ * \brief Enable voltage rail in ASSW.
+ *
+ * \param[inout] pms    Pointer to PMS Module space.
+ * \param[in]    supply select primary monitor voltage source. Refer User Manual for valid supply source.
+ * 						Range: \ref IfxPmsEvr_PrimaryMonitorVoltageSource
+ *
+ * \retval TRUE --> Returns TRUE if supply selected is valid for the API.
  *  FALSE --> Returns FALSE if invalid supply selected
  *
  * Coding example:
@@ -1568,9 +1848,12 @@ IFX_EXTERN boolean IfxPmsEvr_scaleEvrVoltage(Ifx_PMS *pms, IfxPmsEvr_EvrcVoltSca
  */
 IFX_EXTERN boolean IfxPmsEvr_enableVoltageRail(Ifx_PMS *pms, IfxPmsEvr_PrimaryMonitorVoltageSource supply);
 
-/** \brief Configures access to all masters to all the PMS in the device
- * \param apConfig pointer to configuration structure
- * \return None
+/**
+ * \brief Configures access to all masters to all the PMS in the device.
+ *
+ * \param[in] apConfig pointer to configuration structure.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxPmsEvr_configureAccessToPms(IfxApApu_ApuConfig *apConfig);
 
@@ -3127,14 +3410,14 @@ IFX_INLINE float32 IfxPmsEvr_getPrimaryMonitorResultMv(Ifx_PMS *pms, IfxPmsEvr_P
     switch (source)
     {
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vdd:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_4EX)
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
         result = (pms->VMONP.VDDSTAT.B.RESULT) * IFXPMSEVR_TRKCORELSB_MV;
 #else
         result = (pms->VMONP.VDDSTAT.B.RESULT) * IFXPMSEVR_SARHVLSB_MV;
 #endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_4EX) */
         break;
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vddext:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_4EX)
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
         result = (pms->VMONP.VDDEXTSTAT.B.RESULT) * IFXPMSEVR_SARHVLSB_MV;
 #else
         result = (pms->VMONP.VDDEXTSTAT.B.RESULT) * IFXPMSEVR_TRKHVLSB_MV;

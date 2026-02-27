@@ -2,7 +2,7 @@
  * \file IfxEgtm_Tim_Timer.c
  * \brief EGTM TIMER details
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -69,20 +69,27 @@ void IfxEgtm_Tim_Timer_initChannel(IfxEgtm_Tim_Timer *driver, IfxEgtm_Tim_Timer_
 
     Ifx_EGTM_CLS_TIM_CH *channel = IfxEgtm_Tim_getChannel(driver->tim, driver->channel);
 
+    /* Sets the TIM channel Control register */
     IfxEgtm_Tim_Ch_setControl(channel, config->channelControl);
 
     if (config->enableAuxInputSourceSelect == TRUE)
     {
+    	/* Sets the Auxiliary input source */
         IfxEgtm_Tim_Ch_setAuxInputSourceSelection(driver->egtm, driver->clsIndex, driver->channel);
     }
 
+    /* Sets the raising edge Filter Parameter */
     IfxEgtm_Tim_Ch_setRisingEdgeFilterTime(channel, config->raisingEdgeFilterTime);
+    /* Set the Falling edge Filter Parameter */
     IfxEgtm_Tim_Ch_setFallingEdgeFilterTime(channel, config->fallingEdgeFilterTime);
+    /* Sets the Input source */
     IfxEgtm_Tim_Ch_setInputSourceSelection(driver->tim, driver->channel, config->inputSourceSelect);
 
     if (config->irqEnable == TRUE)
     {
+    	/* Sets the TIM channel IRQ mode */
         IfxEgtm_Tim_Ch_setNotificationMode(channel, config->irqMode);
+        /* Sets the Interrupt Notification */
         IfxEgtm_Tim_Ch_setNotification(channel, config->irqType);
     }
 
@@ -136,6 +143,7 @@ void IfxEgtm_Tim_Timer_initChannelConfig(IfxEgtm_Tim_Timer_Config *config, Ifx_E
         .enableAuxInputSourceSelect       = 0,
     };
 
+    /* Default Configuration */
     *config = IfxEgtm_Tim_Timer_defaultChannelConfig;
 }
 

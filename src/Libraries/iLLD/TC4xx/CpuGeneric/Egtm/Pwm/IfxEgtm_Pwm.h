@@ -3,7 +3,7 @@
  * \brief EGTM PWM details
  * \ingroup IfxLld_Egtm
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -548,6 +548,8 @@ typedef struct
     IfxSrc_Tos           isrProvider;       /**< \brief Type of Service for Ccu0/1 interrupt */
     Ifx_Priority         priority;          /**< \brief Priority for Ccu0/1 interrupt */
     IfxSrc_VmId          vmId;              /**< \brief Virtual machine interrupt service provider */
+    boolean              ccu0Enabled;       /**< \brief Explicitly enable Period (CCU0) interrupt */
+    boolean              ccu1Enabled;       /**< \brief Explicitly enable Duty (CCU1) interrupt */
     IfxEgtm_Pwm_callBack periodEvent;       /**< \brief Period interrupt callback function pointer */
     IfxEgtm_Pwm_callBack dutyEvent;         /**< \brief Duty interrupt callback function pointer */
 } IfxEgtm_Pwm_InterruptConfig;
@@ -618,12 +620,12 @@ typedef union
 typedef struct
 {
     IfxEgtm_Pwm_ChannelRegisters registers;         /**< \brief Contains pointers to frequenctly accessed channel specific registers */
-    uint32                       upenMask;          /**< \brief Update enable mask of this channel */
+    uint32                       upenMask;          /**< \brief Update enable mask of this channel. Range: 0 to 0xFFFF */
     IfxEgtm_Pwm_callBack         periodEvent;       /**< \brief CCU0 interrupt callback function pointer */
     IfxEgtm_Pwm_callBack         dutyEvent;         /**< \brief CCU1 interrupt callback function pointer */
     IfxEgtm_Pwm_SubModule_Ch     timerCh;           /**< \brief Channel Index */
-    uint32                       phaseTicks;        /**< \brief Current phase ticks */
-    uint32                       dutyTicks;         /**< \brief Current duty ticks */
+    uint32                       phaseTicks;        /**< \brief Current phase ticks. Range: 0 to 0x00FFFFFF */
+    uint32                       dutyTicks;         /**< \brief Current duty ticks. Range: 0 to 0x00FFFFFF */
 } IfxEgtm_Pwm_Channel;
 
 /** \brief Structure to hold pointers to [TGC[0/1]/AGC]_GLB_CTRL and mask value for fast access
@@ -633,8 +635,8 @@ typedef struct
     volatile Ifx_UReg_32Bit *reg0;                /**< \brief ATOM: points to AGC_GLB_CTRL.
                                                    * TOM: If channels span 2 TGCs then points to TGC0_GLB_CTRL else to the TGC being used TGCx_GLB_CTRL */
     volatile Ifx_UReg_32Bit *reg1;                /**< \brief ATOM: Not used. TOM: Points to TGC1_GLB_CTRL if channels span across 2 TGCs. */
-    uint32                   upenMask0;           /**< \brief UPEN Mask for reg0 [AGC/TGC[0/1]]_GLB_CTRL */
-    uint32                   upenMask1;           /**< \brief UPEN Mask for reg1 [AGC/TGC[0/1]]_GLB_CTRL */
+    uint32                   upenMask0;           /**< \brief UPEN Mask for reg0 [AGC/TGC[0/1]]_GLB_CTRL. Range: 0 to 0xFFFF0000 */
+    uint32                   upenMask1;           /**< \brief UPEN Mask for reg1 [AGC/TGC[0/1]]_GLB_CTRL. Range: 0 to 0xFFFF0000 */
     volatile Ifx_UReg_32Bit *endisCtrlReg0;       /**< \brief ATOM: points to AGC_ENDIS_CTRL.
                                                    * TOM: If channels span 2 TGCs then points to TGC0_ENDIS_CTRL else to the TGC being used TGCx_GLB_CTRL */
     volatile Ifx_UReg_32Bit *endisCtrlReg1;       /**< \brief ATOM: Not used. TOM: Points to TGC1_ENDIS_CTRL if channels span across 2 TGCs. */
@@ -652,7 +654,7 @@ typedef struct
     IfxEgtm_Cluster            cluster;                /**< \brief Index of the CLS object used */
     IfxEgtm_Pwm_SubModule      subModule;              /**< \brief Sub module to be used for PWM */
     IfxEgtm_Pwm_Alignment      alignment;              /**< \brief PWM alignment */
-    uint8                      numChannels;            /**< \brief Number of channels (base + sync) to be configured */
+    uint8                      numChannels;            /**< \brief Number of channels (base + sync) to be configured. Range: 1 to 8  */
     IfxEgtm_Pwm_ChannelConfig *channels;               /**< \brief Pointer to channel configuration */
     float32                    frequency;              /**< \brief Initial PWM frequency */
     IfxEgtm_Pwm_ClockSource    clockSource;            /**< \brief Clock source for Atom/Tom channels */
@@ -687,13 +689,13 @@ typedef struct
     IfxEgtm_Cluster           cluster;                 /**< \brief Index of the CLS object used */
     IfxEgtm_Pwm_SubModule     subModule;               /**< \brief Sub module to be used for PWM */
     IfxEgtm_Pwm_Alignment     alignment;               /**< \brief PWM alignment */
-    uint8                     numChannels;             /**< \brief Number of channels configured (base + sync) */
+    uint8                     numChannels;             /**< \brief Number of channels configured (base + sync). Range: 1 to 8  */
     IfxEgtm_Pwm_Channel      *channels;                /**< \brief Stores state of PWM channels (base + sync) */
     IfxEgtm_Pwm_GlobalControl globalControl;           /**< \brief Pointer and mask for GLB_CTRL */
     float32                   sourceFrequency;         /**< \brief Source clock frequency in Hz */
     float32                   dtmFrequency;            /**< \brief DTM clock frequency in Hz */
     float32                   frequency;               /**< \brief Current PWM frequency in Hz */
-    uint32                    periodTicks;             /**< \brief Current PWM Period in ticks */
+    uint32                    periodTicks;             /**< \brief Current PWM Period in ticks. Range: 0 to 0x00FFFFFF */
     IfxEgtm_Pwm_ClockSource   clockSource;             /**< \brief Clock source for Atom/Tom channels */
     IfxEgtm_Dtm_ClockSource   dtmClockSource;          /**< \brief Clock source for DTM channels */
     boolean                   syncUpdateEnabled;       /**< \brief TRUE: Update compare registers from shadow at the end of period */
@@ -710,24 +712,30 @@ typedef struct
 /******************************************************************************/
 
 /** \brief Initializes the configuration structure to default values
- * \param config Pointer to the Configuration structure
- * \param egtmSFR Pointer to GTM module
- * \return None
+ *
+ * \param[inout] config  Pointer to the Configuration structure
+ * \param[in]    egtmSFR Pointer to GTM module
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Pwm_initConfig(IfxEgtm_Pwm_Config *config, Ifx_EGTM *egtmSFR);
 
 /** \brief Initializes the channel configuration structure to default values
- * \param channelConfig Configuration structure
- * \return None
+ *
+ * \param[inout] channelConfig Configuration structure
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Pwm_initChannelConfig(IfxEgtm_Pwm_ChannelConfig *channelConfig);
 
 /** \brief Initializes the GTM module for PWM
- * \param pwm PWM handle
- * \param channels Pointer to array to store channel data
- * Length of array is specified in config parameter
- * \param config Configuration structure
- * \return None
+ *
+ * \param[inout] pwm      PWM handle
+ * \param[in]    channels Pointer to array to store channel data Length of array is specified in config parameter
+ *                        Range: \ref: IfxEgtm_Pwm_Channel
+ * \param[in]    config   Configuration structure
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Pwm_init(IfxEgtm_Pwm *pwm, IfxEgtm_Pwm_Channel *channels, IfxEgtm_Pwm_Config *config);
 
@@ -741,61 +749,84 @@ IFX_EXTERN void IfxEgtm_Pwm_init(IfxEgtm_Pwm *pwm, IfxEgtm_Pwm_Channel *channels
 /******************************************************************************/
 
 /** \brief Sets the Signal level during duty cycle for specified channel
- * \param clusterSFR Pointer to the Cluster object
- * \param subModule ATOM/TOM
- * \param channel Channel index
- * \param polarity Active high/low
- * \return None
+ *
+ * \param[inout] clusterSFR Pointer to the Cluster object
+ * \param[in] subModule     ATOM/TOM
+ *                          Range: \ref: IfxEgtm_Pwm_SubModule
+ * \param[in] channel       Channel index
+ *                          Range: \ref: IfxEgtm_Pwm_SubModule_Ch
+ * \param[in] polarity      Active high/low
+ *                          Range: \ref: Ifx_ActiveState
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Pwm_setChannelPolarity(Ifx_EGTM_CLS *clusterSFR, IfxEgtm_Pwm_SubModule subModule, IfxEgtm_Pwm_SubModule_Ch channel, Ifx_ActiveState polarity);
 
 /** \brief Update sync channel phase with requested value at the end of period (synchronously)
  * Note: Use this API only for sync channels and not for base channel. API doesn't check this condition.
- * \param pwm PWM handle
- * \param configIndex Index of channel in the array of configured PWM channels
- * \param requestPhase Requested phase in radians (0.0 .. 2 * pi)
- * \return None
+ *
+ * \param[inout] pwm         PWM handle
+ * \param[in]    configIndex Index of channel in the array of configured PWM channels
+ *                           Range: \ref: IfxEgtm_Pwm_SyncChannelIndex
+ * \param[in]    requestPhase Requested phase in radians (0.0 .. 2 * pi)
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Pwm_updateChannelPhase(IfxEgtm_Pwm *pwm, IfxEgtm_Pwm_SyncChannelIndex configIndex, float32 requestPhase);
 
 /** \brief Update sync channel phase with requested value immediately (asynchronously)
  * Note: Use this API only for sync channels and not for base channel. API doesn't check this condition.
- * \param pwm PWM handle
- * \param configIndex Index of channel in the array of configured PWM channels
- * \param requestPhase Requested phase in radians (0.0 .. 2 * pi)
- * \return None
+ *
+ * \param[inout] pwm         PWM handle
+ * \param[in]    configIndex Index of channel in the array of configured PWM channels
+ *                           Range: \ref: IfxEgtm_Pwm_SyncChannelIndex
+ * \param[in]    requestPhase Requested phase in radians (0.0 .. 2 * pi)
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Pwm_updateChannelPhaseImmediate(IfxEgtm_Pwm *pwm, IfxEgtm_Pwm_SyncChannelIndex configIndex, float32 requestPhase);
 
 /** \brief Update channel duty with requested value at the end of period (synchronously)
- * \param pwm PWM handle
- * \param configIndex Index of channel in the array of configured PWM channels
- * \param requestDuty Requested duty in % (0.0 .. 100.0)
- * \return None
+ *
+ * \param[inout] pwm         PWM handle
+ * \param[in]    configIndex Index of channel in the array of configured PWM channels
+ *                           Range: \ref: IfxEgtm_Pwm_SyncChannelIndex
+ * \param[in]    requestDuty Requested duty in % (0.0 .. 100.0)
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Pwm_updateChannelDuty(IfxEgtm_Pwm *pwm, IfxEgtm_Pwm_SyncChannelIndex configIndex, float32 requestDuty);
 
 /** \brief Update channel duty with requested value immediately (asynchronously)
- * \param pwm Pointer to the PWM handle
- * \param configIndex Index of channel in the array of configured PWM channels
- * \param requestDuty Requested duty in % (0.0 .. 100.0)
- * \return None
+ *
+ * \param[inout] pwm         Pointer to the PWM handle
+ * \param[in]    configIndex Index of channel in the array of configured PWM channels
+ *                           Range: \ref: IfxEgtm_Pwm_SyncChannelIndex
+ * \param[in]    requestDuty Requested duty in % (0.0 .. 100.0)
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Pwm_updateChannelDutyImmediate(IfxEgtm_Pwm *pwm, IfxEgtm_Pwm_SyncChannelIndex configIndex, float32 requestDuty);
 
 /** \brief Update channel dead time (leading and trailing) with requested value (synchronously)
- * \param pwm PWM handle
- * \param configIndex Index of channel in the array of configured PWM channels
- * \param requestDeadTime Requested dead time in seconds
- * \return None
+ *
+ * \param[inout] pwm             PWM handle
+ * \param[in]    configIndex     Index of channel in the array of configured PWM channels
+ *                               Range: \ref: IfxEgtm_Pwm_SyncChannelIndex
+ * \param[in]    requestDeadTime Requested dead time in seconds
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Pwm_updateChannelDeadTime(IfxEgtm_Pwm *pwm, IfxEgtm_Pwm_SyncChannelIndex configIndex, IfxEgtm_Pwm_DeadTime requestDeadTime);
 
 /** \brief Update channel dead time (leading and trailing) with requested value (asynchronously)
- * \param pwm Pointer to the PWM handle
- * \param configIndex Index of channel in the array of configured PWM channels
- * \param requestDeadTime Requested dead time in seconds
- * \return None
+ *
+ * \param[inout] pwm             Pointer to the PWM handle
+ * \param[in]    configIndex     Index of channel in the array of configured PWM channels
+ *                               Range: \ref: IfxEgtm_Pwm_SyncChannelIndex
+ * \param[in]    requestDeadTime Requested dead time in seconds
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Pwm_updateChannelDeadTimeImmediate(IfxEgtm_Pwm *pwm, IfxEgtm_Pwm_SyncChannelIndex configIndex, IfxEgtm_Pwm_DeadTime requestDeadTime);
 
@@ -804,139 +835,179 @@ IFX_INLINE void IfxEgtm_Pwm_updateChannelDeadTimeImmediate(IfxEgtm_Pwm *pwm, Ifx
 /******************************************************************************/
 
 /** \brief Synchronously start all the configured channels
- * \param pwm Pointer to the PWM handle
- * \return None
+ *
+ * \param[inout] pwm Pointer to the PWM handle
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Pwm_startSyncedChannels(IfxEgtm_Pwm *pwm);
 
 /** \brief Synchronously stops all the configured channels
- * \param pwm Pointer to the PWM handle
- * \return None
+ *
+ * \param[inout] pwm Pointer to the PWM handle
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Pwm_stopSyncedChannels(IfxEgtm_Pwm *pwm);
 
 /** \brief Synchronously start two synced groups using TBU submodule of GTM
- * \param pwm1 Pointer to the First PWM handle
- * \param pwm2 Pointer to the Second PWM handle
- * \return None
+ *
+ * \param[inout] pwm1 Pointer to the First PWM handle
+ * \param[inout] pwm2 Pointer to the Second PWM handle
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Pwm_startSyncedGroups(IfxEgtm_Pwm *pwm1, IfxEgtm_Pwm *pwm2);
 
 /** \brief Synchronously stops two synced groups using TBU submodule of GTM
- * \param pwm1 Pointer to the First PWM handle
- * \param pwm2 Pointer to the Second PWM handle
- * \return None
+ *
+ * \param[inout] pwm1 Pointer to the First PWM handle
+ * \param[inout] pwm2 Pointer to the Second PWM handle
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Pwm_stopSyncedGroups(IfxEgtm_Pwm *pwm1, IfxEgtm_Pwm *pwm2);
 
 /** \brief Change the frequency of all channels to requested frequency at the end of period (synchronously)
- * \param pwm Pointer to the PWM handle
- * \param requestFrequency Requested frequency in Hz
- * \return None
+ *
+ * \param[inout] pwm              Pointer to the PWM handle
+ * \param[in]    requestFrequency Requested frequency in Hz
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Pwm_updateFrequency(IfxEgtm_Pwm *pwm, float32 requestFrequency);
 
 /** \brief Change the frequency of two synced groups' channels to requested frequency at the end of period (synchronously)
- * \param pwm1 Pointer to the PWM handle 1
- * \param pwm2 Pointer to the PWM handle 2
- * \param requestFrequency Requested frequency in Hz
- * \return None
+ *
+ * \param[inout] pwm1             Pointer to the PWM handle 1
+ * \param[inout] pwm2             Pointer to the PWM handle 2
+ * \param[in]    requestFrequency Requested frequency in Hz
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Pwm_updateSyncedGroupsFrequency(IfxEgtm_Pwm *pwm1, IfxEgtm_Pwm *pwm2, float32 requestFrequency);
 
 /** \brief Change the frequency of all channels to requested frequency immediately (asynchronously)
- * \param pwm Pointer to the PWM handle
- * \param requestFrequency Requested frequency in Hz
- * \return None
+ *
+ * \param[inout] pwm              Pointer to the PWM handle
+ * \param[in]    requestFrequency Requested frequency in Hz
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Pwm_updateFrequencyImmediate(IfxEgtm_Pwm *pwm, float32 requestFrequency);
 
 /** \brief Update phase and duty of any configured channel to requested values at the end of period (synchronously)
  * It is recommeded to use this API only for edge aligned PWM
+ *
  * \param pwm Pointer to the PWM handle
  * \param configIndex Enum to choose channel type (base/sync) and index
  * \param requestPhase New phase value (applicable for edge aligned sync channel)
  * \param requestDuty New duty value
- * \return None
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Pwm_updateChannelPulse(IfxEgtm_Pwm *pwm, IfxEgtm_Pwm_SyncChannelIndex configIndex, float32 requestPhase, float32 requestDuty);
 
 /** \brief Update phase and duty of any configured channel to requested values immediately (asynchronously)
  * It is recommeded to use this API only for edge aligned PWM
- * \param pwm Pointer to the PWM handle
- * \param configIndex Enum to choose channel type (base/sync) and index
- * \param requestPhase New phase value(applicable for edge aligned sync channel)
- * \param requestDuty New duty value
- * \return None
+ *
+ * \param[inout] pwm          Pointer to the PWM handle
+ * \param[in]    configIndex  Enum to choose channel type (base/sync) and index
+ *                            Range: \ref: IfxEgtm_Pwm_SyncChannelIndex
+ * \param[in]    requestPhase New phase value(applicable for edge aligned sync channel)
+ * \param[in]    requestDuty  New duty value
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Pwm_updateChannelPulseImmediate(IfxEgtm_Pwm *pwm, IfxEgtm_Pwm_SyncChannelIndex configIndex, float32 requestPhase, float32 requestDuty);
 
 /** \brief Update phase of all configured channels to requested values at the end of period (synchronously)
- * \param pwm Pointer to the PWM handle
- * \param requestPhase New phase values
- * Note: First index element is ignored
- * \return None
+ *
+ * \param[inout] pwm          Pointer to the PWM handle
+ * \param[in]    requestPhase New phase values
+ *                            Note: First index element is ignored
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Pwm_updateChannelsPhase(IfxEgtm_Pwm *pwm, float32 *requestPhase);
 
 /** \brief Update duty of all configured channels to requested values at the end of period (synchronously)
- * \param pwm Pointer to the PWM handle
- * \param requestDuty New duty value
- * \return None
+ *
+ * \param[inout] pwm         Pointer to the PWM handle
+ * \param[in]    requestDuty New duty value
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Pwm_updateChannelsDuty(IfxEgtm_Pwm *pwm, float32 *requestDuty);
 
 /** \brief Update phase and duty of all configured channels to requested values at the end of period (synchronously)
  * It is recommeded to use this API only for edge aligned PWM
- * \param pwm Pointer to the PWM handle
- * \param requestPhase New phase value(applicable for edge aligned sync channel)
- * \param requestDuty New duty value
- * \return None
+ *
+ * \param[inout] pwm          Pointer to the PWM handle
+ * \param[in]    requestPhase New phase value(applicable for edge aligned sync channel)
+ * \param[in]    requestDuty  New duty value
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Pwm_updateChannelsPulse(IfxEgtm_Pwm *pwm, float32 *requestPhase, float32 *requestDuty);
 
 /** \brief Update dead time of all configured channels to requested values
- * \param pwm Pointer to the PWM handle
- * \param requestDeadTime New dead time value
- * \return None
+ *
+ * \param[inout] pwm             Pointer to the PWM handle
+ * \param[in]    requestDeadTime New dead time value
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Pwm_updateChannelsDeadTime(IfxEgtm_Pwm *pwm, IfxEgtm_Pwm_DeadTime *requestDeadTime);
 
 /** \brief Update phase of all configured channels to requested values immediately (asynchronously)
- * \param pwm Pointer to the PWM handle
- * \param requestPhase New phase values
- * Note: First index element is ignored
- * \return None
+ *
+ * \param[inout] pwm          Pointer to the PWM handle
+ * \param[in]    requestPhase New phase values
+ *                            Note: First index element is ignored
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Pwm_updateChannelsPhaseImmediate(IfxEgtm_Pwm *pwm, float32 *requestPhase);
 
 /** \brief Update duty of all configured channels to requested values immediately (asynchronously)
- * \param pwm Pointer to the PWM handle
- * \param requestDuty New duty value
- * \return None
+ *
+ * \param[inout] pwm         Pointer to the PWM handle
+ * \param[in]    requestDuty New duty value
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Pwm_updateChannelsDutyImmediate(IfxEgtm_Pwm *pwm, float32 *requestDuty);
 
 /** \brief Update phase and duty of all configured channels to requested values immediately (asynchronously)
  * It is recommeded to use this API only for edge aligned PWM
- * \param pwm Pointer to the PWM handle
- * \param requestPhase New phase value(applicable for edge aligned sync channel)
- * \param requestDuty New duty value
- * \return None
+ *
+ * \param[inout] pwm          Pointer to the PWM handle
+ * \param[in]    requestPhase New phase value(applicable for edge aligned sync channel)
+ * \param[in]    requestDuty  New duty value
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Pwm_updateChannelsPulseImmediate(IfxEgtm_Pwm *pwm, float32 *requestPhase, float32 *requestDuty);
 
 /** \brief Function that handles interrupt generated by channel by calling ccu0/ccu1 callback functions
- * \param channel Pointer to the Channel handle
- * \param data Data to pass to callback functions
- * \return None
+ *
+ * \param[in] channel Pointer to the Channel handle
+ *                    Range: \ref: IfxEgtm_Pwm_Channel
+ * \param[in] data    Data to pass to callback functions
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Pwm_interruptHandler(IfxEgtm_Pwm_Channel *channel, void *data);
 
 /** \brief Gets channel state: running or stopped
- * \param pwm Pointer to the PWM handle
- * \param channel Channel index
- * \return Channel state
+ *
+ * \param[in] pwm     Pointer to the PWM handle
+ * \param[in] channel Channel index
+ *                    Range: \ref: IfxEgtm_Pwm_SubModule_Ch
+ *
+ * \retval Channel state
+ * Range: \ref: IfxEgtm_Pwm_ChannelState
  */
 IFX_EXTERN IfxEgtm_Pwm_ChannelState IfxEgtm_Pwm_getChannelState(IfxEgtm_Pwm *pwm, IfxEgtm_Pwm_SubModule_Ch channel);
 
@@ -949,13 +1020,13 @@ IFX_EXTERN IfxEgtm_Pwm_ChannelState IfxEgtm_Pwm_getChannelState(IfxEgtm_Pwm *pwm
 #if IFXEGTM_PWM_START_STOP_CHANNEL_OUTPUT_ENABLE
 /** \brief Stops/Disables the PWM channel outputs for the requested PWM
  * \param pwm Pointer to the PWM handle
- * \return None
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Pwm_stopChannelOutputs(IfxEgtm_Pwm *pwm);
 
 /** \brief Starts/Enables the PWM channel outputs for the requested PWM
  * \param pwm Pointer to the PWM handle
- * \return None
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Pwm_startChannelOutputs(IfxEgtm_Pwm *pwm);
 #endif /* #if IFXEGTM_PWM_START_STOP_CHANNEL_OUTPUT_ENABLE */

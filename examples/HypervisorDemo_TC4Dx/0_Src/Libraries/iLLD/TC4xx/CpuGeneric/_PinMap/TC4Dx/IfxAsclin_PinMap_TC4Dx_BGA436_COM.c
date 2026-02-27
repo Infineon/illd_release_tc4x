@@ -2,9 +2,9 @@
  * \file IfxAsclin_PinMap_TC4Dx_BGA436_COM.c
  * \brief ASCLIN  details
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2022-11-10 04:25:07
  *
  *
  *                                 IMPORTANT NOTICE

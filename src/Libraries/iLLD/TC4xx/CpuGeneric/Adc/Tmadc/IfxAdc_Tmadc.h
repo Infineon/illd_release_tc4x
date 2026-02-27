@@ -3,7 +3,7 @@
  * \brief ADC TMADC details
  * \ingroup IfxLld_Adc
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -422,16 +422,21 @@
 
 /** \brief Macro for TMADC module power on phase completed
  */
-#define IFXADC_TMADC_POWERONPHASE_COMPLETE (2U)
+#define IFXADC_TMADC_POWERONPHASE_COMPLETE (2U) 
 
 /******************************************************************************/
 /*------------------------------Type Definitions------------------------------*/
 /******************************************************************************/
 
 /** \brief Type definition for Callback functions
- * \return None
+ * \retval None
  */
 typedef void (*IfxAdc_Tmadc_Callback)(void);
+
+/** \Alias type used in Tmadc module to represent ADC interrupt configuration. Maps IfxAdc_Tmadc_DmaSrvReq to the generic IfxAdc_SrvReq structure,
+ * which encapsulates interrupt priority, type of service (TOS), and optional virtual machine ID (VM ID) for ADC-related interrupts.
+ */
+ typedef IfxAdc_SrvReq IfxAdc_Tmadc_DmaSrvReq;
 
 /******************************************************************************/
 /*--------------------------------Enumerations--------------------------------*/
@@ -493,18 +498,8 @@ typedef struct
 typedef struct
 {
     IfxAdc_TmadcResultReg resultRegSel;       /**< \brief Result register selection for boundary flag */
-    boolean               enable;             /**< \brief enable/disable boundary flag */
+    boolean               enable;             /**< \brief Range: TRUE: enable boundary flag, FALSE: disable boundary flag */
 } IfxAdc_Tmadc_BoundaryFlagCfg;
-
-/** \brief Data structure holding service request configuration raised by DMA to CPU.
- * If configured buffer is of type linear then buffer full interrupt.
- */
-typedef struct
-{
-    Ifx_Priority priority;            /**< \brief Interrupt priority */
-    IfxSrc_Tos   typeOfService;       /**< \brief type of interrupt service */
-    IfxSrc_VmId  vmId;                /**< \brief Virtual Machine Number */
-} IfxAdc_Tmadc_DmaSrvReq;
 
 /** \brief Boundary Trigger Configuration
  */
@@ -522,8 +517,8 @@ typedef struct
  */
 typedef struct
 {
-    uint16                       upperBound;       /**< \brief Upper boundary (12 Bit) */
-    uint16                       lowerBound;       /**< \brief Lower boundary (12 Bit) */
+    uint16                       upperBound;       /**< \brief Upper boundary (12 Bit). Range: 0 to 0xFFF */
+    uint16                       lowerBound;       /**< \brief Lower boundary (12 Bit). Range: 0 to 0xFFF */
     IfxAdc_Tmadc_TriggerConfig  *trigger;          /**< \brief Pointer to the trigger configuration for update */
     IfxAdc_Tmadc_BoundaryFlagCfg flagCfg;          /**< \brief Boundary flag Configuration */
 } IfxAdc_Tmadc_BoundaryConfig;
@@ -543,7 +538,7 @@ typedef struct
 {
     IfxDma_Dma_Channel channel;       /**< \brief DMA channel handle */
     IfxDma_Index       dmaId;         /**< \brief Dma Module Index */
-    boolean            useDma;        /**< \brief use Dma for Data transfer/s */
+    boolean            useDma;        /**< \brief use Dma for Data transfer/s. Range: TRUE Enable dma for transfer, FALSE Disable dma for transfer */
 } IfxAdc_Tmadc_Dma;
 
 /** \brief Dma configuration
@@ -604,14 +599,14 @@ typedef struct
  */
 typedef struct
 {
-    uint8                        count;                 /**< \brief Channel count */
-    boolean                      emuxCi0;               /**< \brief True --> Control interface 0 enabled */
-    boolean                      emuxCi1;               /**< \brief True --> Control interface 1 enabled */
-    IfxAdc_TmadcEmuxCodingScheme exmuxCodeScheme;       /**< \brief True --> EMUX channel selection lines are gray coded */
+    uint8                        count;                 /**< \brief Channel count. Range: 0 to 0xF */
+    boolean                      emuxCi0;               /**< \brief Range: TRUE: Control interface 0 enabled, FALSE: Control interface 0 disabled */
+    boolean                      emuxCi1;               /**< \brief Range: TRUE: Control interface 1 enabled, FALSE: Control interface 1 disabled */
+    IfxAdc_TmadcEmuxCodingScheme exmuxCodeScheme;       /**< \brief TRUE --> EMUX channel selection lines are gray coded */
     IfxAdc_Tmadc_EmuxPinConfig  *emuxPins;              /**< \brief Emux Pinx configuration */
 #if IFXADC_TMADC_IS_EMUX_CI2_CI3_AVAILABLE
-    boolean                      emuxCi3;               /**< \brief True --> Control interface 3 enabled */
-    boolean                      emuxCi2;               /**< \brief True --> Control interface 2 enabled */
+    boolean                      emuxCi3;               /**< \brief Range: TRUE: Control interface 3 enabled, FALSE: Control interface 3 disabled, */
+    boolean                      emuxCi2;               /**< \brief Range: TRUE: Control interface 2 enabled, FASLSE: Control interface 2 disabled */
 #endif /* #if IFXADC_TMADC_IS_EMUX_CI2_CI3_AVAILABLE */
 } IfxAdc_Tmadc_EmuxConfig;
 
@@ -620,8 +615,8 @@ typedef struct
 typedef struct
 {
     IfxAdc_TmadcGlobalServReq servReq;             /**< \brief Global service request node selection */
-    boolean                   enableEvent;         /**< \brief True --> Enable event on SR6 for corresponding TMADC */
-    boolean                   eventLogic;          /**< \brief EVOP True --> AND Logic, False --> OR Logic */
+    boolean                   enableEvent;         /**< \brief Range: TRUE: Enable event on SR6 for corresponding TMADC, FALSE: Disable event on SR6 for corresponding TMADC */
+    boolean                   eventLogic;          /**< \brief EVOP TRUE: AND Logic, FALSE: OR Logic */
     IfxSrc_Tos                typeOfService;       /**< \brief type of interrupt service */
     IfxSrc_VmId               vmId;                /**< \brief Virtual Machine Number */
     Ifx_Priority              priority;            /**< \brief Global event priority */
@@ -631,13 +626,13 @@ typedef struct
  */
 typedef struct
 {
-    uint16                             channels;              /**< \brief Set of channels in this group */
+    uint16                             channels;              /**< \brief Set of channels in this group. Range: 0 to 0xF */
     IfxAdc_TmadcResultReg              baseResultReg;         /**< \brief Lowest Result register number in the group. Result register in the group should be contiguous */
     IfxAdc_Tmadc_ChannelTriggerConfig *trigger;               /**< \brief Pointer to the Trigger configuration for this group */
     IfxAdc_TmadcOpMode                 mode;                  /**< \brief Continuous / one shot mode for group conversion */
-    boolean                            waitForRead;           /**< \brief If Set, then the next conversion only happens once all results are read */
-    boolean                            enableTimestamp;       /**< \brief True --> Timestamp enabled, False --> Timestamp disabled */
-    uint8                              numChannels;           /**< \brief Number of channels in the group */
+    boolean                            waitForRead;           /**< \brief If Set, then the next conversion only happens once all results are read. Range: TRUE: Wait-for-read enabled, FALSE: Wait-for-read disabled */
+    boolean                            enableTimestamp;       /**< \brief Range: TRUE: Timestamp enabled, FALSE: Timestamp disabled */
+    uint8                              numChannels;           /**< \brief Number of channels in the group. Range: 0 to 0xF */
     IfxAdc_TmadcModule                 moduleId;              /**< \brief Module to which the group belongs */
     IfxAdc_Tmadc_ChannelServReqConfig *grpSrvReq;             /**< \brief Pointer to the channel group service request node configuration */
     IfxAdc_Tmadc_DmaConfig            *dmaCfg;                /**< \brief Dma Configuration */
@@ -657,8 +652,8 @@ typedef struct
  */
 typedef struct
 {
-    boolean                     waitForRead;        /**< \brief If set, no conversion happens until value is read */
-    boolean                     boundMode;          /**< \brief True --> set BFL if conversion result outside configured boundary */
+    boolean                     waitForRead;        /**< \brief If set, no conversion happens until value is read. Range: TRUE: Wait-for-read enabled, FALSE: Wait-for-read disabled */
+    boolean                     boundMode;          /**< \brief Range: TRUE: set BFL if conversion result outside configured boundary, FALSE: set BFL if conversion result within configured boundary */
     IfxAdc_TmadcBoundaryCmpMode boundCmpMode;       /**< \brief Mode of checking boundary */
     IfxAdc_TmadcBoundaryReg     boundRegSel;        /**< \brief Select boundary register */
 } IfxAdc_Tmadc_MonitorChResultConfig;
@@ -667,16 +662,16 @@ typedef struct
  */
 typedef struct
 {
-    uint32                 *bufferPtr;              /**< \brief Application buffer */
+    uint32                 *bufferPtr;              /**< \brief Application buffer. */
     IfxAdc_Tmadc_Callback   buffFullCallback;       /**< \brief Call back if Buffer full. Call back is provided only if ToS = CPU */
     IfxAdc_Tmadc_Dma        dma;                    /**< \brief Dma Handle */
     IfxAdc_Tmadc_BufferType bufferType;             /**< \brief Type of the buffer */
-    uint16                  writeIndex;             /**< \brief Write Index of the buffer. */
-    uint16                  readIndex;              /**< \brief Read Index of the buffer */
-    uint16                  size;                   /**< \brief Size of the buffer in in words */
-    uint16                  validResult;            /**< \brief Number of valid results */
-    boolean                 bufferFull;             /**< \brief Flag to indicate if buffer full */
-    boolean                 queueEnabled;           /**< \brief True --> If queue enabled */
+    uint16                  writeIndex;             /**< \brief Write Index of the buffer. Range: 0 to 0xFFFF */
+    uint16                  readIndex;              /**< \brief Read Index of the buffer, Range: 0 to 0xFFFF */
+    uint16                  size;                   /**< \brief Size of the buffer in in words. Range: 0 to 0xFFFF */
+    uint16                  validResult;            /**< \brief Number of valid results. Range: 0 to 0xFFFF */
+    boolean                 bufferFull;             /**< \brief Flag to indicate if buffer full, Range: TRUE: Buffer is full, FALSE: Buffer is not full */
+    boolean                 queueEnabled;           /**< \brief Range: TRUE: If queue enabled, FALSE: queue disabled  */
 } IfxAdc_Tmadc_Queue;
 
 /** \brief TMADC Queue Configuration
@@ -686,7 +681,7 @@ typedef struct
     IfxAdc_Tmadc_DmaConfig *dmaCfg;                   /**< \brief Dma Configuration */
     void                   *bufferPtr;                /**< \brief Pointer to the application buffer */
     IfxAdc_Tmadc_Callback   bufferFullCallback;       /**< \brief Callback if Buffer gets full */
-    uint16                  size;                     /**< \brief Size of buffer in words */
+    uint16                  size;                     /**< \brief Size of buffer in words. Range: 0 to 0xFFFF */
     IfxAdc_Tmadc_BufferType bufferType;               /**< \brief Type of the buffer */
 } IfxAdc_Tmadc_QueueConfig;
 
@@ -695,10 +690,10 @@ typedef struct
 typedef struct
 {
     IfxAdc_TmadcResultReg       resultReg;             /**< \brief Result register associated with channel */
-    boolean                     waitForRead;           /**< \brief If set, no conversion happens until value is read */
-    boolean                     hysteresisEn;          /**< \brief enable hysteresis mode for bounday check */
-    boolean                     boundMode;             /**< \brief True --> set BFL if conversion result outside configured boundary */
-    boolean                     enableTimestamp;       /**< \brief True --> Timestamp enabled, False --> Timestamp disabled */
+    boolean                     waitForRead;           /**< \brief If set, no conversion happens until value is read. Range: TRUE: Wait-for-read enabled, FALSE: Wait-for-read disabled */
+    boolean                     hysteresisEn;          /**< \brief enable hysteresis mode for bounday check. Range: TRUE:enable hysteresis mode, FALSE: disable hysteresis mode  */
+    boolean                     boundMode;             /**< \brief Range: TRUE: set BFL if conversion result outside configured boundary, FALSE: Conversion result within boundary */
+    boolean                     enableTimestamp;       /**< \brief Range: TRUE: Timestamp enabled, FALSE: Timestamp disabled */
     IfxAdc_TmadcBoundaryCmpMode boundCmpMode;          /**< \brief Mode of checking boundary */
     IfxAdc_TmadcBoundaryReg     boundRegSel;           /**< \brief Select boundary register */
 } IfxAdc_Tmadc_ResultConfig;
@@ -708,7 +703,7 @@ typedef struct
 typedef struct
 {
     IfxAdc_Tmadc_InterruptConfig *intConfig[IFXADC_TMADC_MAX_SERV_REQ_NODE];       /**< \brief Interrupt configuration for SR0-SR6 nodes */
-    uint8                         numServReqNodes;                                 /**< \brief Total number of service request nodes */
+    uint8                         numServReqNodes;                                 /**< \brief Total number of service request nodes. Range: 0 to 0xF */
 } IfxAdc_Tmadc_ServRequestConfig;
 
 /** \} */
@@ -722,7 +717,7 @@ typedef struct
     IfxAdc_TmadcModule       id;               /**< \brief module ID */
     Ifx_ADC_TMADC           *modSFR;           /**< \brief pointer to the module SFR set */
     IfxAdc_Tmadc_moduleState state;            /**< \brief State of module */
-    boolean                  calEnabled;       /**< \brief True --> Calibration Enabled */
+    boolean                  calEnabled;       /**< \brief Range: TRUE : Calibration Enabled, FALSE : Calibration disabled */
 } IfxAdc_Tmadc;
 
 /** \brief Data structure describing the handle of a channel
@@ -739,7 +734,7 @@ typedef struct
     IfxAdc_TmadcBoundaryReg   boundaryReg;            /**< \brief boundary register that is selected for this channel */
     IfxAdc_TmadcModule        moduleId;               /**< \brief Module to which channel belongs */
     IfxAdc_Tmadc_Queue        queue;                  /**< \brief TMADC  queue information */
-    boolean                   timeStampEnabled;       /**< \brief True --> Timestamp enabled, False --> Timestamp disabled */
+    boolean                   timeStampEnabled;       /**< \brief Range: TRUE: Timestamp enabled, FALSE: Timestamp disabled */
 } IfxAdc_Tmadc_Ch;
 
 /** \brief Data Structure holding configuration of a channel of TMADC
@@ -752,7 +747,7 @@ typedef struct
     float32                            samplingTimeNS;       /**< \brief sampling time for channel in NS */
     IfxAdc_TmadcOpMode                 mode;                 /**< \brief Continuous conversion / one shot */
     IfxAdc_TmadcSarCore                core;                 /**< \brief SAR core selection for channel. */
-    boolean                            enableEmux;           /**< \brief If TRUE, Channel is connected to EMUX. */
+    boolean                            enableEmux;           /**< \brief Range: TRUE: Channel is connected to EMUX, FALSE: Channel not connected to EMUX */
     IfxAdc_Tmadc_ResultConfig          resultCfg;            /**< \brief Result configuration for this channel */
     IfxAdc_Tmadc_ChannelTriggerConfig *trigger;              /**< \brief Pointer to the trigger configuration */
     IfxAdc_Tmadc_ChannelServReqConfig *channelSrvReq;        /**< \brief Pointer to the channel service request configuration */
@@ -767,9 +762,9 @@ typedef struct
 {
     IfxAdc_TmadcModule                    id;                     /**< \brief module ID */
     Ifx_ADC                              *adcSFR;                 /**< \brief pointer to the module SFR set */
-    boolean                               shadowBnd0Update;       /**< \brief Enable shadow update of boundary values */
-    boolean                               shadowBnd1Update;       /**< \brief Enable shadow update of boundary values for Boundary Register 1 */
-    boolean                               calEnable;              /**< \brief True --> Calibration configuration. */
+    boolean                               shadowBnd0Update;       /**< \brief Range: TRUE: Enable shadow update of boundary values, FALSE:TRUE: Disable shadow update of boundary values */
+    boolean                               shadowBnd1Update;       /**< \brief Range: TRUE: Enable shadow update of boundary values for Boundary Register 1, FALSE: Disable shadow update of boundary values for Boundary Register 1 */
+    boolean                               calEnable;              /**< \brief Calibration configuration. Range: TRUE: Enable Calibration, FALSE: Disable calibration */
     IfxAdc_TmadcOutputSupervisorMux       outputSignalSel;        /**< \brief Output Supervisor signal selection */
     IfxAdc_Tmadc_EmuxConfig              *emuxCfg;                /**< \brief External multiplexer configuration */
     IfxAdc_Tmadc_ModuleBoundConfig       *bndryConfig;            /**< \brief Pointer to boundary configuration */
@@ -781,15 +776,15 @@ typedef struct
  */
 typedef struct
 {
-    uint8                 numChannels;            /**< \brief Number of channels in this group */
-    uint16                channelset;             /**< \brief Set of channels in this group */
+    uint8                 numChannels;            /**< \brief Number of channels in this group. Range: 0 to 0xF */
+    uint16                channelset;             /**< \brief Set of channels in this group. Range: 0 to 0xF */
     IfxAdc_TmadcResultReg baseResultReg;          /**< \brief Lowest Result register number in the group */
     Ifx_ADC_TMADC        *tmSFR;                  /**< \brief Pointer to the TMADC SFR set */
     uint32               *sourceAddress;          /**< \brief Source Address if timestamp enable it will contain the address of timestamp register else result register address */
     uint32               *groupResPtr;            /**< \brief Pointer to the group result buffer */
     IfxAdc_Tmadc_Callback groupCallback;          /**< \brief Callback provided when the result for all channels in group is copied to buffer */
     IfxAdc_Tmadc_Dma      dma;                    /**< \brief Dma Handle */
-    boolean               timestampEnabled;       /**< \brief True --> Timestamp enabled False --> Timestamp disabled */
+    boolean               timestampEnabled;       /**< \brief Range: TRUE: Timestamp enabled FALSE: Timestamp disabled */
 } IfxAdc_Tmadc_Group;
 
 /** \brief Data structure describing the handle of a channel
@@ -813,7 +808,7 @@ typedef struct
     float32                            samplingTimeNS;       /**< \brief sampling time for channel in NS. Minimum sampling time of monitor channel is 1us */
     IfxAdc_TmadcOpMode                 mode;                 /**< \brief Continuous conversion / one shot */
     IfxAdc_TmadcMonitorChannelInput    input;                /**< \brief Channel Input mux selection */
-    boolean                            enableChannel;        /**< \brief Enable Channel input connection */
+    boolean                            enableChannel;        /**< \brief Range: TRUE: Enable Channel input connection, FALSE: Disable Channel input connection */
     IfxAdc_Tmadc_MonitorChResultConfig resultCfg;            /**< \brief Result configuration for channel */
     IfxAdc_Tmadc_ChannelServReqConfig  channelSrvReq;        /**< \brief Channel service request configuration */
 } IfxAdc_Tmadc_MonitorChannelConfig;
@@ -822,8 +817,8 @@ typedef struct
  */
 typedef struct
 {
-    uint16 timeStamp;       /**< \brief Timestamp (0 if disabled) */
-    uint16 result;          /**< \brief Result */
+    uint16 timeStamp;       /**< \brief Timestamp (0 if disabled). Range: 0 to 0xFFFF */
+    uint16 result;          /**< \brief Result. Range: 0 to 0xFFFF */
 } IfxAdc_Tmadc_Result;
 
 /** \} */
@@ -836,37 +831,48 @@ typedef struct
 /******************************************************************************/
 
 /** \brief Function to the initialize one TMADC module
- * \param tmadc pointer to the module handle
- * \param config configuration of module
- * \return None
+ *
+ * \param[inout] tmadc  Pointer to the module handle
+ * \param[in]    config Configuration of module
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAdc_Tmadc_initModule(IfxAdc_Tmadc *tmadc, const IfxAdc_Tmadc_Config *config);
 
 /** \brief Function to initialize module configuration to default.
- * \param config Configuration of module
- * \param adc Pointer to ADC module sfr
- * \return None
+ *
+ * \param[inout] config Configuration of module
+ * \param[in]    adc    Pointer to ADC module sfr
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAdc_Tmadc_initModuleConfig(IfxAdc_Tmadc_Config *config, Ifx_ADC *adc);
 
 /** \brief Function to configure boundary
- * \param tmadc Pointer to tmadc module sfr
- * \param config Pointer to boundary configuration
- * \param reg Boundary register 0/1
- * \return None
+ *
+ * \param[inout] tmadc  Pointer to tmadc module sfr
+ * \param[in]    config Pointer to boundary configuration
+ * \param[in]    reg    Boundary register 0/1
+ *                      Range: \ref IfxAdc_TmadcBoundaryReg
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAdc_Tmadc_configureBoundary(Ifx_ADC_TMADC *tmadc, IfxAdc_Tmadc_BoundaryConfig *config, IfxAdc_TmadcBoundaryReg reg);
 
 /** \brief Function to configure emux of Tmadc module
- * \param tmadc Pointer to tmadc module sfr
- * \param emuxConfig Pointer to Emux configuration
- * \return None
+ *
+ * \param[inout] tmadc      Pointer to tmadc module sfr
+ * \param[in]    emuxConfig Pointer to Emux configuration
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAdc_Tmadc_configureEmux(Ifx_ADC_TMADC *tmadc, IfxAdc_Tmadc_EmuxConfig *emuxConfig);
 
 /** \brief Function to start calibration and run TMADC module
- * \param tmadc pointer to the module handle
- * \return None
+ *
+ * \param[inout] tmadc pointer to the module handle
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAdc_Tmadc_runModule(IfxAdc_Tmadc *tmadc);
 
@@ -880,10 +886,12 @@ IFX_EXTERN void IfxAdc_Tmadc_runModule(IfxAdc_Tmadc *tmadc);
 /******************************************************************************/
 
 /** \brief Function to enable channel event for the requested node
- * \param channel pointer to the tmadc channel handle
- * \param srvnode Service request node for which the event should be enabled.
- * \param eventType Event type for service request nodes(boundary,error and result)
- * \return None
+ *
+ * \param[inout] channel   Pointer to the tmadc channel handle
+ * \param[in]    srvnode   Service request node for which the event should be enabled.
+ * \param[in]    eventType Event type for service request nodes(boundary,error and result)
+ *
+ * \retval None
  */
 IFX_INLINE void IfxAdc_Tmadc_enableChannelEvent(IfxAdc_Tmadc_Ch *channel, IfxAdc_TmadcServReq srvnode, IfxAdc_TmadcEventSel eventType);
 
@@ -892,30 +900,38 @@ IFX_INLINE void IfxAdc_Tmadc_enableChannelEvent(IfxAdc_Tmadc_Ch *channel, IfxAdc
 /******************************************************************************/
 
 /** \brief Function to initialize one channel of TMADC
- * \param channel pointer to the channel handle
- * \param config pointer to the channel config
- * \return None
+ *
+ * \param[inout] channel Pointer to the channel handle
+ * \param[in]    config  Pointer to the channel config 
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAdc_Tmadc_initChannel(IfxAdc_Tmadc_Ch *channel, IfxAdc_Tmadc_ChConfig *config);
 
 /** \brief Function to initialize the channel configuration to default values.
- * \param config Pointer to the channel configuration
- * \param adc Pointer to ADC module sfr
- * \return None
+ *
+ * \param[inout] config Pointer to the channel configuration
+ * \param[in]    adc    Pointer to ADC module sfr
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAdc_Tmadc_initChannelConfig(IfxAdc_Tmadc_ChConfig *config, Ifx_ADC *adc);
 
 /** \brief Function to initialize the monitor channel configuration to default values.
- * \param config Pointer to the monitor channel configuration
- * \param adc Pointer to ADC module sfr
- * \return None
+ *
+ * \param[inout] config Pointer to the monitor channel configuration
+ * \param[in]    adc    Pointer to ADC module sfr
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAdc_Tmadc_initMonitorChannelConfig(IfxAdc_Tmadc_MonitorChannelConfig *config, Ifx_ADC *adc);
 
 /** \brief Function to initialize monitor channel of TMADC
- * \param channel Pointer to the channel handle
- * \param config pointer to the channel config
- * \return None
+ *
+ * \param[inout] channel Pointer to the channel handle
+ * \param[in]    config  Pointer to the channel config
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAdc_Tmadc_initMonitorChannel(IfxAdc_Tmadc_MonitorCh *channel, IfxAdc_Tmadc_MonitorChannelConfig *config);
 
@@ -928,16 +944,20 @@ IFX_EXTERN void IfxAdc_Tmadc_initMonitorChannel(IfxAdc_Tmadc_MonitorCh *channel,
 /*-------------------------Global Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief
- * \param config pointer to the group configuration
- * \return None
+/** \brief Function to initialize the group configuration to default values.
+ *
+ * \param[inout] config pointer to the group configuration
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAdc_Tmadc_initGroupConfig(IfxAdc_Tmadc_GroupConfig *config);
 
 /** \brief Function to initialize group handle.
- * \param grp Pointer to group handle
- * \param config Pointer to group configruation
- * \return None
+ *
+ * \param[inout] grp    Pointer to group handle
+ * \param[in]    config Pointer to group configruation
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAdc_Tmadc_initGroup(IfxAdc_Tmadc_Group *grp, IfxAdc_Tmadc_GroupConfig *config);
 
@@ -950,9 +970,11 @@ IFX_EXTERN void IfxAdc_Tmadc_initGroup(IfxAdc_Tmadc_Group *grp, IfxAdc_Tmadc_Gro
 /*-------------------------Inline Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/**
- * \param grp Pointer to the group handle
- * \return None
+/** Trigger a group for conversion
+ *
+ * \param[inout] grp Pointer to the group handle
+ *
+ * \retval None
  */
 IFX_INLINE void IfxAdc_Tmadc_triggerGroup(IfxAdc_Tmadc_Group *grp);
 
@@ -961,14 +983,18 @@ IFX_INLINE void IfxAdc_Tmadc_triggerGroup(IfxAdc_Tmadc_Group *grp);
 /******************************************************************************/
 
 /** \brief Trigger a channel for conversion
- * \param channel Pointer to the channel handle
- * \return None
+ *
+ * \param[inout] channel Pointer to the channel handle
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAdc_Tmadc_triggerChannel(IfxAdc_Tmadc_Ch *channel);
 
 /** \brief Trigger monitor channel for conversion
- * \param channel Pointer to the channel handle
- * \return None
+ *
+ * \param[inout] channel Pointer to the channel handle
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAdc_Tmadc_triggerMonitorChannel(IfxAdc_Tmadc_MonitorCh *channel);
 
@@ -982,26 +1008,38 @@ IFX_EXTERN void IfxAdc_Tmadc_triggerMonitorChannel(IfxAdc_Tmadc_MonitorCh *chann
 /******************************************************************************/
 
 /** \brief Reads the result from the result register.
- * \param channel Pointer to the channel handle
- * \return result value after conversion
+ *
+ * \param[in] channel Pointer to the channel handle
+ *
+ * \retval result value after conversion
+ * Range: 0 to 0xFFFF
  */
 IFX_EXTERN uint16 IfxAdc_Tmadc_readChannelResult(IfxAdc_Tmadc_Ch *channel);
 
 /** \brief Reads the timestamp from the register. (0 if timestamp is disabled for the channel)
- * \param channel Pointer to the channel handle
- * \return Returns timestamp value.
+ *
+ * \param[in] channel Pointer to the channel handle
+ *
+ * \retval Returns timestamp value.
+ * Range: 0 to 0xFFFF
  */
 IFX_EXTERN uint16 IfxAdc_Tmadc_readTimestamp(IfxAdc_Tmadc_Ch *channel);
 
 /** \brief Reads the result and timestamp from the register.
- * \param channel Pointer to the channel handle
- * \return Returns both timestamp(if enabled) and result value.
+ *
+ * \param[in] channel Pointer to the channel handle
+ *
+ * \retval Returns both timestamp(if enabled) and result value.
+ * Range: 0 to 0xFFFF
  */
 IFX_EXTERN IfxAdc_Tmadc_Result IfxAdc_Tmadc_readRawResult(IfxAdc_Tmadc_Ch *channel);
 
 /** \brief Reads the monitor channel result from the result register.
- * \param channel Pointer to the channel handle
- * \return Returns result value
+ *
+ * \param[in] channel Pointer to the channel handle
+ *
+ * \retval Returns result value
+ * Range: 0 to 0xFFFF
  */
 IFX_EXTERN uint16 IfxAdc_Tmadc_readMonitorChannelResult(IfxAdc_Tmadc_MonitorCh *channel);
 
@@ -1012,48 +1050,64 @@ IFX_EXTERN uint16 IfxAdc_Tmadc_readMonitorChannelResult(IfxAdc_Tmadc_MonitorCh *
 /******************************************************************************/
 
 /** \brief Function to clear buffer for TMADC channel
- * \param channel Pointer to Tmadc channel handle
- * \return None
+ *
+ * \param[inout] channel Pointer to Tmadc channel handle
+ *
+ * \retval None
  */
 IFX_INLINE void IfxAdc_Tmadc_clearChannelBuffer(IfxAdc_Tmadc_Ch *channel);
 
 /** \brief Function to check if buffer full
- * \param channel Pointer to Tmadc channel handle
- * \return Return buffer full status.
- * TRUE --> Buffer full
+ *
+ * \param[in] channel Pointer to Tmadc channel handle
+ *
+ * \retval Return buffer full status.
+ * Range: TRUE : Buffer full
+ *        FALSE: Buffer not full
  */
 IFX_INLINE boolean IfxAdc_Tmadc_isChannelBufferFull(IfxAdc_Tmadc_Ch *channel);
 
 /** \brief Function to check if buffer empty
- * \param channel Pointer to Tmadc channel handle
- * \return Return buffer empty status.
- * TRUE --> Buffer empty
+ *
+ * \param[in] channel Pointer to Tmadc channel handle
+ *
+ * \retval Return buffer empty status.
+ * Range: TRUE : Buffer empty
+ *        FALSE: Buffer not empty
  */
 IFX_INLINE boolean IfxAdc_Tmadc_isChannelBufferEmpty(IfxAdc_Tmadc_Ch *channel);
 
 /** \brief API to check the availability of new result.
- * \param channel Pointer to the channel handle
- * \return Returns TRUE: New result available
- *  FALSE : No new result available
+ *
+ * \param[in] channel Pointer to the channel handle
+ *
+ * \retval Returns TRUE  : New result available
+ *                 FALSE : No new result available
  */
 IFX_INLINE boolean IfxAdc_Tmadc_isResultAvailable(IfxAdc_Tmadc_Ch *channel);
 
 /** \brief API to clear result flag.
- * \param channel Pointer to the channel handle
- * \return None
+ *
+ * \param[inout] channel Pointer to the channel handle
+ *
+ * \retval None
  */
 IFX_INLINE void IfxAdc_Tmadc_clearResultFlag(IfxAdc_Tmadc_Ch *channel);
 
 /** \brief API to check if new result is available for the monitor channel in the result register.
- * \param channel Pointer to the monitor channel handle
- * \return Returns TRUE: New result available
- *  FALSE : No new result available
+ *
+ * \param[in] channel Pointer to the monitor channel handle
+ *
+ * \retval Returns TRUE  : New result available
+ *                 FALSE : No new result available
  */
 IFX_INLINE boolean IfxAdc_Tmadc_isMonitorChannelResultAvailable(IfxAdc_Tmadc_MonitorCh *channel);
 
 /** \brief API to clear monitor channel result flag.
- * \param channel Pointer to the monitor channel handle
- * \return None
+ *
+ * \param[inout] channel Pointer to the monitor channel handle
+ *
+ * \retval None
  */
 IFX_INLINE void IfxAdc_Tmadc_clearMonitorChannelResultFlag(IfxAdc_Tmadc_MonitorCh *channel);
 
@@ -1062,58 +1116,77 @@ IFX_INLINE void IfxAdc_Tmadc_clearMonitorChannelResultFlag(IfxAdc_Tmadc_MonitorC
 /******************************************************************************/
 
 /** \brief Function to setup the result buffer for TMADC channel
- * \param channel Pointer to the channel handle
- * \param buffer Pointer to the buffer
- * \param size Size of the buffer in words.
- * \return Returns
- * IfxAdc_Status_success --> Setting up the result buffer is successful
- * IfxAdc_Status_failure --> Issue in setting up the result buffer
+ *
+ * \param[inout] channel Pointer to the channel handle
+ * \param[out]   buffer  Pointer to the buffer
+ * \param[in]    size    Size of the buffer in words.
+ *                       Range: 0 to 0xFFFF
+ *
+ * \retval 
+ * Returns IfxAdc_Status_success --> Setting up the result buffer is successful
+ * Returns IfxAdc_Status_failure --> Issue in setting up the result buffer
  */
 IFX_EXTERN IfxAdc_Status IfxAdc_Tmadc_setupChannelResultBuffer(IfxAdc_Tmadc_Ch *channel, void *buffer, uint16 size);
 
 /** \brief Function to update the destination address for group result.
  * The next set of data from result register will be stored in this new destination address.
- * \param group Pointer to the group handle
- * \param destAddr Pointer to buffer, to store next set of group results.
- * \return Returns
- * IfxAdc_Status_success --> Setting up the result buffer is successful
- * IfxAdc_Status_failure --> Issue in setting up the result buffer.
+ *
+ * \param[inout] group    Pointer to the group handle
+ * \param[in]    destAddr Pointer to buffer, to store next set of group results.
+ *
+ * \retval 
+ * Returns IfxAdc_Status_success --> Setting up the result buffer is successful
+ * Returns IfxAdc_Status_failure --> Issue in setting up the result buffer.
  */
 IFX_EXTERN IfxAdc_Status IfxAdc_Tmadc_updateGroupResultAddress(IfxAdc_Tmadc_Group *group, void *destAddr);
 
 /** \brief Function to copy data from hardware result register to software buffer for a TMADC channel.
- * \param channel Pointer to Tmadc channel handle
- * \return None
+ *
+ * \param[inout] channel Pointer to Tmadc channel handle
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAdc_Tmadc_writeChannelBuffer(IfxAdc_Tmadc_Ch *channel);
 
 /** \brief Function to copy data from hardware result register to software buffer for all channels in a group.
- * \param group Pointer to the group handle
- * \return None
+ *
+ * \param[inout] group Pointer to the group handle
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAdc_Tmadc_writeGroupBuffer(IfxAdc_Tmadc_Group *group);
 
 /** \brief TMADC channel ISR for copying the multiple results of single channel to the buffer. It also provides the callback on buffer full if configured.
- * \param channel Pointer to Tmadc channel handle
- * \return None
+ *
+ * \param[inout] channel Pointer to Tmadc channel handle
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAdc_Tmadc_resultChannelIsr(IfxAdc_Tmadc_Ch *channel);
 
 /** \brief TMADC group ISR to copy result of all channels in the group to the configured buffer.
- * \param group Pointer to Tmadc group handle
- * \return None
+ *
+ * \param[inout] group Pointer to Tmadc group handle
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAdc_Tmadc_resultGroupIsr(IfxAdc_Tmadc_Group *group);
 
 /** \brief Function to read immediate conversion result from circular buffer for TMADC channel.
- * \param channel Pointer to Tmadc channel handle
- * \return Returns immediate result data from the circular buffer.
+ *
+ * \param[inout] channel Pointer to Tmadc channel handle
+ *
+ * \retval Returns immediate result data from the circular buffer.
+ * Range: 0 to 0xFFFF
  */
 IFX_EXTERN uint32 IfxAdc_Tmadc_readChannelCircularBufferResult(IfxAdc_Tmadc_Ch *channel);
 
 /** \brief Function to get number of new results in the buffer for the TMADC channel
- * \param channel Pointer to Tmadc channel handle
- * \return Return number of new results from the buffer
+ *
+ * \param[in] channel Pointer to Tmadc channel handle
+ *
+ * \retval Return number of new results from the buffer
+ * Range: 0 to 0xFFFF
  */
 IFX_EXTERN uint16 IfxAdc_Tmadc_getNumberOfChannelResults(IfxAdc_Tmadc_Ch *channel);
 

@@ -2,9 +2,9 @@
  * \file IfxCan_Can.c
  * \brief CAN CAN details
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-04-08 11:27:57
  *
  *
  *                                 IMPORTANT NOTICE
@@ -47,10 +47,10 @@
 
 #include "Ifx_Cfg.h"
 #if defined (__TASKING__)
-#pragma warning 508		/* To suppress empty file warning */
+#pragma warning 508     /* To suppress empty file warning */
 #endif
 #if defined (__ghs__)
-#pragma diag_suppress 96		/* To suppress empty file warning */
+#pragma diag_suppress 96        /* To suppress empty file warning */
 #endif
 
 #include "IfxCan_Can.h"
@@ -868,7 +868,8 @@ IfxCan_ReadTxEventStatus IfxCan_Can_readTxEvent(IfxCan_Can_Node *node, IfxCan_Ca
 
                 if (canTxEventFifoElements->timeStampCaptureState == IfxCan_TimeStampState_captured)
                 {
-                    timeStampIndex                    = IfxCan_Node_getTsuTimeStampPointer(node->node);
+                    /* Get Timestamp Index from Tx Event Specific Register*/
+                    timeStampIndex                    = (uint8)txEventFifoElement->E1B.B.TXTSP;
                     canTxEventFifoElements->timeStamp = IfxCan_Node_getTsuTimeStamp(node->node, (IfxCan_TsuTimeStampIndex)timeStampIndex);
                 }
             }
@@ -968,6 +969,7 @@ void IfxCan_Can_readMessage(IfxCan_Can_Node *node, IfxCan_Message *message, uint
     }
     else if (node->node->CCCR.B.UTSU == 1)
     {
+        /* Get Timestamp Index from Global Register */
         timeStampIndex       = IfxCan_Node_getTsuTimeStampPointer(node->node);
         message->rxTimeStamp = IfxCan_Node_getTsuTimeStamp(node->node, (IfxCan_TsuTimeStampIndex)timeStampIndex);
     }
@@ -1248,6 +1250,9 @@ boolean IfxCan_Can_initNode(IfxCan_Can_Node *node, const IfxCan_Can_NodeConfig *
         IfxCan_Node_setFrameMode(nodeSfr, config->frame.mode);
     }
 
+    /* Store the timestamp type in the Node handle */
+    node->timeStampType = config->timeStampConfig.timeStamper;
+
     /*Enable Time Stamp*/
     if (config->timeStampConfig.timeStamper != IfxCan_TimeStamper_none)
     {
@@ -1410,8 +1415,13 @@ boolean IfxCan_Can_initNode(IfxCan_Can_Node *node, const IfxCan_Can_NodeConfig *
         }
     }
 
-    /* enable internal virtual CAN bus loopback mode if selected */
-    if (config->busLoopbackEnabled)
+    /* Loopback mode configuration: Enables Either of the Loopback modes, defaults to LOUT in case both are enabled in configuration */
+    if (config->busLoopbackOutEnabled == TRUE)
+    {
+        IFX_ASSERT(IFX_VERBOSE_LEVEL_WARNING, config->busLoopbackEnabled == FALSE);
+        IfxCan_Node_enableLoopbackOutMode(nodeSfr);
+    }
+    else if (config->busLoopbackEnabled == TRUE)
     {
         IfxCan_Node_enableLoopbackMode(nodeSfr);
     }
@@ -1988,6 +1998,7 @@ void IfxCan_Can_initNodeConfig(IfxCan_Can_NodeConfig *config, IfxCan_Can *can)
         },
         .pins                     = NULL_PTR,
         .busLoopbackEnabled       = FALSE,
+        .busLoopbackOutEnabled    = FALSE,
         .calculateBitTimingValues = TRUE,
         .timeStampConfig          = {
             .timeStamper          = IfxCan_TimeStamper_none,
@@ -2148,6 +2159,7 @@ void IfxCan_Can_setExtendedPduRouting(IfxCan_Can_Node *node, IfxCan_XtdPduRoutin
 
     xtdRoutingElementPtr->PR.U = xtdRoutingElement.PR.U;
 }
+
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

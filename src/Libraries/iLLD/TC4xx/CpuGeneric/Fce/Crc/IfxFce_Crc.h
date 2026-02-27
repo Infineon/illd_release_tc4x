@@ -3,7 +3,7 @@
  * \brief FCE CRC details
  * \ingroup IfxLld_Fce
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -251,10 +251,10 @@
  */
 typedef struct
 {
-    boolean crcMismatch;       /**< \brief Specifies enabel/disable of CRC mismatch interrupt */
-    boolean configError;       /**< \brief Specifies enabel/disable of configuration error interrupt */
-    boolean lengthError;       /**< \brief Specifies enabel/disable of length error interrupt */
-    boolean busError;          /**< \brief Specifies enabel/disable of bus error interrupt */
+    boolean crcMismatch;       /**< \brief Specifies enabel/disable of CRC mismatch interrupt. Range: TRUE CRC mismatch interrupt is enabled, FALSE CRC mismatch interrupt is disabled.*/
+    boolean configError;       /**< \brief Specifies enabel/disable of configuration error interrupt. Range: TRUE configuration error interrupt is enabled, FALSE Configuration error interrupt is disabled. */
+    boolean lengthError;       /**< \brief Specifies enabel/disable of length error interrupt. Range: TRUE Length error interrupt is enabled, FALSE Length error interrupt is disabled. */
+    boolean busError;          /**< \brief Specifies enabel/disable of bus error interrupt. Range: TRUE Bus error Interrupt is enabled , FALSE Bus error interrupt is disabled. */
 } IfxFce_Crc_EnabledInterrupts;
 
 /** \} */
@@ -273,7 +273,7 @@ typedef struct
 typedef struct
 {
     Ifx_FCE    *fce;                    /**< \brief Pointer to FCE registers */
-    uint8       isrPriority;            /**< \brief interrupt priority */
+    uint8       isrPriority;            /**< \brief Interrupt priority. Range: 0 to 0xFF. */
     IfxSrc_Tos  isrTypeOfService;       /**< \brief type of interrupt service */
     IfxSrc_VmId vmId;                   /**< \brief VM service provider */
 } IfxFce_Crc_Config;
@@ -283,11 +283,11 @@ typedef struct
 typedef struct
 {
     Ifx_FCE           *fce;                 /**< \brief Specifies pointer to FCE module registers */
-    uint32             expectedCrc;         /**< \brief Specifies the expected CRC to be compared with resulted. */
+    uint32             expectedCrc;         /**< \brief Specifies the expected CRC to be compared with resulted. Range: 0 to 0xFFFFFFFF. */
     IfxDma_Dma_Channel fceDmaChannel;       /**< \brief Dma channel handle for Fce. */
     IfxFce_CrcChannel  crcChannel;          /**< \brief Specifies the Crc channel */
     IfxFce_CrcKernel   crcKernel;           /**< \brief Specifies the Crc kernel */
-    boolean            useDma;              /**< \brief Variable indicates Dma usage in Fce. */
+    boolean            useDma;              /**< \brief Variable indicates Dma usage in Fce. Range: TRUE Enable dma for transfer, FALSE Disable dma for transfer. */
 } IfxFce_Crc_Crc;
 
 /** \brief Specifies the module configuration structure
@@ -297,7 +297,7 @@ typedef struct
     Ifx_FCE                     *fce;                             /**< \brief Specifies pointer to FCE module registers */
     Ifx_DMA                     *dma;                             /**< \brief DMA module pointer */
     IfxFce_Crc_EnabledInterrupts enabledInterrupts;               /**< \brief Specifies the interrupt enable structure */
-    uint32                       expectedCrc;                     /**< \brief Specifies the expected CRC to be compared with resulted. */
+    uint32                       expectedCrc;                     /**< \brief Specifies the expected CRC to be compared with resulted. Range: 0 to 0xFFFFFFFF. */
     IfxDma_ChannelId             fceChannelId;                    /**< \brief Select the Dma channel for Fce operation */
     IfxFce_CrcChannel            crcChannel;                      /**< \brief Specifies the Crc Channel */
     IfxFce_CrcKernel             crcKernel;                       /**< \brief Specifies the Crc kernel */
@@ -305,9 +305,9 @@ typedef struct
     boolean                      automaticLengthReload;           /**< \brief Specifies the enable/disable of automatic length reload */
     boolean                      dataByteReflectionEnabled;       /**< \brief Specifies enable/disable of input data byte wise reflection */
     boolean                      crc32BitReflectionEnabled;       /**< \brief Specifies enable/disable of CRC 32-bit wise reflection */
-    boolean                      swapOrderOfBytes;                /**< \brief Swaps the order of the bytes in the IR input register */
-    boolean                      crcResultInverted;               /**< \brief Specifies the XOR valueto get the final CRC */
-    boolean                      useDma;                          /**< \brief Specifies whether Dma is used or not. */
+    boolean                      swapOrderOfBytes;                /**< \brief Swaps the order of the bytes in the IR input register. Range: TRUE The order of bytes in the IR register are swapped before CRC computation, FALSE The order of bytes in IR register are not swapped before CRC computation. */
+    boolean                      crcResultInverted;               /**< \brief Specifies the XOR value to get the final CRC */
+    boolean                      useDma;                          /**< \brief Specifies whether Dma is used or not.  Range: TRUE Enable dma for transfer, FALSE Disable dma for transfer. */
 } IfxFce_Crc_CrcConfig;
 
 /** \} */
@@ -319,9 +319,11 @@ typedef struct
 /*-------------------------Global Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Deinitialises the FCE module
- * \param fce Specifies the pointer to FCE module handler
- * \return None
+/** \brief Deinitialises the FCE module.
+ *
+ * \param[inout] fce Specifies the pointer to FCE module handler.
+ *
+ * \retval None
  *
  * Reset the module
  *
@@ -334,37 +336,45 @@ typedef struct
  */
 IFX_EXTERN void IfxFce_Crc_deInitModule(IfxFce_Crc_Crc *fce);
 
-/** \brief Initialise the FCE module for CRC computation according to CRC mode
- * \param fceCrc Specifies the pointer to CRC handle
- * \param crcConfig Specifies the FCE CRC configuration structure
- * \return None
+/** \brief Initialise the FCE module for CRC computation according to CRC mode.
+ *
+ * \param[inout] fceCrc    Specifies the pointer to CRC handle.
+ * \param[in]    crcConfig Specifies the FCE CRC configuration structure.
+ *
+ * \retval None
  *
  * Usage Example: see \ref IfxLld_Fce_Crc_Usage
  *
  */
 IFX_EXTERN void IfxFce_Crc_initCrc(IfxFce_Crc_Crc *fceCrc, const IfxFce_Crc_CrcConfig *crcConfig);
 
-/** \brief Initialises the default CRC configuration buffer
- * \param crcConfig Specifies the FCE CRC configuration structure
- * \param fce Pointer to the FCE module handle
- * \return None
+/** \brief Initialises the default CRC configuration buffer.
+ *
+ * \param[inout] crcConfig Specifies the FCE CRC configuration structure.
+ * \param[in]    fce       Pointer to the FCE module handle.
+ *
+ * \retval None
  *
  * Usage Example: see \ref IfxLld_Fce_Crc_Usage
  *
  */
 IFX_EXTERN void IfxFce_Crc_initCrcConfig(IfxFce_Crc_CrcConfig *crcConfig, IfxFce_Crc *fce);
 
-/** \brief Usage Example: see \ref IfxLld_Fce_Crc_Usage
- * \param fce module handle
- * \param config predefined configuration structure of the module
- * \return None
+/** \brief Usage Example: see \ref IfxLld_Fce_Crc_Usage.
+ *
+ * \param[inout] fce    Module handle.
+ * \param[in]    config Predefined configuration structure of the module.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxFce_Crc_initModule(IfxFce_Crc *fce, const IfxFce_Crc_Config *config);
 
-/** \brief Fills the config structure with default values
- * \param config configuration structure of the module
- * \param fce pointer to FCE registers
- * \return None
+/** \brief Fills the config structure with default values.
+ *
+ * \param[inout] config Configuration structure of the module.
+ * \param[in]    fce    Pointer to FCE registers.
+ *
+ * \retval None
  *
  * Usage Example: see \ref IfxLld_Fce_Crc_Usage
  *
@@ -381,11 +391,13 @@ IFX_EXTERN void IfxFce_Crc_initModuleConfig(IfxFce_Crc_Config *config, Ifx_FCE *
 /******************************************************************************/
 
 /** \brief Calculate the XORed CRC value and returns it. It takes the precomputed XORed and reversed.
- * \param fce Specifies the pointer to FCE module handler
- * \param crcData Length of the input data block
- * \param crcDataLength Length of the input data block
- * \param crcStartValue start value for CRC calculation
- * \return Final CRC after XORed with XOR value.
+ *
+ * \param[inout] fce           Specifies the pointer to FCE module handler.
+ * \param[in]    crcData       Length of the input data block.
+ * \param[in]    crcDataLength Length of the input data block. Range: 0 to 0xFFFF.
+ * \param[in]    crcStartValue Start value for CRC calculation. Range: 0 to 0xFFFFFFFF.
+ *
+ * \retval uint32 Final CRC after XORed with XOR value. Range: 0 to 0xFFFFFFFF.
  */
 IFX_EXTERN uint32 IfxFce_Crc_calculateCrc(IfxFce_Crc_Crc *fce, const uint32 *crcData, uint16 crcDataLength, uint32 crcStartValue);
 
@@ -398,9 +410,11 @@ IFX_EXTERN uint32 IfxFce_Crc_calculateCrc(IfxFce_Crc_Crc *fce, const uint32 *crc
 /*-------------------------Global Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Clears the error flags
- * \param fce Specifies the pointer to FCE module handler
- * \return None
+/** \brief Clears the error flags.
+ *
+ * \param[inout] fce Specifies the pointer to FCE module handler.
+ *
+ * \retval None
  *
  * Usage Example: see \ref IfxLld_Fce_Crc_Usage
  *
@@ -414,8 +428,11 @@ IFX_EXTERN void IfxFce_Crc_clearErrorFlags(IfxFce_Crc_Crc *fce);
 /******************************************************************************/
 
 /** \brief Gets the current CRC interrupt status.
- * \param fce Specifies the pointer to FCE module handler
- * \return Current interrupt status
+ *
+ * \param[in] fce Specifies the pointer to FCE module handler.
+ *
+ * \retval Ifx_FCE_IN_STS Current interrupt status.
  */
 IFX_EXTERN Ifx_FCE_IN_STS IfxFce_Crc_getInterruptStatus(IfxFce_Crc_Crc *fce);
+
 #endif /* IFXFCE_CRC_H */

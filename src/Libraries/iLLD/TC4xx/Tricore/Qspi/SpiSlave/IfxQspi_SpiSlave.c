@@ -2,7 +2,7 @@
  * \file IfxQspi_SpiSlave.c
  * \brief QSPI SPISLAVE details
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -93,7 +93,7 @@ IfxQspi_Status IfxQspi_SpiSlave_exchange(IfxQspi_SpiSlave *handle, const void *s
 {
     IfxQspi_Status status = IfxQspi_Status_busy;
 
-    /* initiate transfer when resource is free */
+    /* Initiate transfer when resource is free */
     if (handle->onTransfer == FALSE)
     {
         status                  = IfxQspi_Status_ok;
@@ -114,8 +114,10 @@ IfxQspi_Status IfxQspi_SpiSlave_getStatus(IfxQspi_SpiSlave *handle)
 {
     IfxQspi_Status status = IfxQspi_Status_ok;
 
+    /* Check if the SPI slave is currently transferring data */
     if (handle->onTransfer != 0)
     {
+    	/* Update the status to busy if a transfer is active */
         status = IfxQspi_Status_busy;
     }
 
@@ -133,20 +135,24 @@ void IfxQspi_SpiSlave_initModule(IfxQspi_SpiSlave *handle, const IfxQspi_SpiSlav
         dmaSFR = (Ifx_DMA *)IfxDma_cfg_indexMap[config->dma.dmaIndex].module;
     }
 
-    /* handle.base must be at offset 0 to be compatible with the standard interface SscIf */
+    /* Handle.base must be at offset 0 to be compatible with the standard interface SscIf */
     {
         IfxQspi_setEnableModuleRequest(qspiSFR);
         IfxQspi_setSleepMode(qspiSFR, (config->allowSleepMode != FALSE) ? IfxQspi_SleepMode_enable : IfxQspi_SleepMode_disable);
     }
 
-    {                                                        /* Configure GLOBAL, Note: at the moment default values for GLOBAL */
+    {
+    	/* Configure GLOBAL, Note: at the moment default values for GLOBAL */
         Ifx_QSPI_GLOBALCON globalcon;
         globalcon.U          = 0;
         globalcon.B.TQ       = IfxQspi_calculateTimeQuantumLength(qspiSFR, config->maximumBaudrate);
-        globalcon.B.EXPECT   = IfxQspi_ExpectTimeout_2097152; /* 2^(EXPECT+6) : timeout for expect phase in Tqspi */
-        globalcon.B.MS       = IfxQspi_Mode_master;           /* select master mode during configuration - we will switch to slave mode at the end of this function */
+        /* 2^(EXPECT+6) : timeout for expect phase in Tqspi */
+        globalcon.B.EXPECT   = IfxQspi_ExpectTimeout_2097152;
+        /* Select master mode during configuration - we will switch to slave mode at the end of this function */
+        globalcon.B.MS       = IfxQspi_Mode_master;
         globalcon.B.AREN     = (config->pauseOnBaudrateSpikeErrors != FALSE) ? 1U : 0U;
-        globalcon.B.RESETS   = 1;                             /* Reset SM and FIFOs */
+        /* Reset SM and FIFOs */
+        globalcon.B.RESETS   = 1;
         globalcon.B.CLKSEL   = 1;
         qspiSFR->GLOBALCON.U = globalcon.U;
     }
@@ -198,7 +204,7 @@ void IfxQspi_SpiSlave_initModule(IfxQspi_SpiSlave *handle, const IfxQspi_SpiSlav
 
         {
             Ifx_QSPI_BACON bacon;
-            uint8          cs = 0; // not relevant for slave
+            uint8          cs = 0; /* Not relevant for slave */
 
             qspiSFR->ECON[cs].U = IfxQspi_calculateExtendedConfigurationValue(qspiSFR, cs, &chConfig);
             bacon.U             = IfxQspi_calculateBasicConfigurationValue(qspiSFR, IfxQspi_ChannelId_0, &chConfig.mode, config->maximumBaudrate);
@@ -253,17 +259,19 @@ void IfxQspi_SpiSlave_initModule(IfxQspi_SpiSlave *handle, const IfxQspi_SpiSlav
         {
             handle->dma.txDmaChannelId     = config->dma.txDmaChannelId;
             dmaCfg.channelId               = handle->dma.txDmaChannelId;
-            dmaCfg.hardwareRequestEnabled  = FALSE; // will be triggered from qspi service request
-            dmaCfg.channelInterruptEnabled = TRUE;  // trigger interrupt after transaction
+            /* Will be triggered from qspi service request */
+            dmaCfg.hardwareRequestEnabled  = FALSE;
+            /* Trigger interrupt after transaction */
+            dmaCfg.channelInterruptEnabled = TRUE;
 
-            // source address and transfer count will be configured during runtime
+            /* Source address and transfer count will be configured during runtime */
             dmaCfg.sourceAddress               = 0;
             dmaCfg.sourceAddressCircularRange  = IfxDma_ChannelIncrementCircular_none;
             dmaCfg.sourceCircularBufferEnabled = FALSE;
             dmaCfg.transferCount               = 0;
             dmaCfg.moveSize                    = IfxDma_ChannelMoveSize_8bit;
 
-            // destination address is fixed; use circular mode to stay at this address for each move
+            /* Destination address is fixed; use circular mode to stay at this address for each move */
             dmaCfg.destinationAddress               = (uint32)&qspiSFR->DATAENTRY[0].U;
             dmaCfg.destinationAddressCircularRange  = IfxDma_ChannelIncrementCircular_none;
             dmaCfg.destinationCircularBufferEnabled = TRUE;
@@ -278,15 +286,17 @@ void IfxQspi_SpiSlave_initModule(IfxQspi_SpiSlave *handle, const IfxQspi_SpiSlav
         {
             handle->dma.rxDmaChannelId     = config->dma.rxDmaChannelId;
             dmaCfg.channelId               = handle->dma.rxDmaChannelId;
-            dmaCfg.hardwareRequestEnabled  = FALSE; // will be triggered from qspi service request
-            dmaCfg.channelInterruptEnabled = TRUE;  // trigger interrupt after transaction
+            /* Will be triggered from qspi service request */
+            dmaCfg.hardwareRequestEnabled  = FALSE;
+            /* Trigger interrupt after transaction */
+            dmaCfg.channelInterruptEnabled = TRUE;
 
-            // source address is fixed; use circular mode to stay at this address for each move
+            /* Source address is fixed; use circular mode to stay at this address for each move */
             dmaCfg.sourceAddress               = (uint32)&qspiSFR->RXEXIT[0].U;
             dmaCfg.sourceAddressCircularRange  = IfxDma_ChannelIncrementCircular_none;
             dmaCfg.sourceCircularBufferEnabled = TRUE;
 
-            // destination address and transfer count will be configured during runtime
+            /* Destination address and transfer count will be configured during runtime */
             dmaCfg.destinationAddress               = 0;
             dmaCfg.destinationAddressCircularRange  = IfxDma_ChannelIncrementCircular_none;
             dmaCfg.destinationCircularBufferEnabled = FALSE;
@@ -311,10 +321,10 @@ void IfxQspi_SpiSlave_initModule(IfxQspi_SpiSlave *handle, const IfxQspi_SpiSlav
         }
     }
 
-    /* interrupt configuration */
+    /* Interrupt configuration */
     IfxQspi_SpiSlave_initInterrupt(qspiSFR, config);
 
-    /* finally switch to slave mode */
+    /* Finally switch to slave mode */
     qspiSFR->GLOBALCON.B.MS = IfxQspi_Mode_slave;
     IfxQspi_run(qspiSFR);
 }
@@ -324,12 +334,12 @@ void IfxQspi_SpiSlave_initModuleConfig(IfxQspi_SpiSlave_Config *config, Ifx_QSPI
 {
     const IfxQspi_SpiSlave_Protocol defaultProtocol = {
         .clockPolarity = IfxQspi_ClockPolarity_idleLow,
-        .shiftClock    = IfxQspi_ShiftClock_shiftTransmitDataOnLeadingEdge,
+        .shiftClock    = IfxQspi_ShiftClock_shiftTransmitDataOnTrailingEdge,
         .dataHeading   = IfxQspi_DataHeading_msbFirst,
         .dataWidth     = 8,
         .parityMode    = Ifx_ParityMode_even
     };
-
+    /* Initializes the SPI slave module configuration */
     config->mode                       = IfxQspi_Mode_slave;
     config->rxPriority                 = 0;
     config->txPriority                 = 0;
@@ -391,7 +401,7 @@ void IfxQspi_SpiSlave_isrError(IfxQspi_SpiSlave *handle)
     IfxQspi_clearAllEventFlags(qspiSFR);
     Ifx_DMA  *dmaSFR     = (Ifx_DMA *)IfxDma_cfg_indexMap[handle->dma.dmaIndex].module;
 
-    /* store all the flags in the variable */
+    /* Store all the flags in the variable */
 
     if ((errorFlags & IfxQspi_Error_parity))
     {
@@ -451,6 +461,45 @@ void IfxQspi_SpiSlave_isrError(IfxQspi_SpiSlave *handle)
 }
 
 
+boolean IfxQspi_SpiSlave_isError(IfxQspi_SpiSlave *handle, IfxQspi_Error error)
+{
+	IfxQspi_SpiSlave *chHandle = handle;
+    boolean errorFlag = 0;
+
+    switch (error)
+    {
+    case IfxQspi_Error_parity:
+    	 errorFlag = chHandle->errorFlags.parityError;
+    	 break;
+    case IfxQspi_Error_configuration:
+    	 errorFlag = chHandle->errorFlags.configurationError;
+    	 break;
+    case IfxQspi_Error_baudrate:
+    	errorFlag = chHandle->errorFlags.baudrateError;
+    	break;
+    case IfxQspi_Error_expectTimeout:
+    	errorFlag = chHandle->errorFlags.expectTimeoutError;
+    	break;
+    case IfxQspi_Error_txfifoOverflow:
+    	errorFlag = chHandle->errorFlags.txFifoOverflowError;
+    	break;
+    case IfxQspi_Error_txfifoUnderflow:
+    	errorFlag = chHandle->errorFlags.txFifoUnderflowError;
+    	break;
+    case IfxQspi_Error_rxfifoOverflow:
+    	errorFlag = chHandle->errorFlags.rxFifoOverflowError;
+    	break;
+    case IfxQspi_Error_rxfifoUnderflow:
+    	errorFlag = chHandle->errorFlags.rxFifoUnderflowError;
+    	break;
+    default:
+    	break;
+    }
+
+    return errorFlag;
+}
+
+
 void IfxQspi_SpiSlave_isrReceive(IfxQspi_SpiSlave *handle)
 {
     IfxQspi_SpiSlave_read(handle);
@@ -472,7 +521,7 @@ IFX_STATIC void IfxQspi_SpiSlave_read(IfxQspi_SpiSlave *handle)
 
     if (job->data == NULL_PTR)
     {
-        // no data should be buffered: do dummy reads
+        /* No data should be buffered: do dummy reads*/
         int i;
 
         for (i = 0; i < count; ++i)
@@ -583,13 +632,18 @@ IFX_STATIC void IfxQspi_SpiSlave_write(IfxQspi_SpiSlave *handle)
                 IfxDma_ChannelIncrementDirection_positive, IfxDma_ChannelIncrementCircular_none);
         }
 
+        /* Clear a channel transfer interrupt flag */
         IfxDma_clearChannelInterrupt(dmaSFR, rxDmaChannelId);
+        /* Clear ALL service requests */
         IfxQspi_clearAllEventFlags(qspiSFR);
         src = IfxQspi_getTransmitSrc(qspiSFR);
+        /* Clear ALL service requests */
         IfxSrc_clearRequest(src);
         src = IfxQspi_getReceiveSrc(qspiSFR);
+        /* Clear ALL service requests */
         IfxSrc_clearRequest(src);
         src = IfxQspi_getErrorSrc(qspiSFR);
+        /* Clear ALL service requests */
         IfxSrc_clearRequest(src);
 
         IfxDma_clearChannelInterrupt(dmaSFR, rxDmaChannelId);
@@ -610,7 +664,7 @@ IFX_STATIC void IfxQspi_SpiSlave_write(IfxQspi_SpiSlave *handle)
         {
             Ifx_QSPI *qspiSFR        = handle->qspi;
             boolean   interruptState = IfxCpu_disableInterrupts();
-            Ifx_SizeT count          = (Ifx_SizeT)(IFXQSPI_HWFIFO_DEPTH - 1 - IfxQspi_getTransmitFifoLevel(qspiSFR)); // -1, since BACON allocates one FIFO entry
+            Ifx_SizeT count          = (Ifx_SizeT)(IFXQSPI_HWFIFO_DEPTH - 1 - IfxQspi_getTransmitFifoLevel(qspiSFR)); /* -1, since BACON allocates one FIFO entry */
             count = __min(job->remaining, count);
 
             if (count > 0)
@@ -619,7 +673,7 @@ IFX_STATIC void IfxQspi_SpiSlave_write(IfxQspi_SpiSlave *handle)
 
                 if (job->data == NULL_PTR)
                 {
-                    // no data should be sent (only received): send all
+                    /* No data should be sent (only received): send all */
                     int i;
 
                     for (i = 0; i < count; ++i)
@@ -647,6 +701,7 @@ IFX_STATIC void IfxQspi_SpiSlave_write(IfxQspi_SpiSlave *handle)
                 }
             }
 
+            /* Restore the state of CPU interrupts */
             IfxCpu_restoreInterrupts(interruptState);
         }
     }
@@ -690,6 +745,7 @@ void IfxQspi_SpiSlave_initPin(const IfxQspi_SpiSlave_Pins *pins)
 
 void IfxQspi_SpiSlave_initInterrupt(Ifx_QSPI *qspiSFR, const IfxQspi_SpiSlave_Config *config)
 {
+	/* Clear ALL service requests */
     IfxQspi_clearAllEventFlags(qspiSFR);
 
     if (config->dma.useDma)
@@ -703,34 +759,49 @@ void IfxQspi_SpiSlave_initInterrupt(Ifx_QSPI *qspiSFR, const IfxQspi_SpiSlave_Co
         }
 
 #endif
+        /* Returns the SRC pointer for given TXFIFO service request */
         volatile Ifx_SRC_SRCR *src = IfxQspi_getTransmitSrc(qspiSFR);
+        /* Initialize interrupt source with configured type of service and priority */
         IfxSrc_init(src, dmaTos, (Ifx_Priority)config->dma.txDmaChannelId, IfxSrc_VmId_0);
+        /* Enable the interrupt source */
         IfxSrc_enable(src);
 
+        /* Returns the SRC pointer for given RXFIFO service request */
         src = IfxQspi_getReceiveSrc(qspiSFR);
+        /* Initialize interrupt source with configured type of service and priority */
         IfxSrc_init(src, dmaTos, (Ifx_Priority)config->dma.rxDmaChannelId, IfxSrc_VmId_0);
+        /* Enable the interrupt source */
         IfxSrc_enable(src);
     }
     else
     {
         if (config->txPriority != 0)
         {
+        	/* Returns the SRC pointer for given TXFIFO service request */
             volatile Ifx_SRC_SRCR *src = IfxQspi_getTransmitSrc(qspiSFR);
+            /* Initialize interrupt source with configured type of service and priority */
             IfxSrc_init(src, config->isrProvider, config->txPriority, config->vmId);
+            /* Enable the interrupt source */
             IfxSrc_enable(src);
         }
 
         if (config->rxPriority != 0)
         {
+        	/* Returns the SRC pointer for given RXFIFO service request */
             volatile Ifx_SRC_SRCR *src = IfxQspi_getReceiveSrc(qspiSFR);
+            /* Initialize interrupt source with configured type of service and priority */
             IfxSrc_init(src, config->isrProvider, config->rxPriority, config->vmId);
+            /* Enable the interrupt source */
             IfxSrc_enable(src);
         }
 
         if (config->erPriority != 0)
         {
+        	/* Returns the SRC pointer for given error request value */
             volatile Ifx_SRC_SRCR *src = IfxQspi_getErrorSrc(qspiSFR);
+            /* Initialize interrupt source with configured type of service and priority */
             IfxSrc_init(src, config->isrProvider, config->erPriority, config->vmId);
+            /* Enable the interrupt source */
             IfxSrc_enable(src);
         }
     }

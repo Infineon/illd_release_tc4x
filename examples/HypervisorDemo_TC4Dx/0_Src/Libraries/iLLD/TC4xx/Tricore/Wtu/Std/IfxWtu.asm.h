@@ -3,7 +3,7 @@
  * \brief WTU  basic functionality
  * \ingroup IfxLld_Wtu
  *
- * \version iLLD-TC4-v2.4.1
+ * \version TBD
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *

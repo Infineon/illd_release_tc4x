@@ -3,9 +3,9 @@
  * \brief AP basic functionality
  * \ingroup IfxLld_Ap
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-07-22 06:47:22
  *
  *
  *                                 IMPORTANT NOTICE

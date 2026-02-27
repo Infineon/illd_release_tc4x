@@ -3,7 +3,7 @@
  * \brief SCR I2c basic functionality
  * 
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2022 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -53,6 +53,7 @@
 #if defined (__ghs__)
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
+
 
 #include "IfxScrI2c.h"
 
@@ -315,6 +316,7 @@ IfxScrI2c_Status IfxScrI2c_slaveReceiveData(uint8 *rxBuffer, uint16 len)
     status = IfxScrI2c_getStatusCode();
     return status;
 }
+
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

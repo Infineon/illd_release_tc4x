@@ -3,9 +3,9 @@
  * \brief SRC on-chip implementation data
  * \ingroup IfxLld_Src
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-10-09 15:20:12
  *
  *
  *                                 IMPORTANT NOTICE
@@ -60,7 +60,7 @@
 #include "Ifx_Cfg.h"
 
 #if defined DEVICE_TC4DX
-#include "IfxSrc_cfg_TC4Dx.h"
+#include "TC4Dx/IfxSrc_cfg_TC4Dx.h"
 #endif
 
 #endif /* IFXSRC_CFG_H */

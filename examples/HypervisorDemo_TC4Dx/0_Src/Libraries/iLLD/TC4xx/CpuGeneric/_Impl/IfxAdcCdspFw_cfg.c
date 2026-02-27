@@ -2,7 +2,7 @@
  * \file IfxAdcCdspFw_cfg.c
  * \brief Cdsp Firmware configuration data
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD_2_0_1_3_5
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *

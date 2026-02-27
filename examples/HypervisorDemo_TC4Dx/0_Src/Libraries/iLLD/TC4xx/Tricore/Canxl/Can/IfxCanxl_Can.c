@@ -2,9 +2,9 @@
  * \file IfxCanxl_Can.c
  * \brief CANXL CAN details
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2024-11-08 09:20:02
  *
  *
  *                                 IMPORTANT NOTICE
@@ -39,6 +39,10 @@
  * DEALINGS IN THE SOFTWARE.
  *
  *
+ * \author Yadunandan Puttaswamy<yadunandan.puttaswamy@infineon.com>
+ * \author Shreyas Shubhankar<shreyas.shubhankar@infineon.com>
+ * \author Chetan Arvind Walvekar<chetanarvind.walvekar@infineon.com>
+ * \author Kalla Harsha Naidu<Harsha.Kalla@infineon.com>
  *
  */
 
@@ -662,18 +666,18 @@ void IfxCanxl_Can_stopNode(IfxCanxl_Can_Node *node)
     {}
 
     /* 2. Abort all TX FIFO Queues */
-    nodeSFR->LOCK.B.ULK    = IFXCANXL_FUNCTIONAL_UNLOCK_KEY1;
-    nodeSFR->LOCK.B.ULK    = IFXCANXL_FUNCTIONAL_UNLOCK_KEY2;
+    nodeSFR->MH_LOCK.B.ULK    = IFXCANXL_FUNCTIONAL_UNLOCK_KEY1;
+    nodeSFR->MH_LOCK.B.ULK    = IFXCANXL_FUNCTIONAL_UNLOCK_KEY2;
     nodeSFR->TX_FQ_CTRL1.U = 0xFFu;
 
     /* 3. Abort all RX FIFO Queues */
-    nodeSFR->LOCK.B.ULK    = IFXCANXL_FUNCTIONAL_UNLOCK_KEY1;
-    nodeSFR->LOCK.B.ULK    = IFXCANXL_FUNCTIONAL_UNLOCK_KEY2;
+    nodeSFR->MH_LOCK.B.ULK    = IFXCANXL_FUNCTIONAL_UNLOCK_KEY1;
+    nodeSFR->MH_LOCK.B.ULK    = IFXCANXL_FUNCTIONAL_UNLOCK_KEY2;
     nodeSFR->RX_FQ_CTRL1.U = 0xFFu;
 
     /* 4. Abort all TX Priority Queue slots */
-    nodeSFR->LOCK.B.ULK    = IFXCANXL_FUNCTIONAL_UNLOCK_KEY1;
-    nodeSFR->LOCK.B.ULK    = IFXCANXL_FUNCTIONAL_UNLOCK_KEY2;
+    nodeSFR->MH_LOCK.B.ULK    = IFXCANXL_FUNCTIONAL_UNLOCK_KEY1;
+    nodeSFR->MH_LOCK.B.ULK    = IFXCANXL_FUNCTIONAL_UNLOCK_KEY2;
     nodeSFR->TX_PQ_CTRL1.U = 0xFFFFFFFFu;
 
     /* 5. Stop the message handler */

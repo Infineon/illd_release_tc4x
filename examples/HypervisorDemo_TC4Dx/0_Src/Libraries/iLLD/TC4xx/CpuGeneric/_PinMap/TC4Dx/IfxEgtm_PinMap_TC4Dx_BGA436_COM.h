@@ -3,9 +3,9 @@
  * \brief EGTM  details
  * \ingroup IfxLld_Egtm
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-05-04 07:21:18
  *
  *
  *                                 IMPORTANT NOTICE

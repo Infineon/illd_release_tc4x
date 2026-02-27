@@ -3,9 +3,9 @@
  * \brief PORT  basic functionality
  * \ingroup IfxLld_Port
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-02-13 07:08:29
  *
  *
  *                                 IMPORTANT NOTICE
@@ -383,8 +383,8 @@ typedef enum
  */
 typedef struct
 {
-    uint8 pinIndex;       /**< \brief Pin index number */
-    uint8 grpNum;         /**< \brief The APU group number to which the pin is mapped to. */
+    uint8 pinIndex;       /**< \brief Pin index number. Range:0 to 15. */
+    uint8 grpNum;         /**< \brief The APU group number to which the pin is mapped to. Range: 0 to 7. */
 } IfxPort_Pin_ApuConfig;
 
 /** \addtogroup IfxLld_Port_Std_DataStructures
@@ -403,18 +403,18 @@ typedef struct
  */
 typedef struct
 {
-    Ifx_P *port;
-    uint8  pinIndex;
+    Ifx_P *port;        /**< \brief Specifies the pointer to port registers. */
+    uint8  pinIndex;    /**< \brief specifies pinIndex. Range:0 to 15. */
 } IfxPort_Pin;
 
 /** \brief To configure pins
  */
 typedef struct
 {
-    Ifx_P            *port;
-    uint8             pinIndex;
-    IfxPort_OutputIdx mode;
-    IfxPort_PadDriver padDriver;
+    Ifx_P            *port;       /**< \brief Specifies the pointer to port registers. */
+    uint8             pinIndex;   /**< \brief specifies pinIndex. Range:0 to 15. */
+    IfxPort_OutputIdx mode;       /**< \brief Pin output alternate index. */
+    IfxPort_PadDriver padDriver;  /**< \brief Pad driver mode. */
 } IfxPort_Pin_Config;
 
 /** \} */
@@ -424,7 +424,7 @@ typedef struct
 typedef struct
 {
     IfxApApu_ApuConfig apuConfig;       /**< \brief APU Configurations */
-    uint8              grpNum;          /**< \brief The APU group number to which the pin is mapped to. */
+    uint8              grpNum;          /**< \brief The APU group number to which the pin is mapped to. Range: 0 to 7. */
 } IfxPort_ApuConfig;
 
 /** \brief APU configurations for All the APU groups
@@ -451,9 +451,12 @@ typedef struct
 /******************************************************************************/
 
 /** \brief Return the port state.
- * \param port Pointer to the port which should be accessed.
- * \param pinIndex Specifies the pin for which the state should be returned.
- * \return Returns TRUE the pin is high; FALSE the pin is low
+ *
+ * \param[in] port     Pointer to the port which should be accessed.
+ * \param[in] pinIndex Specifies the pin for which the state should be returned. Range: 0 to 15.
+ *
+ * \retval TRUE If the pin is high.
+ *         FALSE If the pin is low.
  *
  * Coding example:
  * \code
@@ -465,18 +468,22 @@ typedef struct
  */
 IFX_INLINE boolean IfxPort_getPinState(Ifx_P *port, uint8 pinIndex);
 
-/** \brief Set analog/digital mode for pin
- * \param port Pointer to Port register space
- * \param pinIndex specifies the pin index
- * \param mode set analog/digital mode
- * \return None
+/** \brief Set analog/digital mode for pin.
+ *
+ * \param[inout] port     Pointer to Port register space.
+ * \param[in]    pinIndex Specifies the pin index. Range: 0 to 15.
+ * \param[in]    mode set Analog/digital mode. Range: \ref IfxPort_PinFunctionMode.
+ *
+ * \retval None
  */
 IFX_INLINE void IfxPort_setPinFunctionMode(Ifx_P *port, uint8 pinIndex, IfxPort_PinFunctionMode mode);
 
 /** \brief Set the port output.
- * \param port Pointer to the port which should be accessed.
- * \param pinIndex Specifies the pin to be set.
- * \return None
+ *
+ * \param[inout] port     Pointer to the port which should be accessed.
+ * \param[in]    pinIndex Specifies the pin to be set. Range: 0 to 15.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -489,9 +496,11 @@ IFX_INLINE void IfxPort_setPinFunctionMode(Ifx_P *port, uint8 pinIndex, IfxPort_
 IFX_INLINE void IfxPort_setPinHigh(Ifx_P *port, uint8 pinIndex);
 
 /** \brief Reset the port output.
- * \param port Pointer to the port which should be accessed.
- * \param pinIndex Specifies the pin to be reset.
- * \return None
+ *
+ * \param[inout] port     Pointer to the port which should be accessed.
+ * \param[in]    pinIndex Specifies the pin to be reset. Range: 0 to 15.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -504,10 +513,12 @@ IFX_INLINE void IfxPort_setPinHigh(Ifx_P *port, uint8 pinIndex);
 IFX_INLINE void IfxPort_setPinLow(Ifx_P *port, uint8 pinIndex);
 
 /** \brief Configure the port input / output mode.
- * \param port Pointer to the port which should be accessed.
- * \param pinIndex Specifies the pin to be configured.
- * \param mode Specifies the port pin mode.
- * \return None
+ *
+ * \param[inout] port     Pointer to the port which should be accessed.
+ * \param[in]    pinIndex Specifies the pin to be configured. Range: 0 to 15.
+ * \param[in]    mode     Specifies the port pin mode. Range: \ref IfxPort_InputMode.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -518,11 +529,13 @@ IFX_INLINE void IfxPort_setPinLow(Ifx_P *port, uint8 pinIndex);
 IFX_INLINE void IfxPort_setPinModeInput(Ifx_P *port, uint8 pinIndex, IfxPort_InputMode mode);
 
 /** \brief Configure the port input / output mode.
- * \param port Pointer to the port which should be accessed.
- * \param pinIndex Specifies the pin to be configured.
- * \param mode Specifies the port pin mode.
- * \param index Specifies the alternate (or general purpose) output channel.
- * \return None
+ *
+ * \param[inout] port     Pointer to the port which should be accessed.
+ * \param[in]    pinIndex Specifies the pin to be configured. Range: 0 to 15.
+ * \param[in]    mode     Specifies the port pin mode. Range: \ref IfxPort_OutputMode.
+ * \param[in]    index    Specifies the alternate (or general purpose) output channel. Range: \ref IfxPort_OutputIdx.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -533,10 +546,12 @@ IFX_INLINE void IfxPort_setPinModeInput(Ifx_P *port, uint8 pinIndex, IfxPort_Inp
 IFX_INLINE void IfxPort_setPinModeOutput(Ifx_P *port, uint8 pinIndex, IfxPort_OutputMode mode, IfxPort_OutputIdx index);
 
 /** \brief Set / Resets / Toggle the port output.
- * \param port Pointer to the port which should be accessed.
- * \param pinIndex Specifies the pin to modify.
- * \param action Specifies the action: set, reset, toggle.
- * \return None
+ *
+ * \param[inout] port     Pointer to the port which should be accessed.
+ * \param[in]    pinIndex Specifies the pin to modify. Range: 0 to 15.
+ * \param[in]    action   Specifies the action: set, reset, toggle. Range: \ref IfxPort_State.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -549,9 +564,11 @@ IFX_INLINE void IfxPort_setPinModeOutput(Ifx_P *port, uint8 pinIndex, IfxPort_Ou
 IFX_INLINE void IfxPort_setPinState(Ifx_P *port, uint8 pinIndex, IfxPort_State action);
 
 /** \brief Toggle the port output.
- * \param port Pointer to the port which should be accessed.
- * \param pinIndex Specifies the pin to be toggled.
- * \return None
+ *
+ * \param[inout] port     Pointer to the port which should be accessed.
+ * \param[in]    pinIndex Specifies the pin to be toggled. Range: 0 to 15.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -563,18 +580,22 @@ IFX_INLINE void IfxPort_setPinState(Ifx_P *port, uint8 pinIndex, IfxPort_State a
  */
 IFX_INLINE void IfxPort_togglePin(Ifx_P *port, uint8 pinIndex);
 
-/** \brief Select the reduced frequency mode LVDS-M/LVDS-H
- * \param port pointer to Port Register space
- * \param pinIndex specifies pin index
- * \param lvdsMode specifies the LVDS mode
- * \return None
+/** \brief Select the reduced frequency mode LVDS-M/LVDS-H.
+ *
+ * \param[inout] port     Pointer to Port Register space.
+ * \param[in]    pinIndex Specifies pin index. Range: 0 to 15.
+ * \param[in]    lvdsMode Specifies the LVDS mode. Range: \ref IfxPort_LvdsMode.
+ *
+ * \retval None
  */
 IFX_INLINE void IfxPort_setPinLVDS(Ifx_P *port, uint8 pinIndex, IfxPort_LvdsMode lvdsMode);
 
-/** \brief Returns the configured reduced frequency mode LVDS-M/LVDS-H
- * \param port pointer to Port Register space
- * \param pinIndex specifies pin index
- * \return specifies the lvds mode
+/** \brief Returns the configured reduced frequency mode LVDS-M/LVDS-H.
+ *
+ * \param[in] port     Pointer to Port Register space.
+ * \param[in] pinIndex Specifies pin index. Range: 0 to 15.
+ *
+ * \retval IfxPort_LvdsMode Specifies the lvds mode. Range: \ref IfxPort_LvdsMode.
  */
 IFX_INLINE IfxPort_LvdsMode IfxPort_getPinLVDS(Ifx_P *port, uint8 pinIndex);
 
@@ -584,9 +605,12 @@ IFX_INLINE IfxPort_LvdsMode IfxPort_getPinLVDS(Ifx_P *port, uint8 pinIndex);
 
 /** \brief Disable the emergency stop function.
  * This function disables the emergency stop function. A check is done on port functionality.
- * \param port Pointer to the port which should be accessed.
- * \param pinIndex Specifies the pin for which the emergency stop function should be disabled.
- * \return Returns TRUE if the emergency stop function has been disabled; FALSE if the emergency stop function could not be disabled
+ *
+ * \param[inout] port     Pointer to the port which should be accessed.
+ * \param[in]    pinIndex Specifies the pin for which the emergency stop function should be disabled. Range: 0 to 15.
+ *
+ * \retval TRUE If the emergency stop function has been disabled.
+ *         FALSE If the emergency stop function could not be disabled.
  *
  * Coding example:
  * /code
@@ -603,9 +627,12 @@ IFX_EXTERN boolean IfxPort_disableEmergencyStop(Ifx_P *port, uint8 pinIndex);
 
 /** \brief Enable the emergency stop function.
  * This function enables the emergency stop function. A check is done on port functionality.
- * \param port Pointer to the port which should be accessed.
- * \param pinIndex Specifies the pin for which the emergency stop function should be enabled.
- * \return Returns TRUE if the emergency stop function has been enabled; FALSE if the emergency stop function could not be enabled
+ *
+ * \param[inout] port     Pointer to the port which should be accessed.
+ * \param[in]    pinIndex Specifies the pin for which the emergency stop function should be enabled. Range: 0 to 15.
+ *
+ * \retval TRUE If emergency stop function was successfully enabled.
+ *         FALSE If failed to enable the emergency stop function.
  *
  * Coding example:
  * \code
@@ -621,9 +648,11 @@ IFX_EXTERN boolean IfxPort_enableEmergencyStop(Ifx_P *port, uint8 pinIndex);
 
 /** \brief Disable the emergency stop function.
  * This function disables the emergency stop function. No check is done on port functionality.
- * \param port Pointer to the port which should be accessed.
- * \param pinIndex Specifies the pin for which the emergency stop function should be disabled.
- * \return None
+ *
+ * \param[inout] port     Pointer to the port which should be accessed.
+ * \param[in]    pinIndex Specifies the pin for which the emergency stop function should be disabled. Range: 0 to 15.
+ *
+ * \retval None
  *
  * \see IfxPort_disableEmergencyStop()
  *
@@ -632,9 +661,11 @@ IFX_EXTERN void IfxPort_resetESR(Ifx_P *port, uint8 pinIndex);
 
 /** \brief Enable the emergency stop function.
  * This function enables the emergency stop function. No check is done on port functionality.
- * \param port Pointer to the port which should be accessed.
- * \param pinIndex Specifies the pin for which the emergency stop function should be enabled.
- * \return None
+ *
+ * \param[inout] port     Pointer to the port which should be accessed.
+ * \param[in]    pinIndex Specifies the pin for which the emergency stop function should be enabled. Range: 0 to 15.
+ *
+ * \retval None
  *
  * \see IfxPort_enableEmergencyStop()
  *
@@ -642,12 +673,14 @@ IFX_EXTERN void IfxPort_resetESR(Ifx_P *port, uint8 pinIndex);
 IFX_EXTERN void IfxPort_setESR(Ifx_P *port, uint8 pinIndex);
 
 /** \brief Configure the port input / output mode.
- * Also Configures the P40/P41 Port for digital functionality
- * which bydefault support analog functionality.
- * \param port Pointer to the port which should be accessed.
- * \param pinIndex Specifies the pin to be configured.
- * \param mode Specifies the port pin mode.
- * \return None
+ * Also Configures the P40/P41 Port for digital functionality.
+ * which by default support analog functionality.
+ *
+ * \param[inout] port     Pointer to the port which should be accessed.
+ * \param[in]    pinIndex Specifies the pin to be configured. Range: 0 to 15.
+ * \param[in]    mode     Specifies the port pin mode. Range: \ref IfxPort_Mode.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -658,10 +691,12 @@ IFX_EXTERN void IfxPort_setESR(Ifx_P *port, uint8 pinIndex);
 IFX_EXTERN void IfxPort_setPinMode(Ifx_P *port, uint8 pinIndex, IfxPort_Mode mode);
 
 /** \brief Configure the pad driver mode.
- * \param port Pointer to the port which should be accessed.
- * \param pinIndex Specifies the pin for which the mode will be set.
- * \param padDriver Specifies the driver mode.
- * \return None
+ *
+ * \param[inout] port      Pointer to the port which should be accessed.
+ * \param[in]    pinIndex  Specifies the pin for which the mode will be set. Range: 0 to 15.
+ * \param[in]    padDriver Specifies the driver mode. Range: \ref IfxPort_PadDriver.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -673,27 +708,34 @@ IFX_EXTERN void IfxPort_setPinMode(Ifx_P *port, uint8 pinIndex, IfxPort_Mode mod
 IFX_EXTERN void IfxPort_setPinPadDriver(Ifx_P *port, uint8 pinIndex, IfxPort_PadDriver padDriver);
 
 /** \brief Enable the Pin Controller Selection.
- * \param port Pointer to the base of specified port's SFRs
- * \param pinIndex Specifies the pin for which the mode has to be set.
- * \return None
+ *
+ * \param[inout] port     Pointer to the base of specified port's SFRs.
+ * \param[in]    pinIndex Specifies the pin for which the mode has to be set. Range: 0 to 15.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxPort_setPinControllerSelection(Ifx_P *port, uint8 pinIndex);
 
-/**
- * \param port Pointer to the base of specified port's SFRs
- * \param pinIndex Specifies the pin for which the mode has to be set.
- * \return None
+/** \brief Resets the pin controller selection to its default state.
+ *
+ * \param[inout] port     Pointer to the base of specified port's SFRs.
+ * \param[in]    pinIndex Specifies the pin for which the mode has to be set. Range: 0 to 15.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxPort_resetPinControllerSelection(Ifx_P *port, uint8 pinIndex);
 
-/**
- * \param port Pointer to the base of specified port's SFRs
- * \param pinIndex Specifies the pin for which the mode has to be set.
- * \param mode Selects the controller for the port pin(Tricore,EVADC,GETH,SCR,HRPWM etc)
+/** \brief Modifies the Pin Controller Selection.
+ *
+ * \param[inout] port     Pointer to the base of specified port's SFRs.
+ * \param[in]    pinIndex Specifies the pin for which the mode has to be set. Range: 0 to 15.
+ * \param[in]    mode     Selects the controller for the port pin(Tricore,EVADC,GETH,SCR,HRPWM etc). Range: 0 or 1.
+ *
  * 0-> normal function
  * 1-> Alternate functionality(SCR pin,EVADC PDD,GETH RGMII/MII,HRPWM etc)
- * Note:It is the Users responsibility to pass correct port, pin and mode inputs
- * \return None
+ * Note:It is the Users responsibility to pass correct port, pin and mode inputs.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxPort_modifyPinControllerSelection(Ifx_P *port, uint8 pinIndex, boolean mode);
 
@@ -706,11 +748,13 @@ IFX_EXTERN void IfxPort_modifyPinControllerSelection(Ifx_P *port, uint8 pinIndex
 /*-------------------------Inline Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Return the port group state
- * \param port Pointer to the port which should be accessed.
- * \param pinIndex start at the given pin
- * \param mask selects the pins which should be read (starting from pinIndex)
- * \return Returns the selected pin values
+/** \brief Return the port group state.
+ *
+ * \param[in] port     Pointer to the port which should be accessed.
+ * \param[in] pinIndex Start at the given pin. Range: 0 to 15.
+ * \param[in] mask     Selects the pins which should be read (starting from pinIndex). Range: 0 to 0xFFFF.
+ *
+ * \retval uint32 Returns the selected pin values. Range: 0 to 0xFFFFFFFF.
  *
  * Coding example:
  * \code
@@ -722,11 +766,13 @@ IFX_EXTERN void IfxPort_modifyPinControllerSelection(Ifx_P *port, uint8 pinIndex
 IFX_INLINE uint32 IfxPort_getGroupState(Ifx_P *port, uint8 pinIndex, uint16 mask);
 
 /** \brief Set the port group state.
- * \param port Pointer to the port which should be accessed.
- * \param pinIndex start at the given pin
- * \param mask selects the pins which should be modified (starting from pinIndex)
- * \param data specifies the value which should be set
- * \return None
+ *
+ * \param[inout] port     Pointer to the port which should be accessed.
+ * \param[in]    pinIndex Start at the given pin. Range: 0 to 15.
+ * \param[in]    mask     Selects the pins which should be modified (starting from pinIndex). Range: 0 to 0xFFFF.
+ * \param[in]    data     Specifies the value which should be set. Range: 0 to 0xFFFF.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -744,24 +790,30 @@ IFX_INLINE void IfxPort_setGroupState(Ifx_P *port, uint8 pinIndex, uint16 mask, 
 /*-------------------------Global Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Returns the module address of the selected Port module
- * \param port Pointer to PORT module registers
- * \return PORT module register address
+/** \brief Returns the module address of the selected Port module.
+ *
+ * \param[in] port Pointer to PORT module registers. Range: \ref IfxPort_Index.
+ *
+ * \retval Ifx_P PORT module register address.
  */
 IFX_EXTERN Ifx_P *IfxPort_getAddress(IfxPort_Index port);
 
-/** \brief Return port index within IfxModule_IndexMap (defined in IfxPort_cfg.c)
- * \param port Pointer to the port for which the index number in IfxModule_IndexMap should be retrieved.
- * \return port index of IfxModule_IndexMap. return -1 in case of unknown port index.
+/** \brief Return port index within IfxModule_IndexMap (defined in IfxPort_cfg.c).
+ *
+ * \param[in] port Pointer to the port for which the index number in IfxModule_IndexMap should be retrieved.
+ *
+ * \retval IfxPort_Index Port index of IfxModule_IndexMap. return -1 in case of unknown port index. Range: \ref IfxPort_Index.
  */
 IFX_EXTERN IfxPort_Index IfxPort_getIndex(Ifx_P *port);
 
-/** \brief Set pin modes to input at the pin location specified by '1' by the mask
- * \param port Pointer to the port which should be accessed.
- * \param pinIndex start at the given pin
- * \param mask selects the pins which should be modified (starting from pinIndex)
- * \param mode Specifies the port pin mode.
- * \return None
+/** \brief Set pin modes to input at the pin location specified by '1' by the mask.
+ *
+ * \param[inout] port     Pointer to the port which should be accessed.
+ * \param[in]    pinIndex Start at the given pin. Range: 0 to 15.
+ * \param[in]    mask     Selects the pins which should be modified (starting from pinIndex). Range: 0 to 0xFFFF.
+ * \param[in]    mode     Specifies the port pin mode. Range: \ref IfxPort_InputMode.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -772,13 +824,15 @@ IFX_EXTERN IfxPort_Index IfxPort_getIndex(Ifx_P *port);
  */
 IFX_EXTERN void IfxPort_setGroupModeInput(Ifx_P *port, uint8 pinIndex, uint16 mask, IfxPort_InputMode mode);
 
-/** \brief Set pin modes to output at the pin location specified by '1' by the mask starting at pinIndex
- * \param port Pointer to the port which should be accessed.
- * \param pinIndex start at the given pin
- * \param mask selects the pins which should be modified (starting from pinIndex)
- * \param mode Specifies the port pin mode.
- * \param index Specifies the alternate (or general purpose) output channel.
- * \return None
+/** \brief Set pin modes to output at the pin location specified by '1' by the mask starting at pinIndex.
+ *
+ * \param[inout] port     Pointer to the port which should be accessed.
+ * \param[in]    pinIndex Start at the given pin. Range: 0 to 15.
+ * \param[in]    mask     Selects the pins which should be modified (starting from pinIndex). Range: 0 to 0xFFFF.
+ * \param[in]    mode     Specifies the port pin mode. Range: \ref IfxPort_OutputMode.
+ * \param[in]    index    Specifies the alternate (or general purpose) output channel. Range: \ref IfxPort_OutputIdx.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -789,12 +843,14 @@ IFX_EXTERN void IfxPort_setGroupModeInput(Ifx_P *port, uint8 pinIndex, uint16 ma
  */
 IFX_EXTERN void IfxPort_setGroupModeOutput(Ifx_P *port, uint8 pinIndex, uint16 mask, IfxPort_OutputMode mode, IfxPort_OutputIdx index);
 
-/** \brief Set pad driver strength at the pin location specified by '1' by the mask
- * \param port Pointer to the port which should be accessed.
- * \param pinIndex start at the given pin
- * \param mask selects the pins which should be modified (starting from pinIndex)
- * \param padDriver Specifies the pad driver strength.
- * \return None
+/** \brief Set pad driver strength at the pin location specified by '1' by the mask.
+ *
+ * \param[inout] port      Pointer to the port which should be accessed.
+ * \param[in]    pinIndex  Start at the given pin. Range: 0 to 15.
+ * \param[in]    mask      Selects the pins which should be modified (starting from pinIndex). Range: 0 to 0xFFFF.
+ * \param[in]    padDriver Specifies the pad driver strength. Range: \ref IfxPort_PadDriver.
+ *
+ * \retval None
  *
  * Coding example:
  * \code
@@ -805,12 +861,14 @@ IFX_EXTERN void IfxPort_setGroupModeOutput(Ifx_P *port, uint8 pinIndex, uint16 m
  */
 IFX_EXTERN void IfxPort_setGroupPadDriver(Ifx_P *port, uint8 pinIndex, uint16 mask, IfxPort_PadDriver padDriver);
 
-/** \brief Configure lvds mode
- * \param port pointer to Port Register space
- * \param pinIndex specifies pin index
- * \param pinMode specifes the mode of pin
- * \param lvds config LVDS
- * \return None
+/** \brief Configure lvds mode.
+ *
+ * \param[inout] port     Pointer to Port Register space.
+ * \param[in]    pinIndex Specifies pin index. Range: 0 to 15.
+ * \param[in]    pinMode  Specifes the mode of pin. Range: \ref IfxPort_Mode.
+ * \param[in]    lvds     Config LVDS.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxPort_setPinModeLVDS(Ifx_P *port, uint8 pinIndex, IfxPort_Mode pinMode, IfxPort_LvdsConfig *lvds);
 
@@ -820,67 +878,85 @@ IFX_EXTERN void IfxPort_setPinModeLVDS(Ifx_P *port, uint8 pinIndex, IfxPort_Mode
 /*-------------------------Inline Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Initialise the PROT Config to default values
- * \param config PROT SE Config pointer
- * \return None
+/** \brief Initialise the PROT Config to default values.
+ *
+ * \param[inout] config PROT SE Config pointer.
+ *
+ * \retval None
  */
 IFX_INLINE void IfxPort_initProtConfig(IfxPort_ProtConfig *config);
 
-/** \brief Initialize the PROT
- * \param port PORT module pointer
- * \param config PRTO SE Config pointer
- * \return None
+/** \brief Initialize the PROT.
+ *
+ * \param[inout] port   PORT module pointer.
+ * \param[in]    config PRTO SE Config pointer.
+ *
+ * \retval None
  */
 IFX_INLINE void IfxPort_initProt(Ifx_P *port, IfxPort_ProtConfig *config);
 
-/** \brief Configures the specfic pin slice to a APU group
- * \param port PORT module pointer
- * \param pinIndex pin Index
- * \param grpNum APU group to which the pin is to be assigned
- * \return None
+/** \brief Configures the specfic pin slice to a APU group.
+ *
+ * \param[inout] port     PORT module pointer.
+ * \param[in]    pinIndex Pin Index. Range: 0 to 15.
+ * \param[in]    grpNum   APU group to which the pin is to be assigned. Range: 0 to 7.
+ *
+ * \retval None
  */
 IFX_INLINE void IfxPort_setApuGroupSelection(Ifx_P *port, uint8 pinIndex, uint8 grpNum);
 
 /** \brief API to Enable the wake up feature.
- * \param port PORT module pointer
- * \param pinIndex pin index
- * \param enable Enable/Disable the wake up
- * \return None
+ *
+ * \param[inout] port     PORT module pointer.
+ * \param[in]    pinIndex Pin index. Range: 0 to 15.
+ * \param[in]    enable   Enable/Disable the wake up.
+ *
+ * \retval None
  */
 IFX_INLINE void IfxPort_setPinWakeUpEnable(Ifx_P *port, uint8 pinIndex, boolean enable);
 
-/** \brief API to clear the wake up status
- * \param port Port module pointer
- * \param pinIndex pin index
- * \return None
+/** \brief API to clear the wake up status.
+ *
+ * \param[inout] port     Port module pointer.
+ * \param[in]    pinIndex Pin index. Range: 0 to 15.
+ *
+ * \retval None
  */
 IFX_INLINE void IfxPort_clearPinWakeUpStatus(Ifx_P *port, uint8 pinIndex);
 
-/** \brief API to enable the wake up status
- * \param port Port module pointer
- * \param pinIndex pin index
- * \param enable Enable/Disable the wake up status
- * \return None
+/** \brief API to enable the wake up status.
+ *
+ * \param[inout] port     Port module pointer.
+ * \param[in]    pinIndex Pin index. Range: 0 to 15.
+ * \param[in]    enable   Enable/Disable the wake up status.
+ *
+ * \retval None
  */
 IFX_INLINE void IfxPort_setPinWakeUpStatusEnable(Ifx_P *port, uint8 pinIndex, boolean enable);
 
-/** \brief API to return the wake up status of the port pin
- * \param port Port module pointer
- * \param pinIndex pin index
- * \return Return status enable/disable
+/** \brief API to return the wake up status of the port pin.
+ *
+ * \param[in] port     Port module pointer.
+ * \param[in] pinIndex Pin index. Range: 0 to 15.
+ *
+ * \retval Return status enable/disable.
  */
 IFX_INLINE boolean IfxPort_getPinWakeUpStatus(Ifx_P *port, uint8 pinIndex);
 
-/** \brief API to return the wake up status register
- * \param port Port module pointer
- * \return Returns the status value
+/** \brief API to return the wake up status register.
+ *
+ * \param[in] port Port module pointer.
+ *
+ * \retval uint32 Returns the status value. Range: 0 to 0xFFFF.
  */
 IFX_INLINE uint32 IfxPort_getRawPinWakeUpStatus(Ifx_P *port);
 
-/** \brief configure Bandgap Trimming Register (BGTRIM)
- * \param port PORT MODULE Pointer
- * \param bandgapTrim configure bandgap trimming value
- * \return None
+/** \brief configure Bandgap Trimming Register (BGTRIM).
+ *
+ * \param[inout] port        PORT MODULE Pointer.
+ * \param[in]    bandgapTrim configure bandgap trimming value. Range: \ref IfxPort_BandgapTrimConfig.
+ *
+ * \retval None
  */
 IFX_INLINE void IfxPort_configureBandGapTrim(Ifx_P *port, IfxPort_BandgapTrimConfig bandgapTrim);
 
@@ -888,62 +964,77 @@ IFX_INLINE void IfxPort_configureBandGapTrim(Ifx_P *port, IfxPort_BandgapTrimCon
 /*-------------------------Global Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Initialise the APU config to default values
- * \param config Apu Config pointer
- * \return None
+/** \brief Initialise the APU config to default values.
+ *
+ * \param[inout] config Apu Config pointer.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxPort_initApuConfig(IfxPort_ApuConfig *config);
 
-/** \brief Initialise the APU
- * \param port PORT module pointer
- * \param config APU Config pointer
- * \return None
+/** \brief Initialise the APU.
+ *
+ * \param[inout] port   PORT module pointer.
+ * \param[in]    config APU Config pointer.
+ * \retval None
  */
 IFX_EXTERN void IfxPort_initApu(Ifx_P *port, IfxPort_ApuConfig *config);
 
-/** \brief Configures the Pins to the APU groups
- * \param port PORT module pointer
- * \param config APU group configuration pointer
- * \return None
+/** \brief Configures the Pins to the APU groups.
+ *
+ * \param[inout] port   PORT module pointer.
+ * \param[in]    config APU group configuration pointer.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxPort_initApuGroups(Ifx_P *port, IfxPort_ApuGroupConfig *config);
 
-/** \brief Configure the ESR PAD and push pull configuration
- * \param port PORT MODULE Pointer
- * \param pinIndex Pin Index
- * \param esrLevel ESR level
- * \param esrPadCfg ESR Pad configuration
- * \return None
+/** \brief Configure the ESR PAD and push pull configuration.
+ *
+ * \param[inout] port      PORT MODULE Pointer.
+ * \param[in]    pinIndex  Pin Index. Range: 0 to 15.
+ * \param[in]    esrLevel  ESR level. Range: \ref IfxPort_EsrLevel.
+ * \param[in]    esrPadCfg ESR Pad configuration. Range: \ref IfxPort_EsrPadCfg.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxPort_configureESR(Ifx_P *port, uint8 pinIndex, IfxPort_EsrLevel esrLevel, IfxPort_EsrPadCfg esrPadCfg);
 
-/** \brief Configures access to all masters to all the Ports in the device
- * \param apConfig config pointer to configuration structure.
- * Note : By default the access protection group selected is 0 (PADCFG.ACCEN.B.GRP= 0) for all ports
- * \return None
+/** \brief Configures access to all masters to all the Ports in the device.
+ * Note : By default the access protection group selected is 0 (PADCFG.ACCEN.B.GRP= 0) for all ports.
+ *
+ * \param[in] apConfig Config pointer to configuration structure.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxPort_configureAccessToPorts(IfxApApu_ApuConfig *apConfig);
 
 /** \brief write to the RST_CTRLA and RST_CTRLB register, to enable the reset of the selected PORT.
- * \param port Pointer to the port which should be accessed.
- * \return None
+ *
+ * \param[inout] port Pointer to the port which should be accessed.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxPort_resetModule(Ifx_P *port);
 
 /** \brief Api to configure xspi output driver.
- * \param port Pointer to the port which should be accessed.
- * \param pinIndex Specifies the pin to be configured.
- * \param modex Specifies the port pin modex.
- * \return None
+ *
+ * \param[inout] port     Pointer to the port which should be accessed.
+ * \param[in]    pinIndex Specifies the pin to be configured. Range: 0 to 15.
+ * \param[in]    modex    Specifies the port pin modex. Range: \ref IfxPort_Modex.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxPort_setPinModex(Ifx_P *port, uint8 pinIndex, IfxPort_Modex modex);
 
-/** \brief Configures access to all masters to all the Ports in the device
- * \param port port Pointer to the port which should be accessed
- * \param group Pad Access Groups
- * \param apConfig config pointer to configuration structure.
- * Note : By default the access protection group selected is 0 (PADCFG.ACCEN.B.GRP= 0) for all ports
- * \return None
+/** \brief Configures access to all masters to all the Ports in the device.
+ * Note : By default the access protection group selected is 0 (PADCFG.ACCEN.B.GRP= 0) for all ports.
+ *
+ * \param[inout] port     Pointer to the port which should be accessed.
+ * \param[in]    group    Pad Access Groups. Range: \ref IfxPort_PadAccessGroup.
+ * \param[in]    apConfig Config pointer to configuration structure.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxPort_configureAccessToPort(Ifx_P *port, IfxPort_PadAccessGroup group, void *apConfig);
 

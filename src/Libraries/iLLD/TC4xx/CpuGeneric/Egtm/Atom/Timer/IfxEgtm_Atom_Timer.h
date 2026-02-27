@@ -3,7 +3,7 @@
  * \brief EGTM TIMER details
  * \ingroup IfxLld_Egtm
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -232,7 +232,7 @@ typedef struct
 typedef struct
 {
     boolean                      enabled;                  /**< \brief If TRUE, the trigger functionality is initialized, else ignored */
-    uint32                       triggerPoint;             /**< \brief Trigger point in timer ticks */
+    uint32                       triggerPoint;             /**< \brief Trigger point in timer ticks. Range: 0 to 0xFFFFFF */
     IfxPort_OutputMode           outputMode;               /**< \brief Output mode */
     IfxPort_PadDriver            outputDriver;             /**< \brief Output pad driver */
     boolean                      risingEdgeAtPeriod;       /**< \brief Set the clock signal polarity, if TRUE, the rising edge is at the period, else at the trigger offset. When the timer is stopped, the output is set to high */
@@ -254,13 +254,13 @@ typedef struct
     IfxEgtm_Cluster             clsIndex;               /**< \brief Enum for CLS objects */
     IfxEgtm_Atom_Ch             timerChannel;           /**< \brief ATOM channel used for the timer */
     IfxEgtm_Atom_Ch             triggerChannel;         /**< \brief ATOM channel used for the trigger, if identical to the timerChannel, the trigger interrupt is having the same interrupt level as  the timer interrupt */
-    uint16                      channelsMask;           /**< \brief Mask for channels to be modified together */
-    uint32                      offset;                 /**< \brief Timer initial offset in ticks */
+    uint16                      channelsMask;           /**< \brief Mask for channels to be modified together. Range: 0 to 0xFFFF */
+    uint32                      offset;                 /**< \brief Timer initial offset in ticks. Range: 0 to 0xFFFF FFFF */
     Ifx_EGTM_CLS_CDTM_DTM      *dtm;                    /**< \brief Pointer to DTM object used by ATOM */
     IfxEgtm_Dtm_Ch              dtmChannel;             /**< \brief DTM channel */
-    uint32                      agcDisableUpdate;       /**< \brief AGC value for disable update */
-    uint32                      agcApplyUpdate;         /**< \brief AGC value for apply update */
-    uint32                      period;                 /**< \brief Timer period in ticks (cached value) */
+    uint32                      agcDisableUpdate;       /**< \brief AGC value for disable update. Range: 0 to 0xFF */
+    uint32                      agcApplyUpdate;         /**< \brief AGC value for apply update. Range: 0 to 0xFFFF FF01 */
+    uint32                      period;                 /**< \brief Timer period in ticks (cached value). Range: 0 to 0x00FFFFFF */
     boolean                     triggerEnabled;         /**< \brief If TRUE, the trigger functionality is initialized */
     float32                     clockFreq;              /**< \brief Timer input clock frequency (cached value) */
     IfxEgtm_Atom_Timer_CountDir countDir;               /**< \brief Timer counting mode */
@@ -298,96 +298,127 @@ typedef struct
 /** \brief Add a channel to the channel mask
  * Channels present in the mask are started, stopped, updated at the same time as the timer:
  * IfxEgtm_Atom_Timer_applyUpdate, IfxEgtm_Atom_Timer_disableUpdate, IfxEgtm_Atom_Timer_stop, IfxEgtm_Atom_Timer_run
- * \param driver ATOM Timer interface Handle
- * \param channel Channel to ba added to the mask
- * \return None
+ *
+ * \param[inout] driver  ATOM Timer interface Handle
+ * \param[in]    channel Channel to ba added to the mask
+ *                       Range: \ref: IfxEgtm_Atom_Ch
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Atom_Timer_addToChannelMask(IfxEgtm_Atom_Timer *driver, IfxEgtm_Atom_Ch channel);
 
 /** \brief Enables the transfer of the shadow registers
  * \see IfxStdIf_Timer_ApplyUpdate
- * \param driver ATOM Timer interface Handle
- * \return None
+ *
+ * \param[inout] driver ATOM Timer interface Handle
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Atom_Timer_applyUpdate(IfxEgtm_Atom_Timer *driver);
 
 /** \brief Disables the update
  * \see IfxStdIf_Timer_DisableUpdate
- * \param driver ATOM Timer interface Handle
- * \return None
+ *
+ * \param[inout] driver ATOM Timer interface Handle
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Atom_Timer_disableUpdate(IfxEgtm_Atom_Timer *driver);
 
 /** \brief Returns the frequency
  * \see IfxStdIf_Timer_GetFrequency
- * \param driver ATOM Timer interface Handle
- * \return Frequency
+ *
+ * \param[in] driver ATOM Timer interface Handle
+ *
+ * \retval Frequency
  */
 IFX_INLINE float32 IfxEgtm_Atom_Timer_getFrequency(IfxEgtm_Atom_Timer *driver);
 
 /** \brief Returns the Input frequency
  * \see IfxStdIf_Timer_GetInputFrequency
- * \param driver ATOM Timer interface Handle
- * \return Frequency
+ *
+ * \param[in] driver ATOM Timer interface Handle
+ *
+ * \retval Frequency
  */
 IFX_INLINE float32 IfxEgtm_Atom_Timer_getInputFrequency(IfxEgtm_Atom_Timer *driver);
 
 /** \brief Returns the period of the timer
  * \see IfxStdIf_Timer_GetPeriod
- * \param driver ATOM Timer interface Handle
- * \return Period
+ *
+ * \param[in] driver ATOM Timer interface Handle
+ *
+ * \retval Period
+ * Range: Range: 0 to 0x00FFFFFF
  */
 IFX_INLINE uint32 IfxEgtm_Atom_Timer_getPeriod(IfxEgtm_Atom_Timer *driver);
 
 /** \brief Returns the resolution
  * \see IfxStdIf_Timer_GetResolution
- * \param driver ATOM Timer interface Handle
- * \return Resolution
+ *
+ * \param[in] driver ATOM Timer interface Handle
+ *
+ * \retval Resolution
  */
 IFX_INLINE float32 IfxEgtm_Atom_Timer_getResolution(IfxEgtm_Atom_Timer *driver);
 
 /** \brief Returns the trigger point
- * \param driver ATOM Timer interface Handle
- * \return Trigger point
+ *
+ * \param[in] driver ATOM Timer interface Handle
+ *
+ * \retval Trigger point
+ * Range: 0 to 0x00FFFFFF
  */
 IFX_INLINE uint32 IfxEgtm_Atom_Timer_getTrigger(IfxEgtm_Atom_Timer *driver);
 
 /** \brief Sets the frequency
  * \see IfxStdIf_Timer_SetFrequency
- * \param driver ATOM Timer interface Handle
- * \param frequency Frequency
- * \return TRUE on success else FALSE
+ *
+ * \param[inout] driver    ATOM Timer interface Handle
+ * \param[in]    frequency Frequency
+ *
+ * \retval TRUE on success else FALSE
  */
 IFX_INLINE boolean IfxEgtm_Atom_Timer_setFrequency(IfxEgtm_Atom_Timer *driver, float32 frequency);
 
 /** \brief Sets the period for the timer
  * \see IfxStdIf_Timer_SetPeriod
- * \param driver ATOM Timer interface Handle
- * \param period Period value
- * \return TRUE on success else FALSE
+ *
+ * \param[inout] driver ATOM Timer interface Handle
+ * \param[in]    period Period value
+ *                      Range: 0 to 0x00FFFFFF
+ *
+ * \retval TRUE on success else FALSE
  */
 IFX_INLINE boolean IfxEgtm_Atom_Timer_setPeriod(IfxEgtm_Atom_Timer *driver, uint32 period);
 
 /** \brief Sets the single shot mode of the timer
  * \see IfxStdIf_Timer_SetSingleMode
- * \param driver ATOM Timer interface Handle
- * \param enabled If TRUE, sets the single shot mode
- * \return None
+ *
+ * \param[inout] driver ATOM Timer interface Handle
+ * \param[in]   enabled If TRUE, sets the single shot mode
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Atom_Timer_setSingleMode(IfxEgtm_Atom_Timer *driver, boolean enabled);
 
 /** \brief Sets the trigger
  * \see IfxStdIf_Timer_SetTrigger
- * \param driver ATOM Timer interface Handle
- * \param triggerPoint Trigger point value
- * \return None
+ *
+ * \param[inout] driver       ATOM Timer interface Handle
+ * \param[in]    triggerPoint Trigger point value
+ *                            Range: 0 to 0xFFFFFF
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Atom_Timer_setTrigger(IfxEgtm_Atom_Timer *driver, uint32 triggerPoint);
 
 /** \brief Updates the input frequency
  * \see IfxStdIf_Timer_UpdateInputFrequency
- * \param driver ATOM Timer interface Handle
- * \return None
+ *
+ * \param[inout] driver ATOM Timer interface Handle
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Atom_Timer_updateInputFrequency(IfxEgtm_Atom_Timer *driver);
 
@@ -397,29 +428,41 @@ IFX_INLINE void IfxEgtm_Atom_Timer_updateInputFrequency(IfxEgtm_Atom_Timer *driv
 
 /** \brief Returns the timer event
  * \see IfxStdIf_Timer_AckTimerIrq
- * \param driver ATOM Timer interface Handle
- * \return Timer event
+ *
+ * \param[inout] driver ATOM Timer interface Handle
+ *
+ * \retval Timer event
+ * Range: TRUE: No interrupt triggered by software or by the compare event in CCU0 unit was raised
+ *        FALSE: Interrupt triggered by software or by the compare event in CCU0 unit was raised
  */
 IFX_EXTERN boolean IfxEgtm_Atom_Timer_acknowledgeTimerIrq(IfxEgtm_Atom_Timer *driver);
 
 /** \brief Returns the trigger event
  * \see IfxStdIf_Timer_AckTriggerIrq
- * \param driver ATOM Timer interface Handle
- * \return Trigger event
+ *
+ * \param[inout] driver ATOM Timer interface Handle
+ *
+ * \retval Trigger event
+ * Range: TRUE: No interrupt triggered by software or by the compare event in CCU0 unit was raised
+ *        FALSE: Interrupt triggered by software or by the compare event in CCU0 unit was raised
  */
 IFX_EXTERN boolean IfxEgtm_Atom_Timer_acknowledgeTriggerIrq(IfxEgtm_Atom_Timer *driver);
 
 /** \brief Runs the timer
  * \see IfxStdIf_Timer_Run
- * \param driver ATOM Timer interface Handle
- * \return None
+ *
+ * \param[inout] driver ATOM Timer interface Handle
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Atom_Timer_run(IfxEgtm_Atom_Timer *driver);
 
 /** \brief Stops the timer
  * \see IfxStdIf_Timer_Stop
- * \param driver ATOM Timer interface Handle
- * \return None
+ *
+ * \param[inout] driver ATOM Timer interface Handle
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Atom_Timer_stop(IfxEgtm_Atom_Timer *driver);
 
@@ -434,20 +477,29 @@ IFX_EXTERN void IfxEgtm_Atom_Timer_stop(IfxEgtm_Atom_Timer *driver);
 
 /** \brief Returns the initial timer offset in ticks
  * \see IfxStdIf_Timer_GetOffset
- * \param driver ATOM Timer interface Handle
- * \return Returns the initial timer offset in ticks
+ *
+ * \param[in] driver ATOM Timer interface Handle
+ *
+ * \retval Returns the initial timer offset in ticks
+ * Range: 0 to 0x00FFFFFF
  */
 IFX_INLINE uint32 IfxEgtm_Atom_Timer_getOffset(IfxEgtm_Atom_Timer *driver);
 
 /** \brief Returns the pointer to timer channel
- * \param driver ATOM Timer interface Handle
- * \return Pointer
+ *
+ * \param[in] driver ATOM Timer interface Handle
+ *
+ * \retval Pointer
+ * Range: 0 to 0x00FFFFFF
  */
 IFX_INLINE volatile uint32 *IfxEgtm_Atom_Timer_getPointer(IfxEgtm_Atom_Timer *driver);
 
 /** \brief Returns the pointer to trigger channel
- * \param driver ATOM Timer interface Handle
- * \return Pointer
+ *
+ * \param[in] driver ATOM Timer interface Handle
+ *
+ * \retval Pointer
+ * Range: 0 to 0x00FFFFFF
  */
 IFX_INLINE volatile uint32 *IfxEgtm_Atom_Timer_getTriggerPointer(IfxEgtm_Atom_Timer *driver);
 
@@ -456,16 +508,20 @@ IFX_INLINE volatile uint32 *IfxEgtm_Atom_Timer_getTriggerPointer(IfxEgtm_Atom_Ti
 /******************************************************************************/
 
 /** \brief initializes the timer object
- * \param driver ATOM Timer interface Handle
- * \param config Configuration structure for ATOM Timer
- * \return TRUE on success else FALSE
+ *
+ * \param[inout] driver ATOM Timer interface Handle
+ * \param[in]    config Configuration structure for ATOM Timer
+ *
+ * \retval TRUE on success else FALSE
  */
 IFX_EXTERN boolean IfxEgtm_Atom_Timer_init(IfxEgtm_Atom_Timer *driver, const IfxEgtm_Atom_Timer_Config *config);
 
 /** \brief Initializes the configuration structure to default
- * \param config Configuration structure for ATOM Timer
- * \param egtm Pointer to EGTM module
- * \return None
+ *
+ * \param[inout] config Configuration structure for ATOM Timer
+ * \param[in]    egtm   Pointer to EGTM module
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Atom_Timer_initConfig(IfxEgtm_Atom_Timer_Config *config, Ifx_EGTM *egtm);
 

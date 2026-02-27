@@ -3,9 +3,9 @@
  * \brief Vmt on-chip implementation data 
  * \ingroup IfxLld_Vmt 
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-10-10 10:24:59
  *
  *                                 IMPORTANT NOTICE
  *
@@ -58,7 +58,7 @@
 #include "Ifx_Cfg.h"
 
 #if defined DEVICE_TC4DX
-#include "IfxVmt_cfg_TC4Dx.h"
+#include "TC4Dx/IfxVmt_cfg_TC4Dx.h"
 #endif
 
 #endif /* IFXVMT_CFG_H */

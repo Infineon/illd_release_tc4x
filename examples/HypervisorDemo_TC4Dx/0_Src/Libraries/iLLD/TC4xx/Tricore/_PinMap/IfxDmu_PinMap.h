@@ -3,9 +3,9 @@
  * \brief DMU  details
  * \ingroup IfxLld_Dmu
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-05-04 07:21:19
  *
  *
  *                                 IMPORTANT NOTICE

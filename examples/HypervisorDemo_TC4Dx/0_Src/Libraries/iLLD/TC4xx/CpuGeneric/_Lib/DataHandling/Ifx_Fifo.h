@@ -3,9 +3,9 @@
  * \brief FIFO buffer functions
  * \ingroup IfxLld_lib_datahandling_fifo
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2019-02-28 14:29:40 GMT$
  *
   *                                 IMPORTANT NOTICE
  *

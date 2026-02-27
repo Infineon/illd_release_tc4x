@@ -3,9 +3,9 @@
  * \brief HSPHY XPCS details
  * \ingroup IfxLld_Hsphy
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-07-30 13:51:35
  *
  *
  *                                 IMPORTANT NOTICE
@@ -69,9 +69,9 @@
 /******************************************************************************/
 
 /** \brief Initialize XPCS data path for the specified XPCS instance.
- * \param hsphyRegPtr Pointer to the HSPHY register structure.
- * \param xpcsIndex xpcsIndex XPCS index
- * \return TRUE Timeout error occurred during initialization.
+ * \param[inout] hsphyRegPtr Pointer to the HSPHY register structure.
+ * \param[in] xpcsIndex xpcsIndex XPCS index, Range \ref IfxHsphy_XpcsIndex
+ * \retval TRUE Timeout error occurred during initialization else FALSE.
  */
 IFX_EXTERN boolean IfxHsphy_Xpcs_sgmiiDataPathInit(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_XpcsIndex xpcsIndex);
 
@@ -82,9 +82,9 @@ IFX_EXTERN boolean IfxHsphy_Xpcs_sgmiiDataPathInit(Ifx_HSPHY *hsphyRegPtr, IfxHs
 /******************************************************************************/
 
 /** \brief Resets the xpcs
- * \param hsphyRegPtr HPSHY register pointer
- * \param xpcs Target device id
- * \return returns True if time out error occurs
+ * \param[inout] hsphyRegPtr HPSHY register pointer
+ * \param[in] xpcs Target device id. Range \ref IfxHsphy_GethXpcsParams or \ref IfxHsphy_XpcsParams
+ * \retval TRUE if time out error occurs else FALSE
  */
 #if IFXHSPHY_IS_GETH_AVAILABLE
 IFX_EXTERN boolean IfxHsphy_Xpcs_reset(Ifx_HSPHY *hsphyRegPtr, const IfxHsphy_GethXpcsParams *xpcs);
@@ -93,10 +93,10 @@ IFX_EXTERN boolean IfxHsphy_Xpcs_reset(Ifx_HSPHY *hsphyRegPtr, const IfxHsphy_Xp
 #endif /* #if IFXHSPHY_IS_GETH_AVAILABLE */
 
 /** \brief API for configuring the speed selected
- * \param hsphyRegPtr HPSHY register pointer
- * \param trgtSpeed target device speed selected
- * \param xpcs Target device id
- * \return the status as success/ time out /invalid config error
+ * \param[inout] hsphyRegPtr HPSHY register pointer
+ * \param[in] trgtSpeed target device speed selected. Range \ref IfxHsphy_TrgtDeviceSpeed
+ * \param[in] xpcs Target device id
+ * \retval the status as success/ time out /invalid config error. Range \ref IfxHsphy_SgmiiSpeedConfigStatus or \ref IfxHsphy_GethSgmiiSpeedConfigStatus
  */
 #if IFXHSPHY_IS_GETH_AVAILABLE
 IFX_EXTERN IfxHsphy_Geth_SgmiiSpeedConfigStatus IfxHsphy_Xpcs_setSgmiiSpeedMode(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_TrgtDeviceSpeed trgtSpeed, const IfxHsphy_GethXpcsParams *xpcs); 
@@ -106,10 +106,10 @@ IFX_EXTERN IfxHsphy_SgmiiSpeedConfigStatus IfxHsphy_Xpcs_setSgmiiSpeedMode(Ifx_H
 
 #if IFXHSPHY_IS_PADINTERFACE_USXSGMII_AVAILABLE
 /** \brief API for configuring the speed selected
- * \param hsphyRegPtr hsphy register pointer
- * \param trgtSpeed target device speed selected
- * \param xpcs xpcs reference
- * \return returns True if time out error occurs
+ * \param[inout] hsphyRegPtr hsphy register pointer
+ * \param[in] trgtSpeed target device speed selected. Range \ref IfxHsphy_TrgtDeviceSpeed
+ * \param[in] xpcs xpcs reference
+ * \retval returns TRUE if time out error occurs, else FALSE.
  */
 IFX_EXTERN boolean IfxHsphy_Xpcs_setUsxgmiiSpeedMode(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_TrgtDeviceSpeed trgtSpeed, const IfxHsphy_GethXpcsParams *xpcs);
 #endif /* #if IFXHSPHY_IS_PADINTERFACE_USXSGMII_AVAILABLE */

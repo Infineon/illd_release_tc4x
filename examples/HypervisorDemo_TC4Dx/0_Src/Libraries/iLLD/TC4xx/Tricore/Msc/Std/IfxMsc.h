@@ -3,9 +3,9 @@
  * \brief MSC  basic functionality
  * \ingroup IfxLld_Msc
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-05-20 11:07:25
  *
  *
  *                                 IMPORTANT NOTICE

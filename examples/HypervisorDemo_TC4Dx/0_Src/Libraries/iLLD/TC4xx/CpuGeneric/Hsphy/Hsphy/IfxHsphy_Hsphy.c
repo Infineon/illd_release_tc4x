@@ -2,9 +2,9 @@
  * \file IfxHsphy_Hsphy.c
  * \brief HSPHY HSPHY details
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-07-30 13:39:38
  *
  *
  *                                 IMPORTANT NOTICE
@@ -139,7 +139,7 @@ IfxHsphy_status IfxHsphy_Hsphy_initModule(IfxHsphy_Hsphy *hsphy, IfxHsphy_Hsphy_
     {
         if ((hsphy->hsphyData[index]->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_xspiPads) && (hsphy->hsphyData[index]->hsphyCfg.cfgData != NULL_PTR))
         {
-            // Init and HSPHY configuration for XSPI
+            /* Init and HSPHY configuration for XSPI */
             xspiConfig  = (IfxHsphy_Xspi_XspiCfg *)hsphy->hsphyData[index]->hsphyCfg.cfgData;
             retvalCheck = IfxHsphy_Xspi_xspiInit(hsphy->hsphySFR, xspiConfig);
 
@@ -177,7 +177,7 @@ IfxHsphy_status IfxHsphy_Hsphy_initModule(IfxHsphy_Hsphy *hsphy, IfxHsphy_Hsphy_
 
         if ((hsphy->hsphyData[index]->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_sgmii) && (hsphy->hsphyData[index]->hsphyCfg.cfgData != NULL_PTR))
         {
-            //Get the data of XPCS from cfgData
+            /* Get the data of XPCS from cfgData */
 #if IFXHSPHY_IS_GETH_AVAILABLE			
 			xpcsConfig  = (const IfxHsphy_GethXpcsParams *)(hsphy->hsphyData[index]->hsphyCfg.cfgData);
 			IfxHsphy_EthIndex ethIndex = xpcsConfig->ethIdx;
@@ -215,11 +215,6 @@ IfxHsphy_status IfxHsphy_Hsphy_initModule(IfxHsphy_Hsphy *hsphy, IfxHsphy_Hsphy_
 			if (retvalCheck_sgmii != IfxHsphy_Geth_SgmiiSpeedConfigStatus_success)
 			{
 				if (retvalCheck_sgmii == IfxHsphy_Geth_SgmiiSpeedConfigStatus_timeOutError)
-#else
-				if (retvalCheck_sgmii != IfxHsphy_SgmiiSpeedConfigStatus_success)
-				{
-					if (retvalCheck_sgmii == IfxHsphy_SgmiiSpeedConfigStatus_timeOutError)
-#endif /* #if IFXHSPHY_IS_GETH_AVAILABLE */ 
 					{
 						return IfxHsphy_status_timeOutError;
 					}
@@ -228,11 +223,24 @@ IfxHsphy_status IfxHsphy_Hsphy_initModule(IfxHsphy_Hsphy *hsphy, IfxHsphy_Hsphy_
 						return IfxHsphy_status_invalidConfigError;
 					}
 				}
+#else
+				if (retvalCheck_sgmii != IfxHsphy_SgmiiSpeedConfigStatus_success)
+				{
+					if (retvalCheck_sgmii == IfxHsphy_SgmiiSpeedConfigStatus_timeOutError)
+					{
+						return IfxHsphy_status_timeOutError;
+					}
+					else
+					{
+						return IfxHsphy_status_invalidConfigError;
+					}
+				}
+#endif /* #if IFXHSPHY_IS_GETH_AVAILABLE */
 			}
 #if IFXHSPHY_IS_PADINTERFACE_USXSGMII_AVAILABLE		
         else if ((hsphy->hsphyData[index]->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_usxsgmii) && (hsphy->hsphyData[index]->hsphyCfg.cfgData != NULL_PTR))
         {
-            // USXGMII configuration.
+            /* USXGMII configuration. */
             xpcsConfig  = (const IfxHsphy_GethXpcsParams *)hsphy->hsphyData[index]->hsphyCfg.cfgData;
             IfxHsphy_EthIndex ethIndex = xpcsConfig->ethIdx;
             retvalCheck = IfxHsphy_resetXpcs(hsphy->hsphySFR, xpcsConfig);
@@ -267,7 +275,7 @@ IfxHsphy_status IfxHsphy_Hsphy_initModule(IfxHsphy_Hsphy *hsphy, IfxHsphy_Hsphy_
 #if IFXHSPHY_IS_GETH_AVAILABLE
         else if ((hsphy->hsphyData[index]->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_rgmiiPads) && (hsphy->hsphyData[index]->hsphyCfg.cfgData != NULL_PTR))
         {
-            // PAD configuration.
+            /* PAD configuration. */
             rgmiiConfig                          = (IfxHsphy_Geth_RgmiiCfg *)hsphy->hsphyData[index]->hsphyCfg.cfgData;
             IfxHsphy_EthIndex ethIndex = rgmiiConfig->ethIdx;
             hsphy->hsphySFR->ETH[ethIndex].B.EPR = IfxHsphy_EthCtrlExtPhySel_rgmii;
@@ -286,12 +294,12 @@ IfxHsphy_status IfxHsphy_Hsphy_initModule(IfxHsphy_Hsphy *hsphy, IfxHsphy_Hsphy_
 
         else if ((hsphy->hsphyData[index]->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_miiPads) && (hsphy->hsphyData[index]->hsphyCfg.cfgData != NULL_PTR))
         {
-            // PAD configuration.
+            /* PAD configuration. */
             miiConfig                            = (IfxHsphy_Geth_MiiCfg *)hsphy->hsphyData[index]->hsphyCfg.cfgData;
             IfxHsphy_EthIndex ethIndex = miiConfig->ethIdx;
             hsphy->hsphySFR->ETH[ethIndex].B.EPR = IfxHsphy_EthCtrlExtPhySel_mii;
 
-            // TODO: Check do we need any initializations for MII
+            /* TODO: Check do we need any initializations for MII */
             if (miiConfig->miiPins != NULL_PTR)
             {
                 IfxHsphy_Geth_setMiiPins(hsphy->hsphySFR, ethIndex, miiConfig);
@@ -300,12 +308,12 @@ IfxHsphy_status IfxHsphy_Hsphy_initModule(IfxHsphy_Hsphy *hsphy, IfxHsphy_Hsphy_
 
         else if ((hsphy->hsphyData[index]->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_rmiiPads) && (hsphy->hsphyData[index]->hsphyCfg.cfgData != NULL_PTR))
         {
-            // PAD configuration.
+            /* PAD configuration. */
             rmiiConfig                           = (IfxHsphy_Geth_RmiiCfg *)hsphy->hsphyData[index]->hsphyCfg.cfgData;
             IfxHsphy_EthIndex ethIndex = rmiiConfig->ethIdx;
             hsphy->hsphySFR->ETH[ethIndex].B.EPR = IfxHsphy_EthCtrlExtPhySel_rmii;
             hsphy->hsphySFR->CMNCFG.B.FSR        = 1;
-            // TODO: Check do we need any initializations for RMII
+            /* TODO: Check do we need any initializations for RMII */
 
             if (rmiiConfig->rmiiPins != NULL_PTR)
             {
@@ -323,7 +331,7 @@ IfxHsphy_status IfxHsphy_Hsphy_initModule(IfxHsphy_Hsphy *hsphy, IfxHsphy_Hsphy_
 #if IFXHSPHY_IS_PADINTERFACE_SGBT_AVAILABLE
         else if (hsphy->hsphyData[index]->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_sgbt)
         {
-            //Get the data of TPCS from cfgData
+            /* Get the data of TPCS from cfgData */
             const IfxHsphy_TpcsParams     *tpcsConfig      = (const IfxHsphy_TpcsParams *)(hsphy->hsphyData[index]->hsphyCfg.cfgData);
 
             IfxHsphy_TpcsSpeedConfigStatus tpcsRetValCheck = IfxHsphy_setTpcsSpeedMode(hsphy->hsphySFR, hsphy->hsphyData[index]->hsphyCfg.deviceSpeed, tpcsConfig);
@@ -356,7 +364,7 @@ IfxHsphy_status IfxHsphy_Hsphy_initModule(IfxHsphy_Hsphy *hsphy, IfxHsphy_Hsphy_
                 return IfxHsphy_status_failure;
             }
         }
-    }     // End of for loop
+    }     /* End of for loop */
 
     return retval;
 }
@@ -368,7 +376,8 @@ void IfxHsphy_Hsphy_initModuleConfig(Ifx_HSPHY *hsphy, IfxHsphy_Hsphy_Cfg *confi
         .hsphySFR     = NULL_PTR,
 		
 #if IFXHSPHY_IS_PHY0_AVAILABLE
-        .phyConfig[0] = {           // Config the PHY[0] to use the xspi
+        /* Config the PHY[0] to use the xspi */
+        .phyConfig[0] = {           
             .phyIdx        = IfxHsphy_PhyIndex_0,
             .padInterface  = IfxHsphy_PadNativeInterface_sgmii,
             .trgtDevice    = IfxHsphy_TrgtDevice_xgmac,
@@ -378,11 +387,11 @@ void IfxHsphy_Hsphy_initModuleConfig(Ifx_HSPHY *hsphy, IfxHsphy_Hsphy_Cfg *confi
         },	
 #else	
         .phyConfig[0] = {
-            // PHY[0] is not supported in TC45x, TC48x and TC44x
+            /* PHY[0] is not supported in TC45x, TC48x and TC44x */
         },		
 #endif /* #if IFXHSPHY_IS_PHY0_AVAILABLE */	
-
-        .phyConfig[1] = {           // config the PHY[1] to use the Geth with 1gbps speed
+        /* config the PHY[1] to use the Geth with 1gbps speed */
+        .phyConfig[1] = {           
             .phyIdx        = IfxHsphy_PhyIndex_1,
             .padInterface  = IfxHsphy_PadNativeInterface_sgmii,
 #if IFXHSPHY_IS_TRGTDEVICE_XGMAC	    
@@ -404,7 +413,8 @@ void IfxHsphy_Hsphy_initModuleConfig(Ifx_HSPHY *hsphy, IfxHsphy_Hsphy_Cfg *confi
         },
 		
 #if IFXHSPHY_IS_PHY2_AVAILABLE
-        .phyConfig[2] = {           // config the PHY[2] to use the Pcie
+        /* Config the PHY[2] to use the Pcie */
+        .phyConfig[2] = {           
             .phyIdx        = IfxHsphy_PhyIndex_2,
             .padInterface  = IfxHsphy_PadNativeInterface_pcie,
             .trgtDevice    = IfxHsphy_TrgtDevice_pcie,
@@ -413,14 +423,16 @@ void IfxHsphy_Hsphy_initModuleConfig(Ifx_HSPHY *hsphy, IfxHsphy_Hsphy_Cfg *confi
             .cfgData       = NULL_PTR,
         }	
 #else
-        .phyConfig[2] = {       // config the PHY[2] to use the SGBT/Trace.
-			// PHY[2] is not supported in TC48x and TC44x, TC46x.
+        /* Config the PHY[2] to use the SGBT/Trace. */
+        .phyConfig[2] = {       
+		/* PHY[2] is not supported in TC48x and TC44x, TC46x. */
         }
 #endif /* #if IFXHSPHY_IS_PHY2_AVAILABLE */
     };
-
-    *config          = defaultConfig; /*Default Config*/
-    config->hsphySFR = hsphy;         /*Module Pointer*/
+    /*Default Config*/
+    *config          = defaultConfig; 
+    /*Module Pointer*/
+    config->hsphySFR = hsphy;         
 }
 
 
@@ -433,7 +445,7 @@ boolean IfxHsphy_Hsphy_initDone(IfxHsphy_hsphyIndex hsphyIdx, IfxHsphy_PhyIndex 
 
     timeoutCycleCount = IFXHSPHY_MAX_TIMEOUT;
 
-    //Check if the Phy is read and wait till it gets ready
+    /* Check if the Phy is read and wait till it gets ready */
     while (IfxHsphy_isPhyReady(HsphySfr, phyIndex) != TRUE)
     {
         IFXHSPHY_LOOP_TIMEOUT_CHECK(timeoutCycleCount, timeOutError);
@@ -446,7 +458,7 @@ boolean IfxHsphy_Hsphy_initDone(IfxHsphy_hsphyIndex hsphyIdx, IfxHsphy_PhyIndex 
 
 boolean IfxHsphy_Hsphy_phyInit(IfxHsphy_Hsphy_phyData *hsphyData, IfxHsphy_Hsphy_phyConfig *phyConfig)
 {
-    //Check for lookup and get more connection parameters
+    /* Check for lookup and get more connection parameters */
 
     boolean retval       = FALSE;
     uint8   index        = 0;
@@ -469,7 +481,7 @@ boolean IfxHsphy_Hsphy_phyInit(IfxHsphy_Hsphy_phyData *hsphyData, IfxHsphy_Hsphy
 
     if (retval != FALSE)
     {
-        //index has the value to get more parameters
+        /* Index has the value to get more parameters */
         hsphyData->hsphyCfg.phyIdx        = phyConfig->phyIdx;
         hsphyData->hsphyCfg.padInterface  = phyConfig->padInterface;
         hsphyData->hsphyCfg.trgtDevice    = phyConfig->trgtDevice;
@@ -477,7 +489,7 @@ boolean IfxHsphy_Hsphy_phyInit(IfxHsphy_Hsphy_phyData *hsphyData, IfxHsphy_Hsphy
         hsphyData->hsphyCfg.deviceSpeed   = phyConfig->deviceSpeed;
 
 #if IFXHSPHY_IS_GETH_AVAILABLE
-        //cfg data
+        /* Cfg data */
         if (hsphyData->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_sgmii)
         {
             hsphyData->hsphyCfg.cfgData = (const IfxHsphy_GethXpcsParams *)phyConfig->cfgData;
@@ -519,7 +531,7 @@ boolean IfxHsphy_Hsphy_phyInit(IfxHsphy_Hsphy_phyData *hsphyData, IfxHsphy_Hsphy
             retval = FALSE;
         }
 #else		
-        //cfg data
+        /* Cfg data */
         if (hsphyData->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_sgmii)
         {
             hsphyData->hsphyCfg.cfgData = (const IfxHsphy_XpcsParams *)phyConfig->cfgData;

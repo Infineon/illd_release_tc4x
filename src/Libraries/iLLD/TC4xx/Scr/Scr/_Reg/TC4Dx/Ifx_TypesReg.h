@@ -72,43 +72,47 @@
 #ifndef IFX_TYPESREG_H
 #define IFX_TYPESREG_H 1
 /******************************************************************************/
+#if defined(__cplusplus)
+#define IFX_BITFIELD_VOLATILE
+#else
+#define IFX_BITFIELD_VOLATILE volatile
+#endif
 
 #if defined(__TASKING__)
  #if defined(__CTC__) || defined(__CPTC__)
  #define Ifx_Strict_16Bit unsigned __sfrbit16
  #define Ifx_Strict_32Bit unsigned __sfrbit32
- #define Ifx_Strict_64Bit volatile unsigned long long /* compiler support needed */
+ #define Ifx_Strict_64Bit IFX_BITFIELD_VOLATILE unsigned long long /* compiler support needed */
+ typedef unsigned __sfrbit32 Ifx_UReg_32Bit;
  #else
- #define Ifx_Strict_16Bit volatile unsigned short
- #define Ifx_Strict_32Bit volatile unsigned int
- #define Ifx_Strict_64Bit volatile unsigned long long
+ #define Ifx_Strict_16Bit IFX_BITFIELD_VOLATILE unsigned short
+ #define Ifx_Strict_32Bit IFX_BITFIELD_VOLATILE unsigned int
+ #define Ifx_Strict_64Bit IFX_BITFIELD_VOLATILE unsigned long long
+ typedef unsigned int   Ifx_UReg_32Bit;
  #endif
 #elif defined(__GNUC__) && !defined(__CCAC__)
-#if defined(__cplusplus)
-#define Ifx_Strict_16Bit unsigned short
-#define Ifx_Strict_32Bit unsigned int
-#define Ifx_Strict_64Bit unsigned long long
-#else
-#define Ifx_Strict_16Bit volatile unsigned short
-#define Ifx_Strict_32Bit volatile unsigned int
-#define Ifx_Strict_64Bit volatile unsigned long long
-#endif
+#define Ifx_Strict_16Bit IFX_BITFIELD_VOLATILE unsigned short
+#define Ifx_Strict_32Bit IFX_BITFIELD_VOLATILE unsigned int
+#define Ifx_Strict_64Bit IFX_BITFIELD_VOLATILE unsigned long long
+typedef unsigned int   Ifx_UReg_32Bit;
 #elif defined(__DCC__)
 #define Ifx_Strict_16Bit unsigned short
 #define Ifx_Strict_32Bit unsigned int
-#define Ifx_Strict_64Bit volatile unsigned long long
+#define Ifx_Strict_64Bit IFX_BITFIELD_VOLATILE unsigned long long
+typedef unsigned int   Ifx_UReg_32Bit;
 #elif defined(__ghs__)
-#define Ifx_Strict_16Bit volatile unsigned short
-#define Ifx_Strict_32Bit volatile unsigned int
-#define Ifx_Strict_64Bit volatile unsigned long long
+#define Ifx_Strict_16Bit IFX_BITFIELD_VOLATILE unsigned short
+#define Ifx_Strict_32Bit IFX_BITFIELD_VOLATILE unsigned int
+#define Ifx_Strict_64Bit IFX_BITFIELD_VOLATILE unsigned long long
+typedef unsigned int   Ifx_UReg_32Bit;
 #elif defined(__CCAC__)
-#define Ifx_Strict_16Bit volatile unsigned short
-#define Ifx_Strict_32Bit volatile unsigned int
-#define Ifx_Strict_64Bit volatile unsigned long long
+#define Ifx_Strict_16Bit IFX_BITFIELD_VOLATILE unsigned short
+#define Ifx_Strict_32Bit IFX_BITFIELD_VOLATILE unsigned int
+#define Ifx_Strict_64Bit IFX_BITFIELD_VOLATILE unsigned long long
+typedef unsigned int   Ifx_UReg_32Bit;
 #endif
 typedef unsigned char  Ifx_UReg_8Bit;
 typedef unsigned short Ifx_UReg_16Bit;
-typedef unsigned int   Ifx_UReg_32Bit;
 typedef unsigned long long Ifx_UReg_64Bit;
 typedef signed char    Ifx_SReg_8Bit;
 typedef signed short   Ifx_SReg_16Bit;

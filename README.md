@@ -14,7 +14,7 @@ The TC4xx BaseFramework project contains only the AppSw, the libraries are not i
 
 								  
 ## iLLD version info
-iLLD Release version	V2.4.1
+iLLD Release version	V2.5.0
 
 								   
 ## Revision History

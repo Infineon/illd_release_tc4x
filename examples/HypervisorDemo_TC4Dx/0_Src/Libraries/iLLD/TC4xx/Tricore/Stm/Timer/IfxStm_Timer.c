@@ -2,9 +2,9 @@
  * \file IfxStm_Timer.c
  * \brief STM TIMER details
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-04-14 14:46:11
  *
  *
  *                                 IMPORTANT NOTICE
@@ -80,24 +80,28 @@ boolean IfxStm_Timer_acknowledgeTimerIrq(IfxStm_Timer *driver)
 
 float32 IfxStm_Timer_getFrequency(IfxStm_Timer *driver)
 {
+	/* Calculates and returns the timer frequency in Hz */
     return 1.0f / IfxStdIf_Timer_tickToS(driver->base.clockFreq, driver->base.period);
 }
 
 
 float32 IfxStm_Timer_getInputFrequency(IfxStm_Timer *driver)
 {
+    /* Returns the input clock frequency of the timer */
     return driver->base.clockFreq;
 }
 
 
 Ifx_TimerValue IfxStm_Timer_getPeriod(IfxStm_Timer *driver)
 {
+    /* Returns the timer period in seconds */
     return driver->base.period;
 }
 
 
 float32 IfxStm_Timer_getResolution(IfxStm_Timer *driver)
 {
+    /* Calculates and returns the timer resolution in seconds */
     return 1.0f / driver->base.clockFreq;
 }
 
@@ -107,8 +111,11 @@ void IfxStm_Timer_run(IfxStm_Timer *driver)
     boolean interruptState;
     uint64  timer;
 
+    /* Disables interrupts and save the current state */
     interruptState = IfxCpu_disableInterrupts();
+    /* Retrieves the index of a specific STM module */
     timer          = IfxStm_get(driver->stm);
+    /* Restores the interrupt state */
     IfxCpu_restoreInterrupts(interruptState);
 
     driver->comparatorValue = (Ifx_TimerValue)(timer >> driver->comparatorShift) + driver->base.period;
@@ -143,23 +150,23 @@ void IfxStm_Timer_setSingleMode(IfxStm_Timer *driver, boolean enabled)
 boolean IfxStm_Timer_stdIfTimerInit(IfxStdIf_Timer *stdif, IfxStm_Timer *driver)
 {
     IfxStdIf_Timer_initStdIf(stdif, driver);
-    /* Set the API link */
+    /* Sets the API link */
     stdif->getFrequency         = (IfxStdIf_Timer_GetFrequency) & IfxStm_Timer_getFrequency;
     stdif->getPeriod            = (IfxStdIf_Timer_GetPeriod) & IfxStm_Timer_getPeriod;
     stdif->getResolution        = (IfxStdIf_Timer_GetResolution) & IfxStm_Timer_getResolution;
-    //stdif->getTrigger
+    /* stdif->getTrigger */
     stdif->setFrequency         = (IfxStdIf_Timer_SetFrequency) & IfxStm_Timer_setFrequency;
     stdif->updateInputFrequency = (IfxStdIf_Timer_UpdateInputFrequency) & IfxStm_Timer_updateInputFrequency;
-    //stdif->applyUpdate
-    //stdif->disableUpdate
+    /* stdif->applyUpdate */
+    /* stdif->disableUpdate */
     stdif->getInputFrequency = (IfxStdIf_Timer_GetInputFrequency) & IfxStm_Timer_getInputFrequency;
     stdif->run               = (IfxStdIf_Timer_Run) & IfxStm_Timer_run;
     stdif->setPeriod         = (IfxStdIf_Timer_SetPeriod) & IfxStm_Timer_setPeriod;
     stdif->setSingleMode     = (IfxStdIf_Timer_SetSingleMode) & IfxStm_Timer_setSingleMode;
-    //stdif->setTrigger
+    /* stdif->setTrigger */
     stdif->stop              = (IfxStdIf_Timer_Stop) & IfxStm_Timer_stop;
     stdif->ackTimerIrq       = (IfxStdIf_Timer_AckTimerIrq) & IfxStm_Timer_acknowledgeTimerIrq;
-    //stdif->ackTriggerIrq
+    /* stdif->ackTriggerIrq */
 
     return TRUE;
 }
@@ -185,7 +192,7 @@ boolean IfxStm_Timer_init(volatile IfxStm_Timer *driver, const IfxStm_Timer_Conf
     volatile IfxStm_Timer_Base *base   = &driver->base;
     uint32                      val;
 
-    IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, config->base.countDir == IfxStdIf_Timer_CountDir_up); /* only this mode is supported */
+    IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, config->base.countDir == IfxStdIf_Timer_CountDir_up); /* Only this mode is supported */
 
     driver->stm          = config->stm;
     driver->comparator   = config->comparator;
@@ -196,10 +203,10 @@ boolean IfxStm_Timer_init(volatile IfxStm_Timer *driver, const IfxStm_Timer_Conf
     IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, config->base.trigger.enabled == FALSE); /* Trigger feature not supported */
     IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, config->base.startOffset == 0);         /* Trigger feature not supported */
 
-    /* Initialize the timer part */
-    // STM timer is already running after reset (free running timer)
+    /* Initializes the timer part */
+    /* STM timer is already running after reset (free running timer) */
 
-    // Calculate shift
+    /* Calculates shift */
     driver->comparatorShift = 0;
     val                     = (uint32)(config->base.minResolution * IfxStm_getFrequency());
 
@@ -230,7 +237,7 @@ boolean IfxStm_Timer_init(volatile IfxStm_Timer *driver, const IfxStm_Timer_Conf
     {
         IfxStm_Index index;
         index = (IfxStm_Index)IfxCpu_getCoreId();
-        /* clear the interrupt flag of the selected comparator */
+        /* clears the interrupt flag of the selected comparator */
         IfxStm_clearCompareFlag(driver->stm, driver->comparator);
 
         volatile Ifx_SRC_SRCR *src;

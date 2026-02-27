@@ -2,9 +2,9 @@
  * \file IfxEray.c
  * \brief ERAY  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-09-07 14:19:12
  *
  *
  *                                 IMPORTANT NOTICE

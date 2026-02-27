@@ -3,9 +3,9 @@
  * \brief SMM on-chip implementation data
  * \ingroup IfxLld_Smm
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-10-09 06:54:30
  *
  *
  *                                 IMPORTANT NOTICE
@@ -58,7 +58,7 @@
 #include "Ifx_Cfg.h"
 
 #if defined DEVICE_TC4DX
-#include "IfxSmm_cfg_TC4Dx.h"
+#include "TC4Dx/IfxSmm_cfg_TC4Dx.h"
 #endif
 
 #endif /* IFXSMM_CFG_H */

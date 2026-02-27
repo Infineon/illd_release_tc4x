@@ -3,9 +3,9 @@
  * \brief LBIST  basic functionality
  * \ingroup IfxLld_Lbist
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-07-07 03:20:27
  *
  *                                 IMPORTANT NOTICE
  *
@@ -38,6 +38,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  *
+ * \author Sai Kiran Bollu<SaiKiran.Bollu@infineon.com>
  *
  * LBIST module scans and tests the digital circutary within the microcontroller.
  * This driver provides LBIST APIs which are used to trigger the Logic BIST module.

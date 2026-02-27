@@ -2,7 +2,7 @@
  * \file IfxEgtm_Tim.c
  * \brief EGTM  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -64,25 +64,31 @@ float32 IfxEgtm_Tim_Ch_getFilterClockFrequency(Ifx_EGTM *egtm, Ifx_EGTM_CLS_TIM_
     IfxEgtm_Cmu_Tim_Filter_Clk filterClock;
     IfxEgtm_Cmu_Clk            clk;
 
+    /* Gets the filter clock source for the timer channel */
     filterClock = IfxEgtm_Tim_Ch_getFilterClockSource(channel);
 
     switch (filterClock)
     {
     case IfxEgtm_Cmu_Tim_Filter_Clk_0:
+    	/* Filters clock source 0 corresponds to CMU clock 0 */
         clk = IfxEgtm_Cmu_Clk_0;
         break;
     case IfxEgtm_Cmu_Tim_Filter_Clk_1:
+    	/* Filtesr clock source 1 corresponds to CMU clock 1 */
         clk = IfxEgtm_Cmu_Clk_1;
         break;
     case IfxEgtm_Cmu_Tim_Filter_Clk_6:
+    	/* Filters clock source 6 corresponds to CMU clock 6 */
         clk = IfxEgtm_Cmu_Clk_6;
         break;
     case IfxEgtm_Cmu_Tim_Filter_Clk_7:
     default:
+    	/* Filters clock source 7 (or any other value) corresponds to CMU clock 7 */
         clk = IfxEgtm_Cmu_Clk_7;
         break;
     }
 
+    /* Get the frequency of the mapped CMU clock */
     return IfxEgtm_Cmu_getClkFrequency(egtm, clk, TRUE);
 }
 
@@ -116,6 +122,7 @@ void IfxEgtm_Tim_Ch_setControl(Ifx_EGTM_CLS_TIM_CH *channel, IfxEgtm_Tim_Channel
     ctrl.B.EGPR1_SEL   = control.egpr1Sel;
     ctrl.B.TOCTRL      = (uint8)control.timeoutControl;
 
+    /* Updates the control register with the new configuration */
     channel->CTRL.U    = ctrl.U;
 }
 

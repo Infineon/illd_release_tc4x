@@ -2,9 +2,9 @@
  * \file IfxAdc_PinMap_TC4Dx_BGA436_COM.c
  * \brief ADC  details
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2022-10-19 05:15:11
  *
  *
  *                                 IMPORTANT NOTICE

@@ -3,7 +3,7 @@
  * \brief PCIE on-chip implementation data
  * \ingroup IfxLld_Pcie
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -66,7 +66,7 @@
 #include "Ifx_Cfg.h"
 
 #if defined DEVICE_TC4DX
-#include "IfxPcie_cfg_TC4Dx.h"
+#include "TC4Dx/IfxPcie_cfg_TC4Dx.h"
 #endif
 
 #endif /* IFXPCIE_CFG_H */

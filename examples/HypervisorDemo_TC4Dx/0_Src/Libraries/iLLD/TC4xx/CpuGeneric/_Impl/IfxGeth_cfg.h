@@ -3,9 +3,9 @@
  * \brief GETH on-chip implementation data
  * \ingroup IfxLld_Geth
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-03-26 10:49:35
  *
  *
  *                                 IMPORTANT NOTICE
@@ -40,6 +40,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  *
+ * \author Yadunandan Puttaswamy<yadunandan.puttaswamy@infineon.com>
  *
  * \defgroup IfxLld_Geth GETH
  * \ingroup IfxLld
@@ -59,7 +60,7 @@
 #include "Ifx_Cfg.h"
 
 #if defined DEVICE_TC4DX
-#include "IfxGeth_cfg_TC4Dx.h"
+#include "TC4Dx/IfxGeth_cfg_TC4Dx.h"
 #endif
 
 #endif /* IFXGETH_CFG_H */

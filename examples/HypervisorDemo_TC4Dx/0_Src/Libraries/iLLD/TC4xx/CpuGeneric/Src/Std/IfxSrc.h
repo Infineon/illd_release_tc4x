@@ -3,9 +3,9 @@
  * \brief SRC  basic functionality
  * \ingroup IfxLld_Src
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-05-21 08:57:44
  *
  *
  *                                 IMPORTANT NOTICE
@@ -168,10 +168,10 @@ typedef enum
  */
 typedef struct
 {
-    uint16 srnIndexVal0;       /**< \brief SRN index value for interrupt trigger-0 */
-    uint16 srnIndexVal1;       /**< \brief SRN index Value for interrupt trigger-1 */
-    uint16 srnIndexVal2;       /**< \brief SRN index Value for interrupt trigger-2 */
-    uint16 srnIndexVal3;       /**< \brief SRN index Value for interrupt trigger-3 */
+    uint16 srnIndexVal0;       /**< \brief SRN index value for interrupt trigger-0. Range: 0 to 0x7FF */
+    uint16 srnIndexVal1;       /**< \brief SRN index Value for interrupt trigger-1. Range: 0 to 0x7FF */
+    uint16 srnIndexVal2;       /**< \brief SRN index Value for interrupt trigger-2. Range: 0 to 0x7FF */
+    uint16 srnIndexVal3;       /**< \brief SRN index Value for interrupt trigger-3. Range: 0 to 0x7FF */
 } IfxSrc_OtgbSrnIndexVal;
 
 /** \brief Configuration for Service Provider trigger Set
@@ -202,8 +202,10 @@ typedef struct
 /******************************************************************************/
 
 /** \brief Resets the overrun flag of the Service Request.
- * \param src pointer to the Service Request Control register which the overrun flag should be cleared.
- * \return None
+ *
+ * \param[inout] src Pointer to the Service Request Control register which the overrun flag should be cleared.
+ *
+ * \retval None
  *
  * Usage example: see \ref IfxSrc_init
  *
@@ -211,17 +213,21 @@ typedef struct
 IFX_INLINE void IfxSrc_clearOverrun(volatile Ifx_SRC_SRCR *src);
 
 /** \brief Clears a pending request in the source controller by setting the clear request bit.
- * \param src pointer to the Service Request Control register which the request should be cleared.
- * \return None
+ *
+ * \param[inout] src Pointer to the Service Request Control register which the request should be cleared.
+ *
+ * \retval None
  *
  * Usage example: see \ref IfxSrc_init
  *
  */
 IFX_INLINE void IfxSrc_clearRequest(volatile Ifx_SRC_SRCR *src);
 
-/** \brief Clears a pending request in the source controller by setting the clear request bit
- * \param src pointer to the Service Request Control register for which the overrun status should be returned.
- * \return current service request control overrun status.
+/** \brief Clears a pending request in the source controller by setting the clear request bit.
+ *
+ * \param[in] src Pointer to the Service Request Control register for which the overrun status should be returned.
+ *
+ * \retval Current service request control overrun status.
  *
  * Usage example: see \ref IfxSrc_init
  *
@@ -229,8 +235,10 @@ IFX_INLINE void IfxSrc_clearRequest(volatile Ifx_SRC_SRCR *src);
 IFX_INLINE boolean IfxSrc_isOverrun(volatile Ifx_SRC_SRCR *src);
 
 /** \brief Checks if a source is requested by examining the SRR bit.
- * \param src pointer to the Service Request Control register for which the request status should be returned.
- * \return current service request control request status.
+ *
+ * \param[in] src Pointer to the Service Request Control register for which the request status should be returned.
+ *
+ * \retval Current service request control request status.
  *
  * Usage example: see \ref IfxSrc_init
  *
@@ -238,8 +246,10 @@ IFX_INLINE boolean IfxSrc_isOverrun(volatile Ifx_SRC_SRCR *src);
 IFX_INLINE boolean IfxSrc_isRequested(volatile Ifx_SRC_SRCR *src);
 
 /** \brief Requests a specific interrupt service by software
- * \param src pointer to the Service Request Control register which the interrupt has to be requested.
- * \return None
+ *
+ * \param[inout] src Pointer to the Service Request Control register which the interrupt has to be requested.
+ *
+ * \retval None
  *
  * Usage example: see \ref IfxSrc_init
  *
@@ -247,9 +257,11 @@ IFX_INLINE boolean IfxSrc_isRequested(volatile Ifx_SRC_SRCR *src);
 IFX_INLINE void IfxSrc_setRequest(volatile Ifx_SRC_SRCR *src);
 
 /** \brief Get the ECC error status occurred in the specified service type.
- * \param intr pointer to the Interrupt Control Unit register for which the ECC error status should be returned.
- * \param typeOfService type of interrupt service provider.[Interrupt Control Unit mapped to type of service provider]
- * \return current interrupt control unit ECC error status.
+ *
+ * \param[in] intr          Pointer to the Interrupt Control Unit register for which the ECC error status should be returned.
+ * \param[in] typeOfService Type of interrupt service provider.[Interrupt Control Unit mapped to type of service provider]. Range: \ref IfxSrc_Tos.
+ *
+ * \retval Current interrupt control unit ECC error status.
  *
  * Usage example: see \ref IfxSrc_init
  *
@@ -257,9 +269,11 @@ IFX_INLINE void IfxSrc_setRequest(volatile Ifx_SRC_SRCR *src);
 IFX_INLINE boolean IfxSrc_getEccError(volatile Ifx_INT *intr, IfxSrc_Tos typeOfService);
 
 /** \brief Clears the ECC error status for a specified service type.
- * \param intr pointer to the Interrupt Control Unit register for which the ECC error flag should be cleared.
- * \param typeOfService type of interrupt service provider.[Interrupt Control Unit mapped to type of service provider]
- * \return None
+ *
+ * \param[inout] intr          Pointer to the Interrupt Control Unit register for which the ECC error flag should be cleared.
+ * \param[in]    typeOfService Type of interrupt service provider.[Interrupt Control Unit mapped to type of service provider]. Range: \ref IfxSrc_Tos.
+ *
+ * \retval None
  *
  * Usage example: see \ref IfxSrc_init
  *
@@ -267,10 +281,12 @@ IFX_INLINE boolean IfxSrc_getEccError(volatile Ifx_INT *intr, IfxSrc_Tos typeOfS
 IFX_INLINE void IfxSrc_clearEccError(volatile Ifx_INT *intr, IfxSrc_Tos typeOfService);
 
 /** \brief Enables a specific interrupt line service request in broadcast interrupt group.
- * \param intr pointer to the Service Request Broadcast register for which the interrupt line has to be enabled.
- * \param groupNum Service request broadcast group in which interrupt line should be enabled.
- * \param interruptLine Specific interrupt line number in service request broadcast group.
- * \return None
+ *
+ * \param[inout] intr          Pointer to the Service Request Broadcast register for which the interrupt line has to be enabled.
+ * \param[in]    groupNum      Service request broadcast group in which interrupt line should be enabled. Range: \ref IfxSrc_Int_group.
+ * \param[in]    interruptLine Specific interrupt line number in service request broadcast group. Range: 0 to 7.
+ *
+ * \retval None
  *
  * Usage example: see \ref IfxSrc_init
  *
@@ -278,32 +294,38 @@ IFX_INLINE void IfxSrc_clearEccError(volatile Ifx_INT *intr, IfxSrc_Tos typeOfSe
 IFX_INLINE void IfxSrc_enableBroadcastInterruptLine(volatile Ifx_INT *intr, IfxSrc_Int_group groupNum, uint8 interruptLine);
 
 /** \brief Disables a specific interrupt line service request in broadcast interrupt group.
- * \param intr pointer to the Service Request Broadcast register for which the interrupt line has to be disabled.
- * \param groupNum Service request broadcast group in which interrupt line should be disabled.
- * \param interruptLine Specific interrupt line number in service request broadcast group.
- * \return None
+ *
+ * \param[inout] intr          Pointer to the Service Request Broadcast register for which the interrupt line has to be disabled.
+ * \param[in]    groupNum      Service request broadcast group in which interrupt line should be disabled. Range: \ref IfxSrc_Int_group.
+ * \param[in]    interruptLine Specific interrupt line number in service request broadcast group. Range: 0 to 7.
+ *
+ * \retval None
  *
  * Usage example: see \ref IfxSrc_init
  *
  */
 IFX_INLINE void IfxSrc_disableBroadcastInterruptLine(volatile Ifx_INT *intr, IfxSrc_Int_group groupNum, uint8 interruptLine);
 
-/** \brief Trigger a specific interrupt line in service request broadcast group by software
- * \param intr pointer to the Service Request Broadcast register for which the interrupt line has to be triggered.
- * \param groupNum Service request broadcast group in which interrupt line should be triggered.
- * \param interruptLine Specific interrupt line number in service request broadcast group.
- * \return None
+/** \brief Trigger a specific interrupt line in service request broadcast group by software.
+ *
+ * \param[inout] intr          Pointer to the Service Request Broadcast register for which the interrupt line has to be triggered.
+ * \param[in]    groupNum      Service request broadcast group in which interrupt line should be triggered. Range: \ref IfxSrc_Int_group.
+ * \param[in]    interruptLine Specific interrupt line number in service request broadcast group. Range: 0 to 7.
+ *
+ * \retval None
  *
  * Usage example: see \ref IfxSrc_init
  *
  */
 IFX_INLINE void IfxSrc_triggerBroadcastinterruptLine(volatile Ifx_INT *intr, IfxSrc_Int_group groupNum, uint8 interruptLine);
 
-/** \brief Trigger interrupts in service request broadcast group by software
- * \param intr pointer to the Service Request Broadcast register for which the interrupts has to be triggered.
- * \param groupNum Service request broadcast group in which interrupts should be triggered.
- * \param interrupts Number of Interrupts in service request broadcast group.
- * \return None
+/** \brief Trigger interrupts in service request broadcast group by software.
+ *
+ * \param[inout] intr       Pointer to the Service Request Broadcast register for which the interrupts has to be triggered.
+ * \param[in]    groupNum   Service request broadcast group in which interrupts should be triggered. Range: \ref IfxSrc_Int_group.
+ * \param[in]    interrupts Number of Interrupts in service request broadcast group. Range: 0 to 7.
+ *
+ * \retval None
  *
  * Usage example: see \ref IfxSrc_init
  *
@@ -321,8 +343,10 @@ IFX_INLINE void IfxSrc_triggerBroadcastinterrupts(volatile Ifx_INT *intr, IfxSrc
 
 /** \brief Deinitializes the source register by resetting its fields to their default values.
  * Resets the TOS to F.
- * \param src pointer to the Service Request Control register which should be deinitialised.
- * \return None
+ *
+ * \param[inout] src Pointer to the Service Request Control register which should be deinitialized.
+ *
+ * \retval None
  *
  * Usage example: see \ref IfxSrc_init
  *
@@ -330,8 +354,10 @@ IFX_INLINE void IfxSrc_triggerBroadcastinterrupts(volatile Ifx_INT *intr, IfxSrc
 IFX_INLINE void IfxSrc_deinit(volatile Ifx_SRC_SRCR *src);
 
 /** \brief Disables the source control register (SRCR) by setting the SRE bit to 0.
- * \param src pointer to the Service Request Control register for which the interrupt has to be disabled.
- * \return None
+ *
+ * \param[inout] src Pointer to the Service Request Control register for which the interrupt has to be disabled.
+ *
+ * \retval None
  *
  * Usage example: see \ref IfxSrc_init
  *
@@ -339,8 +365,10 @@ IFX_INLINE void IfxSrc_deinit(volatile Ifx_SRC_SRCR *src);
 IFX_INLINE void IfxSrc_disable(volatile Ifx_SRC_SRCR *src);
 
 /** \brief Enables a specific interrupt service request.
- * \param src pointer to the Service Request Control register for which the interrupt has to be enabled.
- * \return None
+ *
+ * \param[inout] src Pointer to the Service Request Control register for which the interrupt has to be enabled.
+ *
+ * \retval None
  *
  * Usage example: see \ref IfxSrc_init
  *
@@ -350,11 +378,13 @@ IFX_INLINE void IfxSrc_enable(volatile Ifx_SRC_SRCR *src);
 /** \brief Initializes the service request control register.
  * Note: In case Virtualization is disabled VM Number is always written with zero.
  * Note: In case of re-initialization, use IfxSrc_deinit to reset the TOS to F.
- * \param src pointer to the Service Request Control register which should be initialised.
- * \param typOfService type of interrupt service provider.
- * \param priority Interrupt priority.
- * \param vmNumber The Virtual Machine which is going to be the interrupt service provider.
- * \return None
+ *
+ * \param[inout] src          Pointer to the Service Request Control register which should be initialized.
+ * \param[in]    typOfService Type of interrupt service provider. Range: \ref IfxSrc_Tos.
+ * \param[in]    priority     Interrupt priority.
+ * \param[in]    vmNumber     The Virtual Machine which is going to be the interrupt service provider. Range: \ref IfxSrc_VmId.
+ *
+ * \retval None
  *
  * Get the peripheral service control register which request need to be serviced and assign this service to any of service providers.
  * \code
@@ -389,23 +419,29 @@ IFX_INLINE void IfxSrc_init(volatile Ifx_SRC_SRCR *src, IfxSrc_Tos typOfService,
 /******************************************************************************/
 
 /** \brief Configures the trigger for the Otgb source.
- * \param intr points to the OTGB OCS register
- * \param triggerSelection type of triggerSet chosen
- * \return None
+ *
+ * \param[inout] intr             Points to the OTGB OCS register.
+ * \param[in]    triggerSelection Type of triggerSet chosen. Range: \ref IfxSrc_TrigSet.
+ *
+ * \retval None
  */
 IFX_INLINE void IfxSrc_configOtgbTriggerSet(volatile Ifx_INT *intr, IfxSrc_TrigSet triggerSelection);
 
-/** \brief Used to select the OTGB Bus for the selected triggerSet
- * \param intr points to the OTGB OCS regoster
- * \param busSelection : bus chosen for the trigger selected
- * \return None
+/** \brief Used to select the OTGB Bus for the selected triggerSet.
+ *
+ * \param[inout] intr         Points to the OTGB OCS regoster.
+ * \param[in]    busSelection Bus chosen for the trigger selected. Range: \ref IfxSrc_OtgbBusSel.
+ *
+ * \retval None
  */
 IFX_INLINE void IfxSrc_configOtgbBusSelect(volatile Ifx_INT *intr, IfxSrc_OtgbBusSel busSelection);
 
-/** \brief configure GPSR[x].DATA
- * \param src GPSRGxSRy pointer
- * \param data unsigned 16-bit data
- * \return None
+/** \brief Configure GPSR[x].DATA.
+ *
+ * \param[inout] src  GPSRGxSRy pointer.
+ * \param[in]    data Unsigned 16-bit data. Range: 0 to 0xFFFF.
+ *
+ * \retval None
  */
 IFX_INLINE void IfxSrc_updateGpsrData(volatile Ifx_INT_GPSRG_SWC *src, uint16 data);
 
@@ -413,11 +449,13 @@ IFX_INLINE void IfxSrc_updateGpsrData(volatile Ifx_INT_GPSRG_SWC *src, uint16 da
 /*-------------------------Global Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Used to select only one SRN index and corressponding SRN index Value
- * \param intr points to OTGB OIX register
- * \param srnIndex SRN index passed by the user
- * \param srnIndexVal value corressponding to the srnIndex
- * \return None
+/** \brief Used to select only one SRN index and corresponding SRN index Value.
+ *
+ * \param[inout] intr        Points to OTGB OIX register.
+ * \param[in]    srnIndex    SRN index passed by the user. Range: \ref IfxSrc_OtgbSrnIndex.
+ * \param[in]    srnIndexVal Value corresponding to the srnIndex.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxSrc_setOtgbSrnIndex(volatile Ifx_INT *intr, IfxSrc_OtgbSrnIndex srnIndex, IfxSrc_OtgbSrnIndexVal *srnIndexVal);
 
@@ -425,28 +463,36 @@ IFX_EXTERN void IfxSrc_setOtgbSrnIndex(volatile Ifx_INT *intr, IfxSrc_OtgbSrnInd
  * 1. for IS triggerSet  , 4 SRN are configured according to the input provided by the user.
  * 2. for SP triggerSet , sp config provided by the user is configured.
  * 3.for SPA triggerSet , no additional configuration required.
- * \param intr ICU module pointer
- * \param OtgbConfig Configuration for all the triggerSets
- * \return None
+ *
+ * \param[inout] intr       ICU module pointer.
+ * \param[in]    OtgbConfig Configuration for all the triggerSets.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxSrc_initOtgb(volatile Ifx_INT *intr, IfxSrc_OtgbConfig *OtgbConfig);
 
 /** \brief Initializes the OTGB configuration structure with default values.
- * \param OtgbConfig Configuration param passed to congure all three trigger Sets
- * \return None
+ *
+ * \param[inout] OtgbConfig Configuration param passed to congure all three trigger Sets.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxSrc_initOtgbConfig(IfxSrc_OtgbConfig *OtgbConfig);
 
 /** \brief Configures interrupt triggers for OTGB service provider based on the provided configuration.
- * \param intr points to OTGB OIT register
- * \param spConfig service provider configuration struct object
- * \return None
+ *
+ * \param[inout] intr     Points to OTGB OIT register.
+ * \param[in]    spConfig Service provider configuration struct object.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxSrc_configOtgbServiceProviderTrigger(volatile Ifx_INT *intr, IfxSrc_spConfig *spConfig);
 
 /** \brief Configures access to all masters to all the ICUs in the device.
- * \param apConfig Pointer to the IfxApApu_ApuConfig structure that contains the configuration settings for access control.
- * \return None
+ *
+ * \param[in] apConfig Pointer to the IfxApApu_ApuConfig structure that contains the configuration settings for access control.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxSrc_configureAccessToSrcs(IfxApApu_ApuConfig *apConfig);
 
@@ -606,7 +652,7 @@ IFX_INLINE void IfxSrc_updateGpsrData(volatile Ifx_INT_GPSRG_SWC *src, uint16 da
         gprsgSwc.B.LOCKSET = 1;
         src->U             = gprsgSwc.U;
     }
-	
+
     src->B.LOCKSET = 1;
 
     while (!src->B.LOCKSTAT)

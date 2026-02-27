@@ -2,9 +2,9 @@
  * \file IfxHsphy_EthIO.c
  * \brief HSPHY ETHIO details
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-07-30 13:33:44
  *
  *
  *                                 IMPORTANT NOTICE

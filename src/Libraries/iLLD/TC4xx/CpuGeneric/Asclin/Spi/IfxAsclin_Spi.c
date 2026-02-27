@@ -2,7 +2,7 @@
  * \file IfxAsclin_Spi.c
  * \brief ASCLIN SPI details
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -52,13 +52,15 @@
 /******************************************************************************/
 
 /**
- * \param asclin module handle
- * \return status of the on going job
+ * \param[in] asclin module handle
+ *
+ * \retval IfxAsclin_Spi_Status status of the on going job.
  */
 IFX_STATIC IfxAsclin_Spi_Status IfxAsclin_Spi_lock(IfxAsclin_Spi *asclin);
 
 /**
- * \param asclin module handle
+ * \param[inout] asclin module handle
+ *
  * \return None
  */
 IFX_STATIC void IfxAsclin_Spi_unlock(IfxAsclin_Spi *asclin);
@@ -69,15 +71,18 @@ IFX_STATIC void IfxAsclin_Spi_unlock(IfxAsclin_Spi *asclin);
 
 void IfxAsclin_Spi_disableModule(IfxAsclin_Spi *asclin)
 {
-    Ifx_ASCLIN *asclinSFR = asclin->asclin;       /* getting the pointer to ASCLIN registers from module handler */
+	/* getting the pointer to ASCLIN registers from module handler */
+    Ifx_ASCLIN *asclinSFR = asclin->asclin;
 
-    IfxAsclin_setDisableModuleRequest(asclinSFR); /* disabling the module */
+    /* disabling the module */
+    IfxAsclin_setDisableModuleRequest(asclinSFR);
 }
 
 
 IfxAsclin_Spi_Status IfxAsclin_Spi_exchange(IfxAsclin_Spi *asclin, void *src, void *dest, uint32 count)
 {
-    IfxAsclin_Spi_Status status     = IfxAsclin_Spi_lock(asclin); /* lock the driver until the communication is done */
+	/* lock the driver until the communication is done */
+    IfxAsclin_Spi_Status status     = IfxAsclin_Spi_lock(asclin);
 
     uint32               count_8_16 = ((count / asclin->dataWidth) + (count % asclin->dataWidth));
 #if IFXASCLIN_SPI_IS_DATAWIDTH32_AVAILABLE	
@@ -103,7 +108,8 @@ IfxAsclin_Spi_Status IfxAsclin_Spi_exchange(IfxAsclin_Spi *asclin, void *src, vo
         }
 #endif	/* #if IFXASCLIN_SPI_IS_DATAWIDTH32_AVAILABLE */
 
-        IfxAsclin_Spi_write(asclin);          /* write data into Tx fifo */
+        /* write data into Tx fifo */
+        IfxAsclin_Spi_write(asclin);
     }
 
     return status;
@@ -173,7 +179,7 @@ IfxAsclin_Status IfxAsclin_Spi_initModule(IfxAsclin_Spi *asclin, const IfxAsclin
     {
         IfxAsclin_setTxFifoInletWidth(asclinSFR, IfxAsclin_TxFifoInletWidth_1);   /* setting Tx FIFO inlet width to 1 byte */
         IfxAsclin_setRxFifoOutletWidth(asclinSFR, IfxAsclin_RxFifoOutletWidth_1); /* setting Rx FIFO outlet width to 1 byte */
-        asclin->dataWidth = 1;                                                    /* echo the data width to module handle*/
+        asclin->dataWidth = 1;                                                    /* echo the data width to module handle */
     }
 #if IFXASCLIN_SPI_IS_DATAWIDTH32_AVAILABLE 	
 	else if (config->dataLength <= 16)
@@ -183,14 +189,14 @@ IfxAsclin_Status IfxAsclin_Spi_initModule(IfxAsclin_Spi *asclin, const IfxAsclin
 	{
         IfxAsclin_setTxFifoInletWidth(asclinSFR, IfxAsclin_TxFifoInletWidth_2);   /* setting Tx FIFO inlet width to 2 bytes */
         IfxAsclin_setRxFifoOutletWidth(asclinSFR, IfxAsclin_RxFifoOutletWidth_2); /* setting Rx FIFO outlet width to 2 bytes */
-        asclin->dataWidth = 2;                                                    /* echo the data width to module handle*/
+        asclin->dataWidth = 2;                                                    /* echo the data width to module handle */
     }
 #if IFXASCLIN_SPI_IS_DATAWIDTH32_AVAILABLE	
     else
     {
         IfxAsclin_setTxFifoInletWidth(asclinSFR, IfxAsclin_TxFifoInletWidth_3);      /* setting Tx FIFO inlet width to 4 bytes */
         IfxAsclin_setRxFifoOutletWidth(asclinSFR, IfxAsclin_RxFifoOutletWidth_3);    /* setting Rx FIFO outlet width to 4 bytes */
-        asclin->dataWidth = 3;                                                       /* echo the data width to module handle*/
+        asclin->dataWidth = 3;                                                       /* echo the data width to module handle */
     }
 #endif	/* #if IFXASCLIN_SPI_IS_DATAWIDTH32_AVAILABLE */
 
@@ -243,7 +249,7 @@ IfxAsclin_Status IfxAsclin_Spi_initModule(IfxAsclin_Spi *asclin, const IfxAsclin
         IfxSrc_enable(src);
     }
 
-    if (config->interrupt.erPriority > 0) /*These interrupts are not serviced by dma*/
+    if (config->interrupt.erPriority > 0) /* these interrupts are not serviced by dma */
     {
         volatile Ifx_SRC_SRCR *src;
         src = IfxAsclin_getSrcPointerEr(asclinSFR);
@@ -252,7 +258,7 @@ IfxAsclin_Status IfxAsclin_Spi_initModule(IfxAsclin_Spi *asclin, const IfxAsclin
         IfxSrc_enable(src);
     }
 
-    /* Pin mapping */
+    /* pin mapping */
     const IfxAsclin_Spi_Pins *pins = config->pins;
 
     if (pins != NULL_PTR)
@@ -288,7 +294,7 @@ IfxAsclin_Status IfxAsclin_Spi_initModule(IfxAsclin_Spi *asclin, const IfxAsclin
 
     IfxAsclin_enableParity(asclinSFR, config->parity);                      /* no parity */
 
-    IfxAsclin_setClockSource(asclinSFR, config->clockSource);               /* setting the clock source*/
+    IfxAsclin_setClockSource(asclinSFR, config->clockSource);               /* setting the clock source */
 
     asclin->sending = 0;
     IfxAsclin_enableTxFifoOutlet(asclinSFR, TRUE);                          /* disabling Rx FIFO for recieving */
@@ -307,7 +313,7 @@ void IfxAsclin_Spi_initModuleConfig(IfxAsclin_Spi_Config *config, Ifx_ASCLIN *as
         .parity      = FALSE,
         .clockSource = IfxAsclin_ClockSource_ascFastClock, /* Asclin fast clock, fasclinf*/
 
-        /* Default values for input output control */
+        /* default values for input output control */
         .inputOutput              = {
             .alti     = IfxAsclin_RxInputSelect_0,               /* alternate input 0; */
             .cpol     = IfxAsclin_ClockPolarity_idleLow,         /* CPOL  active low */
@@ -315,19 +321,19 @@ void IfxAsclin_Spi_initModuleConfig(IfxAsclin_Spi_Config *config, Ifx_ASCLIN *as
             .loopBack = FALSE,                                   /* no loop back */
         },
 
-        /* Default values for baudrate */
+        /* default values for baudrate */
         .baudrate                 = {
             .baudrate     = 100000.0f,                      /* default baudrate (the fractional dividier setup will be calculated in initModule) */
             .prescaler    = 2,                              /* default prescaler */
             .oversampling = IfxAsclin_OversamplingFactor_8, /* default oversampling factor */
         },
 
-        /* Default Values for Bit sampling */
+        /* default Values for Bit sampling */
         .bitSampling              = {
             .medianFilter         = IfxAsclin_SamplesPerBit_one, /* one sample per bit */
         },
 
-        /* Default Values for Frame Control */
+        /* default Values for Frame Control */
         .frame                    = {
             .idleDelay = IfxAsclin_IdleDelay_0,                /* no idle delay */
             .leadDelay = IfxAsclin_LeadDelay_1,                /* one lead bit */
@@ -335,10 +341,10 @@ void IfxAsclin_Spi_initModuleConfig(IfxAsclin_Spi_Config *config, Ifx_ASCLIN *as
             .shiftDir  = IfxAsclin_ShiftDirection_lsbFirst,    /* shift direction LSB first */
         },
 
-        /* Default Values for Data Control*/
+        /* default Values for Data Control */
         .dataLength               = IfxAsclin_DataLength_8, /* number of bits per transfer 8*/
 
-        /* Default Values for fifo Control */
+        /* default Values for fifo Control */
         .fifo                     = {
             .outWidth             = IfxAsclin_RxFifoOutletWidth_1,        /* 8-bit wide read */
             .inWidth              = IfxAsclin_TxFifoInletWidth_1,         /*8-bit wide write */
@@ -349,7 +355,7 @@ void IfxAsclin_Spi_initModuleConfig(IfxAsclin_Spi_Config *config, Ifx_ASCLIN *as
             .rxFifoInterruptMode  = IfxAsclin_FifoInterruptMode_combined, /* Rx FIFO interrupt generation mode */
         },
 
-        /* Default Values for Interrupt Config */
+        /* default Values for Interrupt Config */
         .interrupt                = {
             .rxPriority    = 0,               /* receive interrupt priority 0 */
             .txPriority    = 0,               /* transmit interrupt priority 0 */
@@ -361,7 +367,7 @@ void IfxAsclin_Spi_initModuleConfig(IfxAsclin_Spi_Config *config, Ifx_ASCLIN *as
         .pins                     = NULL_PTR, /* pins to null pointer */
     };
 
-    /* Default Configuration */
+    /* default Configuration */
     *config        = defaultConfig;
     /* take over module pointer */
     config->asclin = asclin;
@@ -370,7 +376,8 @@ void IfxAsclin_Spi_initModuleConfig(IfxAsclin_Spi_Config *config, Ifx_ASCLIN *as
 
 void IfxAsclin_Spi_isrError(IfxAsclin_Spi *asclin)
 {
-    Ifx_ASCLIN *asclinSFR = asclin->asclin; /* getting the pointer to ASCLIN registers from module handler */
+	/* getting the pointer to ASCLIN registers from module handler */
+    Ifx_ASCLIN *asclinSFR = asclin->asclin;
 
     /* store all the flags in the variable */
     if (IfxAsclin_getFrameErrorFlagStatus(asclinSFR))
@@ -401,17 +408,25 @@ void IfxAsclin_Spi_isrError(IfxAsclin_Spi *asclin)
 
 void IfxAsclin_Spi_isrReceive(IfxAsclin_Spi *asclin)
 {
-    Ifx_ASCLIN *asclinSFR = asclin->asclin;        /* getting the pointer to ASCLIN registers from module handler*/
-    IfxAsclin_clearRxFifoFillLevelFlag(asclinSFR); /* clear the interrupt flag */
-    IfxAsclin_Spi_read(asclin);                    /* read the remaining data */
+	/* getting the pointer to ASCLIN registers from module handler */
+    Ifx_ASCLIN *asclinSFR = asclin->asclin;
+
+    /* clear the interrupt flag */
+    IfxAsclin_clearRxFifoFillLevelFlag(asclinSFR);
+    /* read the remaining data */
+    IfxAsclin_Spi_read(asclin);
 }
 
 
 void IfxAsclin_Spi_isrTransmit(IfxAsclin_Spi *asclin)
 {
-    Ifx_ASCLIN *asclinSFR = asclin->asclin;        /* getting the pointer to ASCLIN registers from module handler */
-    IfxAsclin_clearTxFifoFillLevelFlag(asclinSFR); /* clear the interrupt flag */
-    IfxAsclin_Spi_write(asclin);                   /* write the remaining data */
+	/* getting the pointer to ASCLIN registers from module handler */
+    Ifx_ASCLIN *asclinSFR = asclin->asclin;
+
+    /* clear the interrupt flag */
+    IfxAsclin_clearTxFifoFillLevelFlag(asclinSFR);
+    /* write the remaining data */
+    IfxAsclin_Spi_write(asclin);
 }
 
 
@@ -440,8 +455,10 @@ IFX_STATIC IfxAsclin_Spi_Status IfxAsclin_Spi_lock(IfxAsclin_Spi *asclin)
 
 void IfxAsclin_Spi_read(IfxAsclin_Spi *asclin)
 {
-    Ifx_ASCLIN        *asclinSFR = asclin->asclin;                                  /* getting the pointer to ASCLIN registers from module handler */
-    IfxAsclin_Spi_Job *job       = &asclin->rxJob;                                  /* getting the rxJob structure from module handler */
+	/* getting the pointer to ASCLIN registers from module handler */
+    Ifx_ASCLIN        *asclinSFR = asclin->asclin;
+    /* getting the rxJob structure from module handler */
+    IfxAsclin_Spi_Job *job       = &asclin->rxJob;
 
     uint32             count     = (uint32)IfxAsclin_getRxFifoFillLevel(asclinSFR); /* get the readable count of Rx fifo */
     count = __min(job->pending, count);                                             /* check for the end of the data */
@@ -468,13 +485,13 @@ void IfxAsclin_Spi_read(IfxAsclin_Spi *asclin)
             job->data = &(((uint8 *)job->data)[count]);    /* pointing to the remaining data */
             break;
 
-        case 2:                                            /* in case of 16 bit wide*/
+        case 2:                                            /* in case of 16 bit wide */
             IfxAsclin_read16(asclinSFR, job->data, count); /* reading from Rx FIFO */
             job->data = &(((uint16 *)job->data)[count]);   /* pointing to the remaining data */
             break;
 
 #if IFXASCLIN_SPI_IS_DATAWIDTH32_AVAILABLE
-        case 3:                                            /* in case of 32 bit wide*/
+        case 3:                                            /* in case of 32 bit wide */
             IfxAsclin_read32(asclinSFR, job->data, count); /* reading from Rx FIFO */
             job->data = &(((uint32 *)job->data)[count]);   /* pointing to the remaining data */
             break;
@@ -498,8 +515,10 @@ IFX_STATIC void IfxAsclin_Spi_unlock(IfxAsclin_Spi *asclin)
 
 void IfxAsclin_Spi_write(IfxAsclin_Spi *asclin)
 {
-    Ifx_ASCLIN        *asclinSFR = asclin->asclin;    /* getting the pointer to ASCLIN registers from module handler */
-    IfxAsclin_Spi_Job *job       = &asclin->txJob;    /* getting the txJob structure from module handler */
+	/* getting the pointer to ASCLIN registers from module handler */
+    Ifx_ASCLIN        *asclinSFR = asclin->asclin;
+    /* getting the txJob structure from module handler */
+    IfxAsclin_Spi_Job *job       = &asclin->txJob;
 
     if (job->pending)
     {
@@ -516,12 +535,12 @@ void IfxAsclin_Spi_write(IfxAsclin_Spi *asclin)
 
             for (i = 0; i < count; i++)
             {
-                IfxAsclin_writeTxData(asclinSFR, ~0); /* write all 1's */
+                IfxAsclin_writeTxData(asclinSFR, ~0); 									 /* write all 1's */
             }
         }
         else
         {
-            job->pending = job->pending - count;                      /* discount the current filling count from job pending */
+            job->pending = job->pending - count;                      					 /* discount the current filling count from job pending */
 
             /* write data up to the count based on the in width */
             switch (asclin->dataWidth)
@@ -537,7 +556,7 @@ void IfxAsclin_Spi_write(IfxAsclin_Spi *asclin)
                 break;
 				
 #if IFXASCLIN_SPI_IS_DATAWIDTH32_AVAILABLE
-            case 3:                                             /* in case of 32 bit wide*/
+            case 3:                                             /* in case of 32 bit wide */
                 IfxAsclin_write32(asclinSFR, job->data, count); /* writing to Tx FIFO */
                 job->data = &(((uint32 *)job->data)[count]);    /* pointing to the remaining data */
                 break;

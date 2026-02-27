@@ -2,7 +2,7 @@
  * \file IfxStm.c
  * \brief STM  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -67,10 +67,12 @@ void IfxStm_clearCompareFlag(Ifx_CPU *cpu, IfxStm_Comparator comparator)
 
     if (comparator == IfxStm_Comparator_0)
     {
+    	/* Clears the Reset Compare Register CMP0 Interrupt Flag */
         iscr->B.CMP0IRR = 1U;
     }
     else if (comparator == IfxStm_Comparator_1)
     {
+    	/* Clears the Reset Compare Register CMP1 Interrupt Flag */
         iscr->B.CMP1IRR = 1U;
     }
 }
@@ -91,10 +93,12 @@ void IfxStm_disableComparatorInterrupt(Ifx_CPU *cpu, IfxStm_Comparator comparato
 
     if (comparator == IfxStm_Comparator_0)
     {
+    	/* Disables the Compare Register CMP0 Interrupt Enable Control */
         icr->B.CMP0EN = 0U;
     }
-    else // if (comparator == IfxStm_Comparator_1)
+    else /* if (comparator == IfxStm_Comparator_1) */
     {
+    	/* Disables the Compare Register CMP1 Interrupt Enable Control */
         icr->B.CMP1EN = 0U;
     }
 }
@@ -122,10 +126,12 @@ void IfxStm_enableComparatorInterrupt(Ifx_CPU *cpu, IfxStm_Comparator comparator
 
     if (comparator == IfxStm_Comparator_0)
     {
+    	/* Enables the Compare Register CMP0 Interrupt Enable Control */
         icr->B.CMP0EN = 1U;
     }
     else if (comparator == IfxStm_Comparator_1)
     {
+    	/* Enables the Compare Register CMP1 Interrupt Enable Control */
         icr->B.CMP1EN = 1U;
     }
 }
@@ -235,15 +241,15 @@ volatile Ifx_SRC_SRCR *IfxStm_getSrcPointer(IfxStm_Index index, IfxStm_Comparato
     {
     case IfxCpu_Id_0:
     {
-        return comparator == IfxStm_ComparatorInterrupt_ir0 ? &MODULE_SRC.STMCPU0SR2 : &MODULE_SRC.STMCPU0SR3;
+        return comparator == IfxStm_ComparatorInterrupt_ir0 ? &SRC_STMCPU0SR2 : &SRC_STMCPU0SR3;
     }
     case IfxCpu_Id_1:
     {
-        return comparator == IfxStm_ComparatorInterrupt_ir0 ? &MODULE_SRC.STMCPU1SR2 : &MODULE_SRC.STMCPU1SR3;
+        return comparator == IfxStm_ComparatorInterrupt_ir0 ? &SRC_STMCPU1SR2 : &SRC_STMCPU1SR3;
     }
     case IfxCpu_Id_6:
     {
-        return comparator == IfxStm_ComparatorInterrupt_ir0 ? &MODULE_SRC.STMCPUCSSR2 : &MODULE_SRC.STMCPUCSSR3;
+        return comparator == IfxStm_ComparatorInterrupt_ir0 ? &SRC_STMCPUCSSR2 : &SRC_STMCPUCSSR3;
     }
     default:
 
@@ -283,6 +289,7 @@ boolean IfxStm_initCompare(Ifx_CPU *cpu, const IfxStm_CompareConfig *config)
 
     if (config->comparator == IfxStm_Comparator_0)
     {
+    	/* Configures the size, offset, and interrupt for Comparator 0 */
         comconTemp.B.MSIZE0   = config->compareSize;
         comconTemp.B.MSTART0  = config->compareOffset;
         comconTemp.B.RELCOMP0 = config->comparison;
@@ -291,6 +298,7 @@ boolean IfxStm_initCompare(Ifx_CPU *cpu, const IfxStm_CompareConfig *config)
     }
     else if (config->comparator == IfxStm_Comparator_1)
     {
+    	/* Configures the size, offset, and interrupt for Comparator 1 */
         comconTemp.B.MSIZE1   = config->compareSize;
         comconTemp.B.MSTART1  = config->compareOffset;
         comconTemp.B.RELCOMP1 = config->comparison;
@@ -299,15 +307,15 @@ boolean IfxStm_initCompare(Ifx_CPU *cpu, const IfxStm_CompareConfig *config)
     }
     else
     {
-        /*Invalid value */
+        /* Invalid value */
         result = FALSE;
     }
 
     icr->U    = icrTemp.U;
     comcon->U = comconTemp.U;
 
-    /* configure interrupt */
-    index = IfxCpu_getCoreId();
+    /* Configures interrupt */
+	index = IfxStm_getIndex(cpu);
 
     if (config->triggerPriority > 0)
     {
@@ -317,7 +325,7 @@ boolean IfxStm_initCompare(Ifx_CPU *cpu, const IfxStm_CompareConfig *config)
         IfxSrc_enable(srcr);
     }
 
-    /*Configure the comparator ticks to current value to avoid any wrong triggering*/
+    /* Configures the comparator ticks to current value to avoid any wrong triggering */
     if (config->comparator == IfxStm_Comparator_0)
     {
         cmp0->U = (uint32)IfxStm_getOffsetTimer(cpu, (uint8)config->compareOffset);
@@ -328,17 +336,17 @@ boolean IfxStm_initCompare(Ifx_CPU *cpu, const IfxStm_CompareConfig *config)
     }
     else
     {
-        /*Invalid value */
+        /* Invalid value */
         result = FALSE;
     }
 
-    /* clear the interrupt flag of the selected comparator before enabling the interrupt */
-    /* this is to avaoid the unneccesary interrupt for the compare match of reset values of the registers */
+    /* Clears the interrupt flag of the selected comparator before enabling the interrupt */
+    /* This is to avoid the unnecessary interrupt for the compare match of reset values of the registers */
     IfxStm_clearCompareFlag(cpu, config->comparator);
-    /* enable the interrupt for the selected comparator */
+    /* Enables the interrupt for the selected comparator */
     IfxStm_enableComparatorInterrupt(cpu, config->comparator);
 
-    /*Configure the comparator ticks */
+    /* Configures the comparator ticks */
     if (config->comparator == IfxStm_Comparator_0)
     {
         cmp0->U = (uint32)IfxStm_getOffsetTimer(cpu, (uint8)config->compareOffset) + config->ticks;
@@ -349,7 +357,7 @@ boolean IfxStm_initCompare(Ifx_CPU *cpu, const IfxStm_CompareConfig *config)
     }
     else
     {
-        /*Invalid value */
+        /* Invalid value */
         result = FALSE;
     }
 
@@ -359,11 +367,12 @@ boolean IfxStm_initCompare(Ifx_CPU *cpu, const IfxStm_CompareConfig *config)
 
 void IfxStm_initCompareConfig(IfxStm_CompareConfig *config)
 {
+	/* Initializes compare configuration with default values */
     config->comparator          = IfxStm_Comparator_0;
     config->compareOffset       = IfxStm_ComparatorOffset_0;
     config->compareSize         = IfxStm_ComparatorSize_32Bits;
     config->comparison          = IfxStm_ComparatorComparison_absolute;
-    config->comparatorInterrupt = IfxStm_ComparatorInterrupt_ir0;     /*User must select the interrupt output */
+    config->comparatorInterrupt = IfxStm_ComparatorInterrupt_ir0;     /* User must select the interrupt output */
     config->ticks               = 0xFFFFFFFF;
     config->triggerPriority     = 0;
     config->typeOfService       = IfxSrc_Tos_cpu0;
@@ -388,7 +397,7 @@ boolean IfxStm_isCompareFlagSet(Ifx_CPU *cpu, IfxStm_Comparator comparator)
     {
         return isr->B.CMP0IR;
     }
-    else // if (comparator == IfxStm_Comparator_1)
+    else /* if (comparator == IfxStm_Comparator_1) */
     {
         return isr->B.CMP1IR;
     }
@@ -418,12 +427,14 @@ void IfxStm_setCompareControl(Ifx_CPU *cpu, IfxStm_Comparator comparator, IfxStm
 
     if (comparator == 0)
     {
+    	/* Configures the size, offset, and interrupt for Comparator 0 */
         comconTemp.B.MSIZE0  = size;
         comconTemp.B.MSTART0 = offset;
         icrTemp.B.CMP0OS     = interrupt;
     }
-    else // if (comparator == 1)
+    else /* if (comparator == 1) */
     {
+    	/* Configures the size, offset, and interrupt for Comparator 1 */
         comconTemp.B.MSIZE1  = size;
         comconTemp.B.MSTART1 = offset;
         icrTemp.B.CMP1OS     = interrupt;
@@ -437,10 +448,17 @@ void IfxStm_setCompareControl(Ifx_CPU *cpu, IfxStm_Comparator comparator, IfxStm
 void IfxStm_configureAccessToStms(IfxApApu_ApuConfig *apConfig)
 {
     uint8 index;
-
+#if ON_AURIX_VP == 0
     for (index = 0; index < IFXSTM_NUM_MODULES; index++)
     {
         Ifx_CPU *cpu = IfxCpu_cfg_indexMap[index].module;
         IfxApApu_init((Ifx_ACCEN_ACCEN *)&cpu->ACCENSTMCFG, apConfig);
     }
+#else
+	for (index = 0; index < (IFXSTM_NUM_MODULES - 1); index++)
+    {
+        Ifx_CPU *cpu = IfxCpu_cfg_indexMap[index].module;
+        IfxApApu_init((Ifx_ACCEN_ACCEN *)&cpu->ACCENSTMCFG, apConfig);
+    }
+#endif
 }

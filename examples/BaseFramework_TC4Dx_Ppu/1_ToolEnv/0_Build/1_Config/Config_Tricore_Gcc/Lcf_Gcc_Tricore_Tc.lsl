@@ -166,7 +166,6 @@ MEMORY
     pfls5 (rx!p): org = 0x81200000, len = 2M
     pfls5_nc (rx!p): org = 0xA1200000, len = 2M
 
-	
     ucb (rx!p): org = 0xae400000, len = 80K
 
     cpu0_dlmu (w!xp): org = 0x90000000, len = 512K
@@ -190,11 +189,19 @@ MEMORY
     lmuram (w!xp): org = 0x90400000, len = 5M - 512K
     lmuram_nc (w!xp): org = 0xb0400000, len = 5M - 512K
     
-    ppu_lmuram (w!xp): org = 0x90880000, len = 512K
-    ppu_lmuram_nc (w!xp): org = 0xb0880000, len = 512K  
+    ppu_lmuram (w!xp): org = 0x90880000, len = 512K     #Reserved for Metaware PPU
+    ppu_lmuram_nc (w!xp): org = 0xb0880000, len = 512K  # Reserved for Metaware PPU
+        
+    ppu_csm (w!xp): org = 0x92080000, len = 512K        #Reserved for Metaware PPU
+    ppu_csm_nc (w!xp): org = 0xb2080000, len = 512K     #Reserved for Metaware PPU
     
-    ppu_csm (w!xp): org = 0x92080000, len = 512K
-    ppu_csm_nc (w!xp): org = 0xb2080000, len = 512K
+    pfls5_ppu(rx!p)      : org = 0x81300000, len = 1024K   #Reserved for Metaware PPU
+    
+    ppu_vccm(rx!p) : org = 0xC0000000, len = 128K   #Reserved for Metaware PPU
+
+    lmu_not_allocated1(rx!p) : org = 0xB0400000, len = 2048K   #Reserved for Metaware PPU
+    lmu_not_allocated2(rx!p) : org = 0xB0780000, len = 1024K   #Reserved for Metaware PPU
+    per_space_no_aloc1(rx!p) : org = 0xF0000000, len = 256M    #Reserved for Metaware PPU
 }
 
 /* map local memory address to a global address */
@@ -2540,6 +2547,46 @@ SECTIONS
     . += LCF_PPU_CSM_SIZE;
     __PPU_CSM_END = .;
     } > ppu_csm_nc
+
+    .shared_mem_ppu_pfls5_ppu : FLAGS(aw)
+    {
+        . = ALIGN(64);
+        _fshared_pfls5_ppu = .;
+        . += LENGTH(pfls5_ppu);
+        _eshared_pfls5_ppu = .;
+    } > pfls5_ppu
+
+    .shared_mem_ppu_ppu_vccm : FLAGS(aw)
+    {
+        . = ALIGN(64);
+        _fshared_ppu_vccm = .;
+        . += LENGTH(ppu_vccm);
+        _eshared_ppu_vccm = .;
+    } > ppu_vccm
+
+    .shared_mem_ppu_lmu_not_allocated1 : FLAGS(aw)
+    {
+        . = ALIGN(64);
+        _fshared_lmu_not_allocated1 = .;
+        . += LENGTH(lmu_not_allocated1);
+        _eshared_lmu_not_allocated1 = .;
+    } > lmu_not_allocated1
+
+    .shared_mem_ppu_lmu_not_allocated2 : FLAGS(aw)
+    {
+        . = ALIGN(64);
+        _fshared_lmu_not_allocated2 = .;
+        . += LENGTH(lmu_not_allocated2);
+        _eshared_lmu_not_allocated2 = .;
+    } > lmu_not_allocated2
+
+    .shared_mem_ppu_per_space_no_aloc1 : FLAGS(aw)
+    {
+        . = ALIGN(64);
+        _fshared_per_space_no_aloc1 = .;
+        . += LENGTH(per_space_no_aloc1);
+        _eshared_per_space_no_aloc1 = .;
+    } > per_space_no_aloc1
     
 }
 
@@ -3026,3 +3073,4 @@ SECTIONS
     .version_info    0 : { *(.version_info) }
     .boffs           0 : { KEEP (*(.boffs)) }
 }
+

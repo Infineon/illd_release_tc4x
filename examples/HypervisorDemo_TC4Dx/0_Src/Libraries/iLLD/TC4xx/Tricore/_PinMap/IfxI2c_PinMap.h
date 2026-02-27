@@ -3,9 +3,9 @@
  * \brief I2C  details
  * \ingroup IfxLld_I2c
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-08-07 05:48:20
  *
  *
  *                                 IMPORTANT NOTICE

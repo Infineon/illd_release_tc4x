@@ -3,7 +3,7 @@
  * \brief EGTM TIMER details
  * \ingroup IfxLld_Egtm
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -82,9 +82,9 @@ typedef struct
     IfxEgtm_Cluster               clsIndex;                         /**< \brief Specifies the CLS instance number */
     IfxEgtm_Tim_Ch                channel;                          /**< \brief Tim channel no */
     IfxEgtm_Tim_ChannelControl    channelControl;                   /**< \brief Control configuration */
-    uint32                        raisingEdgeFilterTime;            /**< \brief Filter Raising Edge parameter */
-    uint32                        fallingEdgeFilterTime;            /**< \brief Filter Falling Edge parameter */
-    uint32                        shadowCounter;                    /**< \brief Shadow counter value */
+    uint32                        raisingEdgeFilterTime;            /**< \brief Filter Raising Edge parameter. Range: 0 to 0xFFFFFF */
+    uint32                        fallingEdgeFilterTime;            /**< \brief Filter Falling Edge parameter. Range: 0 to 0xFFFFFF */
+    uint32                        shadowCounter;                    /**< \brief Shadow counter value. Range: 0 to 0xFFFFFF */
     boolean                       irqEnable;                        /**< \brief enable interrupt notification */
     IfxEgtm_IrqMode               irqMode;                          /**< \brief interrupt mode (level/pulse/pulse notify/single pulse) */
     IfxEgtm_Tim_IrqType           irqType;                          /**< \brief interrupt type (new value/ ecnt overflow/ gpr overflow/ cnt overflow / TO detect / glitch detect) */
@@ -102,16 +102,20 @@ typedef struct
 /******************************************************************************/
 
 /** \brief initializes the TIM channel object
- * \param driver TOM Timer interface Handle
- * \param config Configuration structure for TIM
- * \return None
+ *
+ * \param[inout] driver TOM Timer interface Handle
+ * \param[in]    config Configuration structure for TIM
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Tim_Timer_initChannel(IfxEgtm_Tim_Timer *driver, IfxEgtm_Tim_Timer_Config *config);
 
 /** \brief initialize the config struct with default TIM channel configuration
- * \param config pointer to the TIM Channel configuration (it will be initialized by this function)
- * \param egtm Pointer to EGTM module
- * \return None
+ *
+ * \param[inout] config Pointer to the TIM Channel configuration (it will be initialized by this function)
+ * \param[in]    egtm   Pointer to EGTM module
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Tim_Timer_initChannelConfig(IfxEgtm_Tim_Timer_Config *config, Ifx_EGTM *egtm);
 

@@ -1,6 +1,6 @@
 /**
  * \file IfxCpu_IntrinsicsWindriver.h
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -48,6 +48,10 @@
 #include "Ifx_Types.h"
 
 /******************************************************************************/
+
+/* Endian Swap for CRC32 Calculation*/
+#define CPU_CRC_ENDIAN_SWAP 0  /* No Swap by default*/
+
 /* *INDENT-OFF* */
 /** \defgroup IfxLld_Cpu_Intrinsics_Windriver_min_smax Minimum and Maximum of (Short) Integers
  These intrinsic functions return the minimum or maximum of a signed integer, unsigned integer or short integer.
@@ -1537,17 +1541,38 @@ IFX_INLINE void Ifx__copyDoubleDouble(volatile uint32 *src, volatile uint32 *dst
     *(dst64 + 1) = *(src64 + 1);
 }
 
-IFX_INLINE unsigned int IfxCpu_calculateCrc32(uint32 *startaddress, uint8 length)
+/** \brief Calculate CRC32 over a data block
+ *
+ * \param[in] startaddress Pointer to starting address of data block (32-bit aligned)
+ * \param[in] length       Number of 32-bit words to process (0 to 0xFFFFFFFF, i.e. up to 16GB)
+ * \param[in] seed         Initial seed value for CRC calculation (use 0 for standard CRC32)
+ *
+ * \retval uint32 Calculated CRC32 value
+ */
+IFX_INLINE unsigned int IfxCpu_calculateCrc32(uint32 *startaddress, uint32 length, uint32 seed)
 {
-    uint32 returnvalue = 0; /* set seed value to 0 */
+    uint32 returnvalue = seed;
+    uint32 dataWord;
+    
     for (;length > 0; length--)
     {
-          /* calculate the CRC over all data */
-        returnvalue = Ifx__crc32(returnvalue,*startaddress);
+        dataWord = *startaddress;
+        
+#if CPU_CRC_ENDIAN_SWAP
+        /* swap bytes within the 32-bit word */
+        dataWord = ((dataWord & 0x000000FFU) << 24) |
+                  ((dataWord & 0x0000FF00U) << 8)  |
+                  ((dataWord & 0x00FF0000U) >> 8)  |
+                  ((dataWord & 0xFF000000U) >> 24);
+#endif
+        
+        /* Calculate the CRC over current data word */
+        returnvalue = Ifx__crc32(returnvalue, dataWord);
         startaddress++;
     }
     return returnvalue;
 }
+
 
 /** \brief Function calculates a user defined CRC
  *

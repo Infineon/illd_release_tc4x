@@ -3,9 +3,9 @@
  * \brief ADC CDSP details
  * \ingroup IfxLld_Adc
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-04-02 11:05:08
  *
  *
  *                                 IMPORTANT NOTICE
@@ -159,7 +159,7 @@
  *      boundaryConfig.boundaryMode        = IfxAdc_CdspBoundaryCmpMode_disable; //Boundary flag condition disabled
  *
  *      //Trigger Configuration. Timestamp and Integrator trigger configuration is set to NULL_PTR. If required follow the similar steps as boundary trigger and service trigger
- *     IfxAdc_Cdsp_ServReqTrigger srvtrigger    = {IfxAdc_CdspTriggerSel_0, 100};
+ *      IfxAdc_Cdsp_ServReqTrigger srvtrigger    = {IfxAdc_CdspTriggerSel_0, 100};
  *      IfxAdc_Cdsp_Trigger bndtrigger    = {IfxAdc_CdspTriggerSel_1, IfxAdc_CdspTriggerMode_risingEdge, 150};
  *      IfxAdc_Cdsp_TriggerConfig trigCfg = {&srvtrigger, NULL_PTR, &bndtrigger, NULL_PTR};
  *
@@ -196,13 +196,15 @@
  *      dspConfig.resultCfg.dataReadWidth   = IfxAdc_CdspDataReadWidth_16Bit;
  *      dspConfig.resultCfg.fifoSrvLevel    = IfxAdc_CdspFifoSrLevel_1;
  *      // For FFT filter use
- *     dspConfig.filterchainSel = IfxAdc_Cdsp_FilterChainSel_fc6,
+ *      dspConfig.filterchainSel = IfxAdc_Cdsp_FilterChainSel_fc6,
  *      //Now initialize the Dsp core with your configuration
  *      IfxAdc_Cdsp_initDspCore(&dspCore0Handle, &dspConfig);
  *
  * \endcode
  *
  * The CDSP is ready for use now!
+ *
+ * NOTE : The DCCM example in the iLLD(IfxAdcCdspFw_cfg.c file) is intended as a usage example and may not work as-is for every application. It should be adapted to the application's requirements.
  *
  * \section IfxLld_Adc_Cdsp_ConversionResult Conversion Result
  * \code
@@ -617,9 +619,14 @@
 /******************************************************************************/
 
 /** \brief Type definition for Callback functions
- * \return None
+ * \retval None
  */
 typedef void (*IfxAdc_Cdsp_Callback)(void);
+
+/** \Alias type used in Cdsp module to represent ADC interrupt configuration. Maps IfxAdc_Tmadc_DmaSrvReq to the generic IfxAdc_SrvReq structure,
+ * which encapsulates interrupt priority, type of service (TOS), and optional virtual machine ID (VM ID) for ADC-related interrupts.
+ */
+ typedef IfxAdc_SrvReq IfxAdc_Cdsp_DmaSrvReq;
 
 /******************************************************************************/
 /*--------------------------------Enumerations--------------------------------*/
@@ -695,27 +702,13 @@ typedef enum
 
 /** \addtogroup IfxLld_Adc_Cdsp_Data_Structures
  * \{ */
-/** \brief Data structure holding service request configuration raised by DMA to CPU.
- * If configured buffer is of type linear then buffer full interrupt.
- */
-typedef struct
-{
-    Ifx_Priority priority;            /**< \brief Interrupt priority */
-    IfxSrc_Tos   typeOfService;       /**< \brief type of interrupt service */
-    IfxSrc_VmId  vmId;                /**< \brief Virtual Machine Number */
-} IfxAdc_Cdsp_DmaSrvReq;
-
-/** \} */
-
-/** \addtogroup IfxLld_Adc_Cdsp_Data_Structures
- * \{ */
 /** \brief Cdsp DMA handle
  */
 typedef struct
 {
     IfxDma_Dma_Channel channel;       /**< \brief DMA channel handle */
     IfxDma_Index       dmaId;         /**< \brief Dma Module Index */
-    boolean            useDma;        /**< \brief use Dma for Data transfer/s */
+    boolean            useDma;        /**< \brief use Dma for Data transfer/s. Range: TRUE Enable dma for transfer, FALSE Disable dma for transfer. */
 } IfxAdc_Cdsp_Dma;
 
 /** \brief Dma configuration
@@ -733,7 +726,7 @@ typedef struct
 {
     IfxAdc_CdspTriggerSel  triggerSel;       /**< \brief Selection value for trigger */
     IfxAdc_CdspTriggerMode edgeSel;          /**< \brief Edge selection for trigger */
-    uint16                 delay;            /**< \brief Trigger delay count */
+    uint16                 delay;            /**< \brief Trigger delay count. Range: 0 to 0xFFFF */
 } IfxAdc_Cdsp_Trigger;
 
 /** \} */
@@ -743,7 +736,7 @@ typedef struct
 typedef struct
 {
     IfxAdc_CdspTriggerSel triggerSel;       /**< \brief Selection value for trigger */
-    uint16                delay;            /**< \brief Trigger delay count */
+    uint16                delay;            /**< \brief Trigger delay count. Range: 0 to 0xFFFF */
 } IfxAdc_Cdsp_ServReqTrigger;
 
 /** \brief Data structure holding software trigger configuration
@@ -752,7 +745,7 @@ typedef struct
 {
     IfxAdc_CdspTriggerSel          triggerSel;       /**< \brief Selection value for trigger */
     IfxAdc_CdspSoftwareTriggerMode edgeSel;          /**< \brief Edge selection for trigger */
-    uint16                         delay;            /**< \brief Trigger delay count */
+    uint16                         delay;            /**< \brief Trigger delay count. Range: 0 to 0xFFFF */
 } IfxAdc_Cdsp_SoftwareTrigger;
 
 /** \addtogroup IfxLld_Adc_Cdsp_Data_Structures
@@ -764,18 +757,19 @@ typedef struct
     Ifx_Priority priority;            /**< \brief Interrupt priority */
     IfxSrc_Tos   typeOfService;       /**< \brief type of interrupt service */
     IfxSrc_VmId  vmId;                /**< \brief Virtual Machine Number */
-    boolean      sr2Enable;           /**< \brief Enable service request for Boundary event(SR2) */
+    boolean      sr2Enable;           /**< \brief TRUE : Enable service request for Boundary event(SR2)
+                                                  FALSE: Disable service request for Boundary event(SR2)  */
 } IfxAdc_Cdsp_AlarmSrvReq;
 
 /** \brief Configuration of Boundary Limit Checking
  */
 typedef struct
 {
-    uint16                     upperBound;         /**< \brief Upper boundary (16 Bit) */
-    uint16                     lowerBound;         /**< \brief Lower boundary (16 Bit) */
+    uint16                     upperBound;         /**< \brief Upper boundary (16 Bit). Range: 0 to 0xFFFF */
+    uint16                     lowerBound;         /**< \brief Lower boundary (16 Bit). Range: 0 to 0xFFFF */
     IfxAdc_CdspBoundaryServReq srvReqConfig;       /**< \brief Service Request configuration */
     IfxAdc_CdspBoundaryCmpMode boundaryMode;       /**< \brief Boundary compare mode */
-    boolean                    hystEn;             /**< \brief True --> Enable hysteresis */
+    boolean                    hystEn;             /**< \brief Range: TRUE: Enable hysteresis, FALSE:  Disable hysteresis */
 } IfxAdc_Cdsp_BoundaryConfig;
 
 /** \brief Data structure holding Timestamp,wakeup event service request configuration
@@ -793,7 +787,7 @@ typedef struct
 typedef struct
 {
     IfxAdc_Cdsp_FilterChainSel filterchainId;       /**< \brief Filter Chains Id */
-    uint16                     fftSize;             /**< \brief FFT output size (Number of frequency bins) */
+    uint16                     fftSize;             /**< \brief FFT output size (Number of frequency bins). Range: 0 to 0xFFFF */
 } IfxAdc_Cdsp_Filterchain;
 
 /** \brief Data structure holding memory configuration
@@ -802,8 +796,8 @@ typedef struct
 {
     void  *codeMemSrcAddrPtr;       /**< \brief Pointer to source address */
     void  *dataMemSrcAddrPtr;       /**< \brief Pointer to source address */
-    uint16 codeSize;                /**< \brief Code Size to copy in ICCM memory */
-    uint16 dataSize;                /**< \brief Data Size to copy in DCCM memory */
+    uint16 codeSize;                /**< \brief Code Size to copy in ICCM memory. Range: 0 to 0xFFFF */
+    uint16 dataSize;                /**< \brief Data Size to copy in DCCM memory. Range: 0 to 0xFFFF */
 } IfxAdc_Cdsp_MemoryConfig;
 
 /** \brief CDSP Queue Handle
@@ -814,12 +808,12 @@ typedef struct
     IfxAdc_Cdsp_Callback   buffHandler;        /**< \brief Call back if Buffer full. Call back is provided only if ToS = CPU */
     IfxAdc_Cdsp_Dma        dma;                /**< \brief Dma Handle */
     IfxAdc_Cdsp_BufferType bufferType;         /**< \brief Type of the buffer */
-    uint16                 writeIndex;         /**< \brief Write Index of the buffer. */
-    uint16                 readIndex;          /**< \brief Read Index of the buffer. */
-    uint16                 size;               /**< \brief Size of the buffer in bytes */
-    uint16                 validResult;        /**< \brief Number of valid results */
-    boolean                bufferFull;         /**< \brief Flag to indicate if buffer full */
-    boolean                queueEnabled;       /**< \brief True --> If queue enabled */
+    uint16                 writeIndex;         /**< \brief Write Index of the buffer. Range: 0 to 0xFFFF */
+    uint16                 readIndex;          /**< \brief Read Index of the buffer. Range: 0 to 0xFFFF */
+    uint16                 size;               /**< \brief Size of the buffer in bytes. Range: 0 to 0xFFFF */
+    uint16                 validResult;        /**< \brief Number of valid results. Range: 0 to 0xFFFF */
+    boolean                bufferFull;         /**< \brief Flag to indicate if buffer full. Range: TRUE: buffer full, FALSE: buffer not full  */
+    boolean                queueEnabled;       /**< \brief Range: TRUE: If queue enabled, FALSE: If queue disabled */
 } IfxAdc_Cdsp_Queue;
 
 /** \brief CDSP Queue Configuration
@@ -837,9 +831,9 @@ typedef struct
  */
 typedef struct
 {
-    boolean                  readAsUnsigned;        /**< \brief read result as unsigned (RDM=1) */
-    boolean                  enableTimeStamp;       /**< \brief Enable Time Stamp */
-    boolean                  disableFifo;           /**< \brief Disable Fifo */
+    boolean                  readAsUnsigned;        /**< \brief read result as unsigned (RDM=1). Range: TRUE: Unsigned mode, FALSE: Signed mode */
+    boolean                  enableTimeStamp;       /**< \brief Range: TRUE: Enable Time Stamp, FALSE: Disable Time Stamp */
+    boolean                  disableFifo;           /**< \brief Range: TRUE: Disable Fifo, FALSE: Enable Fifo */
     IfxAdc_CdspFifoSrLevel   fifoSrvLevel;          /**< \brief FIFO fill level for service Request */
     IfxAdc_CdspDataReadWidth dataReadWidth;         /**< \brief Data Read Width */
 } IfxAdc_Cdsp_ResultConfig;
@@ -848,9 +842,9 @@ typedef struct
  */
 typedef struct
 {
-    uint16  timestamp;             /**< \brief Timestamp counter value */
-    uint16  result0[4];            /**< \brief Array holding the result values in FIFO */
-    boolean timestampStatus;       /**< \brief Gives the status of TIMESTAMP value */
+    uint16  timestamp;             /**< \brief Timestamp counter value. Range: 0 to 0xFFFF */
+    uint16  result0[4];            /**< \brief Array holding the result values in FIFO. Range: 0 to 0xFFFF */
+    boolean timestampStatus;       /**< \brief Gives the status of TIMESTAMP value. Range: TRUE: Time stamp is enabled, FALSE: Time stamp is disabled */
 } IfxAdc_Cdsp_ResultFifo;
 
 /** \brief Data structure holding Result service request configuration.
@@ -868,7 +862,7 @@ typedef struct
  */
 typedef struct
 {
-    boolean                   startCounter;       /**< \brief True --> Start timestamp counter */
+    boolean                   startCounter;       /**< \brief Range: TRUE : Start timestamp counter, FALSE : Stop timestamp counter */
     IfxAdc_CdspTimestampClock clk;                /**< \brief Selection of timestamp counter clock */
 } IfxAdc_Cdsp_TimestampConfig;
 
@@ -917,8 +911,8 @@ typedef struct
     Ifx_ADC_CDSP_DSP        *dspSFR;                 /**< \brief pointer to the core SFR set */
     IfxAdc_Cdsp_Callback     resHandler;             /**< \brief Result Handler */
     IfxAdc_Cdsp_CoreState    state;                  /**< \brief State of module */
-    boolean                  fifoEnabled;            /**< \brief If TRUE, FIFO is enabled for core */
-    boolean                  timeStampEnabled;       /**< \brief If TRUE, time stamp read is enabled for core */
+    boolean                  fifoEnabled;            /**< \brief Range: TRUE: FIFO is enabled for core, FALSE: FIFO is enabled for core */
+    boolean                  timeStampEnabled;       /**< \brief Range: TRUE: Time stamp read is enabled for core, FALSE: time stamp read is disabled for core */
     IfxAdc_CdspDataReadWidth dataReadWidth;          /**< \brief Data Read Width */
     IfxAdc_CdspFifoSrLevel   fifoLevel;              /**< \brief FIFO fill level for service Request */
     IfxAdc_CdspInput         inputSel;               /**< \brief CDSP input selection (TMADC, DSADC and GP register) */
@@ -957,7 +951,7 @@ typedef struct
  */
 typedef struct
 {
-    uint16 timestamp;       /**< \brief Timestamp value */
+    uint16 timestamp;       /**< \brief Timestamp value. Range: 0 to 0xFFFF */
     sint32 result;          /**< \brief result value */
 } IfxAdc_Cdsp_Result;
 
@@ -989,30 +983,38 @@ typedef struct
 /******************************************************************************/
 
 /** \brief Function to initialize module.
- * \param cdsp Pointer to module handler
- * \param config Pointer to module configuration
- * \return None
+ *
+ * \param[inout] cdsp   Pointer to module handler
+ * \param[in]    config Pointer to module configuration
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAdc_Cdsp_initModule(IfxAdc_Cdsp *cdsp, const IfxAdc_Cdsp_Config *config);
 
 /** \brief Function to initialize module configuration structure with default values
- * \param config Pointer to module configuration
- * \param adc Pointer to ADC module sfr set
- * \return None
+ *
+ * \param[inout] config  Pointer to module configuration
+ * \param[in]    adc     Pointer to ADC module sfr set
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAdc_Cdsp_initModuleConfig(IfxAdc_Cdsp_Config *config, Ifx_ADC *adc);
 
 /** \brief Function to initialize Dsp core
- * \param dsp Pointer to handle of DSP core
- * \param config Pointer to DSP core configuration
- * \return None
+ *
+ * \param[inout] dsp    Pointer to handle of DSP core
+ * \param[in]    config Pointer to DSP core configuration
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAdc_Cdsp_initDspCore(IfxAdc_Cdsp_Dsp *dsp, IfxAdc_Cdsp_DspCoreConfig *config);
 
 /** \brief Function to the initialize configuration structure of DSP core
- * \param config Pointer to Dsp core configuration
- * \param adc Pointer to ADC module sfr set
- * \return None
+ *
+ * \param[inout] config Pointer to Dsp core configuration
+ * \param[in]    adc    Pointer to ADC module sfr set
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAdc_Cdsp_initDspCoreConfig(IfxAdc_Cdsp_DspCoreConfig *config, Ifx_ADC *adc);
 
@@ -1026,14 +1028,18 @@ IFX_EXTERN void IfxAdc_Cdsp_initDspCoreConfig(IfxAdc_Cdsp_DspCoreConfig *config,
 /******************************************************************************/
 
 /** \brief Function to read secondary DSP core result.(RES1)
- * \param dsp Pointer to dsp core handle
- * \return Return secondary result (RES1)
+ *
+ * \param[in] dsp Pointer to dsp core handle
+ *
+ * \retval Return secondary result (RES1)
  */
 IFX_INLINE sint32 IfxAdc_Cdsp_readSecondaryResult(IfxAdc_Cdsp_Dsp *dsp);
 
 /** \brief Function to read tertiary DSP core result.(RES2)
- * \param dsp Pointer to dsp core handle
- * \return Return tertiary result (RES2)
+ *
+ * \param[in] dsp Pointer to dsp core handle
+ *
+ * \retval Return tertiary result (RES2)
  */
 IFX_INLINE sint32 IfxAdc_Cdsp_readTertiaryResult(IfxAdc_Cdsp_Dsp *dsp);
 
@@ -1043,15 +1049,20 @@ IFX_INLINE sint32 IfxAdc_Cdsp_readTertiaryResult(IfxAdc_Cdsp_Dsp *dsp);
 
 /** \brief Function to read DSP core result
  * If the FIFO is disabled, recommanded to use the IfxAdc_Cdsp_readResult API [DRM = 01, DisableFIFO = TRUE]
- * \param dsp Pointer to dsp core handle
- * \return Return 16-bit result value.
+ *
+ * \param[in] dsp Pointer to dsp core handle
+ *
+ * \retval Return 16-bit result value.
  * Returns previous result if result flag not set.
+ * Range: 0 to 0xFFFF
  */
 IFX_EXTERN uint16 IfxAdc_Cdsp_readDspCoreResult(IfxAdc_Cdsp_Dsp *dsp);
 
 /** \brief Function to read DSP core result from hardware register when FiFO is disabled. (DRM-1)
- * \param dsp Pointer to dsp core handle
- * \return Return result with timestamp(if enabled)
+ *
+ * \param[in] dsp Pointer to dsp core handle
+ *
+ * \retval Return result with timestamp(if enabled)
  */
 IFX_EXTERN IfxAdc_Cdsp_Result IfxAdc_Cdsp_readResult(IfxAdc_Cdsp_Dsp *dsp);
 
@@ -1062,60 +1073,82 @@ IFX_EXTERN IfxAdc_Cdsp_Result IfxAdc_Cdsp_readResult(IfxAdc_Cdsp_Dsp *dsp);
 /******************************************************************************/
 
 /** \brief Returns timestamp counter value
- * \param dsp Pointer to handle of DSP core
- * \return Returns timestamp counter value
+ *
+ * \param[in] dsp Pointer to handle of DSP core
+ *
+ * \retval Returns timestamp counter value
+ * Range: 0 to 0xFFFF
  */
 IFX_INLINE uint16 IfxAdc_Cdsp_readTimestampCounter(IfxAdc_Cdsp_Dsp *dsp);
 
 /** \brief Returns timestamp counter value
- * \param dsp Pointer to handle of DSP core
- * \return Returns latched timestamp value
+ *
+ * \param[in] dsp Pointer to handle of DSP core
+ *
+ * \retval Returns latched timestamp value
+ * Range: 0 to 0xFFFF
  */
 IFX_INLINE uint16 IfxAdc_Cdsp_readTimestampValue(IfxAdc_Cdsp_Dsp *dsp);
 
 /** \brief Function to read intermediate integration value.
- * \param dsp Pointer to handle of DSP core
- * \return Returns intermediate integrator value
+ *
+ * \param[in] dsp Pointer to handle of DSP core
+ *
+ * \retval Returns intermediate integrator value
+ * Range: 0 to 0xFFFF FFFFF
  */
 IFX_INLINE uint32 IfxAdc_Cdsp_readIntegratorIntermediateValue(IfxAdc_Cdsp_Dsp *dsp);
 
 /** \brief Function to start timestamp counter.
- * \param dsp Pointer to handle of DSP core
- * \return None
+ *
+ * \param[inout] dsp Pointer to handle of DSP core
+ *
+ * \retval None
  */
 IFX_INLINE void IfxAdc_Cdsp_startTimestampCounter(IfxAdc_Cdsp_Dsp *dsp);
 
 /** \brief Function to start timestamp counter.
- * \param dsp Pointer to handle of DSP core
- * \return None
+ *
+ * \param[inout] dsp Pointer to handle of DSP core
+ *
+ * \retval None
  */
 IFX_INLINE void IfxAdc_Cdsp_stopTimestampCounter(IfxAdc_Cdsp_Dsp *dsp);
 
 /** \brief Function to clear buffer
- * \param dsp Pointer to handle of DSP core
- * \return None
+ *
+ * \param[inout] dsp Pointer to handle of DSP core
+ *
+ * \retval None
  */
 IFX_INLINE void IfxAdc_Cdsp_clearBuffer(IfxAdc_Cdsp_Dsp *dsp);
 
 /** \brief Function to check if buffer full
- * \param dsp Pointer to handle of DSP core
- * \return Return buffer full status.
- * TRUE --> Buffer full
+ *
+ * \param[in] dsp Pointer to handle of DSP core
+ *
+ * \retval Return buffer full status.
+ * Range: TRUE Buffer full, FALSE Buffer not full
  */
 IFX_INLINE boolean IfxAdc_Cdsp_isBufferFull(IfxAdc_Cdsp_Dsp *dsp);
 
 /** \brief Function to check if buffer empty
- * \param dsp Pointer to handle of DSP core
- * \return Return buffer empty status.
- * TRUE --> Buffer empty
+ *
+ * \param[in] dsp Pointer to handle of DSP core
+ *
+ * \retval Return buffer empty status.
+ * Range: TRUE  Buffer empty, FALSE Buffer full
  */
 IFX_INLINE boolean IfxAdc_Cdsp_isBufferEmpty(IfxAdc_Cdsp_Dsp *dsp);
 
 /** \brief Parallelize the CDSP core execution
- * \param cdsp pointer to cdsp handle
- * \param dspCoresEnableValue value to enable the DSP cores (setting the each bit in this specifies the run of
- * DSP core in corresponding CDSP. For example bit 0 of this variable controls the run of CDSP0)
- * \return None
+ *
+ * \param[inout] cdsp                Pointer to cdsp handle
+ * \param[in]    dspCoresEnableValue Value to enable the DSP cores (setting the each bit in this specifies the run of
+ *                                   DSP core in corresponding CDSP. For example bit 0 of this variable controls the run of CDSP0)
+ *                                   Range: 0 to 0xFFF
+ *
+ * \retval None
  *
  * Coding example:
  *
@@ -1130,16 +1163,22 @@ IFX_INLINE boolean IfxAdc_Cdsp_isBufferEmpty(IfxAdc_Cdsp_Dsp *dsp);
 IFX_INLINE void IfxAdc_Cdsp_enableMultipleCores(IfxAdc_Cdsp *cdsp, uint32 dspCoresEnableValue);
 
 /** \brief Function to get the number of input samples used for calculating FFT or size of the FFT
- * \param dsp pointer to dsp core handle
- * \return Number of samples
+ *
+ * \param[in] dsp pointer to dsp core handle
+ *
+ * \retval Number of samples
+ * Range: 0 to 0xFFFF
  */
 IFX_INLINE uint16 IfxAdc_Cdsp_getNumOfSamples(IfxAdc_Cdsp_Dsp *dsp);
 
 /** \brief Parallelize the CDSP core stop execution
- * \param cdsp pointer to cdsp handle
- * \param dspCoresDisableValue value to disable the DSP cores (setting the each bit to 1 in the halt register  to stop DSP core in corresponding CDSP.
- * For example bit 0 of this variable controls the stop of CDSP0).
- * \return None
+ *
+ * \param[inout] cdsp                 Pointer to cdsp handle
+ * \param[in]    dspCoresDisableValue Value to disable the DSP cores (setting the each bit to 1 in the halt register  to stop DSP core in corresponding CDSP.
+ *                                    For example bit 0 of this variable controls the stop of CDSP0).
+ *                                    Range: 0 to 0xFFF
+ *
+ * \retval None
  *
  * Coding example:
  *
@@ -1158,74 +1197,97 @@ IFX_INLINE void IfxAdc_Cdsp_disableMultipleCores(IfxAdc_Cdsp *cdsp, uint32 dspCo
 /******************************************************************************/
 
 /** \brief Function to get number of new results from the buffer
- * \param dsp Pointer to handle of DSP core
- * \return Returns number of new results from the buffer
+ *
+ * \param[in] dsp Pointer to handle of DSP core
+ *
+ * \retval Returns number of new results from the buffer
+ * Range: 0 to 0xFFFF
  */
 IFX_EXTERN uint16 IfxAdc_Cdsp_getNumberOfResults(IfxAdc_Cdsp_Dsp *dsp);
 
 /** \brief Function to copy data from hardware FIFO to software buffer.
- * \param dsp Pointer to dsp core handle
- * \return None
+ *
+ * \param[inout] dsp Pointer to dsp core handle
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAdc_Cdsp_writeBuffer(IfxAdc_Cdsp_Dsp *dsp);
 
 /** \brief Function to read immediate conversion result from circular buffer
- * \param dsp Pointer to dsp core handle
- * \return Returns immediate unread data from the buffer.
+ *
+ * \param[inout] dsp Pointer to dsp core handle
+ *
+ * \retval Returns immediate unread data from the buffer.
  */
 IFX_EXTERN sint16 IfxAdc_Cdsp_readCircularBufferResult(IfxAdc_Cdsp_Dsp *dsp);
 
 /** \brief Function to copy conversion results from application buffer to another linear buffer.
- * \param dsp Pointer to dsp core handle
- * \param resBuff Buffer to store result
- * \param size Size of data to be read
- * \return Returns read status
+ *
+ * \param[inout] dsp     Pointer to dsp core handle
+ * \param[out]   resBuff Buffer to store result
+ * \param[in]    size    Size of data to be read
+ *                       Range: 0 to 0xFFFF
+ *
+ * \retval Returns read status.
+ * Range: \ref IfxAdc_Status
  * IfxAdc_Status_success --> Read result successful
  * IfxAdc_Status_failure --> Buffer empty,read failed
  */
 IFX_EXTERN IfxAdc_Status IfxAdc_Cdsp_readStreamResult(IfxAdc_Cdsp_Dsp *dsp, uint16 *resBuff, uint16 size);
 
 /** \brief Isr for writing data from hardware buffer to software Fifo.
- * \param dsp Pointer to dsp core handle
- * \return None
+ *
+ * \param[inout] dsp Pointer to dsp core handle
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAdc_Cdsp_resultIsr(IfxAdc_Cdsp_Dsp *dsp);
 
 /** \brief Function to setup the result buffer.
- * \param dsp Pointer to dsp core handle
- * \param buffer Pointer to the buffer
- * \param size Size of the buffer
- * \return Return
- * IfxAdc_Status_success --> Setting up of result buffer is successful
- * IfxAdc_Status_failure --> Issue in setting up of result buffer
+ *
+ * \param[inout] dsp    Pointer to dsp core handle
+ * \param[in]    buffer Pointer to the buffer
+ * \param[in]    size   Size of the buffer
+ *                      Range: \ref IfxAdc_Cdsp_BufferSize
+ *
+ * \retval 
+ * Return IfxAdc_Status_success --> Setting up of result buffer is successful
+ * Return IfxAdc_Status_failure --> Issue in setting up of result buffer
  */
 IFX_EXTERN IfxAdc_Status IfxAdc_Cdsp_setupResultBuffer(IfxAdc_Cdsp_Dsp *dsp, void *buffer, IfxAdc_Cdsp_BufferSize size);
 
 /** \brief Function to get the result for Luenberger observer (LO) filter. [DRM = 01, Timestamp = FALSE]
+ *
  * Result type in Radian
- * \param dsp Pointer to dsp core handle
- * \param resultPtr result pointer to get the LO filter result
- * \return Return
- * IfxAdc_Status_success --> Update result to  buffer is successful
- * IfxAdc_Status_failure --> Buffer is null pointer
+ * \param[in]    dsp       Pointer to dsp core handle
+ * \param[inout] resultPtr Result pointer to get the LO filter result
+ *
+ * \retval 
+ * Return IfxAdc_Status_success --> Update result to  buffer is successful
+ *  Return IfxAdc_Status_failure --> Buffer is null pointer
  */
 IFX_EXTERN IfxAdc_Status IfxAdc_Cdsp_readLoFilterResult(IfxAdc_Cdsp_Dsp *dsp, IfxAdc_Cdsp_ResultLo *resultPtr);
 
 /** \brief Function to read the FFT filter result
- * \param dsp pointer to dsp core handle
- * \param resultBuff result buffer for FFT filter
- * \return Return
- * IfxAdc_Status_success --> Update result to  buffer is successful
- * IfxAdc_Status_failure --> Buffer is null pointer
+ *
+ * \param[in]    dsp        Pointer to dsp core handle
+ * \param[inout] resultBuff Result buffer for FFT filter
+ *                          Range: 0 to 0xFFFF FFFF
+ *
+ * \retval 
+ * Return IfxAdc_Status_success --> Update result to  buffer is successful
+ * Return IfxAdc_Status_failure --> Buffer is null pointer
  */
 IFX_EXTERN IfxAdc_Status IfxAdc_Cdsp_readFftFilterResult(IfxAdc_Cdsp_Dsp *dsp, uint32 *resultBuff);
 
 /** \brief Function to get the result for Predictive Maintenance
- * \param dsp Pointer to dsp core handle
- * \param resultPtr result pointer to get the Predictive Maintenance filter result
- * \return Return
- * IfxAdc_Status_success --> Update result to  buffer is successful
- * IfxAdc_Status_failure --> Buffer is null pointer
+ *
+ * \param[in]    dsp       Pointer to dsp core handle
+ * \param[inout] resultPtr Result pointer to get the Predictive Maintenance filter result
+ *
+ * \retval 
+ * Return IfxAdc_Status_success --> Update result to  buffer is successful
+ * Return IfxAdc_Status_failure --> Buffer is null pointer
  */
 IFX_EXTERN IfxAdc_Status IfxAdc_Cdsp_readPredictiveMaintenanceResult(IfxAdc_Cdsp_Dsp *dsp, IfxAdc_Cdsp_ResultPredictiveMaintenance *resultPtr);
 

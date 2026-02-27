@@ -3,7 +3,7 @@
  * \brief ADC on-chip implementation data
  * \ingroup IfxLld_Adc
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD_2_0_1_3_5
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -60,7 +60,7 @@
 #include "Ifx_Cfg.h"
 
 #if defined DEVICE_TC4DX
-#include "IfxAdcCdspFw_cfg_TC4Dx.h"
+#include "TC4Dx/IfxAdcCdspFw_cfg_TC4Dx.h"
 #endif
 
 #endif /* IFXADCCDSPFW_CFG_H */

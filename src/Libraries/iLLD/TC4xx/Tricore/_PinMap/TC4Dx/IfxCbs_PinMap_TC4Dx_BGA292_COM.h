@@ -3,7 +3,7 @@
  * \brief CBS  details
  * \ingroup IfxLld_Cbs
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *

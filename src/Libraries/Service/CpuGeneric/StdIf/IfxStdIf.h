@@ -3,7 +3,7 @@
  * \brief Standard interface types
  * \ingroup IfxLld
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2018 Infineon Technologies AG. All rights reserved.
  *
  *

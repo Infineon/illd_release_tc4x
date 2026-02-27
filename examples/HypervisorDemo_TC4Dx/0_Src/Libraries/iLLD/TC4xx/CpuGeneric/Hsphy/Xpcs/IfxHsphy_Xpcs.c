@@ -2,9 +2,9 @@
  * \file IfxHsphy_Xpcs.c
  * \brief HSPHY XPCS details
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2026-02-03 13:25:39
  *
  *
  *                                 IMPORTANT NOTICE
@@ -65,7 +65,7 @@ boolean IfxHsphy_Xpcs_sgmiiDataPathInit(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_XpcsInd
     uint8  timeOutError      = 0U;
 
 #if IFXHSPHY_XDATAPATH_INIT_TRIG
-    //Initialize XPCS data path
+    /* Initialize XPCS data path */
 	hsphyRegPtr->XPCS[xpcsIndex].PCS.VR_XS_DIG_CTRL1.B.INIT = 1;
 
 	while (hsphyRegPtr->XPCS[xpcsIndex].PCS.VR_XS_DIG_CTRL1.B.INIT == 1)
@@ -74,10 +74,10 @@ boolean IfxHsphy_Xpcs_sgmiiDataPathInit(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_XpcsInd
 	}
 #endif /* #if IFXHSPHY_XDATAPATH_INIT_TRIG */
 
-    //Initialize XPCS data path
+    /* Initialize XPCS data path */
     hsphyRegPtr->XPCS[xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_TX_GENCTRL1.B.TX_CLK_RDY_0 = 0;
-    hsphyRegPtr->XPCS[xpcsIndex].PCS.SR_XS_CTRL1.B.LPM                               = 1; //power down the DWC_xpcs
-
+    /* ower down the DWC_xpcs */
+    hsphyRegPtr->XPCS[xpcsIndex].PCS.SR_XS_CTRL1.B.LPM                               = 1; 
 #if IFXHSPHY_TIMEOUT_CHECK
     timeoutCycleCount                                                                = IFXHSPHY_MAX_TIMEOUT;
 #endif /* #if IFXHSPHY_TIMEOUT_CHECK */
@@ -91,8 +91,8 @@ boolean IfxHsphy_Xpcs_sgmiiDataPathInit(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_XpcsInd
     {
         return TRUE;
     }
-
-    hsphyRegPtr->XPCS[xpcsIndex].PCS.SR_XS_CTRL1.U &= (uint32)(~((1 << IFX_HSPHY_XPCS_PCS_SR_XS_CTRL1_LPM_OFF) | (1 << IFX_HSPHY_XPCS_PCS_SR_XS_CTRL1_RST_OFF)));      //power up the DWC_xpcs
+    /* Power up the DWC_xpcs */
+    hsphyRegPtr->XPCS[xpcsIndex].PCS.SR_XS_CTRL1.U &= (uint32)(~((1 << IFX_HSPHY_XPCS_PCS_SR_XS_CTRL1_LPM_OFF) | (1 << IFX_HSPHY_XPCS_PCS_SR_XS_CTRL1_RST_OFF)));      
 
     timeoutCycleCount                               = IFXHSPHY_MAX_TIMEOUT;
 
@@ -147,8 +147,6 @@ IfxHsphy_Geth_SgmiiSpeedConfigStatus IfxHsphy_Xpcs_setSgmiiSpeedMode(Ifx_HSPHY *
 IfxHsphy_SgmiiSpeedConfigStatus IfxHsphy_Xpcs_setSgmiiSpeedMode(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_TrgtDeviceSpeed trgtSpeed, const IfxHsphy_XpcsParams *xpcs)
 #endif /* #if IFXHSPHY_IS_GETH_AVAILABLE */
 {
-    uint32              timeoutCycleCount = IFXHSPHY_MAX_TIMEOUT;
-    uint8               timeOutError      = 0U;
     IfxHsphy_SgmiiSpeed sgmiiSpeed        = IfxHsphy_SgmiiSpeed_1G;
     boolean             relvalCheck;
 
@@ -205,7 +203,7 @@ IfxHsphy_SgmiiSpeedConfigStatus IfxHsphy_Xpcs_setSgmiiSpeedMode(Ifx_HSPHY *hsphy
 
     else if (trgtSpeed == IfxHsphy_TrgtDeviceSpeed_1G)
     {
-        //Set XPCS in 1G mode
+        /* Set XPCS in 1G mode */
 #if (IFXHSPHY_PLATFORM_SIMULATION == 1)
         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_RX_GENCTRL1.B.RX_RST_0 = 1;
 #endif
@@ -218,7 +216,7 @@ IfxHsphy_SgmiiSpeedConfigStatus IfxHsphy_Xpcs_setSgmiiSpeedMode(Ifx_HSPHY *hsphy
 #if IFXHSPHY_IS_TRGTDEVICE_SPEED_2P5G
     else if (trgtSpeed == IfxHsphy_TrgtDeviceSpeed_2P5G)
     {
-        //Set XPCS in 2.5G mode
+        /* Set XPCS in 2.5G mode */
 #if (IFXHSPHY_PLATFORM_SIMULATION == 1)
         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_RX_GENCTRL1.B.RX_RST_0 = 1;
 #endif
@@ -233,7 +231,7 @@ IfxHsphy_SgmiiSpeedConfigStatus IfxHsphy_Xpcs_setSgmiiSpeedMode(Ifx_HSPHY *hsphy
 #elif IFXHSPHY_IS_TRGTDEVICE_SPEED_5G
     else if (trgtSpeed == IfxHsphy_TrgtDeviceSpeed_5G)
     {
-        //Set XPCS in 5G mode
+        /* Set XPCS in 5G mode */
         sgmiiSpeed                                                        = IfxHsphy_SgmiiSpeed_5G;
         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.SR_XS_CTRL2.B.PCS_TYPE_SEL = IFXHSPHY_SET_FIELD_VALUE(XPCS_PCS_SR_XS_CTRL2, PCS_TYPE_SEL, IfxHsphy_PcsTypeSel_2P5GBASE_X);
         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.SR_CTRL1.B.SS13            = 0;
@@ -248,26 +246,10 @@ IfxHsphy_SgmiiSpeedConfigStatus IfxHsphy_Xpcs_setSgmiiSpeedMode(Ifx_HSPHY *hsphy
 #endif /* #if IFXHSPHY_IS_GETH_AVAILABLE */
     }
 
-    //config the ref freq selected
+    /* Config the ref freq selected */
     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_REF_CLK_CTRL.B.REF_MPLLA_DIV2 = IfxHsphy_Sgmii_refClkConfig[xpcs->xpcsRefClk][IfxHsphy_SgmiiRefClkBits_refMpllaDiv2];
     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_REF_CLK_CTRL.B.REF_CLK_DIV2   = IfxHsphy_Sgmii_refClkConfig[xpcs->xpcsRefClk][IfxHsphy_SgmiiRefClkBits_refClKDiv2];
     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_REF_CLK_CTRL.B.REF_RANGE      = IfxHsphy_Sgmii_refClkConfig[xpcs->xpcsRefClk][IfxHsphy_SgmiiRefClkBits_refRange];
-
-    hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.VR_XS_DIG_CTRL1.B.VR_RST                           = 1;
-
-    while (hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.VR_XS_DIG_CTRL1.B.VR_RST != 0)
-    {
-        IFXHSPHY_LOOP_TIMEOUT_CHECK(timeoutCycleCount, timeOutError);
-    }
-
-    if (timeOutError == TRUE)
-    {
-#if IFXHSPHY_IS_GETH_AVAILABLE	
-        return IfxHsphy_Geth_SgmiiSpeedConfigStatus_timeOutError;	
-#else	
-        return IfxHsphy_SgmiiSpeedConfigStatus_timeOutError;
-#endif /* #if IFXHSPHY_IS_GETH_AVAILABLE */
-    }
 
     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_MPLLA_CTRL0.B.MPLLA_MULTIPLIER        = IfxHsphy_Sgmii_paramConfig[sgmiiSpeed][xpcs->xpcsRefClk][IfxHsphy_SgmiiParamIndex_mpllaMultiplier];
     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_MPLLA_CTRL2.B.MPLLA_TX_CLK_DIV        = IfxHsphy_Sgmii_paramConfig[sgmiiSpeed][xpcs->xpcsRefClk][IfxHsphy_SgmiiParamIndex_mpllaTxClkDiv];
@@ -347,7 +329,8 @@ boolean IfxHsphy_Xpcs_setUsxgmiiSpeedMode(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_TrgtD
 
     if (trgtSpeed == IfxHsphy_TrgtDeviceSpeed_5G)
     {
-        relvalCheck = IfxHsphy_sgmiiMpllDisable(hsphyRegPtr, xpcs->xpcsIndex); //need to change the func name specific to serial 100M
+        /* Need to change the func name specific to serial 100M */
+        relvalCheck = IfxHsphy_sgmiiMpllDisable(hsphyRegPtr, xpcs->xpcsIndex); 
 
         if (relvalCheck == TRUE)
         {
@@ -358,17 +341,6 @@ boolean IfxHsphy_Xpcs_setUsxgmiiSpeedMode(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_TrgtD
 
         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.VR_XS_DIG_CTRL1.B.USXG_EN = 1;
         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.VR_XS_KR_CTRL.B.USXG_MODE = 1;
-        hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.VR_XS_DIG_CTRL1.B.VR_RST  = 1;
-
-        while (hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.VR_XS_DIG_CTRL1.B.VR_RST != 0)
-        {
-            IFXHSPHY_LOOP_TIMEOUT_CHECK(timeoutCycleCount, timeOutError);
-        }
-
-        if (timeOutError == TRUE)
-        {
-            return TRUE;
-        }
 
         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_MPLLA_CTRL0.B.MPLLA_MULTIPLIER        = IfxHsphy_Usxgmii_paramConfig[usxgmiiSpeed][xpcs->xpcsRefClk][IfxHsphy_UsxgmiiParamIndex_mpllaMultiplier];
         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_MPLLA_CTRL2.B.MPLLA_TX_CLK_DIV        = IfxHsphy_Usxgmii_paramConfig[usxgmiiSpeed][xpcs->xpcsRefClk][IfxHsphy_UsxgmiiParamIndex_mpllaTxClkDiv];
@@ -392,8 +364,8 @@ boolean IfxHsphy_Xpcs_setUsxgmiiSpeedMode(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_TrgtD
 
         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_AFE_DFE_EN_CTRL.B.AFE_EN_0                = 1;
         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_AFE_DFE_EN_CTRL.B.DFE_EN_0                = 1;
-
-        relvalCheck                                                                                   = IfxHsphy_sgmiiMpllEnable(hsphyRegPtr, xpcs->xpcsIndex); //need to change the func name specific to serial 100M
+        /* Need to change the func name specific to serial 100M */
+        relvalCheck                                                                                   = IfxHsphy_sgmiiMpllEnable(hsphyRegPtr, xpcs->xpcsIndex); 
 
         if (relvalCheck == TRUE)
         {
@@ -410,7 +382,8 @@ boolean IfxHsphy_Xpcs_setUsxgmiiSpeedMode(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_TrgtD
         }
 
         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_TX_GENCTRL1.B.TX_CLK_RDY_0 = 0;
-        hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.SR_XS_CTRL1.B.LPM                               = 1; //power down the DWC_xpcs
+        /* Power down the DWC_xpcs */
+        hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.SR_XS_CTRL1.B.LPM                               = 1; 
 
         while (hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.VR_XS_DIG_STS.B.PSEQ_STATE != IfxHsphy_XpcsPowerUpSeqState_powerDown)
         {
@@ -422,7 +395,8 @@ boolean IfxHsphy_Xpcs_setUsxgmiiSpeedMode(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_TrgtD
             return TRUE;
         }
 
-        hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.SR_XS_CTRL1.U &= (uint32)(~((1 << IFX_HSPHY_XPCS_PCS_SR_XS_CTRL1_LPM_OFF) | (1 << IFX_HSPHY_XPCS_PCS_SR_XS_CTRL1_RST_OFF)));      //power up the DWC_xpcs
+        /* Power up the DWC_xpcs */
+        hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.SR_XS_CTRL1.U &= (uint32)(~((1 << IFX_HSPHY_XPCS_PCS_SR_XS_CTRL1_LPM_OFF) | (1 << IFX_HSPHY_XPCS_PCS_SR_XS_CTRL1_RST_OFF)));      
 
         timeoutCycleCount                                     = IFXHSPHY_MAX_TIMEOUT;
 
@@ -442,7 +416,7 @@ boolean IfxHsphy_Xpcs_setUsxgmiiSpeedMode(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_TrgtD
         hsphyRegPtr->XPCS[xpcs->xpcsIndex].MII.CTRL.B.SS6                                      = 0;
         hsphyRegPtr->XPCS[xpcs->xpcsIndex].MII.CTRL.B.SS13                                     = 1;
 
-        //delay of 100ns to be added
+        /* Delay of 100ns to be added */
 
         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.VR_XS_DIG_CTRL1.B.USRA_RST = 1;
 

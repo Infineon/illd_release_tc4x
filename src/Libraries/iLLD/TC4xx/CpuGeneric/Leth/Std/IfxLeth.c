@@ -2,7 +2,7 @@
  * \file IfxLeth.c
  * \brief LETH  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -58,7 +58,8 @@ void IfxLeth_disableModule(Ifx_LETH *lethSFR)
     IfxApProt_setState((Ifx_PROT_PROT *)&(lethSFR->PROTE), IfxApProt_State_config);
 #endif
 
-    lethSFR->CLC.B.DISR = 1;        /* set the disable request */
+    /* set the disable request */
+    lethSFR->CLC.B.DISR = 1;
 
 #if (IFX_PROT_ENABLED == 1U)
     IfxApProt_setState((Ifx_PROT_PROT *)&(lethSFR->PROTE), IfxApProt_State_run);
@@ -72,16 +73,19 @@ void IfxLeth_enableModule(Ifx_LETH *lethSFR)
     IfxApProt_setState((Ifx_PROT_PROT *)&(lethSFR->PROTE), IfxApProt_State_config);
 #endif
 
-    if (IfxLeth_isModuleEnabled(lethSFR) != 1) /* if module is not enabled already */
+    /* if module is not enabled already */
+    if (IfxLeth_isModuleEnabled(lethSFR) != 1)
     {
-        lethSFR->CLC.B.DISR = 0;               /* set the enable request */
+    	/* set the enable request */
+        lethSFR->CLC.B.DISR = 0;
     }
 
 #if (IFX_PROT_ENABLED == 1U)
     IfxApProt_setState((Ifx_PROT_PROT *)&(lethSFR->PROTE), IfxApProt_State_run);
 #endif
 
-    while (IfxLeth_isModuleEnabled(lethSFR) == FALSE) /* wait till enabled */
+    /* wait till enabled */
+    while (IfxLeth_isModuleEnabled(lethSFR) == FALSE)
     {}
 }
 
@@ -92,15 +96,19 @@ void IfxLeth_resetModule(Ifx_LETH *lethSFR)
     IfxApProt_setState((Ifx_PROT_PROT *)&(lethSFR->PROTE), IfxApProt_State_config);
 #endif
 
-    lethSFR->RST.CTRLA.B.KRST = 1;          /* Only if both Kernel reset bits are set a reset is executed */
+    /* Only if both Kernel reset bits are set a reset is executed */
+    lethSFR->RST.CTRLA.B.KRST = 1;
     lethSFR->RST.CTRLB.B.KRST = 1;
 
-    while (lethSFR->RST.STAT.B.KRST == 0)   /* Wait until reset is executed */
+    /* Wait until reset is executed */
+    while (lethSFR->RST.STAT.B.KRST == 0)
     {}
 
-    lethSFR->RST.CTRLB.B.STATCLR = 1;       /* Clear Kernel reset status bit */
+    /* Clear Kernel reset status bit */
+    lethSFR->RST.CTRLB.B.STATCLR = 1;
 
-    while (lethSFR->RST.STAT.B.KRST == 1)   /* Wait until KRST is cleared, only after this reset sequence is completed */
+    /* Wait until KRST is cleared, only after this reset sequence is completed */
+    while (lethSFR->RST.STAT.B.KRST == 1)
     {}
 
 #if (IFX_PROT_ENABLED == 1U)
@@ -288,7 +296,8 @@ void IfxLeth_setupRmiiInputPins(Ifx_LETH *lethSFR, IfxLeth_PortIndex portIndex, 
     {
         if (rmiiPins->crsDv != NULL_PTR)
         {
-            lethSFR->P[portIndex].PORTCTRL0.B.RXDV = crsDiv->select; /* RMII CRSDV uses the same mux as MII RXDV */
+        	/* RMII CRSDV uses the same mux as MII RXDV */
+            lethSFR->P[portIndex].PORTCTRL0.B.RXDV = crsDiv->select;
 
             if (rmiiPins->crsDv->disablePcsr == FALSE)
             {
@@ -464,48 +473,66 @@ void IfxLeth_setupMiiOutputPins(Ifx_LETH *lethSFR, const IfxLeth_MiiPins *miiPin
         if (miiPins->txEn != NULL_PTR)
         {
             IfxLeth_P_Out *txEn = miiPins->txEn;
+            /* Reset the pin controller selection for the TXEN pin */
             IfxPort_resetPinControllerSelection(txEn->pin.port, txEn->pin.pinIndex);
+            /* Set the pin mode to output for the TXEN pin */
             IfxPort_setPinModeOutput(txEn->pin.port, txEn->pin.pinIndex, mode, txEn->select);
+            /* Set the pad driver for the TXEN pin */
             IfxPort_setPinPadDriver(txEn->pin.port, txEn->pin.pinIndex, speedGrade);
         }
 
         if (miiPins->txEr != NULL_PTR)
         {
             IfxLeth_P_Out *txEr = miiPins->txEr;
+            /* Reset the pin controller selection for the TXER pin */
             IfxPort_resetPinControllerSelection(txEr->pin.port, txEr->pin.pinIndex);
+            /* Set the pin mode to output for the TXER pin */
             IfxPort_setPinModeOutput(txEr->pin.port, txEr->pin.pinIndex, mode, txEr->select);
+            /* Set the pad driver for the TXER pin */
             IfxPort_setPinPadDriver(txEr->pin.port, txEr->pin.pinIndex, speedGrade);
         }
 
         if (miiPins->txd0 != NULL_PTR)
         {
             IfxLeth_P_Out *txd0 = miiPins->txd0;
+            /* Reset the pin controller selection for the TXD0 pin */
             IfxPort_resetPinControllerSelection(txd0->pin.port, txd0->pin.pinIndex);
+            /* Set the pin mode to output for the TXD0 pin */
             IfxPort_setPinModeOutput(txd0->pin.port, txd0->pin.pinIndex, mode, txd0->select);
+            /* Set the pad driver for the TXD0 pin */
             IfxPort_setPinPadDriver(txd0->pin.port, txd0->pin.pinIndex, speedGrade);
         }
 
         if (miiPins->txd1 != NULL_PTR)
         {
             IfxLeth_P_Out *txd1 = miiPins->txd1;
+            /* Reset the pin controller selection for the TXD1 pin */
             IfxPort_resetPinControllerSelection(txd1->pin.port, txd1->pin.pinIndex);
+            /* Set the pin mode to output for the TXD1 pin */
             IfxPort_setPinModeOutput(txd1->pin.port, txd1->pin.pinIndex, mode, txd1->select);
+            /* Set the pad driver for the TXD0 pin */
             IfxPort_setPinPadDriver(txd1->pin.port, txd1->pin.pinIndex, speedGrade);
         }
 
         if (miiPins->txd2 != NULL_PTR)
         {
             IfxLeth_P_Out *txd2 = miiPins->txd2;
+            /* Reset the pin controller selection for the TXD2 pin */
             IfxPort_resetPinControllerSelection(txd2->pin.port, txd2->pin.pinIndex);
+            /* Set the pin mode to output for the TXD2 pin */
             IfxPort_setPinModeOutput(txd2->pin.port, txd2->pin.pinIndex, mode, txd2->select);
+            /* Set the pad driver for the TXD0 pin */
             IfxPort_setPinPadDriver(txd2->pin.port, txd2->pin.pinIndex, speedGrade);
         }
 
         if (miiPins->txd3 != NULL_PTR)
         {
             IfxLeth_P_Out *txd3 = miiPins->txd3;
+            /* Reset the pin controller selection for the TXD3 pin */
             IfxPort_resetPinControllerSelection(txd3->pin.port, txd3->pin.pinIndex);
+            /* Set the pin mode to output for the TXD3 pin */
             IfxPort_setPinModeOutput(txd3->pin.port, txd3->pin.pinIndex, mode, txd3->select);
+            /* Set the pad driver for the TXD0 pin */
             IfxPort_setPinPadDriver(txd3->pin.port, txd3->pin.pinIndex, speedGrade);
         }
     }
@@ -514,7 +541,9 @@ void IfxLeth_setupMiiOutputPins(Ifx_LETH *lethSFR, const IfxLeth_MiiPins *miiPin
 
 void IfxLeth_setMiiPins(Ifx_LETH *lethSFR, IfxLeth_PortIndex portIndex, const IfxLeth_MiiPins *miiPins)
 {
+	/* Set up MII input pins for the specified port */
     IfxLeth_setupMiiInputPins(lethSFR, portIndex, miiPins);
+    /* Set up MII output pins  */
     IfxLeth_setupMiiOutputPins(lethSFR, miiPins);
 }
 
@@ -564,12 +593,16 @@ void IfxLeth_setPhyInterface(Ifx_LETH *lethSFR, IfxLeth_PortIndex portIndex, Ifx
             lethSFR->PORT[portIndex].CORE.MAC_CONFIGURATION.B.FES = 0;
 #ifdef IFXLETH1_IS_1G_SUPPORTED
 #if IFXLETH1_IS_1G_SUPPORTED
-            if (lethSFR == &MODULE_LETH1)    /*Writable only in Leth modules supporting 1G data rate*/
+            /*Writable only in Leth modules supporting 1G data rate*/
+            if (lethSFR == &MODULE_LETH1)
             {
                 lethSFR->PORT[portIndex].CORE.MAC_CONFIGURATION.B.PS = 1;
             }
 #endif	/* #if IFXLETH1_IS_1G_SUPPORTED */	
 #endif  /* #ifdef IFXLETH1_IS_1G_SUPPORTED */	
+#if (IFXLETH0_IS_BRIDGE_AVAILABLE == FALSE)
+            lethSFR->PORT[portIndex].CORE.MAC_CONFIGURATION.B.PS = 1;
+#endif /* #if (IFXLETH0_IS_BRIDGE_AVAILABLE == FALSE) */
         }
 
         break;
@@ -585,12 +618,17 @@ void IfxLeth_setPhyInterface(Ifx_LETH *lethSFR, IfxLeth_PortIndex portIndex, Ifx
             lethSFR->PORT[portIndex].CORE.MAC_CONFIGURATION.B.FES = 1;
 #ifdef IFXLETH1_IS_1G_SUPPORTED
 #if IFXLETH1_IS_1G_SUPPORTED
-            if (lethSFR == &MODULE_LETH1)    /*Writable only in Leth modules supporting 1G data rate*/
+            /*Writable only in Leth modules supporting 1G data rate*/
+            if (lethSFR == &MODULE_LETH1)
             {
                 lethSFR->PORT[portIndex].CORE.MAC_CONFIGURATION.B.PS = 1;
             }
 #endif	/* #if IFXLETH1_IS_1G_SUPPORTED */	
-#endif  /* #ifdef IFXLETH1_IS_1G_SUPPORTED */		
+#endif  /* #ifdef IFXLETH1_IS_1G_SUPPORTED */	
+
+#if (IFXLETH0_IS_BRIDGE_AVAILABLE == FALSE)
+            lethSFR->PORT[portIndex].CORE.MAC_CONFIGURATION.B.PS = 1;
+#endif /* #if (IFXLETH0_IS_BRIDGE_AVAILABLE == FALSE) */	
         }
 
         break;
@@ -607,12 +645,17 @@ void IfxLeth_setPhyInterface(Ifx_LETH *lethSFR, IfxLeth_PortIndex portIndex, Ifx
 
 #ifdef IFXLETH1_IS_1G_SUPPORTED
 #if IFXLETH1_IS_1G_SUPPORTED
-            if (lethSFR == &MODULE_LETH1)    /*Writable only in Leth modules supporting 1G data rate*/
+            /*Writable only in Leth modules supporting 1G data rate*/
+            if (lethSFR == &MODULE_LETH1)
             {
                 lethSFR->PORT[portIndex].CORE.MAC_CONFIGURATION.B.PS = 1;
             }
 #endif	/* #if IFXLETH1_IS_1G_SUPPORTED */		
 #endif  /* #ifdef IFXLETH1_IS_1G_SUPPORTED */	
+
+#if (IFXLETH0_IS_BRIDGE_AVAILABLE == FALSE)
+            lethSFR->PORT[portIndex].CORE.MAC_CONFIGURATION.B.PS = 1;
+#endif /* #if (IFXLETH0_IS_BRIDGE_AVAILABLE == FALSE) */
         }
 
         break;
@@ -629,12 +672,17 @@ void IfxLeth_setPhyInterface(Ifx_LETH *lethSFR, IfxLeth_PortIndex portIndex, Ifx
 
 #ifdef IFXLETH1_IS_1G_SUPPORTED
 #if IFXLETH1_IS_1G_SUPPORTED
-            if (lethSFR == &MODULE_LETH1)    /*Writable only in Leth modules supporting 1G data rate*/
+            /*Writable only in Leth modules supporting 1G data rate*/
+            if (lethSFR == &MODULE_LETH1)
             {
                 lethSFR->PORT[portIndex].CORE.MAC_CONFIGURATION.B.PS = 1;
             }
 #endif	/* #if IFXLETH1_IS_1G_SUPPORTED */	
 #endif  /* #ifdef IFXLETH1_IS_1G_SUPPORTED */		
+
+#if (IFXLETH0_IS_BRIDGE_AVAILABLE == FALSE)
+            lethSFR->PORT[portIndex].CORE.MAC_CONFIGURATION.B.PS = 1;
+#endif /* #if (IFXLETH0_IS_BRIDGE_AVAILABLE == FALSE) */
         }
 
         break;
@@ -652,12 +700,17 @@ void IfxLeth_setPhyInterface(Ifx_LETH *lethSFR, IfxLeth_PortIndex portIndex, Ifx
 
 #ifdef IFXLETH1_IS_1G_SUPPORTED
 #if IFXLETH1_IS_1G_SUPPORTED
-            if (lethSFR == &MODULE_LETH1)    /*Writable only in Leth modules supporting 1G data rate*/
+            /*Writable only in Leth modules supporting 1G data rate*/
+            if (lethSFR == &MODULE_LETH1)
             {
                 lethSFR->PORT[portIndex].CORE.MAC_CONFIGURATION.B.PS = 1;
             }
 #endif	/* #if IFXLETH1_IS_1G_SUPPORTED */	
 #endif  /* #ifdef IFXLETH1_IS_1G_SUPPORTED */		
+
+#if (IFXLETH0_IS_BRIDGE_AVAILABLE == FALSE)
+            lethSFR->PORT[portIndex].CORE.MAC_CONFIGURATION.B.PS = 1;
+#endif /* #if (IFXLETH0_IS_BRIDGE_AVAILABLE == FALSE) */
         }
 
         break;
@@ -675,19 +728,25 @@ void IfxLeth_setPhyInterface(Ifx_LETH *lethSFR, IfxLeth_PortIndex portIndex, Ifx
 
 #ifdef IFXLETH1_IS_1G_SUPPORTED			
 #if IFXLETH1_IS_1G_SUPPORTED
-            if (lethSFR == &MODULE_LETH1)     /*Writable only in Leth modules supporting 1G data rate*/
+            /*Writable only in Leth modules supporting 1G data rate*/
+            if (lethSFR == &MODULE_LETH1)
             {
                 lethSFR->PORT[portIndex].CORE.MAC_CONFIGURATION.B.PS = 1;
             }
 #endif	/* #if IFXLETH1_IS_1G_SUPPORTED */	
 #endif  /* #ifdef IFXLETH1_IS_1G_SUPPORTED */	
+
+#if (IFXLETH0_IS_BRIDGE_AVAILABLE == FALSE)
+            lethSFR->PORT[portIndex].CORE.MAC_CONFIGURATION.B.PS = 1;
+#endif /* #if (IFXLETH0_IS_BRIDGE_AVAILABLE == FALSE) */
         }
 
         break;
     }
 #ifdef IFXLETH1_IS_1G_SUPPORTED
 #if IFXLETH1_IS_1G_SUPPORTED	
-    case IfxLeth_PhyInterface_sgmii_1000:     /*this option is not available in all devices/ports*/
+    /* This option is not available in all devices/ports*/
+    case IfxLeth_PhyInterface_sgmii_1000:
     {
         if (initPhase == IfxLeth_PhyInterfacePhase_1)
         {
@@ -697,7 +756,8 @@ void IfxLeth_setPhyInterface(Ifx_LETH *lethSFR, IfxLeth_PortIndex portIndex, Ifx
         {
             lethSFR->PORT[portIndex].CORE.MAC_CONFIGURATION.B.FES = 0;
 
-            if (lethSFR == &MODULE_LETH1) /*Writable only in Leth modules supporting 1G data rate*/
+            /*Writable only in Leth modules supporting 1G data rate*/
+            if (lethSFR == &MODULE_LETH1)
             {
                 lethSFR->PORT[portIndex].CORE.MAC_CONFIGURATION.B.PS = 0;
             }
@@ -705,7 +765,8 @@ void IfxLeth_setPhyInterface(Ifx_LETH *lethSFR, IfxLeth_PortIndex portIndex, Ifx
 
         break;
     }
-    case IfxLeth_PhyInterface_sgmii_100: /*this option is not available in all devices/ports*/
+    /* This option is not available in all devices/ports*/
+    case IfxLeth_PhyInterface_sgmii_100:
     {
         if (initPhase == IfxLeth_PhyInterfacePhase_1)
         {
@@ -715,7 +776,8 @@ void IfxLeth_setPhyInterface(Ifx_LETH *lethSFR, IfxLeth_PortIndex portIndex, Ifx
         {
             lethSFR->PORT[portIndex].CORE.MAC_CONFIGURATION.B.FES = 1;
 
-            if (lethSFR == &MODULE_LETH1)    /*Writable only in Leth modules supporting 1G data rate*/
+            /*Writable only in Leth modules supporting 1G data rate*/
+            if (lethSFR == &MODULE_LETH1)
             {
                 lethSFR->PORT[portIndex].CORE.MAC_CONFIGURATION.B.PS = 1;
             }
@@ -733,7 +795,8 @@ void IfxLeth_enablePortClock(Ifx_LETH *lethSFR, IfxLeth_PortIndex portIndex)
 {
     lethSFR->PEN.U &= (~0x0000000F | (~(1 << portIndex)));
 
-    while (((lethSFR->PEN.U) & (1 << (0x10 + portIndex))) == 1) /*Check status*/
+    /*Check status*/
+    while (((lethSFR->PEN.U) & (1 << (0x10 + portIndex))) == 1)
     {}
 }
 
@@ -748,45 +811,56 @@ volatile Ifx_SRC_SRCR *IfxLeth_getSrcPointer(IfxLeth_ServiceRequest serviceReque
 #if IFXLETH_IS_BRIDGE_AVAILABLE
 void IfxLeth_Bridge_setPortMode(Ifx_LETH *lethSFR, IfxLeth_BridgePortMode mode)
 {
+	/* Set port mode based on the specified mode */
     if (mode < IfxLeth_BridgePortMode_multiPort)
     {
-        lethSFR->BRIDGE.ETHBR_FWD_CTRL_REG.B.Q_CH_MAPPING_EN = 0;    /*Single Port Mode*/
-        lethSFR->BRIDGE.ETHBR_FWD_CTRL_REG.B.PORT_SEL        = mode; /*Selected port only to be used*/
+    	/*Single Port Mode*/
+        lethSFR->BRIDGE.ETHBR_FWD_CTRL_REG.B.Q_CH_MAPPING_EN = 0;
+        /*Selected port only to be used*/
+        lethSFR->BRIDGE.ETHBR_FWD_CTRL_REG.B.PORT_SEL        = mode;
     }
     else /*IfxLeth_BridgePortMode_multiPort*/
     {
-        lethSFR->BRIDGE.ETHBR_FWD_CTRL_REG.B.Q_CH_MAPPING_EN = 1; /*Multi Port Mode*/
-        lethSFR->BRIDGE.ETHBR_FWD_CTRL_REG.B.PORT_SEL        = 0; /*No specific instructions, keeping default reset value*/
+    	/*Multi Port Mode*/
+        lethSFR->BRIDGE.ETHBR_FWD_CTRL_REG.B.Q_CH_MAPPING_EN = 1;
+        /*No specific instructions, keeping default reset value*/
+        lethSFR->BRIDGE.ETHBR_FWD_CTRL_REG.B.PORT_SEL        = 0;
     }
 }
 
 
 void IfxLeth_Bridge_mapTxQueue(Ifx_LETH *lethSFR, IfxLeth_PortIndex portIndex, IfxLeth_TxMtlQueue queueNumber, IfxLeth_BridgeTxQueueMap mapValue)
 {
+	/* Map the transmit queue based on the queue number */
     switch (queueNumber)
     {
     case IfxLeth_TxMtlQueue_0:
     {
+    	/* TXQ0_MAP: Transmit Queue 0 Mapping */
         lethSFR->BRIDGE.PORT_CTRL_MAP[portIndex].TXQ_MAP.B.TXQ0_MAP = mapValue;
         break;
     }
     case IfxLeth_TxMtlQueue_1:
     {
+    	/* TXQ1_MAP: Transmit Queue 1 Mapping */
         lethSFR->BRIDGE.PORT_CTRL_MAP[portIndex].TXQ_MAP.B.TXQ1_MAP = mapValue;
         break;
     }
     case IfxLeth_TxMtlQueue_2:
     {
+    	/* TXQ2_MAP: Transmit Queue 2 Mapping */
         lethSFR->BRIDGE.PORT_CTRL_MAP[portIndex].TXQ_MAP.B.TXQ2_MAP = mapValue;
         break;
     }
     case IfxLeth_TxMtlQueue_3:
     {
+    	/* TXQ3_MAP: Transmit Queue 3 Mapping */
         lethSFR->BRIDGE.PORT_CTRL_MAP[portIndex].TXQ_MAP.B.TXQ3_MAP = mapValue;
         break;
     }
     case IfxLeth_TxMtlQueue_4:
     {
+    	/* TXQ4_MAP: Transmit Queue 4 Mapping */
         lethSFR->BRIDGE.PORT_CTRL_MAP[portIndex].TXQ_MAP.B.TXQ4_MAP = mapValue;
         break;
     }
@@ -796,45 +870,54 @@ void IfxLeth_Bridge_mapTxQueue(Ifx_LETH *lethSFR, IfxLeth_PortIndex portIndex, I
 
 void IfxLeth_Bridge_mapRxChannel(Ifx_LETH *lethSFR, IfxLeth_PortIndex portIndex, IfxLeth_BridgeRxChannel channelNumber, IfxLeth_BridgeRxCMap mapValue)
 {
+	/* Map the receive channel based on the channel number */
     switch (channelNumber)
     {
     case IfxLeth_BridgeRxChannel_0:
     {
+    	/* RXC0_MAP: Receive Channel 0 Mapping */
         lethSFR->BRIDGE.PORT_CTRL_MAP[portIndex].RXC_MAP.B.RXC0_MAP = mapValue;
         break;
     }
     case IfxLeth_BridgeRxChannel_1:
     {
+    	/* RXC1_MAP: Receive Channel 1 Mapping */
         lethSFR->BRIDGE.PORT_CTRL_MAP[portIndex].RXC_MAP.B.RXC1_MAP = mapValue;
         break;
     }
     case IfxLeth_BridgeRxChannel_2:
     {
+    	/* RXC2_MAP: Receive Channel 2 Mapping */
         lethSFR->BRIDGE.PORT_CTRL_MAP[portIndex].RXC_MAP.B.RXC2_MAP = mapValue;
         break;
     }
     case IfxLeth_BridgeRxChannel_3:
     {
+    	/* RXC3_MAP: Receive Channel 3 Mapping */
         lethSFR->BRIDGE.PORT_CTRL_MAP[portIndex].RXC_MAP.B.RXC3_MAP = mapValue;
         break;
     }
     case IfxLeth_BridgeRxChannel_4:
     {
+    	/* RXC4_MAP: Receive Channel 4 Mapping */
         lethSFR->BRIDGE.PORT_CTRL_MAP[portIndex].RXC_MAP.B.RXC4_MAP = mapValue;
         break;
     }
     case IfxLeth_BridgeRxChannel_5:
     {
+    	/* RXC5_MAP: Receive Channel 5 Mapping */
         lethSFR->BRIDGE.PORT_CTRL_MAP[portIndex].RXC_MAP.B.RXC5_MAP = mapValue;
         break;
     }
     case IfxLeth_BridgeRxChannel_6:
     {
+    	/* RXC6_MAP: Receive Channel 6 Mapping */
         lethSFR->BRIDGE.PORT_CTRL_MAP[portIndex].RXC_MAP.B.RXC6_MAP = mapValue;
         break;
     }
     case IfxLeth_BridgeRxChannel_7:
     {
+    	/* RXC7_MAP: Receive Channel 7 Mapping */
         lethSFR->BRIDGE.PORT_CTRL_MAP[portIndex].RXC_MAP.B.RXC7_MAP = mapValue;
         break;
     }

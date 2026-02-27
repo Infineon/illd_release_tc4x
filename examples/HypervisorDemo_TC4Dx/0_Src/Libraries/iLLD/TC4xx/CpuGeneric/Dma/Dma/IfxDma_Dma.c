@@ -2,9 +2,9 @@
  * \file IfxDma_Dma.c
  * \brief DMA DMA details
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-03-29 06:29:09
  *
  *
  *                                 IMPORTANT NOTICE
@@ -52,9 +52,11 @@
 /*-----------------------Private Function Prototypes--------------------------*/
 /******************************************************************************/
 
-/** \brief local function to copy a transaction set into DMA channel SFRs or memory location (for linked lists)
- * \param channel Specifies the pointer to DMA channel registers
- * \param config pointer to the DMA default channel configuration structure
+/** \brief Local function to copy a transaction set into DMA channel SFRs or memory location (for linked lists).
+ *
+ * \param[inout] channel Specifies the pointer to DMA channel registers.
+ * \param[in]    config  Pointer to the DMA default channel configuration structure.
+ *
  * \return None
  */
 IFX_STATIC void IfxDma_Dma_configureTransactionSet(Ifx_DMA_CH *channel, const IfxDma_Dma_ChannelConfig *config);
@@ -65,11 +67,11 @@ IFX_STATIC void IfxDma_Dma_configureTransactionSet(Ifx_DMA_CH *channel, const If
 
 IFX_STATIC void IfxDma_Dma_configureTransactionSet(Ifx_DMA_CH *channel, const IfxDma_Dma_ChannelConfig *config)
 {
-    /* shadow address shall be 32-Byte Aligned */
+    /* Shadow address shall be 32-Byte Aligned */
     {
         IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, ((config->shadowAddress & 0x1F) == 0U));
     }
-    /* Configure the resource partition */
+    /* Configures the resource partition */
     {
         if (config->cyberSecurityAsset == TRUE)
         {
@@ -112,6 +114,7 @@ IFX_STATIC void IfxDma_Dma_configureTransactionSet(Ifx_DMA_CH *channel, const If
 #endif
     }
 
+    /* Configures the channel configuration register (CHCFGR) */
     {
         Ifx_DMA_CH_CHCFGR chcfgr;
         chcfgr.U          = 0;
@@ -126,6 +129,7 @@ IFX_STATIC void IfxDma_Dma_configureTransactionSet(Ifx_DMA_CH *channel, const If
         channel->CHCFGR.U = chcfgr.U;
     }
 
+    /* Configures the address and interrupt control register (ADICR) */
     {
         Ifx_DMA_CH_ADICR adicr;
         adicr.U          = 0;
@@ -145,6 +149,8 @@ IFX_STATIC void IfxDma_Dma_configureTransactionSet(Ifx_DMA_CH *channel, const If
         adicr.B.IRDV     = config->interruptRaiseThreshold;
         channel->ADICR.U = adicr.U;
     }
+
+    /* Configures the transaction state register */
     {
         Ifx_DMA_TSR tsr;
         tsr.U                                         = config->module->dma->TSR[config->channelId].U;
@@ -157,7 +163,7 @@ IFX_STATIC void IfxDma_Dma_configureTransactionSet(Ifx_DMA_CH *channel, const If
     channel->SDCRCR.U = config->sourceDestinationAddressCrc;
     channel->RDCRCR.U = config->readDataCrc;
 
-    /* write not allowed if SHCT=1 or SHCT=2 */
+    /* Write not allowed if SHCT=1 or SHCT=2 */
     if ((config->shadowControl != IfxDma_ChannelShadow_none) &&
         (config->shadowControl != IfxDma_ChannelShadow_src) &&
         (config->shadowControl != IfxDma_ChannelShadow_dst))
@@ -175,12 +181,14 @@ void IfxDma_Dma_createModuleHandle(IfxDma_Dma *dmaHandle, Ifx_DMA *dma)
 
 void IfxDma_Dma_initChannel(IfxDma_Dma_Channel *channel, const IfxDma_Dma_ChannelConfig *config)
 {
+	/* Gets the DMA module pointer from the configuration */
     Ifx_DMA *dma = config->module->dma;
 
     channel->dma       = dma;
     channel->channelId = config->channelId;
     channel->channel   = &dma->CH[config->channelId];
 
+    /* Local function to copy a transaction set into DMA channel SFRs or memory location */
     IfxDma_Dma_configureTransactionSet(channel->channel, config);
 #if !defined(IFX_ILLD_PPU_USAGE)
     Ifx__mem_barrier
@@ -204,8 +212,11 @@ void IfxDma_Dma_initChannel(IfxDma_Dma_Channel *channel, const IfxDma_Dma_Channe
 
     if (config->channelInterruptPriority > 0)
     {
+    	/* Returns the SRC pointer for given DMA channel */
         volatile Ifx_SRC_SRCR *src = IfxDma_getSrcPointer(channel->dma, channel->channelId);
+        /* Initializes the service request control register */
         IfxSrc_init(src, config->channelInterruptTypeOfService, config->channelInterruptPriority, config->channelVmId);
+        /* Enables a specific interrupt service request */
         IfxSrc_enable(src);
     }
 }
@@ -213,6 +224,7 @@ void IfxDma_Dma_initChannel(IfxDma_Dma_Channel *channel, const IfxDma_Dma_Channe
 
 void IfxDma_Dma_initChannelConfig(IfxDma_Dma_ChannelConfig *config, IfxDma_Dma *dma)
 {
+	/* Defines a default DMA channel initialization configuration structure */
     const IfxDma_Dma_ChannelConfig defaultConfig = {
         .module                                 = NULL_PTR,
         .channelId                              = IfxDma_ChannelId_0,
@@ -256,13 +268,14 @@ void IfxDma_Dma_initChannelConfig(IfxDma_Dma_ChannelConfig *config, IfxDma_Dma *
     /* Default Configuration */
     *config = defaultConfig;
 
-    /* take over module pointer */
+    /* Takes over module pointer */
     config->module = dma;
 }
 
 
 void IfxDma_Dma_initLinkedListEntry(void *ptrToAddress, const IfxDma_Dma_ChannelConfig *config)
 {
+	/* Local function to copy a transaction set into DMA channel SFRs or memory location */
     IfxDma_Dma_configureTransactionSet((Ifx_DMA_CH *)ptrToAddress, config);
 }
 

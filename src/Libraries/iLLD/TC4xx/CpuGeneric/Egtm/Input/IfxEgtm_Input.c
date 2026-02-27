@@ -2,7 +2,7 @@
  * \file IfxEgtm_Input.c
  * \brief EGTM INPUT details
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -61,17 +61,25 @@
 /******************************************************************************/
 
 /** \brief Select peripheral signal as input to TIM submodule
- * \param inputEntry Unique entry for peripheral input to be connected
- * \param inputTablePtr Pointer to input table for peripheral to be connected
- * \return TRUE on success. FALSE: Input cannot be connected to specified TIM channel in cluster
+ *
+ * \param[in] inputEntry    Unique entry for peripheral input to be connected
+ *                          Range: 0 to 0xFFFFFFFF
+ * \param[in] inputTablePtr Pointer to input table for peripheral to be connected
+ *                          Range: 0 to 0xFFFFFFFF
+ *
+ * \retval TRUE on success. FALSE: Input cannot be connected to specified TIM channel in cluster
  */
 IFX_STATIC boolean IfxEgtm_Input_selectPeripheralTimInput(uint32 inputEntry, uint32 *inputTablePtr);
 
 /** \brief Select peripheral signal as input to DTMAUX
- * \param inputEntry Unique entry for peripheral input to be connected
- * \param dtmAuxInput Connect input signal to DTM_AUX_IN0 or DTM_AUX_IN1
- * \param inputTablePtr Pointer to input table for peripheral to be connected
- * \return TRUE on success. FALSE: Input cannot be connected
+ *
+ * \param[in] inputEntry    Unique entry for peripheral input to be connected
+ *                          Range: 0 to 0xFFFFFFFF
+ * \param[in] dtmAuxInput   Connect input signal to DTM_AUX_IN0 or DTM_AUX_IN1
+ *                          Range: \ref: IfxEgtm_DtmAuxInput
+ * \param[in] inputTablePtr Pointer to input table for peripheral to be connected
+ *
+ * \retval TRUE on success. FALSE: Input cannot be connected
  */
 IFX_STATIC boolean IfxEgtm_Input_selectPeripheralDtmAuxInput(uint32 inputEntry, IfxEgtm_DtmAuxInput dtmAuxInput, uint32 *inputTablePtr);
 
@@ -211,7 +219,7 @@ IFX_STATIC boolean IfxEgtm_Input_selectPeripheralTimInput(uint32 inputEntry, uin
 
     if (result == TRUE)
     {
-        /* Extract cluster, channel number, and chxsel values */
+        /* Extracts cluster, channel number, and chxsel values */
         uint32 cluster = (inputEntry >> 24u) & 0xFu;
         uint32 channel = (inputEntry >> 16u) & 0xFu;
         uint32 chxsel  = inputTablePtr[idx] & IFX_EGTM_TIMINSEL_CH0SEL_MSK;
@@ -221,7 +229,7 @@ IFX_STATIC boolean IfxEgtm_Input_selectPeripheralTimInput(uint32 inputEntry, uin
         uint32 value = chxsel << shift;
         uint32 mask  = (uint32)IFX_EGTM_TIMINSEL_CH0SEL_MSK << shift;
 
-        /* Write to register */
+        /* Writes to register */
         Ifx__ldmst(&MODULE_EGTM.TIMINSEL[cluster].U, mask, value);
     }
 
@@ -237,7 +245,7 @@ IFX_STATIC boolean IfxEgtm_Input_selectPeripheralDtmAuxInput(uint32 inputEntry, 
     /* Loop through all table elements */
     for (idx = 1u; idx <= inputTablePtr[0]; idx++)
     {
-        /* Check if combination is present in table */
+        /* Checks if combination is present in table */
         if ((inputTablePtr[idx] & 0xFFFFFF00u) == inputEntry)
         {
             result = TRUE;
@@ -247,22 +255,23 @@ IFX_STATIC boolean IfxEgtm_Input_selectPeripheralDtmAuxInput(uint32 inputEntry, 
 
     if (result == TRUE)
     {
-        /* Extract CDTM, DTM number, and selx values */
+        /* Extracts CDTM, DTM number, and selx values */
         uint32 cdtm = (inputEntry >> 24u) & 0xFu;
         uint32 dtm  = (inputEntry >> 16u) & 0xFu;
         uint32 selx = inputTablePtr[idx] & IFX_EGTM_DTMAUX_IN_SEL0_MSK;
 
-        /* Calculate value and mask */
+        /* Calculates value and mask */
         uint32 shift = dtm * (IFX_EGTM_DTMAUX_IN_SEL0_LEN + 1u);
         uint32 value = selx << shift;
         uint32 mask  = (uint32)IFX_EGTM_DTMAUX_IN_SEL0_MSK << shift;
 
-        /* Write to register */
+        /* Writes to register */
         Ifx__ldmst(&MODULE_EGTM.DTMAUX[cdtm].IN[dtmAuxInput].U, mask, value);
     }
 
     return result;
 }
+
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

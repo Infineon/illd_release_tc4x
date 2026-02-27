@@ -2,7 +2,7 @@
  * \file IfxPpucCore.c
  * \brief PPUC basic functionality
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -99,6 +99,13 @@ void IfxPpucCore_configureAccessToPpucCsm(IfxApApu_ApuConfig *apConfig)
 {
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_PPU_CSMAP.CSM.ACCEN, apConfig);
 }
+
+
+void IfxPpucCore_configureAccessToPpucVccm(IfxApApu_ApuConfig *apConfig)
+{
+    IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_PPU_VMEMAP.VMEM.ACCEN, apConfig);
+}
+
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

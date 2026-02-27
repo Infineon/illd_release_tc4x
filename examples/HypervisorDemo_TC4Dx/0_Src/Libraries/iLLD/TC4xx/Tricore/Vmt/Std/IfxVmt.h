@@ -3,9 +3,9 @@
  * \brief VMT  basic functionality
  * \ingroup IfxLld_Vmt
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-11-27 11:42:30
  *
  *
  *                                 IMPORTANT NOTICE
@@ -40,6 +40,10 @@
  * DEALINGS IN THE SOFTWARE.
  *
  *
+ * \author Thorsten Klose<Thorsten.Klose@Infineon.com>
+ * \author Rabeyrin Emmanuel<Emmanuel.Rabeyrin@infineon.com>
+ * \author SaiKiran Bollu<SaiKiran.Bollu@Infineon.com>
+ * \author Thorsten Klose<Thorsten.Klose@Infineon.com>
  *
  * \defgroup IfxLld_Vmt_Usage How to use the VMT driver?
  * \ingroup IfxLld_Vmt

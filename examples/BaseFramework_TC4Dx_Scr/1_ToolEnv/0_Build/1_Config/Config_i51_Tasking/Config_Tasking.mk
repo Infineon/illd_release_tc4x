@@ -7,7 +7,7 @@
 #                                                                             #
 #                                                                             #
 # Infineon Technologies AG (Infineon) is supplying this file for use          #
-# exclusively with Infineon’s microcontroller products. This file can be      #
+# exclusively with Infineon's microcontroller products. This file can be      #
 # freely distributed within development tools that are supporting such        #
 # microcontroller products.                                                   #
 #                                                                             #
@@ -19,7 +19,7 @@
 #                                                                             #
 ###############################################################################
 
-B_TASKING_I51_PATH:= C:\Tools\Compilers\Tasking\SmartCode v10.3r1p1\c51
+B_TASKING_I51_PATH:= C:\Tools\Compilers\Tasking\SmartCode v10.4r1\c51
 
 B_TASKING_I51_CC_OPTIONS= -Ms --registerbank=0 -Ag --core=scr3g
 

@@ -3,9 +3,9 @@
  * \brief ERAY on-chip implementation data
  * \ingroup IfxLld_Eray
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-09-07 14:19:11
  *
  *
  *                                 IMPORTANT NOTICE
@@ -60,7 +60,7 @@
 #include "Ifx_Cfg.h"
 
 #if defined DEVICE_TC4DX
-#include "IfxEray_cfg_TC4Dx.h"
+#include "TC4Dx/IfxEray_cfg_TC4Dx.h"
 #endif
 
 #endif /* IFXERAY_CFG_H */

@@ -3,9 +3,9 @@
  * \brief FCE on-chip implementation data
  * \ingroup IfxLld_Fce
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-10-09 12:56:10
  *
  *
  *                                 IMPORTANT NOTICE
@@ -58,7 +58,7 @@
 #include "Ifx_Cfg.h"
 
 #if defined DEVICE_TC4DX
-#include "IfxFce_cfg_TC4Dx.h"
+#include "TC4Dx/IfxFce_cfg_TC4Dx.h"
 #endif
 
 #endif /* IFXFCE_CFG_H */

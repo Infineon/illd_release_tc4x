@@ -416,7 +416,7 @@
 	
 	<specificInclude internalPaths= "*/Libraries/*/Scr, */Libraries/*/Sfr/*, */Libraries/*/Tricore, */Libraries/*/Platform/Compilers, */Libraries/*/CpuGeneric, */Libraries/*/ArcEv/*, */AppSw/CpuGeneric/*" />
 	<selection>
-		<discard files="*/Sfr/TC4Ex/*,*/Sfr/TC4Zx/*,*/Sfr/TC44x/*,*/Sfr/TC45x/*,*/Sfr/TC46x/*,*/Sfr/TC48x/*,*/Sfr/TC49x/*,*/Sfr/TC49xN/*" />
+		<discard files="*/Sfr/TC4Ex/*,*/Sfr/TC4Zx/*,*/Sfr/TC44x/*,*/Sfr/TC45x/*,*/Sfr/TC46x/*,*/Sfr/TC48x/*,*/Sfr/TC49x/*,*/Sfr/TC49xN/*, */_PinMap/TC4Ex/*,*/_PinMap/TC4Zx/*,*/_PinMap/TC44x/*,*/_PinMap/TC45x/*,*/_PinMap/TC46x/*,*/_PinMap/TC48x/*,*/_PinMap/TC49x/*,*/_PinMap/TC49xN/*,*/_Impl/TC4Px/*,*/_Impl/TC4Ex/*,*/_Impl/TC4Zx/*,*/_Impl/TC44x/*,*/_Impl/TC45x/*,*/_Impl/TC46x/*,*/_Impl/TC48x/*,*/_Impl/TC49xN/*" />
 		<selection>
 			<!-- Selecting the Intel 8051 only files at this level -->
 			<use files="*/Sfr/TC4Dx/*, */Scr/*, */AppSw/CpuGeneric/Config/Ifx_Cfg.h, */AppSw/i51/main.c"/>

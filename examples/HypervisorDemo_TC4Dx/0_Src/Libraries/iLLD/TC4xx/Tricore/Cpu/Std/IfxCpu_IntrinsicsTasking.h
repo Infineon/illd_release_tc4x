@@ -1,7 +1,7 @@
 /**
  * \file IfxCpu_IntrinsicsTasking.h
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD_2_0_1_2_18
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -48,6 +48,10 @@
 /******************************************************************************/
 #include "Ifx_Types.h"
 /******************************************************************************/
+
+/* Endian Swap for CRC32 Calculation*/
+#define CPU_CRC_ENDIAN_SWAP 0  /* No Swap by default*/
+
 /* *INDENT-OFF* */
 #ifdef __CTC__
 
@@ -496,20 +500,38 @@ IFX_INLINE void Ifx__setStackPointer(void *stackAddr)
     __asm("mov.aa a10, %0": : "a" (stackAddr) :"a10");
 }
 
-IFX_INLINE uint32 IfxCpu_calculateCrc32(uint32 *startaddress, uint8 length)
+/** \brief Calculate CRC32 over a data block
+ *
+ * \param[in] startaddress Pointer to starting address of data block (32-bit aligned)
+ * \param[in] length       Number of 32-bit words to process (0 to 0xFFFFFFFF, i.e. up to 16GB)
+ * \param[in] seed         Initial seed value for CRC calculation (use 0 for standard CRC32)
+ *
+ * \retval uint32 Calculated CRC32 value
+ */
+IFX_INLINE uint32 IfxCpu_calculateCrc32(uint32 *startaddress, uint32 length, uint32 seed)
 {
     uint32 returnvalue = 0u;
-    __asm("MOV d0, #0x0" : : : "d0"); /* set seed value to 0 */
+    uint32 dataWord;
+    __asm("MOV d0, %0" : : "d"(seed) : "d0"); /* set seed value */
     for (;length > 0; length--)
     {
+        dataWord = *startaddress;
+#if CPU_CRC_ENDIAN_SWAP
+        /* Convert to big-endian: swap bytes within the 32-bit word */
+        dataWord = ((dataWord & 0x000000FFU) << 24) |
+                   ((dataWord & 0x0000FF00U) << 8)  |
+                   ((dataWord & 0x00FF0000U) >> 8)  |
+                   ((dataWord & 0xFF000000U) >> 24);
+#endif
         /*calculate the CRC over all data */
-        __asm("MOV d1,%0" : : "d" (*startaddress) : "d0","d1");
+        __asm("MOV d1,%0" : : "d" (dataWord) : "d0","d1");
         __asm__ volatile("CRC32B.W d0,d0,d1");
         startaddress++;
     }
     __asm("MOV %0,d0" : "=d" (returnvalue)); /* return result of CRC*/
     return returnvalue;
 }
+
 
 
 /** \brief Function calculates a user defined CRC

@@ -3,9 +3,9 @@
  * \brief HSPHY DLL details
  * \ingroup IfxLld_Hsphy
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-02-11 06:32:36
  *
  *
  *                                 IMPORTANT NOTICE
@@ -69,22 +69,22 @@
 /******************************************************************************/
 
 /** \brief Xspi init API
- * \param hsphyRegPtr hsphy register pointer
- * \param config Xspi config reference pointer
- * \return returns True if time out error occurs
+ * \param[inout] hsphyRegPtr hsphy register pointer
+ * \param[in] config Xspi config reference pointer
+ * \retval TRUE on timeout error else FALSE.
  */
 IFX_EXTERN boolean IfxHsphy_Dll_xspiInit(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_Xspi_XspiCfg *config);
 
 /** \brief rgmii init api
- * \param hsphyRegPtr hsphy register pointer
- * \param config config for rgmii
- * \return returns True if time out error occurs
+ * \param[inout] hsphyRegPtr hsphy register pointer
+ * \param[in] config config for rgmii
+ * \retval TRUE on timeout error else FALSE.
  */
 IFX_EXTERN boolean IfxHsphy_Dll_rgmiiInit(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_Geth_RgmiiCfg *config);
 
 /** \brief DLL De-Init api
- * \param hsphyRegPtr hsphy register pointer
- * \return None
+ * \param[inout] hsphyRegPtr hsphy register pointer
+ * \retval None
  */
 IFX_EXTERN void IfxHsphy_Dll_xspiDeInit(Ifx_HSPHY *hsphyRegPtr);
 

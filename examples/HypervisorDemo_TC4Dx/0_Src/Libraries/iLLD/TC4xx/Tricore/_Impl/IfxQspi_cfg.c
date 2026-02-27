@@ -2,9 +2,9 @@
  * \file IfxQspi_cfg.c
  * \brief QSPI on-chip implementation data
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2024-02-02 13:48:42
  *
  *
  *                                 IMPORTANT NOTICE

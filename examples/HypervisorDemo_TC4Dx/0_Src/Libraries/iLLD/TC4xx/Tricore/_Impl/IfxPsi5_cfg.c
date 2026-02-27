@@ -2,9 +2,9 @@
  * \file IfxPsi5_cfg.c
  * \brief PSI5 on-chip implementation data
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-09-07 07:33:12
  *
  *
  *                                 IMPORTANT NOTICE

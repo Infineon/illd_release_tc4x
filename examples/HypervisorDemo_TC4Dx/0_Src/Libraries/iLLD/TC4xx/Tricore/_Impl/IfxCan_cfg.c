@@ -2,9 +2,9 @@
  * \file IfxCan_cfg.c
  * \brief CAN on-chip implementation data
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-01-17 13:45:39
  *
  *
  *                                 IMPORTANT NOTICE

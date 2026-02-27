@@ -3,9 +3,9 @@
  * \brief EGTM TRIGGER details
  * \ingroup IfxLld_Egtm
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-11-06 12:52:34
  *
  *
  *                                 IMPORTANT NOTICE
@@ -69,7 +69,7 @@
  * \ingroup IfxLld_Egtm_Trigger
  */
 
-#ifndef IFXEGTM_TRIGGER_H
+#ifndef IFXEGTM_TRIGGER_H 
 #define IFXEGTM_TRIGGER_H 1
 
 /******************************************************************************/
@@ -92,67 +92,108 @@
 /******************************************************************************/
 
 /** \brief Connect eGTM to Adc
- * \param egtmCluster Cluster of EGTM which contains the trigger source
- * \param egtmSource Trigger source selected (Atom or Tom)
- * \param Channel channel within the egtmSource
- * \param adcTrigSignal Connection to ADC trigger Signal
- * \return TRUE on success else FALSE
+ *
+ * \param[in] egtmCluster   Cluster of EGTM which contains the trigger source
+ *                          Range: \ref: IfxEgtm_Cluster
+ * \param[in] egtmSource    Trigger source selected (Atom or Tom)
+ * \param[in] Channel       Channel within the egtmSource
+ * \param[in] adcTrigSignal Connection to ADC trigger Signal
+ *
+ * \retval TRUE on success else FALSE
  */
 IFX_EXTERN boolean IfxEgtm_Trigger_trigToAdc(IfxEgtm_Cluster egtmCluster, IfxEgtm_TrigSource egtmSource, IfxEgtm_TrigChannel Channel, IfxEgtm_Cfg_AdcTriggerSignal adcTrigSignal);
 
 /** \brief Connect eGTM to Sent
- * \param egtmCluster Cluster of EGTM which contains the trigger source
- * \param egtmSource Trigger source selected (Atom or Tom)
- * \param Channel channel within the egtmSource
- * \param sentModule
- * \param sentTrigSignal Connection to SENT trigger Signal
- * \return TRUE on success else FALSE
+ *
+ * \param[in] egtmCluster    Cluster of EGTM which contains the trigger source
+ *                           Range: \ref: IfxEgtm_Cluster
+ * \param[in] egtmSource     Trigger source selected (Atom or Tom)
+ *                           Range: \ref: IfxEgtm_Cfg_Psi5sTriggerSignal
+ * \param[in] Channel        Channel within the egtmSource
+ *                           Range: \ref: IfxEgtm_Cfg_Psi5sTriggerSignal
+ * \param[in] sentModule     The SENT module to configure
+ *                           Range: \ref: IfxEgtm_Cfg_Psi5sTriggerSignal
+ * \param[in] sentTrigSignal Connection to SENT trigger Signal
+ *                           Range: \ref: IfxEgtm_Cfg_Psi5sTriggerSignal
+ *
+ * \retval TRUE on success else FALSE
  */
 IFX_EXTERN boolean IfxEgtm_Trigger_trigToSent(IfxEgtm_Cluster egtmCluster, IfxEgtm_TrigSource egtmSource, IfxEgtm_TrigChannel Channel, IfxEgtm_Cfg_SentTriggerModules sentModule, IfxEgtm_Cfg_SentTriggerSignal sentTrigSignal);
 
 /** \brief Connect eGTM to Psi5
- * \param egtmCluster Cluster of EGTM which contains the trigger source
- * \param egtmSource Trigger source selected (Atom or Tom)
- * \param Channel channel within the egtmSource
- * \param psi5TrigSignal Connection to ADC trigger Signal
- * \return TRUE on success else FALSE
+ *
+ * \param[in] egtmCluster    Cluster of EGTM which contains the trigger source
+ *                           Range: \ref: IfxEgtm_Cluster
+ * \param[in] egtmSource     Trigger source selected (Atom or Tom)
+ *                           Range: \ref: IfxEgtm_TrigSource
+ * \param[in] Channel        Channel within the egtmSource
+ *                           Range: \ref: IfxEgtm_TrigChannel
+ * \param[in] psi5TrigSignal Connection to ADC trigger Signal
+ *                           Range: \ref: IfxEgtm_Cfg_Psi5TriggerSignal
+ *
+ * \retval TRUE on success else FALSE
  */
 IFX_EXTERN boolean IfxEgtm_Trigger_trigToPsi5(IfxEgtm_Cluster egtmCluster, IfxEgtm_TrigSource egtmSource, IfxEgtm_TrigChannel Channel, IfxEgtm_Cfg_Psi5TriggerSignal psi5TrigSignal);
 
 /** \brief Connect eGTM to Psi5s
- * \param egtmCluster Cluster of EGTM which contains the trigger source
- * \param egtmSource Trigger source selected (Atom or Tom)
- * \param Channel channel within the egtmSource
- * \param psi5sModule Psi5s Module configured for trigger
- * \param psi5sTrigSignal Connection to ADC trigger Signal
- * \return TRUE on success else FALSE
+ *
+ * \param[in] egtmCluster     Cluster of EGTM which contains the trigger source
+ *                            Range: \ref: IfxEgtm_Cluster
+ * \param[in] egtmSource      Trigger source selected (Atom or Tom)
+ *                            Range: \ref: IfxEgtm_TrigSource
+ * \param[in] Channel         Channel within the egtmSource
+ *                            Range: \ref: IfxEgtm_TrigChannel
+ * \param[in] psi5sModule     Psi5s Module configured for trigger
+ *                            Range: \ref: IfxEgtm_Cfg_Psi5sTriggerModules
+ * \param[in] psi5sTrigSignal Connection to ADC trigger Signal
+ *                            Range: \ref: IfxEgtm_Cfg_Psi5sTriggerSignal
+ *
+ * \retval TRUE on success else FALSE
  */
 IFX_EXTERN boolean IfxEgtm_Trigger_trigToPsi5s(IfxEgtm_Cluster egtmCluster, IfxEgtm_TrigSource egtmSource, IfxEgtm_TrigChannel Channel, IfxEgtm_Cfg_Psi5sTriggerModules psi5sModule, IfxEgtm_Cfg_Psi5sTriggerSignal psi5sTrigSignal);
 
 /** \brief Connect eGTM to Can
- * \param egtmCluster Cluster of EGTM which contains the trigger source
- * \param egtmSource Trigger source selected (Atom or Tom)
- * \param Channel channel within the egtmSource
- * \param canTrigSignal Connection to ADC trigger Signal
- * \return TRUE on success else FALSE
+ *
+ * \param[in] egtmCluster   Cluster of EGTM which contains the trigger source
+ *                          Range: \ref: IfxEgtm_Cluster
+ * \param[in] egtmSource    Trigger source selected (Atom or Tom)
+ *                          Range: \ref: IfxEgtm_TrigSource
+ * \param[in] Channel       Channel within the egtmSource
+ *                          Range: \ref: IfxEgtm_TrigSource
+ * \param[in] canTrigSignal Connection to ADC trigger Signal
+ *                          Range: \ref: IfxEgtm_Cfg_CanTriggerSignal
+ *
+ * \retval TRUE on success else FALSE
  */
 IFX_EXTERN boolean IfxEgtm_Trigger_trigToCan(IfxEgtm_Cluster egtmCluster, IfxEgtm_TrigSource egtmSource, IfxEgtm_TrigChannel Channel, IfxEgtm_Cfg_CanTriggerSignal canTrigSignal);
 
 /** \brief Connect eGTM to Qspi
- * \param egtmCluster Cluster of EGTM which contains the trigger source
- * \param egtmSource Trigger source selected (Atom or Tom)
- * \param Channel channel within the egtmSource
- * \param qspiTrigSignal Connection to ADC trigger Signal
- * \return TRUE on success else FALSE
+ *
+ * \param[in] egtmCluster    Cluster of EGTM which contains the trigger source
+ *                           Range: \ref: IfxEgtm_Cluster
+ * \param[in] egtmSource     Trigger source selected (Atom or Tom)
+ *                           Range: \ref: IfxEgtm_TrigSource
+ * \param[in] Channel        Channel within the egtmSource
+ *                           Range: \ref: IfxEgtm_TrigChannel
+ * \param[in] qspiTrigSignal Connection to ADC trigger Signal
+ *                           Range: \ref: IfxEgtm_Cfg_QspiTriggerSignal
+ *
+ * \retval TRUE on success else FALSE
  */
 IFX_EXTERN boolean IfxEgtm_Trigger_trigToQspi(IfxEgtm_Cluster egtmCluster, IfxEgtm_TrigSource egtmSource, IfxEgtm_TrigChannel Channel, IfxEgtm_Cfg_QspiTriggerSignal qspiTrigSignal);
 
 /** \brief Connect eGTM to Asclin
- * \param egtmCluster Cluster of EGTM which contains the trigger source
- * \param egtmSource Trigger source selected (Atom or Tom)
- * \param Channel channel within the egtmSource
- * \param asclinTrigSignal Connection to ADC trigger Signal
- * \return TRUE on success else FALSE
+ *
+ * \param[in] egtmCluster      Cluster of EGTM which contains the trigger source
+ *                             Range: \ref: IfxEgtm_Cluster
+ * \param[in] egtmSource       Trigger source selected (Atom or Tom)
+ *                             Range: \ref: IfxEgtm_TrigSource
+ * \param[in] Channel          Channel within the egtmSource
+ *                             Range: \ref: IfxEgtm_TrigChannel
+ * \param[in] asclinTrigSignal Connection to ADC trigger Signal
+ *                             Range: \ref: IfxEgtm_Cfg_AsclinTriggerSignal
+ *
+ * \retval TRUE on success else FALSE
  */
 IFX_EXTERN boolean IfxEgtm_Trigger_trigToAsclin(IfxEgtm_Cluster egtmCluster, IfxEgtm_TrigSource egtmSource, IfxEgtm_TrigChannel Channel, IfxEgtm_Cfg_AsclinTriggerSignal asclinTrigSignal);
 

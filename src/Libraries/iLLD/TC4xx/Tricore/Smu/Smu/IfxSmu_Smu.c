@@ -2,7 +2,7 @@
  * \file IfxSmu_Smu.c
  * \brief SMU SMU details
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -229,7 +229,7 @@ void IfxSmu_Smu_initSafetyModule(IfxSmu_Smu_SafetyConfig *config, boolean smuSaf
     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.SAFE[smuSafeIndex].PROTSSE, IfxApProt_State_config);
 #endif
 
-    /*Write Config key to configure the SMU registers. */
+    /* Write Config key to configure the SMU registers. */
     MODULE_SMU.SAFE[smuSafeIndex].KEYS.U       = (uint32)0x000000bc;
 
     MODULE_SMU.SAFE[smuSafeIndex].FSP[0].CON.U = fspSfr0.U;
@@ -323,7 +323,7 @@ void IfxSmu_Smu_initSecurityModule(IfxSmu_Smu_SecurityConfig *config)
     /* Initialize the Global SMU SECURE configurations */
     IfxSmu_Smu_initSecurityGlobal(&config->globalConfig);
 
-    /*Write Config key to configure the SMU registers. */
+    /* Write Config key to configure the SMU registers. */
     MODULE_SMU.CS.KEYS.U = (uint32)0x000000bc;
 
     for (alarmGroupIndex = 0U; alarmGroupIndex < IFXSMU_NUM_OF_SECURITY_ALARM_GROUPS; alarmGroupIndex++)
@@ -339,7 +339,7 @@ void IfxSmu_Smu_initSecurityModule(IfxSmu_Smu_SecurityConfig *config)
     /* Write SMU_ASCE(0) in CSCMD register */
     MODULE_SMU.CS.CMD.U = IfxSmu_Command_alarmStatusClear;
 
-    /* disable the write-protection for registers */
+    /* Disable the write-protection for registers */
 
     /* Clear all SECURE SMU Alarms */
     for (alarmGroupIndex = 0U; alarmGroupIndex < IFXSMU_NUM_OF_SECURITY_ALARM_GROUPS; alarmGroupIndex++)
@@ -446,7 +446,7 @@ void IfxSmu_Smu_initSafetyGlobal(IfxSmu_Smu_SafetyGlobalConfig *config, boolean 
     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.SAFE[smuSafeIndex].PROTSSE, IfxApProt_State_config);
 #endif
 
-    /*Write Config key to configure the SMU registers. */
+    /* Write Config key to configure the SMU registers. */
     MODULE_SMU.SAFE[smuSafeIndex].KEYS.U   = (uint32)0x000000bc;
 
     MODULE_SMU.SAFE[smuSafeIndex].AGC.U    = agcSfr.U;
@@ -494,7 +494,7 @@ void IfxSmu_Smu_initSecurityGlobal(IfxSmu_Smu_SecurityGlobalConfig *config)
     rtacSfr0B.B.GID3  = config->recoveryTimerAlarmConfig.groupIndex3;
     rtacSfr0B.B.ALID3 = config->recoveryTimerAlarmConfig.alarmId3;
 
-    /*Write Config key to configure the SMU registers. */
+    /* Write Config key to configure the SMU registers. */
     MODULE_SMU.CS.KEYS.U   = (uint32)0x000000bc;
 
     MODULE_SMU.CS.RTC.U    = rtcSfr.U;

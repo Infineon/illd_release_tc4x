@@ -2,9 +2,9 @@
  * \file IfxEgtm_Atom.c
  * \brief EGTM  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-12-13 09:40:10
  *
  *
  *                                 IMPORTANT NOTICE
@@ -122,13 +122,13 @@ float32 IfxEgtm_Atom_Ch_getFrequency(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch ch
 
     if (counterResetEvent == IfxEgtm_Atom_Ch_ResetEvent_onCm0)
     {
-        /* 1. Get channel input frequency */
+        /* 1. Gets channel input frequency */
         sourceFrequency = IfxEgtm_Atom_Ch_getClockFrequency(&MODULE_EGTM, atom, channel);
 #if IFXEGTM_PWM_IS_HIGH_RES_AVAILABLE		
         sourceFrequency = (atom->CH[channel].CTRL2.B.HRES == 1u) ? (sourceFrequency * 32.0f) : sourceFrequency;
 #endif /* #if IFXEGTM_PWM_IS_HIGH_RES_AVAILABLE */
 
-        /* 2. Calculate Period Ticks */
+        /* 2. Calculates Period Ticks */
         if (atom->CH[channel].CTRL.B.UDMODE == 0u)  /* Channel counter running in continuous counting up mode */
         {
             periodTicks = atom->CH[channel].CM0.U;
@@ -138,7 +138,7 @@ float32 IfxEgtm_Atom_Ch_getFrequency(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch ch
             periodTicks = (atom->CH[channel].CM0.U - 1u) << 1u;
         }
 
-        /* 3. Calculate PWM frequency */
+        /* 3. Calculates PWM frequency */
         frequency = sourceFrequency / (float32)periodTicks;
     }
 
@@ -152,10 +152,10 @@ float32 IfxEgtm_Atom_Ch_getDuty(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel
     uint32                     cm0Reg, cm1Reg, periodReg;
     IfxEgtm_Atom_Ch_ResetEvent counterResetEvent;
 
-    /* 1. Read counter reset event */
+    /* 1. Reads counter reset event */
     counterResetEvent = (IfxEgtm_Atom_Ch_ResetEvent)atom->CH[channel].CTRL.B.RST_CCU0;
 
-    /* 2. Read register content */
+    /* 2. Reads register content */
     cm0Reg = atom->CH[channel].CM0.U;
     cm1Reg = atom->CH[channel].CM1.U;
 
@@ -177,7 +177,7 @@ float32 IfxEgtm_Atom_Ch_getDuty(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel
         periodReg = atom->CH[tempChannel].CM0.U;
     }
 
-    /* 4. Calculate Duty percentage */
+    /* 4. Calculates Duty percentage */
     if (atom->CH[channel].CTRL.B.UDMODE == 0u)                     /* Channel counter running in continuous counting up mode */
     {
         if (counterResetEvent == IfxEgtm_Atom_Ch_ResetEvent_onCm0) /* Duty exists during CN0 = [0, CM1] */

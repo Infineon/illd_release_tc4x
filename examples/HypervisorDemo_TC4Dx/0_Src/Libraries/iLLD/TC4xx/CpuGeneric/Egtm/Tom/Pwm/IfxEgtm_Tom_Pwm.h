@@ -3,9 +3,9 @@
  * \brief EGTM PWM details
  * \ingroup IfxLld_Egtm
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-03-29 09:36:38
  *
  *
  *                                 IMPORTANT NOTICE
@@ -223,8 +223,8 @@ typedef struct
     IfxEgtm_Tom_Ch            tomChannel;                     /**< \brief TOM channel to be used for PWM */
     IfxEgtm_Tom_Ch_ClkSrc     clock;                          /**< \brief Clock source for selected TOM channel */
     Ifx_ActiveState           signalLevel;                    /**< \brief Signal Level when duty is active */
-    uint16                    period;                         /**< \brief Period in ticks (TOM only supports 16 bits) */
-    uint16                    dutyCycle;                      /**< \brief Duty Cycle in ticks (TOM only supports 16 bits) */
+    uint16                    period;                         /**< \brief Period in ticks (TOM only supports 16 bits). Range: 0 to 0xFFFF */
+    uint16                    dutyCycle;                      /**< \brief Duty Cycle in ticks (TOM only supports 16 bits). Range: 0 to 0xFFFF */
     IfxEgtm_Tom_Pwm_Interrupt interrupt;                      /**< \brief Configuration structure for interrupt */
     IfxEgtm_Tom_Pwm_pin       pin;                            /**< \brief Configuration structure for output pin */
     IfxEgtm_MscOut           *mscOut;                         /**< \brief MSC configuration */
@@ -243,6 +243,7 @@ typedef struct
     IfxEgtm_Tom_Ch        tomChannel;                     /**< \brief TOM channel used for the timer */
     Ifx_EGTM_CLS_TOM     *tom;                            /**< \brief Pointer to the TOM object */
     Ifx_EGTM_CLS_TOM_TGC *tgc[IFXEGTM_TOM_NUM_TGC];       /**< \brief Pointer to the TGC object */
+    boolean               synchronousUpdateEnabled;       /**< \brief Synchronous update enabled/disabled */
 } IfxEgtm_Tom_Pwm_Driver;
 
 /** \} */
@@ -255,33 +256,104 @@ typedef struct
 /******************************************************************************/
 
 /** \brief Initializes a TOM channel to generate PWM signal
- * \param driver TOM Handle
- * \param config Configuration structure for TOM PWM
- * \return Initialization status: TRUE on success else FALSE
+ *
+ * \param[inout] driver TOM Handle
+ * \param[in]    config Configuration structure for TOM PWM
+ *
+ * \retval Initialization status: TRUE on success else FALSE
  */
 IFX_EXTERN boolean IfxEgtm_Tom_Pwm_init(IfxEgtm_Tom_Pwm_Driver *driver, const IfxEgtm_Tom_Pwm_Config *config);
 
 /** \brief Initializes the configuration structure to default values
- * \param config This parameter is initialized by the function
- * \param egtm Pointer to EGTM module (SFR)
- * \return None
+ *
+ * \param[inout] config This parameter is initialized by the function
+ * \param[in]    egtm   Pointer to EGTM module (SFR)
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Tom_Pwm_initConfig(IfxEgtm_Tom_Pwm_Config *config, Ifx_EGTM *egtm);
 
 /** \brief starts the PWM generation from the configured channel
- * \param driver handle for the PWM device
- * \param immediate immediate start or not
- * \return None
+ *
+ * \param[inout] driver    Handle for the PWM device
+ * \param[in]    immediate Immediate start or not
+ *                         Range: TRUE: starts the PWM generation immediately
+ *                                FALSE: Starts at the next trigger event
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Tom_Pwm_start(IfxEgtm_Tom_Pwm_Driver *driver, boolean immediate);
 
 /** \brief Stops the PWM generation from the configured channel
- * \param driver handle for the PWM device
- * \param immediate immediate start or not.
- * \return None
+ *
+ * \param[inout] driver    Handle for the PWM device
+ * \param[in]    immediate Immediate start or not.
+ *                         Range: TRUE: Stops the PWM generation immediately
+ *                                FALSE: Stops at the next trigger event
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Tom_Pwm_stop(IfxEgtm_Tom_Pwm_Driver *driver, boolean immediate);
 
+/******************************************************************************/
+/*-------------------------Inline Function Prototypes-------------------------*/
+/******************************************************************************/
+
+/** \brief Updates PWM duty cycle
+ *
+ * \param[inout] driver      TOM Handle
+ * \param[in]    requestDuty Requested duty in %
+ *                           Range: 0.0 to 100.0
+ *
+ * \retval None
+ */
+IFX_INLINE void IfxEgtm_Tom_Pwm_setDuty(IfxEgtm_Tom_Pwm_Driver *driver, float32 requestDuty);
+
 /** \} */
+
+/******************************************************************************/
+/*---------------------Inline Function Implementations------------------------*/
+/******************************************************************************/
+
+IFX_INLINE void IfxEgtm_Tom_Pwm_setDuty(IfxEgtm_Tom_Pwm_Driver *driver, float32 requestDuty)
+{
+    uint16 period;
+    uint16 dutyCycle;
+
+    /* Handle non-positive / invalid duty */
+    if (requestDuty < 0.0f)
+    {
+        requestDuty = 0.0f;
+    }
+    else if (requestDuty > 100.0f)
+    {
+        requestDuty = 100.0f;
+    }
+
+    /* Use configured period value according to selected update mode */
+    if (driver->synchronousUpdateEnabled == TRUE)
+    {
+        period = IfxEgtm_Tom_Ch_getCompareZeroShadow(driver->tom, driver->tomChannel);
+    }
+    else
+    {
+        period = IfxEgtm_Tom_Ch_getCompareZero(driver->tom, driver->tomChannel);
+    }
+
+    /* Duty in ticks = period * (requestDuty in percent / 100%) */
+    dutyCycle = (uint16)(((float32)period * requestDuty * 0.01f) + 0.5f);
+
+    /* Clamp to period to avoid overflow caused by rounding */
+    dutyCycle = (dutyCycle <= period) ? dutyCycle : period;
+
+    if (driver->synchronousUpdateEnabled == TRUE)
+    {
+        IfxEgtm_Tom_Ch_setCompareOneShadow(driver->tom, driver->tomChannel, dutyCycle);
+    }
+    else
+    {
+        IfxEgtm_Tom_Ch_setCompareOne(driver->tom, driver->tomChannel, dutyCycle);
+    }
+}
 
 #endif /* IFXEGTM_TOM_PWM_H */

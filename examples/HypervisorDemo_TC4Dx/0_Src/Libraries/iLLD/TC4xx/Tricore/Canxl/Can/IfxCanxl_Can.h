@@ -3,9 +3,9 @@
  * \brief CANXL CAN details
  * \ingroup IfxLld_Canxl
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2024-10-15 09:57:34
  *
  *
  *                                 IMPORTANT NOTICE
@@ -40,6 +40,10 @@
  * DEALINGS IN THE SOFTWARE.
  *
  *
+ * \author Yadunandan Puttaswamy<yadunandan.puttaswamy@infineon.com>
+ * \author Shreyas Shubhankar<shreyas.shubhankar@infineon.com>
+ * \author Chetan Arvind Walvekar<chetanarvind.walvekar@infineon.com>
+ * \author Kalla Harsha Naidu<Harsha.Kalla@infineon.com>
  *
  * \defgroup IfxLld_Canxl_Usage How to use the CANXL Driver?
  * \ingroup IfxLld_Canxl

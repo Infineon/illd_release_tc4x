@@ -3,9 +3,9 @@
  * \brief CONVERTER on-chip implementation data 
  * \ingroup IfxLld_Converter 
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2019-11-28 14:18:19
  *
 
  *                                 IMPORTANT NOTICE
@@ -59,7 +59,7 @@
 #include "Ifx_Cfg.h"
 
 #if defined DEVICE_TC4DX
-#include "IfxConverter_cfg_TC4Dx.h"
+#include "TC4Dx/IfxConverter_cfg_TC4Dx.h"
 #endif
 
 #endif /* IFXCONVERTER_CFG_H */

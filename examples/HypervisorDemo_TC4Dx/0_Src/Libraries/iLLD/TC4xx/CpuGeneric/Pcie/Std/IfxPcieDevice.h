@@ -3,9 +3,9 @@
  * \brief PCIE  basic functionality
  * \ingroup IfxLld_Pcie
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-03-17 07:05:13
  *
  *
  *                                 IMPORTANT NOTICE

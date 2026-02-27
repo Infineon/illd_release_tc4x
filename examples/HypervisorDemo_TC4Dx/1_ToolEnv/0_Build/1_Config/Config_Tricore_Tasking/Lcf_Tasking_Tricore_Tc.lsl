@@ -879,49 +879,49 @@ derivative tc4D
 {
     core tc0
     {
-        architecture = TC1V1.8;
+        architecture = TC1V1.8_DPFPU;
         space_id_offset = 100;           // add 100 to all space IDs in the architecture definition
         copytable_space = vtc:linear;    // use the copy table in the virtual core for 'bss' and initialized data sections
     }
 
     core tc1 // core 1 TC18
     {
-        architecture = TC1V1.8;
+        architecture = TC1V1.8_DPFPU;
         space_id_offset = 200;           // add 200 to all space IDs in the architecture definition
         copytable_space = vtc:linear;    // use the copy table in the virtual core for 'bss' and initialized data sections
     }
 
     core tc2 // core 2 TC18
     {
-        architecture = TC1V1.8;
+        architecture = TC1V1.8_DPFPU;
         space_id_offset = 300;           // add 300 to all space IDs in the architecture definition
         copytable_space = vtc:linear;    // use the copy table in the virtual core for 'bss' and initialized data sections
     }
 
     core tc3 // core 3 TC18
     {
-        architecture = TC1V1.8;
+        architecture = TC1V1.8_DPFPU;
         space_id_offset = 400;           // add 400 to all space IDs in the architecture definition
         copytable_space = vtc:linear;    // use the copy table in the virtual core for 'bss' and initialized data sections
     }
 
     core tc4 // core 4 TC18
     {
-        architecture = TC1V1.8;
+        architecture = TC1V1.8_DPFPU;
         space_id_offset = 500;           // add 500 to all space IDs in the architecture definition
         copytable_space = vtc:linear;    // use the copy table in the virtual core for 'bss' and initialized data sections
     }
 
     core tc5 // core 5 TC18
     {
-        architecture = TC1V1.8;
+        architecture = TC1V1.8_DPFPU;
         space_id_offset = 600;           // add 600 to all space IDs in the architecture definition
         copytable_space = vtc:linear;    // use the copy table in the virtual core for 'bss' and initialized data sections
     }
 
     core vtc
     {
-        architecture = TC1V1.8;
+        architecture = TC1V1.8_DPFPU;
         import tc0;                     // add all address spaces of core tc0 to core vtc for linking and locating
         import tc1;                     //                                tc1
         import tc2;                     //                                tc2

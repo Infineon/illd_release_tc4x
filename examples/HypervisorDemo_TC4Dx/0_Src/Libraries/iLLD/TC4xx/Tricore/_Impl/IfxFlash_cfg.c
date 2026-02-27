@@ -2,9 +2,9 @@
  * \file IfxFlash_cfg.c
  * \brief FLASH on-chip implementation data
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-10-06 06:34:54
  *
  *
  *                                 IMPORTANT NOTICE

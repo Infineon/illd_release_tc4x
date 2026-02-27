@@ -2,7 +2,7 @@
  * \file IfxGeth_Eth.c
  * \brief GETH ETH details
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -130,8 +130,10 @@ void IfxGeth_Eth_configureMTL(IfxGeth_Eth *geth, IfxGeth_PortIndex portIndex, If
     gethSFR->PORT[portIndex].MTL.OPERATION_MODE.B.RAA = mtlConfig->rxArbitrationAlgorithm;
 
     /*Currently ETSALG has no impact as TSA is fixed to Strict priority*/
-    gethSFR->PORT[portIndex].MTL.OPERATION_MODE.B.ETSALG = 0;     /*WRR algorithm*/
-    gethSFR->PORT[portIndex].MTL.OPERATION_MODE.B.FRPE   = 0;     /*Flexible Receive Parser Disabled*/
+    /*WRR algorithm*/
+    gethSFR->PORT[portIndex].MTL.OPERATION_MODE.B.ETSALG = 0;
+    /*Flexible Receive Parser Disabled*/
+    gethSFR->PORT[portIndex].MTL.OPERATION_MODE.B.FRPE   = 0;
 
     /*Clear Interrupts. Compulsory Write of 1 needed to clear bit.*/
     gethSFR->PORT[portIndex].MTL.TCQ0.Q0_INTERRUPT_STATUS.U = 0x10003;
@@ -449,11 +451,13 @@ void IfxGeth_Eth_configureMTL(IfxGeth_Eth *geth, IfxGeth_PortIndex portIndex, If
 
         if (mtlConfig->rxQueue[rxQueueIndex].enableAudioVideoBridge == 0)
         {
-            gethSFR->PORT[portIndex].CORE.MAC_RXQ_CTRL0.B.RXQ0EN = 2; /*Generic Mode*/
+        	/*Generic Mode*/
+            gethSFR->PORT[portIndex].CORE.MAC_RXQ_CTRL0.B.RXQ0EN = 2;
         }
         else
         {
-            gethSFR->PORT[portIndex].CORE.MAC_RXQ_CTRL0.B.RXQ0EN = 1; /*AVB Mode*/
+        	/*AVB Mode*/
+            gethSFR->PORT[portIndex].CORE.MAC_RXQ_CTRL0.B.RXQ0EN = 1;
         }
     }
 
@@ -639,11 +643,13 @@ void IfxGeth_Eth_configureMTL(IfxGeth_Eth *geth, IfxGeth_PortIndex portIndex, If
 
         if (mtlConfig->rxQueue[rxQueueIndex].enableAudioVideoBridge == 0)
         {
-            gethSFR->PORT[portIndex].CORE.MAC_RXQ_CTRL0.B.RXQ5EN = 2; /*Generic Mode*/
+        	/*Generic Mode*/
+            gethSFR->PORT[portIndex].CORE.MAC_RXQ_CTRL0.B.RXQ5EN = 2;
         }
         else
         {
-            gethSFR->PORT[portIndex].CORE.MAC_RXQ_CTRL0.B.RXQ5EN = 1; /*AVB Mode*/
+        	/*AVB Mode*/
+            gethSFR->PORT[portIndex].CORE.MAC_RXQ_CTRL0.B.RXQ5EN = 1;
         }
     }
 
@@ -677,11 +683,13 @@ void IfxGeth_Eth_configureMTL(IfxGeth_Eth *geth, IfxGeth_PortIndex portIndex, If
 
         if (mtlConfig->rxQueue[rxQueueIndex].enableAudioVideoBridge == 0)
         {
-            gethSFR->PORT[portIndex].CORE.MAC_RXQ_CTRL0.B.RXQ6EN = 2; /*Generic Mode*/
+        	/*Generic Mode*/
+            gethSFR->PORT[portIndex].CORE.MAC_RXQ_CTRL0.B.RXQ6EN = 2;
         }
         else
         {
-            gethSFR->PORT[portIndex].CORE.MAC_RXQ_CTRL0.B.RXQ6EN = 1; /*AVB Mode*/
+        	/*AVB Mode*/
+            gethSFR->PORT[portIndex].CORE.MAC_RXQ_CTRL0.B.RXQ6EN = 1;
         }
     }
 
@@ -715,11 +723,13 @@ void IfxGeth_Eth_configureMTL(IfxGeth_Eth *geth, IfxGeth_PortIndex portIndex, If
 
         if (mtlConfig->rxQueue[rxQueueIndex].enableAudioVideoBridge == 0)
         {
-            gethSFR->PORT[portIndex].CORE.MAC_RXQ_CTRL0.B.RXQ7EN = 2; /*Generic Mode*/
+        	/*Generic Mode*/
+            gethSFR->PORT[portIndex].CORE.MAC_RXQ_CTRL0.B.RXQ7EN = 2;
         }
         else
         {
-            gethSFR->PORT[portIndex].CORE.MAC_RXQ_CTRL0.B.RXQ7EN = 1; /*AVB Mode*/
+        	/*AVB Mode*/
+            gethSFR->PORT[portIndex].CORE.MAC_RXQ_CTRL0.B.RXQ7EN = 1;
         }
     }
 
@@ -761,7 +771,8 @@ void IfxGeth_Eth_initBridge(IfxGeth_Eth *geth, IfxGeth_Eth_BridgeConfig *config)
         /*Flush Rx Queues of a port*/
         IfxGeth_Bridge_flushAllPortRxQueues(geth->gethSFR, portIndex);
 
-        if (gethSFR->BRIDGE.FORWARD_CONTROL.B.Q_CH_MAPPING_EN) /* As per HWA, following registers are configured only for two port mode */
+        /* As per HWA, following registers are configured only for two port mode */
+        if (gethSFR->BRIDGE.FORWARD_CONTROL.B.Q_CH_MAPPING_EN)
         {
             for (txQueueIndex = IfxGeth_TxMtlQueue_0; txQueueIndex < IFXGETH_NUM_TX_QUEUES; txQueueIndex++)
             {
@@ -918,17 +929,20 @@ void IfxGeth_Eth_initModule(IfxGeth_Eth *geth, IfxGeth_Eth_Config *config)
     {
     case IfxGeth_BridgePortMode_singlePort0:
     {
-        gethSFR->MACEN.U = 1;     /* MAC0 is enabled */
+    	/* MAC0 is enabled */
+        gethSFR->MACEN.U = 1;
         break;
     }
     case IfxGeth_BridgePortMode_singlePort1:
     {
-        gethSFR->MACEN.U = 2;     /* MAC1 is enabled */
+    	/* MAC1 is enabled */
+        gethSFR->MACEN.U = 2;
         break;
     }
     case IfxGeth_BridgePortMode_multiPort:
     {
-        gethSFR->MACEN.U = 3;     /* Both MAC0 and MAC1 are enabled */
+    	/* Both MAC0 and MAC1 are enabled */
+        gethSFR->MACEN.U = 3;
         break;
     }
     default:
@@ -2112,7 +2126,8 @@ void IfxGeth_Eth_initReceiveDescriptors(IfxGeth_Eth *geth, IfxGeth_Eth_RxChannel
 
     volatile IfxGeth_RxDescr *descr = IfxGeth_Eth_getBaseRxDescriptor(geth, channelId);
 
-    volatile IfxGeth_RxDescr *tail  = &descr[IFXGETH_MAX_RX_DESCRIPTORS - 1]; /* Point to last descriptor in the ring */
+    /* Point to last descriptor in the ring */
+    volatile IfxGeth_RxDescr *tail  = &descr[IFXGETH_MAX_RX_DESCRIPTORS - 1];
 
     /* Initialize descriptors in ring mode */
     for (i = 0; i < IFXGETH_MAX_RX_DESCRIPTORS; i++)
@@ -2162,6 +2177,7 @@ void IfxGeth_Eth_initTransmitDescriptors(IfxGeth_Eth *geth, IfxGeth_Eth_TxChanne
 
     geth->txChannel[channelId].txDescrPtr = descr;
 
+    /* Equivalent to IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, (config->txBuffer1Size) % 4 == 0); */
     IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, ((config->txBuffer1Size & 0x3) == 0));      /* Equivalent to IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, (config->txBuffer1Size) % 4 == 0); */
 
     /* Initialize descriptors in ring mode */
@@ -2199,8 +2215,9 @@ void IfxGeth_Eth_sendTransmitBuffer(IfxGeth_Eth *geth, IfxGeth_PortIndex portInd
     volatile IfxGeth_TxDescr *firstDescr       = IfxGeth_Eth_getActualTxDescriptor(geth, channelId);
     volatile IfxGeth_TxDescr *descr            = firstDescr;
     volatile IfxGeth_TxDescr *nextDescr        = &firstDescr[1];
-    uint32                    bufferLength     = geth->txChannel[channelId].txBuf1Size; /* get the configured buffer length */
-    /* calculate the number of descriptors needed for the frame based on buffer length */
+    /* Get the configured buffer length */
+    uint32                    bufferLength     = geth->txChannel[channelId].txBuf1Size;
+    /* Calculate the number of descriptors needed for the frame based on buffer length */
     uint32                    numOfDescriptors = packetLength / bufferLength;
 
     if (packetLength % bufferLength)
@@ -2208,13 +2225,15 @@ void IfxGeth_Eth_sendTransmitBuffer(IfxGeth_Eth *geth, IfxGeth_PortIndex portInd
         numOfDescriptors += 1;
     }
 
-    /* configure the first descriptor */
+    /* Configure the first descriptor */
     firstDescr->TDES3.R.FL   = packetLength;                                    /* total length of the packet */
 
-    firstDescr->TDES3.R.SAIC = geth->txChannel[channelId].sourceAddressControl; /* Source Address Insertion control. Only valid for first descriptor. Default: IfxGeth_SourceAddressControl_notIncluded */
-    firstDescr->TDES3.R.CPC  = geth->txChannel[channelId].crcControl;           /* CRC and PAD Insertion control. Only valid for first descriptor. Default: IfxGeth_CrcControl_insertCrcAndPad */
+    /* Source Address Insertion control. Only valid for first descriptor. Default: IfxGeth_SourceAddressControl_notIncluded */
+    firstDescr->TDES3.R.SAIC = geth->txChannel[channelId].sourceAddressControl;
+    /* CRC and PAD Insertion control. Only valid for first descriptor. Default: IfxGeth_CrcControl_insertCrcAndPad */
+    firstDescr->TDES3.R.CPC  = geth->txChannel[channelId].crcControl;
 
-    /* configure every other descriptor including first descriptor for the frame transmission */
+    /* Configure every other descriptor including first descriptor for the frame transmission */
     for (i = 0; i < numOfDescriptors; i++)
     {
         if (i == (numOfDescriptors - 1))
@@ -2241,20 +2260,28 @@ void IfxGeth_Eth_sendTransmitBuffer(IfxGeth_Eth *geth, IfxGeth_PortIndex portInd
         descr->TDES3.R.SLOTNUM = geth->txChannel[channelId].avbSlotNumber;       /* AVB Slot number */
         descr->TDES3.R.CTXT    = 0U;                                             /* Normal Descriptor */
 
-        IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, descr->TDES3.R.OWN != 1U);           /* Assert if buffers are not available for transfer */
-        descr->TDES3.R.OWN = 1U;                                                 /* release to DMA */
-        IfxGeth_Eth_shuffleTxDescriptor(geth, channelId);                        /* Point to next descriptor in ring*/
-        descr              = IfxGeth_Eth_getActualTxDescriptor(geth, channelId); /* update the descr pointer */
+        /* Assert if buffers are not available for transfer */
+        IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, descr->TDES3.R.OWN != 1U);
+        /* Release to DMA */
+        descr->TDES3.R.OWN = 1U;
+        /* Point to next descriptor in ring*/
+        IfxGeth_Eth_shuffleTxDescriptor(geth, channelId);
+        /* Update the descr pointer */
+        descr              = IfxGeth_Eth_getActualTxDescriptor(geth, channelId);
         nextDescr          = descr;
     }
 
-    firstDescr->TDES3.R.FD                                  = 1;                 /* first descriptor of the frame */
+    /* First descriptor of the frame */
+    firstDescr->TDES3.R.FD                                  = 1;
     geth->txChannel[channelId].txDescrPtr                   = firstDescr;
 
-    geth->gethSFR->DMA.CH[channelId].TXDESC_TAIL_LPOINTER.U = (uint32)nextDescr; /*last descriptor based on packet size*/
+    /* Last descriptor based on packet size */
+    geth->gethSFR->DMA.CH[channelId].TXDESC_TAIL_LPOINTER.U = (uint32)nextDescr;
 
-    IfxGeth_Eth_wakeupTransmitter(geth, portIndex, channelId);                   /* initiate the transfer */
-    geth->txChannel[channelId].txDescrPtr = nextDescr;                           /* update the handle pointer to next descriptor */
+    /* Initiate the transfer */
+    IfxGeth_Eth_wakeupTransmitter(geth, portIndex, channelId);
+    /* Update the handle pointer to next descriptor */
+    geth->txChannel[channelId].txDescrPtr = nextDescr;
 
     geth->txChannel[channelId].txCount++;
 }
@@ -2269,30 +2296,33 @@ void IfxGeth_Eth_shuffleRxDescriptor(IfxGeth_Eth *geth, IfxGeth_RxDmaChannel cha
 
     IfxGeth_RxDescr *const currentDescr = (IfxGeth_RxDescr *const)geth->rxChannel[channelId].rxDescrPtr;
 
-    /*Update handle*/
+    /* Update handle */
     geth->rxChannel[channelId].rxDescrPtr++;
     if (geth->rxChannel[channelId].rxDescrPtr == lastDescr)
     {
         geth->rxChannel[channelId].rxDescrPtr = baseDescr;
     }
 
-    /* return previous descriptor pointed by tail pointer to DMA */
+    /* Return previous descriptor pointed by tail pointer to DMA */
     int current_pointer_index = currentDescr - baseDescr;
 
     currentDescr->RDES0.U     = (geth->rxChannel[channelId].bufferSize * current_pointer_index) + geth->rxChannel[channelId].buffer1Address;
 
-    currentDescr->RDES2.U     = 0; /* buffer2 not used */
+    /* Buffer2 not used */
+    currentDescr->RDES2.U     = 0;
 
-    currentDescr->RDES3.U     = ((1 << 30) | (1 << 31)); /* set interrupt enabled (Bit 30) and owned by DMA (Bit 31) */
+    /* set interrupt enabled (Bit 30) and owned by DMA (Bit 31) */
+    currentDescr->RDES3.U     = ((1 << 30) | (1 << 31));
 
-    /* update tail pointer */
+    /* Update tail pointer */
     IfxGeth_RxDescr       *tail_pointer       = (IfxGeth_RxDescr *)gethSFR->DMA.CH[channelId].RXDESC_TAIL_LPOINTER.U;
 
     tail_pointer++;
 
     if (tail_pointer == lastDescr)
     {
-        tail_pointer = baseDescr;    /* wrap around the descriptors */
+    	/* Wrap around the descriptors */
+        tail_pointer = baseDescr;
     }
 
     gethSFR->DMA.CH[channelId].RXDESC_TAIL_LPOINTER.U = (uint32)tail_pointer;
@@ -2348,7 +2378,8 @@ void IfxGeth_Eth_wakeupReceiver(IfxGeth_Eth *geth, IfxGeth_PortIndex portIndex, 
         /* check if receive buffer unavailable */
         if (geth->gethSFR->DMA.CH[channelId].STATUS.B.RBU)
         {
-            geth->gethSFR->DMA.CH[channelId].STATUS.B.RBU = 1; /*Clear the bit*/
+        	/* Clear the bit */
+            geth->gethSFR->DMA.CH[channelId].STATUS.B.RBU = 1;
         }
 
         IfxGeth_Eth_startReceiver(geth, portIndex, channelId);
@@ -2358,23 +2389,25 @@ void IfxGeth_Eth_wakeupReceiver(IfxGeth_Eth *geth, IfxGeth_PortIndex portIndex, 
 
 void IfxGeth_Eth_wakeupTransmitter(IfxGeth_Eth *geth, IfxGeth_PortIndex portIndex, IfxGeth_TxDmaChannel channelId)
 {
-    /* check if transmitter suspended */
-    /*if (IfxGeth_dma_isInterruptFlagSet(geth->gethSFR, (IfxGeth_DmaChannel)channelId, IfxGeth_DmaInterruptFlag_transmitStopped))
+    /* Check if transmitter suspended */
+    /* If (IfxGeth_dma_isInterruptFlagSet(geth->gethSFR, (IfxGeth_DmaChannel)channelId, IfxGeth_DmaInterruptFlag_transmitStopped))
      */
     if (geth->gethSFR->DMA.CH[channelId].STATUS.B.TPS)
     {
-        /* check if transmit buffer unavailable*/
+        /* Check if transmit buffer unavailable*/
         if (geth->gethSFR->DMA.CH[channelId].STATUS.B.TBU)
         {
-            geth->gethSFR->DMA.CH[channelId].STATUS.B.TBU = 1;  /*Clear the bit*/
+        	/* Clear the bit */
+            geth->gethSFR->DMA.CH[channelId].STATUS.B.TBU = 1;
         }
 
-        /*check MTL underflow flag*/
+        /* Check MTL underflow flag */
         if (channelId == IfxGeth_TxDmaChannel_0)
         {
             if (geth->gethSFR->PORT[portIndex].MTL.TCQ0.Q0_INTERRUPT_STATUS.B.TXUNFIS)
             {
-                geth->gethSFR->PORT[portIndex].MTL.TCQ0.Q0_INTERRUPT_STATUS.B.TXUNFIS = 1; /*Clear the bit*/
+            	/* Clear the bit */
+                geth->gethSFR->PORT[portIndex].MTL.TCQ0.Q0_INTERRUPT_STATUS.B.TXUNFIS = 1;
             }
         }
 
@@ -2382,7 +2415,8 @@ void IfxGeth_Eth_wakeupTransmitter(IfxGeth_Eth *geth, IfxGeth_PortIndex portInde
         {
             if (geth->gethSFR->PORT[portIndex].MTL.TCQ1.Q1_INTERRUPT_STATUS.B.TXUNFIS)
             {
-                geth->gethSFR->PORT[portIndex].MTL.TCQ1.Q1_INTERRUPT_STATUS.B.TXUNFIS = 1; /*Clear the bit*/
+            	/* Clear the bit */
+                geth->gethSFR->PORT[portIndex].MTL.TCQ1.Q1_INTERRUPT_STATUS.B.TXUNFIS = 1;
             }
         }
 
@@ -2390,7 +2424,8 @@ void IfxGeth_Eth_wakeupTransmitter(IfxGeth_Eth *geth, IfxGeth_PortIndex portInde
         {
             if (geth->gethSFR->PORT[portIndex].MTL.TCQ2.Q2_INTERRUPT_STATUS.B.TXUNFIS)
             {
-                geth->gethSFR->PORT[portIndex].MTL.TCQ2.Q2_INTERRUPT_STATUS.B.TXUNFIS = 1; /*Clear the bit*/
+            	/* Clear the bit */
+                geth->gethSFR->PORT[portIndex].MTL.TCQ2.Q2_INTERRUPT_STATUS.B.TXUNFIS = 1;
             }
         }
 
@@ -2398,7 +2433,8 @@ void IfxGeth_Eth_wakeupTransmitter(IfxGeth_Eth *geth, IfxGeth_PortIndex portInde
         {
             if (geth->gethSFR->PORT[portIndex].MTL.TCQ3.Q3_INTERRUPT_STATUS.B.TXUNFIS)
             {
-                geth->gethSFR->PORT[portIndex].MTL.TCQ3.Q3_INTERRUPT_STATUS.B.TXUNFIS = 1; /*Clear the bit*/
+            	/* Clear the bit */
+                geth->gethSFR->PORT[portIndex].MTL.TCQ3.Q3_INTERRUPT_STATUS.B.TXUNFIS = 1;
             }
         }
 
@@ -2406,7 +2442,8 @@ void IfxGeth_Eth_wakeupTransmitter(IfxGeth_Eth *geth, IfxGeth_PortIndex portInde
         {
             if (geth->gethSFR->PORT[portIndex].MTL.TCQ4.Q4_INTERRUPT_STATUS.B.TXUNFIS)
             {
-                geth->gethSFR->PORT[portIndex].MTL.TCQ4.Q4_INTERRUPT_STATUS.B.TXUNFIS = 1; /*Clear the bit*/
+            	/* Clear the bit */
+                geth->gethSFR->PORT[portIndex].MTL.TCQ4.Q4_INTERRUPT_STATUS.B.TXUNFIS = 1;
             }
         }
 
@@ -2414,7 +2451,8 @@ void IfxGeth_Eth_wakeupTransmitter(IfxGeth_Eth *geth, IfxGeth_PortIndex portInde
         {
             if (geth->gethSFR->PORT[portIndex].MTL.TCQ5.Q5_INTERRUPT_STATUS.B.TXUNFIS)
             {
-                geth->gethSFR->PORT[portIndex].MTL.TCQ5.Q5_INTERRUPT_STATUS.B.TXUNFIS = 1; /*Clear the bit*/
+            	/* Clear the bit */
+                geth->gethSFR->PORT[portIndex].MTL.TCQ5.Q5_INTERRUPT_STATUS.B.TXUNFIS = 1;
             }
         }
 
@@ -2422,7 +2460,8 @@ void IfxGeth_Eth_wakeupTransmitter(IfxGeth_Eth *geth, IfxGeth_PortIndex portInde
         {
             if (geth->gethSFR->PORT[portIndex].MTL.TCQ6.Q6_INTERRUPT_STATUS.B.TXUNFIS)
             {
-                geth->gethSFR->PORT[portIndex].MTL.TCQ6.Q6_INTERRUPT_STATUS.B.TXUNFIS = 1; /*Clear the bit*/
+            	/* Clear the bit */
+                geth->gethSFR->PORT[portIndex].MTL.TCQ6.Q6_INTERRUPT_STATUS.B.TXUNFIS = 1;
             }
         }
 
@@ -2430,7 +2469,8 @@ void IfxGeth_Eth_wakeupTransmitter(IfxGeth_Eth *geth, IfxGeth_PortIndex portInde
         {
             if (geth->gethSFR->PORT[portIndex].MTL.TCQ7.Q7_INTERRUPT_STATUS.B.TXUNFIS)
             {
-                geth->gethSFR->PORT[portIndex].MTL.TCQ7.Q7_INTERRUPT_STATUS.B.TXUNFIS = 1; /*Clear the bit*/
+            	/* Clear the bit */
+                geth->gethSFR->PORT[portIndex].MTL.TCQ7.Q7_INTERRUPT_STATUS.B.TXUNFIS = 1;
             }
         }
 
@@ -2544,7 +2584,8 @@ void IfxGeth_Eth_initVLanTagFilterControl(IfxGeth_Eth *geth, IfxGeth_PortIndex p
     boolean retry    = 0;
     boolean firstTry = 1;
 
-    while (firstTry | retry) /*Retry if Busy*/
+    /* Retry if Busy */
+    while (firstTry | retry)
     {
         if (geth->gethSFR->PORT[portIndex].CORE.MAC_VLAN_TAG_CTRL.B.OB == 0)
         {
@@ -2585,7 +2626,8 @@ void IfxGeth_Eth_writeVLanFilter(IfxGeth_Eth *geth, IfxGeth_PortIndex portIndex,
     boolean retry    = 0;
     boolean firstTry = 1;
 
-    while (firstTry | retry) /*Retry if Busy*/
+    /* Retry if Busy */
+    while (firstTry | retry)
     {
         if (geth->gethSFR->PORT[portIndex].CORE.MAC_VLAN_TAG_CTRL.B.OB == 0)
         {
@@ -2597,7 +2639,8 @@ void IfxGeth_Eth_writeVLanFilter(IfxGeth_Eth *geth, IfxGeth_PortIndex portIndex,
             vLanTagCtrl.B.OFS                                        = config->filterOffset; /*Filter Select*/
             geth->gethSFR->PORT[portIndex].CORE.MAC_VLAN_TAG_CTRL.U  = vLanTagCtrl.U;
 
-            geth->gethSFR->PORT[portIndex].CORE.MAC_VLAN_TAG_CTRL.U += 1;                    /*Initiate the indirect write to Vlan Filter Register by setting OB bitfield*/
+            /* Initiate the indirect write to Vlan Filter Register by setting OB bitfield */
+            geth->gethSFR->PORT[portIndex].CORE.MAC_VLAN_TAG_CTRL.U += 1;
 
             retry                                                    = 0;
         }
@@ -2621,7 +2664,8 @@ uint32 IfxGeth_Eth_readVLanFilter(IfxGeth_Eth *geth, IfxGeth_PortIndex portIndex
     boolean retry    = 0;
     boolean firstTry = 1;
 
-    while (firstTry | retry) /*Retry if Busy*/
+    /*Retry if Busy*/
+    while (firstTry | retry)
     {
         if (geth->gethSFR->PORT[portIndex].CORE.MAC_VLAN_TAG_CTRL.B.OB == 0)
         {
@@ -2631,9 +2675,11 @@ uint32 IfxGeth_Eth_readVLanFilter(IfxGeth_Eth *geth, IfxGeth_PortIndex portIndex
             vLanTagCtrl.B.OFS                                        = filterOffset; /*Filter Select*/
             geth->gethSFR->PORT[portIndex].CORE.MAC_VLAN_TAG_CTRL.U  = vLanTagCtrl.U;
 
-            geth->gethSFR->PORT[portIndex].CORE.MAC_VLAN_TAG_CTRL.U += 1;            /*Initiate the indirect read of Vlan Filter Register by setting OB bitfield*/
+            /* Initiate the indirect read of Vlan Filter Register by setting OB bitfield */
+            geth->gethSFR->PORT[portIndex].CORE.MAC_VLAN_TAG_CTRL.U += 1;
 
-            while (geth->gethSFR->PORT[portIndex].CORE.MAC_VLAN_TAG_CTRL.B.OB)       /*Wait till Filter data is fetched*/
+            /* Wait till Filter data is fetched */
+            while (geth->gethSFR->PORT[portIndex].CORE.MAC_VLAN_TAG_CTRL.B.OB)
             {}
 
             filter = geth->gethSFR->PORT[portIndex].CORE.MAC_VLAN_TAG_DATA.U;
@@ -2661,22 +2707,26 @@ void IfxGeth_Eth_rxFilterFailPacketRouting(IfxGeth_Eth *geth, IfxGeth_PortIndex 
 
     if (config->unicastFailPacketRoutingEnable)
     {
+    	/* Enable the Unicast Address Filter Fail Packets Queue */
         routingControl.B.UFFQE = 1;
         routingControl.B.UFFQ  = config->uincastFailPacketDestination;
     }
 
     if (config->multicastFailPacketRoutingEnable)
     {
+    	/* Enable the Multicast Filter Fail Packets Queuing */
         routingControl.B.MFFQE = 1;
         routingControl.B.MFFQ  = config->multicastFailPacketDestination;
     }
 
     if (config->vlanFailPacketRoutingEnable)
     {
+    	/* Enable the VLAN Tag Filter Fail Packets Queuing */
         routingControl.B.VFFQE = 1;
         routingControl.B.VFFQ  = config->vlanFailPacketDestination;
     }
 
+    /* Write the routing control register */
     geth->gethSFR->PORT[portIndex].CORE.MAC_RXQ_CTRL4.U = routingControl.U;
 }
 
@@ -2761,16 +2811,21 @@ void IfxGeth_Eth_flexibleHeaderInit(IfxGeth_Eth *geth, IfxGeth_PortIndex portInd
     flexHdrCfg.B.FHL  = config->length;
     flexHdrCfg.B.FHSP = config->startPosition;
 
+    /* Configure the static header if transmit and pause header are enabled */
     if (config->txEnable && config->pauseHeaderEnable)
     {
+    	/* Set the low 32 bits of the static header */
         geth->gethSFR->PORT[portIndex].CORE.MAC_FLEX_HDR_LOW.U  = (uint32)(config->staticHeader & 0x00000000FFFFFFFF);
+        /* Set the high 32 bits of the static header */
         geth->gethSFR->PORT[portIndex].CORE.MAC_FLEX_HDR_HIGH.U = (uint32)(config->staticHeader >> 32);
     }
 
+    /* Set the enable flags for the flexible header */
     flexHdrCfg.B.EFLL                                      = config->pauseHeaderEnable;
     flexHdrCfg.B.FHRX                                      = config->rxEnable;
     flexHdrCfg.B.FHTX                                      = config->txEnable;
 
+    /* Write the flexible header configuration register */
     geth->gethSFR->PORT[portIndex].CORE.MAC_FLEX_HDR_CFG.U = flexHdrCfg.U;
 }
 
@@ -2780,23 +2835,28 @@ void IfxGeth_Eth_rxVlanPacket2QueueMap(IfxGeth_Eth *geth, IfxGeth_PortIndex port
     Ifx_GETH_PORT_CORE_MAC_RXQ_CTRL2 queueMap0to3;
     queueMap0to3.U                                      = 0;
 
+    /* Set the priority queue mapping for queues 0-3 */
     queueMap0to3.B.PSRQ0                                = config->rxQueuePriorityMap[0].F;
     queueMap0to3.B.PSRQ1                                = config->rxQueuePriorityMap[1].F;
     queueMap0to3.B.PSRQ2                                = config->rxQueuePriorityMap[2].F;
     queueMap0to3.B.PSRQ3                                = config->rxQueuePriorityMap[3].F;
 
+    /* Write the queue map register for queues 0-3 */
     geth->gethSFR->PORT[portIndex].CORE.MAC_RXQ_CTRL2.U = queueMap0to3.U;
 
     Ifx_GETH_PORT_CORE_MAC_RXQ_CTRL3 queueMap4to7;
     queueMap4to7.U                                            = 0;
 
+    /* Set the priority queue mapping for queues 4-7 */
     queueMap4to7.B.PSRQ4                                      = config->rxQueuePriorityMap[4].F;
     queueMap4to7.B.PSRQ5                                      = config->rxQueuePriorityMap[5].F;
     queueMap4to7.B.PSRQ6                                      = config->rxQueuePriorityMap[6].F;
     queueMap4to7.B.PSRQ7                                      = config->rxQueuePriorityMap[7].F;
 
+    /* Write the queue map register for queues 4-7 */
     geth->gethSFR->PORT[portIndex].CORE.MAC_RXQ_CTRL3.U       = queueMap4to7.U;
 
+    /* Set the priority queue offset */
     geth->gethSFR->PORT[portIndex].CORE.MAC_RXQ_CTRL5.B.PRQSO = config->offset;
 }
 
@@ -2808,15 +2868,20 @@ void IfxGeth_Eth_rxPacket2QueueMap(IfxGeth_Eth *geth, IfxGeth_PortIndex portInde
 
     queueControl.B.UPQ = config->untaggedPacketQueue;
 
-    if (config->residualPacketQueue != 0) /* IfxGeth_RxMtlQueue_0 is default for express frames. Must not be allocated to residual frames*/
+    /* IfxGeth_RxMtlQueue_0 is default for express frames. Must not be allocated to residual frames */
+    if (config->residualPacketQueue != 0)
     {
         queueControl.B.RQ = config->residualPacketQueue;
     }
 
+    /* Configure the multicast or broadcast routing if enabled */
     if (config->multicastOrBroadcastRoutingEnable)
     {
+    	/* Set the multicast or broadcast packet queue */
         queueControl.B.MCBCQ                                       = config->multicastOrBroadcastPacketQueue;
+        /* Set the preemptive multicast or broadcast packet queue */
         geth->gethSFR->PORT[portIndex].CORE.MAC_RXQ_CTRL4.B.PMCBCQ = config->preemptiveMulticastOrBroadcastPacketQueue;
+        /* Enable the multicast or broadcast routing */
         queueControl.B.MCBCQEN                                     = 1;
     }
     else
@@ -2824,14 +2889,18 @@ void IfxGeth_Eth_rxPacket2QueueMap(IfxGeth_Eth *geth, IfxGeth_PortIndex portInde
         geth->gethSFR->PORT[portIndex].CORE.MAC_RXQ_CTRL4.B.PMCBCQ = 0;
     }
 
-    queueControl.B.OMCBCQ                               = config->overrideMulticastOrBroadcastRouting; /*Priority of MCBC packet over other type of packets*/
+    /*Priority of MCBC packet over other type of packets*/
+    queueControl.B.OMCBCQ                               = config->overrideMulticastOrBroadcastRouting;
 
     queueControl.B.TPQC                                 = config->ptpQueueSelect;
     queueControl.B.PTPQ                                 = config->ptpPacketQueue;
 
-    queueControl.B.TACPQE                               = config->taggedAVQueueDestinationSelection; /* Queue Select for Tagged AV Control Packets */
-    queueControl.B.AVCPQ                                = config->avPacketQueue;                     /* Default for untagged AV Control packets. For tagged, this queue is used if TACPQE = 1 */
+    /* Queue Select for Tagged AV Control Packets */
+    queueControl.B.TACPQE                               = config->taggedAVQueueDestinationSelection;
+    /* Default for untagged AV Control packets. For tagged, this queue is used if TACPQE = 1 */
+    queueControl.B.AVCPQ                                = config->avPacketQueue;
 
+    /* Write the queue control register */
     geth->gethSFR->PORT[portIndex].CORE.MAC_RXQ_CTRL1.U = queueControl.U;
 }
 
@@ -2853,8 +2922,10 @@ boolean IfxGeth_Eth_mdioSingleWrite(IfxGeth_Eth *geth, IfxGeth_PortIndex portInd
     uint32  timeoutCycleCount = IFXGETH_MDIO_MAX_TIMEOUT;
     boolean timeOutError      = FALSE;
 
+    /* Wait for the operation to complete */
     while (geth->gethSFR->PORT[portIndex].CORE.MDIO.SINGLE_COMMAND_CONTROL_DATA.B.SBUSY == 1)
     {
+    	/* Check for timeout and update the error flag */
         IFXGETH_MDIO_LOOP_TIMEOUT_CHECK(timeoutCycleCount, timeOutError);
     }
 
@@ -2880,16 +2951,20 @@ boolean IfxGeth_Eth_mdioSingleRead(IfxGeth_Eth *geth, IfxGeth_PortIndex portInde
     uint32  timeoutCycleCount = IFXGETH_MDIO_MAX_TIMEOUT;
     boolean timeOutError      = FALSE;
 
+    /* Wait for the operation to complete or timeout */
     while (geth->gethSFR->PORT[portIndex].CORE.MDIO.SINGLE_COMMAND_CONTROL_DATA.B.SBUSY == 1)
     {
         IFXGETH_MDIO_LOOP_TIMEOUT_CHECK(timeoutCycleCount, timeOutError);
     }
 
+    /* If the operation did not timeout, retrieve the read data */
     if (timeOutError == 0)
     {
         Ifx_GETH_PORT_CORE_MDIO_SINGLE_COMMAND_CONTROL_DATA mdioSingleCmdCtrlData;
+        /* Read the MDIO single command control and data register */
         mdioSingleCmdCtrlData.U       = 0;
         mdioSingleCmdCtrlData.U       = geth->gethSFR->PORT[portIndex].CORE.MDIO.SINGLE_COMMAND_CONTROL_DATA.U;
+        /* Store the read data */
         *(config->mdioSingleReadData) = mdioSingleCmdCtrlData.B.SDATA;
     }
 
@@ -3116,7 +3191,8 @@ boolean IfxGeth_Eth_initTxContextDescriptor(IfxGeth_Eth *geth, IfxGeth_Eth_TxCha
 
     if (descr->TDES3.C.OWN == 1)
     {
-        return status; /*Descriptor is not owned by application to modify it*/
+    	/* Descriptor is not owned by application to modify it */
+        return status;
     }
 
     /*Reset descriptor*/
@@ -3162,12 +3238,14 @@ boolean IfxGeth_Eth_initTxContextDescriptor(IfxGeth_Eth *geth, IfxGeth_Eth_TxCha
     descr->TDES3.C.CTXT = 1;
     descr->TDES3.C.OWN  = 1;
 
-    while (descr->TDES3.C.OWN) /*Wait till DMA reads and writes back the descriptor*/
+    /* Wait till DMA reads and writes back the descriptor */
+    while (descr->TDES3.C.OWN)
     {}
 
     if (descr->TDES3.C.CDE == FALSE)
     {
-        status = TRUE; /* DMA successfully accepted the new context */
+    	/* DMA successfully accepted the new context */
+        status = TRUE;
     }
 
     if (status)
@@ -3218,7 +3296,8 @@ void IfxGeth_Eth_initTxTrafficClass(IfxGeth_Eth *geth, IfxGeth_PortIndex portInd
 
     if (config->algorithm == IfxGeth_TxTransmissionSelectionAlgorithm_ets)
     {
-        geth->gethSFR->PORT[portIndex].MTL.OPERATION_MODE.B.ETSALG = 0; /*Only ETSALG = 0 (WRR Algorithm) is supported by H/w. Remaining values are reserved.*/
+    	/* Only ETSALG = 0 (WRR Algorithm) is supported by H/w. Remaining values are reserved.*/
+        geth->gethSFR->PORT[portIndex].MTL.OPERATION_MODE.B.ETSALG = 0;
     }
 
     IfxGeth_PortMtlTcQuantumWeight *tcQuantumWeight = (IfxGeth_PortMtlTcQuantumWeight *)(baseAddressOfTrafficClassGroup + 0x18);
@@ -3229,13 +3308,15 @@ void IfxGeth_Eth_initTxTrafficClass(IfxGeth_Eth *geth, IfxGeth_PortIndex portInd
     {
         if (config->wrrWeight <= 100)
         {
-            tcQuantumWeight->B.QW = (uint32)config->wrrWeight;  /* Applies for ETSALG = 0 (WRR Algorithm). Max Value = 100 (0x64) */
+        	/* Applies for ETSALG = 0 (WRR Algorithm). Max Value = 100 (0x64) */
+            tcQuantumWeight->B.QW = (uint32)config->wrrWeight;
         }
     }
 
     else if (config->algorithm == IfxGeth_TxTransmissionSelectionAlgorithm_cbs)
     {
-        if (config->tcIndex != IfxGeth_TxTrafficClass_0) /* Bit is not applicable to TC0, TC0 does not support CBS */
+    	/* Bit is not applicable to TC0, TC0 does not support CBS */
+        if (config->tcIndex != IfxGeth_TxTrafficClass_0)
         {
             tcQuantumWeight->B.QW = (uint32)config->cbsIdleSlopeCredit;
         }
@@ -3267,7 +3348,8 @@ void IfxGeth_Eth_initTimeStamp(IfxGeth_Eth *geth, IfxGeth_PortIndex portIndex, I
 
     geth->gethSFR->PORT[portIndex].CORE.MAC_TIMESTAMP_CONTROL.B.TSCFUPDT  = config->updateMethod;
 
-    while (geth->gethSFR->PORT[portIndex].CORE.MAC_TIMESTAMP_CONTROL.B.TSINIT) /*Wait till H/w resets the bit*/
+    /* Wait till H/w resets the bit */
+    while (geth->gethSFR->PORT[portIndex].CORE.MAC_TIMESTAMP_CONTROL.B.TSINIT)
     {}
 
     geth->gethSFR->PORT[portIndex].CORE.MAC_SYSTEM_TIME_SECONDS_UPDATE.U            = config->seconds;
@@ -3277,7 +3359,8 @@ void IfxGeth_Eth_initTimeStamp(IfxGeth_Eth *geth, IfxGeth_PortIndex portIndex, I
 
     geth->gethSFR->PORT[portIndex].CORE.MAC_TIMESTAMP_CONTROL.B.TSINIT              = 1;
 
-    while (geth->gethSFR->PORT[portIndex].CORE.MAC_TIMESTAMP_CONTROL.B.TSINIT) /*Wait till H/w resets the bit and initialization is complete*/
+    /* Wait till H/w resets the bit and initialization is complete */
+    while (geth->gethSFR->PORT[portIndex].CORE.MAC_TIMESTAMP_CONTROL.B.TSINIT)
     {}
 
     /*One Step TimeStamp Config*/
@@ -3320,7 +3403,8 @@ void IfxGeth_Eth_initTimeStamp(IfxGeth_Eth *geth, IfxGeth_PortIndex portIndex, I
 
 void IfxGeth_Eth_updateSystemTime(IfxGeth_Eth *geth, IfxGeth_PortIndex portIndex, IfxGeth_Eth_UpdateSystemTimeConfig *config)
 {
-    while (geth->gethSFR->PORT[portIndex].CORE.MAC_TIMESTAMP_CONTROL.B.TSUPDT) /*Wait till H/w resets the bit*/
+	/* Wait till H/w resets the bit */
+    while (geth->gethSFR->PORT[portIndex].CORE.MAC_TIMESTAMP_CONTROL.B.TSUPDT)
     {}
 
     geth->gethSFR->PORT[portIndex].CORE.MAC_SYSTEM_TIME_SECONDS_UPDATE.U            = config->seconds;
@@ -3329,21 +3413,25 @@ void IfxGeth_Eth_updateSystemTime(IfxGeth_Eth *geth, IfxGeth_PortIndex portIndex
 
     geth->gethSFR->PORT[portIndex].CORE.MAC_TIMESTAMP_CONTROL.B.TSUPDT              = 1;
 
-    while (geth->gethSFR->PORT[portIndex].CORE.MAC_TIMESTAMP_CONTROL.B.TSUPDT) /*Wait till H/w resets the bit and coarse update is complete */
+    /*Wait till H/w resets the bit and coarse update is complete */
+    while (geth->gethSFR->PORT[portIndex].CORE.MAC_TIMESTAMP_CONTROL.B.TSUPDT)
     {}
 }
 
 
 void IfxGeth_Eth_updateTimeStampAddend(IfxGeth_Eth *geth, IfxGeth_PortIndex portIndex, uint32 value)
 {
-    while (geth->gethSFR->PORT[portIndex].CORE.MAC_TIMESTAMP_CONTROL.B.TSADDREG)  /*Wait till H/w resets the bit*/
+	/* Wait till H/w resets the bit */
+    while (geth->gethSFR->PORT[portIndex].CORE.MAC_TIMESTAMP_CONTROL.B.TSADDREG)
     {}
 
-    geth->gethSFR->PORT[portIndex].CORE.MAC_TIMESTAMP_ADDEND.B.TSAR      = value; /* Applies to Fine Update Method only*/
+    /* Applies to Fine Update Method only */
+    geth->gethSFR->PORT[portIndex].CORE.MAC_TIMESTAMP_ADDEND.B.TSAR      = value;
 
     geth->gethSFR->PORT[portIndex].CORE.MAC_TIMESTAMP_CONTROL.B.TSADDREG = 1;
 
-    while (geth->gethSFR->PORT[portIndex].CORE.MAC_TIMESTAMP_CONTROL.B.TSADDREG) /*Wait till H/w resets the bit */
+    /* Wait till H/w resets the bit */
+    while (geth->gethSFR->PORT[portIndex].CORE.MAC_TIMESTAMP_CONTROL.B.TSADDREG)
     {}
 }
 
@@ -3367,7 +3455,8 @@ void IfxGeth_Eth_initPPS(IfxGeth_Eth *geth, IfxGeth_PortIndex portIndex, IfxGeth
         if (config->interruptConfigPPS0.priority > 0)
         {
             volatile Ifx_SRC_SRCR *srcSFR;
-            srcSFR = IfxGeth_getSrcPointer(IfxGeth_ServiceRequest_PPS_0); /* Port 0 PPS Line 0 */
+            /* Port 0 PPS Line 0 */
+            srcSFR = IfxGeth_getSrcPointer(IfxGeth_ServiceRequest_PPS_0);
             IfxSrc_init(srcSFR, config->interruptConfigPPS0.provider, config->interruptConfigPPS0.priority, config->interruptConfigPPS0.vmId);
             IfxSrc_enable(srcSFR);
         }
@@ -3375,7 +3464,8 @@ void IfxGeth_Eth_initPPS(IfxGeth_Eth *geth, IfxGeth_PortIndex portIndex, IfxGeth
         if (config->interruptConfigPPS1.priority > 0)
         {
             volatile Ifx_SRC_SRCR *srcSFR;
-            srcSFR = IfxGeth_getSrcPointer(IfxGeth_ServiceRequest_PPS_1);  /* Port 0 PPS Line 1 */
+            /* Port 0 PPS Line 1 */
+            srcSFR = IfxGeth_getSrcPointer(IfxGeth_ServiceRequest_PPS_1);
             IfxSrc_init(srcSFR, config->interruptConfigPPS1.provider, config->interruptConfigPPS1.priority, config->interruptConfigPPS1.vmId);
             IfxSrc_enable(srcSFR);
         }
@@ -3385,7 +3475,8 @@ void IfxGeth_Eth_initPPS(IfxGeth_Eth *geth, IfxGeth_PortIndex portIndex, IfxGeth
         if (config->interruptConfigPPS0.priority > 0)
         {
             volatile Ifx_SRC_SRCR *srcSFR;
-            srcSFR = IfxGeth_getSrcPointer(IfxGeth_ServiceRequest_PPS_2); /* Port 1 PPS Line 0 */
+            /* Port 1 PPS Line 2 */
+            srcSFR = IfxGeth_getSrcPointer(IfxGeth_ServiceRequest_PPS_2);
             IfxSrc_init(srcSFR, config->interruptConfigPPS0.provider, config->interruptConfigPPS0.priority, config->interruptConfigPPS0.vmId);
             IfxSrc_enable(srcSFR);
         }
@@ -3393,7 +3484,8 @@ void IfxGeth_Eth_initPPS(IfxGeth_Eth *geth, IfxGeth_PortIndex portIndex, IfxGeth
         if (config->interruptConfigPPS1.priority > 0)
         {
             volatile Ifx_SRC_SRCR *srcSFR;
-            srcSFR = IfxGeth_getSrcPointer(IfxGeth_ServiceRequest_PPS_3); /* Port 1 PPS Line 1 */
+            /* Port 1 PPS Line 3 */
+            srcSFR = IfxGeth_getSrcPointer(IfxGeth_ServiceRequest_PPS_3);
             IfxSrc_init(srcSFR, config->interruptConfigPPS1.provider, config->interruptConfigPPS1.priority, config->interruptConfigPPS1.vmId);
             IfxSrc_enable(srcSFR);
         }
@@ -3404,7 +3496,8 @@ void IfxGeth_Eth_initPPS(IfxGeth_Eth *geth, IfxGeth_PortIndex portIndex, IfxGeth
     if (config->interruptConfigPPS0.priority > 0)
     {
         volatile Ifx_SRC_SRCR *srcSFR;
-        srcSFR = IfxGeth_getSrcPointer(IfxGeth_ServiceRequest_PPS_2); /* Port 1 PPS Line 0 */
+        /* Port 1 PPS Line 2 */
+        srcSFR = IfxGeth_getSrcPointer(IfxGeth_ServiceRequest_PPS_2);
         IfxSrc_init(srcSFR, config->interruptConfigPPS0.provider, config->interruptConfigPPS0.priority, config->interruptConfigPPS0.vmId);
         IfxSrc_enable(srcSFR);
     }
@@ -3412,7 +3505,8 @@ void IfxGeth_Eth_initPPS(IfxGeth_Eth *geth, IfxGeth_PortIndex portIndex, IfxGeth
     if (config->interruptConfigPPS1.priority > 0)
     {
         volatile Ifx_SRC_SRCR *srcSFR;
-        srcSFR = IfxGeth_getSrcPointer(IfxGeth_ServiceRequest_PPS_3); /* Port 1 PPS Line 1 */
+        /* Port 1 PPS Line 1 */
+        srcSFR = IfxGeth_getSrcPointer(IfxGeth_ServiceRequest_PPS_3);
         IfxSrc_init(srcSFR, config->interruptConfigPPS1.provider, config->interruptConfigPPS1.priority, config->interruptConfigPPS1.vmId);
         IfxSrc_enable(srcSFR);
     }
@@ -3426,7 +3520,8 @@ void IfxGeth_Eth_flexiblePPSControl(IfxGeth_Eth *geth, IfxGeth_PortIndex portInd
     {
         if ((config->controlPPS0 == IfxGeth_FlexiblePPSControl_startSinglePulse) || (config->controlPPS0 == IfxGeth_FlexiblePPSControl_startPulseTrain) || (config->controlPPS0 == IfxGeth_FlexiblePPSControl_timedStopPulseTrain))
         {
-            while (geth->gethSFR->PORT[portIndex].CORE.MAC_PPS0_TARGET_TIME_NANOSECONDS.B.TTSL0) /*Wait for previous time synchronization to complete*/
+        	/* Wait for previous time synchronization to complete */
+            while (geth->gethSFR->PORT[portIndex].CORE.MAC_PPS0_TARGET_TIME_NANOSECONDS.B.TTSL0)
             {}
 
             geth->gethSFR->PORT[portIndex].CORE.MAC_PPS0_TARGET_TIME_SECONDS.U           = config->targetTimeSecondsPPS0;
@@ -3447,14 +3542,16 @@ void IfxGeth_Eth_flexiblePPSControl(IfxGeth_Eth *geth, IfxGeth_PortIndex portInd
         while (geth->gethSFR->PORT[portIndex].CORE.MAC_PPS_CONTROL.B.PPSCTRL0_PPSCMD0 != 0)
         {}
 
-        geth->gethSFR->PORT[portIndex].CORE.MAC_PPS_CONTROL.B.PPSCTRL0_PPSCMD0 = config->controlPPS0; /* Non-zero value initiates an event */
+        /* Non-zero value initiates an event */
+        geth->gethSFR->PORT[portIndex].CORE.MAC_PPS_CONTROL.B.PPSCTRL0_PPSCMD0 = config->controlPPS0;
     }
 
     if (config->configurePPS1)
     {
         if ((config->controlPPS1 == IfxGeth_FlexiblePPSControl_startSinglePulse) || (config->controlPPS1 == IfxGeth_FlexiblePPSControl_startPulseTrain) || (config->controlPPS1 == IfxGeth_FlexiblePPSControl_timedStopPulseTrain))
         {
-            while (geth->gethSFR->PORT[portIndex].CORE.MAC_PPS1_TARGET_TIME_NANOSECONDS.B.TTSL1) /*Wait for previous time synchronization to complete*/
+        	/* Wait for previous time synchronization to complete */
+            while (geth->gethSFR->PORT[portIndex].CORE.MAC_PPS1_TARGET_TIME_NANOSECONDS.B.TTSL1)
             {}
 
             geth->gethSFR->PORT[portIndex].CORE.MAC_PPS1_TARGET_TIME_SECONDS.U           = config->targetTimeSecondsPPS1;
@@ -3471,7 +3568,7 @@ void IfxGeth_Eth_flexiblePPSControl(IfxGeth_Eth *geth, IfxGeth_PortIndex portInd
             }
         }
 
-        /*Wait until H/w clears the bitfield*/
+        /* Wait until H/w clears the bitfield */
         while (geth->gethSFR->PORT[portIndex].CORE.MAC_PPS_CONTROL.B.PPSCMD1 != 0)
         {}
 
@@ -3484,7 +3581,8 @@ boolean IfxGeth_Eth_getTxDescriptorStatus(IfxGeth_Eth *geth, IfxGeth_TxDescr *tx
 {
     boolean statusAvailable = FALSE;
 
-    if (txDescrPtr->TDES3.W.OWN == 0) /*DMA has processed and closed the descriptor*/
+    /* DMA has processed and closed the descriptor */
+    if (txDescrPtr->TDES3.W.OWN == 0)
     {
         status->own                 = 0;
         status->error               = txDescrPtr->TDES3.W.DERR;
@@ -3492,11 +3590,13 @@ boolean IfxGeth_Eth_getTxDescriptorStatus(IfxGeth_Eth *geth, IfxGeth_TxDescr *tx
         status->isFirstDescriptor   = txDescrPtr->TDES3.W.FD;
         status->isContextDescriptor = txDescrPtr->TDES3.W.CTXT;
 
-        statusAvailable             = TRUE; /* status is available only after DMA processes and closes the descriptor and assigns it back to application */
+        /* Status is available only after DMA processes and closes the descriptor and assigns it back to application */
+        statusAvailable             = TRUE;
     }
     else
     {
-        status->own = 1; /* Still owned by descriptor */
+    	/* Still owned by descriptor */
+        status->own = 1;
     }
 
     return statusAvailable;
@@ -3507,9 +3607,11 @@ boolean IfxGeth_Eth_getRxDescriptorStatus(IfxGeth_Eth *geth, IfxGeth_RxDescr *rx
 {
     boolean statusAvailable = FALSE;
 
-    if (rxDescrPtr->RDES3.W.OWN == 0)      /*DMA has processed and closed the descriptor*/
+    /* DMA has processed and closed the descriptor */
+    if (rxDescrPtr->RDES3.W.OWN == 0)
     {
-        if (rxDescrPtr->RDES3.W.CTXT == 0) /*Normal descriptor*/
+    	/* Normal descriptor */
+        if (rxDescrPtr->RDES3.W.CTXT == 0)
         {
             status->normal.OWN    = 0;
 
@@ -3557,7 +3659,8 @@ boolean IfxGeth_Eth_getRxDescriptorStatus(IfxGeth_Eth *geth, IfxGeth_RxDescr *rx
             status->context.CTXT = rxDescrPtr->RDES3.C.CTXT;
         }
 
-        statusAvailable = TRUE; /* status is available only after DMA processes and closes the descriptor and assigns it back to application */
+        /* Status is available only after DMA processes and closes the descriptor and assigns it back to application */
+        statusAvailable = TRUE;
     }
 
     return statusAvailable;
@@ -3747,6 +3850,7 @@ boolean IfxGeth_Eth_initL3FilteringIPv4(IfxGeth_Eth *geth, IfxGeth_PortIndex por
     filterCtrlReg.B.L3SAM0 = config->filterSrcAddrMatch;
     filterCtrlReg.B.L3DAM0 = config->filterDstAddrMatch;
 
+    /* Configure the source address filtering if enabled */
     if (config->filterSrcAddrMatch == IfxGeth_L3FilterSrcAddrMatch_enable)
     {
         filterCtrlReg.B.L3SAIM0 = config->filterSrcAddrInvMatch;
@@ -3754,6 +3858,7 @@ boolean IfxGeth_Eth_initL3FilteringIPv4(IfxGeth_Eth *geth, IfxGeth_PortIndex por
         filterSrcAddr.U         = config->filterSrcAddr;
     }
 
+    /* Configure the destination address filtering if enabled */
     if (config->filterDstAddrMatch == IfxGeth_L3FilterDstAddrMatch_enable)
     {
         filterCtrlReg.B.L3DAIM0 = config->filterDstAddrInvMatch;
@@ -3763,6 +3868,7 @@ boolean IfxGeth_Eth_initL3FilteringIPv4(IfxGeth_Eth *geth, IfxGeth_PortIndex por
 
     filterCtrlReg.B.DMCHEN = config->filterChannelSel;
 
+    /* Configure the filter channel if enabled */
     if (config->filterChannelSel == IfxGeth_L3L4FilterChannelSel_enable)
     {
         filterCtrlReg.B.DMCHN = config->filterChannel;

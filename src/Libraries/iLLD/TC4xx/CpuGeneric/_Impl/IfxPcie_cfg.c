@@ -2,7 +2,7 @@
  * \file IfxPcie_cfg.c
  * \brief PCIE on-chip implementation data
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -59,10 +59,18 @@
 /*-----------------------Exported Variables/Constants-------------------------*/
 /******************************************************************************/
 
+#ifdef IFXPCIE_CFG_MAX_NUM_MODULES
+IFX_CONST IfxPcie_MemoryLimits IfxPcie_cfg_memoryMap[IFXPCIE_CFG_MAX_NUM_MODULES] = {
+    {            },
+    {0xEC000000u, 0xEFFFFFFFu}
+};
+
+#else
 IFX_CONST IfxPcie_MemoryLimits IfxPcie_cfg_memoryMap[IFXPCIE_CFG_NUM_MODULES] = {
     {0xFC000000u, 0xFFFFFFFFu},
     {0xEC000000u, 0xEFFFFFFFu},
 };
+#endif /* #ifdef IFXPCIE_CFG_MAX_NUM_MODULES */
 
 IFX_CONST IfxModule_IndexMap   IfxPcie_cfg_pcieIndexMap[IFXPCIE_CFG_NUM_MODULES] = {
     {&MODULE_PCIE0_DSP, (uint32)IfxPcie_Index_0},

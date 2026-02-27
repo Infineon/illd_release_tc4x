@@ -2,7 +2,7 @@
  * \file IfxEgtm_Tom_Timer.c
  * \brief EGTM TIMER details
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -96,7 +96,7 @@ boolean IfxEgtm_Tom_Timer_init(IfxEgtm_Tom_Timer *driver, const IfxEgtm_Tom_Time
     /* Only count direction "up" is supported */
     if (config->countDir == IfxEgtm_Tom_Timer_CountDir_up)
     {
-        /* Initialize handle */
+        /* Initializes handle */
         {
             driver->egtm           = config->egtm;
             driver->clsIndex       = config->cluster;
@@ -104,7 +104,7 @@ boolean IfxEgtm_Tom_Timer_init(IfxEgtm_Tom_Timer *driver, const IfxEgtm_Tom_Time
             driver->timerChannel   = config->timerChannel;
             driver->triggerEnabled = config->trigger.enabled;
 
-            /* Get trigger channel */
+            /* Gets trigger channel */
             if (driver->triggerEnabled == TRUE)
             {
                 if (config->triggerOut != NULL_PTR)
@@ -122,7 +122,7 @@ boolean IfxEgtm_Tom_Timer_init(IfxEgtm_Tom_Timer *driver, const IfxEgtm_Tom_Time
                 driver->triggerChannel = driver->timerChannel; /* Set to timer channel to disable its use */
             }
 
-            /* Get pointer to TGC and masks */
+            /* Gets pointer to TGC and masks */
             if (config->timerChannel <= IfxEgtm_Tom_Ch_7)
             {
                 driver->tgc[0] = IfxEgtm_Tom_Ch_getTgcPointer(driver->tom, 0);
@@ -143,15 +143,15 @@ boolean IfxEgtm_Tom_Timer_init(IfxEgtm_Tom_Timer *driver, const IfxEgtm_Tom_Time
             driver->tgcGlobalControlDisableUpdate[1] = 0;
         }
 
-        /* Initialize the timer part */
+        /* Initializes the timer part */
         {
-            /* Set Tom channel clock source */
+            /* Sets Tom channel clock source */
             IfxEgtm_Tom_Ch_setClockSource(driver->tom, driver->timerChannel, config->clock);
 
-            /* Store Clock frequency in the driver */
+            /* Stores Clock frequency in the driver */
             IfxEgtm_Tom_Timer_updateInputFrequency(driver);
 
-            /* Generate trigger at CMO match (TRIG_CCU0) */
+            /* Generates trigger at CMO match (TRIG_CCU0) */
             IfxEgtm_Tom_Ch_setTriggerOutput(driver->tom, driver->timerChannel, IfxEgtm_Tom_Ch_OutputTrigger_generate);
 
             /* This if block has no effect. TODO: Remove/review */
@@ -161,10 +161,10 @@ boolean IfxEgtm_Tom_Timer_init(IfxEgtm_Tom_Timer *driver, const IfxEgtm_Tom_Time
                 IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, FALSE);
             }
 
-            /* Set PWM frequency by setting CM0 register */
+            /* Sets PWM frequency by setting CM0 register */
             (void)IfxEgtm_Tom_Timer_setFrequency(driver, config->frequency);
 
-            /* Initialize CN0 (counter register) with an initial offset configured by user */
+            /* Initializes CN0 (counter register) with an initial offset configured by user */
             driver->offset = IfxEgtm_sToTick(driver->clockFreq, (float32)1.0f / config->frequency * config->startOffset);
             IfxEgtm_Tom_Ch_setCounterValue(driver->tom, driver->timerChannel, driver->offset);
 
@@ -172,7 +172,7 @@ boolean IfxEgtm_Tom_Timer_init(IfxEgtm_Tom_Timer *driver, const IfxEgtm_Tom_Time
             IfxEgtm_Tom_Timer_addToChannelMask(driver, driver->timerChannel);
         }
 
-        /* Initialize the trigger part */
+        /* Initializes the trigger part */
         if (driver->triggerEnabled == TRUE)
         {
             uint16         maskShift          = (config->timerChannel <= IfxEgtm_Tom_Ch_7) ? (uint16)0 : (uint16)8;
@@ -180,7 +180,7 @@ boolean IfxEgtm_Tom_Timer_init(IfxEgtm_Tom_Timer *driver, const IfxEgtm_Tom_Time
             uint16         triggerChannelMask = (uint16)((uint16)1u << ((uint16)triggerChannel - maskShift));
             /* TO DO: enable the trigger to be not in the same TGC group as the timer */
 
-            /* Set channel signal level */
+            /* Sets channel signal level */
             IfxEgtm_Tom_Ch_setSignalLevel(driver->tom, triggerChannel, (config->trigger.risingEdgeAtPeriod == TRUE) ? Ifx_ActiveState_high : Ifx_ActiveState_low);
 
             if (triggerChannel != driver->timerChannel)
@@ -194,10 +194,10 @@ boolean IfxEgtm_Tom_Timer_init(IfxEgtm_Tom_Timer *driver, const IfxEgtm_Tom_Time
                 /* Don't generate trigger at CM0 match. Instead, accept/forward timer channel's trigger */
                 IfxEgtm_Tom_Ch_setTriggerOutput(driver->tom, triggerChannel, IfxEgtm_Tom_Ch_OutputTrigger_forward);
 
-                /* Initialize CN0 (counter register) with an initial offset configured by user */
+                /* Initializes CN0 (counter register) with an initial offset configured by user */
                 IfxEgtm_Tom_Ch_setCounterValue(driver->tom, triggerChannel, driver->offset);
 
-                /* Set channels to start counter when trigger is received TODO: Remove? */
+                /* Sets channels to start counter when trigger is received TODO: Remove? */
                 IfxEgtm_Tom_Tgc_enableChannels(driver->tgc[0], triggerChannelMask, 0, FALSE);
 
                 /* Add trigger channel to channel mask */
@@ -207,13 +207,13 @@ boolean IfxEgtm_Tom_Timer_init(IfxEgtm_Tom_Timer *driver, const IfxEgtm_Tom_Time
             /* Signal must go out of the EGTM even if the port output is not enabled */
             IfxEgtm_Tom_Tgc_enableChannelsOutput(driver->tgc[0], triggerChannelMask, 0, FALSE);
 
-            /* Initialize the port */
+            /* Initializes the port */
             if ((config->trigger.outputEnabled == TRUE) && (config->initPins == TRUE))
             {
                 IfxEgtm_PinMap_setTomTout(config->triggerOut, config->trigger.outputMode, config->trigger.outputDriver);
             }
 
-            /* Set CM1 register */
+            /* Sets CM1 register */
             IfxEgtm_Tom_Timer_setTrigger(driver, config->trigger.triggerPoint);
         }
 
@@ -252,7 +252,7 @@ boolean IfxEgtm_Tom_Timer_init(IfxEgtm_Tom_Timer *driver, const IfxEgtm_Tom_Time
             }
         }
 
-        /* Transfer values from shadow registers */
+        /* Transfers values from shadow registers */
         {
             /* Enable force update from shadow of timer/trigger channel */
             IfxEgtm_Tom_Tgc_setChannelsForceUpdate(driver->tgc[0], driver->channelsMask[0], 0, 0, 0);

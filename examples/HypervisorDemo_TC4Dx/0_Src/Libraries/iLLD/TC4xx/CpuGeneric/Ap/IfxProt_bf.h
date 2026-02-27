@@ -1,7 +1,6 @@
 /**
  * \file IfxProt_bf.h
  * \brief
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *

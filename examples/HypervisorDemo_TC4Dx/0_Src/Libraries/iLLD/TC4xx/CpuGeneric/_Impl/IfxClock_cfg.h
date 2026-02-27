@@ -3,9 +3,9 @@
  * \brief CLOCK on-chip implementation data 
  * \ingroup IfxLld_Clock 
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2019-11-20 04:32:33
  *
 
  *                                 IMPORTANT NOTICE
@@ -60,7 +60,7 @@
 #include "Ifx_Cfg.h"
 
 #if defined DEVICE_TC4DX
-#include "IfxClock_cfg_TC4Dx.h"
+#include "TC4Dx/IfxClock_cfg_TC4Dx.h"
 #endif
 
 #endif /* IFXCLOCK_CFG_H */

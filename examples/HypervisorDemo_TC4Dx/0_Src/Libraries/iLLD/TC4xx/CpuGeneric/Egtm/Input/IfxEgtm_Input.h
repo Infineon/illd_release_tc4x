@@ -3,9 +3,9 @@
  * \brief EGTM INPUT details
  * \ingroup IfxLld_Egtm
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-11-06 12:52:35
  *
  *
  *                                 IMPORTANT NOTICE
@@ -40,6 +40,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  *
+ * \author Shreyas Shubhankar<shreyas.shubhankar@infineon.com>
  *
  * \defgroup IfxLld_Egtm_Input_Usage How to use the Input Interface layer?
  * \ingroup IfxLld_Egtm_Input
@@ -80,78 +81,123 @@
 /******************************************************************************/
 
 /** \brief Select ADC signal as input to TIM submodule.
- * \param input Input ADC signal
- * \param cluster TIM cluster number
- * \param channel TIM channel number
- * \return TRUE on success. FALSE: Input cannot be connected to specified TIM channel in cluster
+ *
+ * \param[in] input   Input ADC signal
+ *                    Range: \ref: IfxEgtm_AdcTimInput
+ * \param[in] cluster TIM cluster number
+ *                    Range: \ref: IfxEgtm_Tim
+ * \param[in] channel TIM channel number
+ *                    Range: \ref: IfxEgtm_Tim_Ch
+ *
+ * \retval TRUE on success. FALSE: Input cannot be connected to specified TIM channel in cluster
  */
 IFX_EXTERN boolean IfxEgtm_Input_selectAdcTimInput(IfxEgtm_AdcTimInput input, IfxEgtm_Tim cluster, IfxEgtm_Tim_Ch channel);
 
 /** \brief Select CAN signal as input to TIM submodule.
- * \param input Input CAN signal
- * \param cluster TIM cluster number
- * \param channel TIM channel number
- * \return TRUE on success. FALSE: Input cannot be connected to specified TIM channel in cluster
+ *
+ * \param[in] input   Input CAN signal
+ *                    Range: \ref: IfxEgtm_CanTimInput
+ * \param[in] cluster TIM cluster number
+ *                    Range: \ref: IfxEgtm_Tim
+ * \param[in] channel TIM channel number
+ *                    Range: \ref: IfxEgtm_Tim_Ch
+ *
+ * \retval TRUE on success. FALSE: Input cannot be connected to specified TIM channel in cluster
  */
 IFX_EXTERN boolean IfxEgtm_Input_selectCanTimInput(IfxEgtm_CanTimInput input, IfxEgtm_Tim cluster, IfxEgtm_Tim_Ch channel);
 
 /** \brief Select CAN-XL signal as input to TIM submodule.
- * \param input Input CAN-XL signal
- * \param cluster TIM cluster number
- * \param channel TIM channel number
- * \return TRUE on success. FALSE: Input cannot be connected to specified TIM channel in cluster
+ *
+ * \param[in] input   Input CAN-XL signal
+ *                    Range: \ref: IfxEgtm_CanxlTimInput
+ * \param[in] cluster TIM cluster number
+ *                    Range: \ref: IfxEgtm_Tim
+ * \param[in] channel TIM channel number
+ *                    Range: \ref: IfxEgtm_Tim_Ch
+ *
+ * \retval TRUE on success. FALSE: Input cannot be connected to specified TIM channel in cluster
  */
 IFX_EXTERN boolean IfxEgtm_Input_selectCanxlTimInput(IfxEgtm_CanxlTimInput input, IfxEgtm_Tim cluster, IfxEgtm_Tim_Ch channel);
 
 #if IFXEGTM_INPUT_GETH_SIGNAL_IS_AVAILABLE
 /** \brief Select GETH signal as input to TIM submodule.
- * \param input Input GETH signal
- * \param cluster TIM cluster number
- * \param channel TIM channel number
- * \return TRUE on success. FALSE: Input cannot be connected to specified TIM channel in cluster
+ *
+ * \param[in] input   Input GETH signal
+ *                    Range: \ref: IfxEgtm_GethTimInput
+ * \param[in] cluster TIM cluster number
+ *                    Range: \ref: IfxEgtm_Tim
+ * \param[in] channel TIM channel number
+ *                    Range: \ref: IfxEgtm_Tim_Ch
+ *
+ * \retval TRUE on success. FALSE: Input cannot be connected to specified TIM channel in cluster
  */
 IFX_EXTERN boolean IfxEgtm_Input_selectGethTimInput(IfxEgtm_GethTimInput input, IfxEgtm_Tim cluster, IfxEgtm_Tim_Ch channel);
 #endif /* #if IFXEGTM_INPUT_GETH_SIGNAL_IS_AVAILABLE*/
 
 #if IFXEGTM_INPUT_GPT12_SIGNAL_IS_AVAILABLE
 /** \brief Select GPT12 signal as input to TIM submodule.
- * \param input Input GPT12 signal
- * \param cluster TIM cluster number
- * \param channel TIM channel number
- * \return TRUE on success. FALSE: Input cannot be connected to specified TIM channel in cluster
+ *
+ * \param[in] input   Input GPT12 signal
+ *                    Range: \ref: IfxEgtm_Gpt12TimInput
+ * \param[in] cluster TIM cluster number
+ *                    Range: \ref: IfxEgtm_Tim
+ * \param[in] channel TIM channel number
+ *                    Range: \ref: IfxEgtm_Tim_Ch
+ *
+ * \retval TRUE on success. FALSE: Input cannot be connected to specified TIM channel in cluster
  */
 IFX_EXTERN boolean IfxEgtm_Input_selectGpt12TimInput(IfxEgtm_Gpt12TimInput input, IfxEgtm_Tim cluster, IfxEgtm_Tim_Ch channel);
 #endif /* #if IFXEGTM_INPUT_GPT12_SIGNAL_IS_AVAILABLE */
 
 /** \brief Select LETH signal as input to TIM submodule.
- * \param input Input LETH signal
- * \param cluster TIM cluster number
- * \param channel TIM channel number
- * \return TRUE on success. FALSE: Input cannot be connected to specified TIM channel in cluster
+ *
+ * \param[in] input   Input LETH signal
+ *                    Range: \ref: IfxEgtm_LethTimInput
+ * \param[in] cluster TIM cluster number
+ *                    Range: \ref: IfxEgtm_Tim
+ * \param[in] channel TIM channel number
+ *                    Range: \ref: IfxEgtm_Tim_Ch
+ *
+ * \retval TRUE on success. FALSE: Input cannot be connected to specified TIM channel in cluster
  */
 IFX_EXTERN boolean IfxEgtm_Input_selectLethTimInput(IfxEgtm_LethTimInput input, IfxEgtm_Tim cluster, IfxEgtm_Tim_Ch channel);
 
 /** \brief Select ERAY signal as input to TIM submodule.
- * \param input Input ERAY signal
- * \param cluster TIM cluster number
- * \param channel TIM channel number
- * \return TRUE on success. FALSE: Input cannot be connected to specified TIM channel in cluster
+ *
+ * \param[in] input   Input ERAY signal
+ *                    Range: \ref: IfxEgtm_ErayTimInput
+ * \param[in] cluster TIM cluster number
+ *                    Range: \ref: IfxEgtm_Tim
+ * \param[in] channel TIM channel number
+ *                    Range: \ref: IfxEgtm_Tim_Ch
+ *
+ * \retval TRUE on success. FALSE: Input cannot be connected to specified TIM channel in cluster
  */
 IFX_EXTERN boolean IfxEgtm_Input_selectErayTimInput(IfxEgtm_ErayTimInput input, IfxEgtm_Tim cluster, IfxEgtm_Tim_Ch channel);
 
 /** \brief Select PMS signal as input to TIM submodule.
- * \param input Input PMS signal
- * \param cluster TIM cluster number
- * \param channel TIM channel number
- * \return TRUE on success. FALSE: Input cannot be connected to specified TIM channel in cluster
+ *
+ * \param[in] input   Input PMS signal
+ *                    Range: \ref: IfxEgtm_PmsTimInput
+ * \param[in] cluster TIM cluster number
+ *                    Range: \ref: IfxEgtm_Tim
+ * \param[in] channel TIM channel number
+ *                    Range: \ref: IfxEgtm_Tim_Ch
+ *
+ * \retval TRUE on success. FALSE: Input cannot be connected to specified TIM channel in cluster
  */
 IFX_EXTERN boolean IfxEgtm_Input_selectPmsTimInput(IfxEgtm_PmsTimInput input, IfxEgtm_Tim cluster, IfxEgtm_Tim_Ch channel);
 
 /** \brief Select SCU signal as input to TIM submodule.
- * \param input Input SCU signal
- * \param cluster TIM cluster number
- * \param channel TIM channel number
- * \return TRUE on success. FALSE: Input cannot be connected to specified TIM channel in cluster
+ *
+ * \param[in] input   Input SCU signal
+ *                    Range: \ref: IfxEgtm_ScuTimInput
+ * \param[in] cluster TIM cluster number
+ *                    Range: \ref: IfxEgtm_Tim
+ * \param[in] channel TIM channel number
+ *                    Range: \ref: IfxEgtm_Tim_Ch
+ *
+ * \retval TRUE on success. FALSE: Input cannot be connected to specified TIM channel in cluster
  */
 IFX_EXTERN boolean IfxEgtm_Input_selectScuTimInput(IfxEgtm_ScuTimInput input, IfxEgtm_Tim cluster, IfxEgtm_Tim_Ch channel);
 
@@ -165,11 +211,17 @@ IFX_EXTERN boolean IfxEgtm_Input_selectScuTimInput(IfxEgtm_ScuTimInput input, If
 /******************************************************************************/
 
 /** \brief Select ADC signal to be used as DTM_AUX_IN0/1
- * \param input Input ADC signal
- * \param cdtm CDTM cluster
- * \param dtm DTM index
- * \param dtmAuxInput Connect input signal to DTM_AUX_IN0 or DTM_AUX_IN1
- * \return TRUE on success. FALSE: Input cannot be connected to specified CDTM/DTM
+ *
+ * \param[in] input       Input ADC signal
+ *                        Range: \ref: IfxEgtm_AdcDtmAuxInput
+ * \param[in] cdtm        CDTM cluster
+ *                        Range: \ref: IfxEgtm_Cdtm
+ * \param[in] dtm         DTM index
+ *                        Range: \ref: IfxEgtm_Dtm
+ * \param[in] dtmAuxInput Connect input signal to DTM_AUX_IN0 or DTM_AUX_IN1
+ *                        Range: \ref: IfxEgtm_DtmAuxInput
+ *
+ * \retval TRUE on success. FALSE: Input cannot be connected to specified CDTM/DTM
  */
 IFX_EXTERN boolean IfxEgtm_Input_selectAdcDtmAuxInput(IfxEgtm_AdcDtmAuxInput input, IfxEgtm_Cdtm cdtm, IfxEgtm_Dtm dtm, IfxEgtm_DtmAuxInput dtmAuxInput);
 

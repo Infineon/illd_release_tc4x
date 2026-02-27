@@ -3,7 +3,7 @@
  * \brief EGTM TIMER details
  * \ingroup IfxLld_Egtm
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -232,7 +232,7 @@ typedef struct
 typedef struct
 {
     boolean                     enabled;                  /**< \brief If TRUE, the trigger functionality is initialized, else ignored */
-    uint16                      triggerPoint;             /**< \brief Trigger point in timer ticks */
+    uint16                      triggerPoint;             /**< \brief Trigger point in timer ticks. Range: 0 to 0xFFFFFF */
     IfxPort_OutputMode          outputMode;               /**< \brief Output mode */
     IfxPort_PadDriver           outputDriver;             /**< \brief Output pad driver */
     boolean                     risingEdgeAtPeriod;       /**< \brief Set the clock signal polarity, if TRUE, the rising edge is at the period, else at the trigger offset. When the timer is stopped, the output is set to high */
@@ -254,13 +254,13 @@ typedef struct
     IfxEgtm_Cluster            clsIndex;                                                 /**< \brief Enum for CLS objects */
     IfxEgtm_Tom_Ch             timerChannel;                                             /**< \brief TOM channel used for the timer */
     IfxEgtm_Tom_Ch             triggerChannel;                                           /**< \brief TOM channel used for the trigger, can be identical to the timer channel */
-    uint16                     channelsMask[IFXEGTM_TOM_NUM_TGC];                        /**< \brief Mask for channels to be modified together, The 1st value corresponds to the Timer's TGC, the 2nd value corresponds to the timer's next TGC if any */
-    uint32                     offset;                                                   /**< \brief Timer initial offset in ticks */
-    uint32                     tgcGlobalControlDisableUpdate[IFXEGTM_TOM_NUM_TGC];       /**< \brief Cached value for TGC GLOB_CTR */
-    uint32                     tgcGlobalControlApplyUpdate[IFXEGTM_TOM_NUM_TGC];         /**< \brief Cached value for TGC GLOB_CTR */
+    uint16                     channelsMask[IFXEGTM_TOM_NUM_TGC];                        /**< \brief Mask for channels to be modified together, The 1st value corresponds to the Timer's TGC, the 2nd value corresponds to the timer's next TGC if any. Range: 0 to 0xFFFF */
+    uint32                     offset;                                                   /**< \brief Timer initial offset in ticks. Range: 0 to 0xFFFF */
+    uint32                     tgcGlobalControlDisableUpdate[IFXEGTM_TOM_NUM_TGC];       /**< \brief Cached value for TGC GLOB_CTR. Range: 0 to 0xFFFF */
+    uint32                     tgcGlobalControlApplyUpdate[IFXEGTM_TOM_NUM_TGC];         /**< \brief Cached value for TGC GLOB_CTR. Range: 0 to 0xFFFF */
     Ifx_EGTM_CLS_CDTM_DTM     *dtm;                                                      /**< \brief Pointer to DTM object used by TOM */
     IfxEgtm_Dtm_Ch             dtmChannel;                                               /**< \brief DTM Channel */
-    uint16                     period;                                                   /**< \brief Timer period in ticks (cached value) */
+    uint16                     period;                                                   /**< \brief Timer period in ticks (cached value). Range: 0 to 0xFFFF */
     boolean                    triggerEnabled;                                           /**< \brief If TRUE, the trigger functionality is initialized */
     float32                    clockFreq;                                                /**< \brief Timer input clock frequency (cached value) */
     IfxEgtm_Tom_Timer_CountDir countDir;                                                 /**< \brief Timer counting mode */
@@ -296,20 +296,27 @@ typedef struct
 /******************************************************************************/
 
 /** \brief Returns the initial timer offset in ticks
- * \param driver TOM Timer interface Handle
- * \return Returns the initial timer offset in ticks
+ *
+ * \param[in] driver TOM Timer interface Handle
+ *
+ * \retval Returns the initial timer offset in ticks
+ * Range: 0 to 0xFFFF
  */
 IFX_INLINE uint32 IfxEgtm_Tom_Timer_getOffset(IfxEgtm_Tom_Timer *driver);
 
 /** \brief Returns the pointer to timer channel
- * \param driver TOM Timer interface Handle
- * \return Pointer
+ *
+ * \param[in] driver TOM Timer interface Handle
+ *
+ * \retval Pointer
  */
 IFX_INLINE volatile uint32 *IfxEgtm_Tom_Timer_getPointer(IfxEgtm_Tom_Timer *driver);
 
 /** \brief Returns the pointer to trigger channel
- * \param driver TOM Timer interface Handle
- * \return Pointer
+ *
+ * \param[in] driver TOM Timer interface Handle
+ *
+ * \retval Pointer
  */
 IFX_INLINE volatile uint32 *IfxEgtm_Tom_Timer_getTriggerPointer(IfxEgtm_Tom_Timer *driver);
 
@@ -318,16 +325,20 @@ IFX_INLINE volatile uint32 *IfxEgtm_Tom_Timer_getTriggerPointer(IfxEgtm_Tom_Time
 /******************************************************************************/
 
 /** \brief initializes the timer object
- * \param driver TOM Timer interface Handle
- * \param config Configuration structure for TOM Timer
- * \return TRUE on success else FALSE
+ *
+ * \param[inout] driver TOM Timer interface Handle
+ * \param[in]    config Configuration structure for TOM Timer
+ *
+ * \retval TRUE on success else FALSE
  */
 IFX_EXTERN boolean IfxEgtm_Tom_Timer_init(IfxEgtm_Tom_Timer *driver, const IfxEgtm_Tom_Timer_Config *config);
 
 /** \brief Initializes the configuration structure to default
- * \param config This parameter is initialized by the function
- * \param egtm Pointer to EGTM module
- * \return None
+ *
+ * \param[inout] config This parameter is initialized by the function
+ * \param[in]    egtm   Pointer to EGTM module
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Tom_Timer_initConfig(IfxEgtm_Tom_Timer_Config *config, Ifx_EGTM *egtm);
 
@@ -343,97 +354,125 @@ IFX_EXTERN void IfxEgtm_Tom_Timer_initConfig(IfxEgtm_Tom_Timer_Config *config, I
 /** \brief Add a channel to the channel mask
  * Channels present in the mask are started, stopped, updated at the same time as the timer:
  * IfxEgtm_Tom_Timer_applyUpdate, IfxEgtm_Tom_Timer_disableUpdate, IfxEgtm_Tom_Timer_stop, IfxEgtm_Tom_Timer_run
- * \param driver TOM Timer interface Handle
- * \param channel Channel to ba added to the mask
- * \return None
+ *
+ * \param[inout] driver  TOM Timer interface Handle
+ * \param[in]    channel Channel to ba added to the mask
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tom_Timer_addToChannelMask(IfxEgtm_Tom_Timer *driver, IfxEgtm_Tom_Ch channel);
 
 /** \brief Enables the transfer of the shadow registers
  * \see IfxStdIf_Timer_ApplyUpdate
  * Specific implementation: Enable the transfer of the shadow registers
- * \param driver TOM Timer interface Handle
- * \return None
+ *
+ * \param[inout] driver TOM Timer interface Handle
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tom_Timer_applyUpdate(IfxEgtm_Tom_Timer *driver);
 
 /** \brief Disables the update
  * \see IfxStdIf_Timer_DisableUpdate
  * Specific implementation: Disable the transfer of the shadow registers
- * \param driver TOM Timer interface Handle
- * \return None
+ *
+ * \param[inout] driver TOM Timer interface Handle
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tom_Timer_disableUpdate(IfxEgtm_Tom_Timer *driver);
 
 /** \brief Returns the frequency
  * \see IfxStdIf_Timer_GetFrequency
- * \param driver TOM Timer interface Handle
- * \return Frequency
+ *
+ * \param[in] driver TOM Timer interface Handle
+ *
+ * \retval Frequency
  */
 IFX_INLINE float32 IfxEgtm_Tom_Timer_getFrequency(IfxEgtm_Tom_Timer *driver);
 
 /** \brief Returns the Input frequency
- * \param driver TOM Timer interface Handle
- * \return Frequency
+ *
+ * \param[in] driver TOM Timer interface Handle
+ *
+ * \retval Frequency
  */
 IFX_INLINE float32 IfxEgtm_Tom_Timer_getInputFrequency(IfxEgtm_Tom_Timer *driver);
 
 /** \brief Returns the period of the timer
  * \see IfxStdIf_Timer_GetPeriod
- * \param driver TOM Timer interface Handle
- * \return Period
+ *
+ * \param[in] driver TOM Timer interface Handle
+ *
+ * \retval Period
+ * Range: 0 to 0xFFFF
  */
 IFX_INLINE uint16 IfxEgtm_Tom_Timer_getPeriod(IfxEgtm_Tom_Timer *driver);
 
 /** \brief Returns the resolution
  * \see IfxStdIf_Timer_GetResolution
- * \param driver TOM Timer interface Handle
- * \return Resolution
+ *
+ * \param[in] driver TOM Timer interface Handle
+ *
+ * \retval Resolution
  */
 IFX_INLINE float32 IfxEgtm_Tom_Timer_getResolution(IfxEgtm_Tom_Timer *driver);
 
 /** \brief Returns the trigger point
- * \param driver TOM Timer interface Handle
- * \return Trigger point
+ *
+ * \param[in] driver TOM Timer interface Handle
+ *
+ * \retval Trigger point
  */
 IFX_INLINE uint16 IfxEgtm_Tom_Timer_getTrigger(IfxEgtm_Tom_Timer *driver);
 
 /** \brief Sets the frequency
  * \see IfxStdIf_Timer_SetFrequency
- * \param driver TOM Timer interface Handle
- * \param frequency Frequency
- * \return TRUE on success else FALSE
+ *
+ * \param[inout] driver    TOM Timer interface Handle
+ * \param[in]    frequency Frequency
+ *
+ * \retval TRUE on success else FALSE
  */
 IFX_INLINE boolean IfxEgtm_Tom_Timer_setFrequency(IfxEgtm_Tom_Timer *driver, float32 frequency);
 
 /** \brief Sets the period for the timer
  * \see IfxStdIf_Timer_SetPeriod
- * \param driver TOM Timer interface Handle
- * \param period Period value
- * \return TRUE on success else FALSE
+ *
+ * \param[inout] driver TOM Timer interface Handle
+ * \param[in]    period Period value
+ *
+ * \retval TRUE on success else FALSE
  */
 IFX_INLINE boolean IfxEgtm_Tom_Timer_setPeriod(IfxEgtm_Tom_Timer *driver, uint16 period);
 
 /** \brief Sets the single shot mode of the timer
  * \see IfxStdIf_Timer_SetSingleMode
- * \param driver TOM Timer interface Handle
- * \param enabled If TRUE, sets the single shot mode
- * \return None
+ *
+ * \param[inout] driver  TOM Timer interface Handle
+ * \param[in]    enabled If TRUE: sets the single shot mode
+ *                          FALSE: Clear the single shot mode
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tom_Timer_setSingleMode(IfxEgtm_Tom_Timer *driver, boolean enabled);
 
 /** \brief Sets the trigger
  * \see IfxStdIf_Timer_SetTrigger
- * \param driver TOM Timer interface Handle
- * \param triggerPoint Trigger point value
- * \return None
+ *
+ * \param[inout] driver       TOM Timer interface Handle
+ * \param[in]    triggerPoint Trigger point value
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tom_Timer_setTrigger(IfxEgtm_Tom_Timer *driver, uint16 triggerPoint);
 
 /** \brief Updates the input frequency
  * \see IfxStdIf_Timer_UpdateInputFrequency
- * \param driver TOM Timer interface Handle
- * \return None
+ *
+ * \param[inout] driver TOM Timer interface Handle
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tom_Timer_updateInputFrequency(IfxEgtm_Tom_Timer *driver);
 
@@ -443,29 +482,37 @@ IFX_INLINE void IfxEgtm_Tom_Timer_updateInputFrequency(IfxEgtm_Tom_Timer *driver
 
 /** \brief Returns the timer event
  * \see IfxStdIf_Timer_AckTimerIrq
- * \param driver TOM Timer interface Handle
- * \return Timer event
+ *
+ * \param[inout] driver TOM Timer interface Handle
+ *
+ * \retval Timer event
  */
 IFX_EXTERN boolean IfxEgtm_Tom_Timer_acknowledgeTimerIrq(IfxEgtm_Tom_Timer *driver);
 
 /** \brief Returns the trigger event
  * \see IfxStdIf_Timer_AckTriggerIrq
- * \param driver TOM Timer interface Handle
- * \return Trigger event
+ *
+ * \param[inout] driver TOM Timer interface Handle
+ *
+ * \retval Trigger event
  */
 IFX_EXTERN boolean IfxEgtm_Tom_Timer_acknowledgeTriggerIrq(IfxEgtm_Tom_Timer *driver);
 
 /** \brief Runs the timer
  * \see IfxStdIf_Timer_Run
- * \param driver TOM Timer interface Handle
- * \return None
+ *
+ * \param[inout] driver TOM Timer interface Handle
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Tom_Timer_run(IfxEgtm_Tom_Timer *driver);
 
 /** \brief Stops the timer
  * \see IfxStdIf_Timer_Stop
- * \param driver TOM Timer interface Handle
- * \return None
+ *
+ * \param[inout] driver TOM Timer interface Handle
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Tom_Timer_stop(IfxEgtm_Tom_Timer *driver);
 

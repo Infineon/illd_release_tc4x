@@ -2,7 +2,7 @@
  * \file IfxPort.c
  * \brief PORT  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -251,7 +251,13 @@ void IfxPort_setPinModeLVDS(Ifx_P *port, uint8 pinIndex, IfxPort_Mode pinMode, I
 {
     uint32               lpcrOffset = (pinIndex / 2);
     volatile Ifx_P_LPCR *lpcr       = &(port->LPCR[0]);
-
+    
+    /* Exception: P14_9 and P14_10 use P14_LPCR5 instead of standard calculation */
+    if ((port == &MODULE_P14) && ((pinIndex == 9) || (pinIndex == 10)))
+    {
+        lpcrOffset = 5; /* P14_9 and P14_10 are controlled by P14_LPCR5 */
+    }
+    
 #if (IFX_PROT_ENABLED == 1U)
     IfxApProt_setState((Ifx_PROT_PROT *)&port->PROTSE, IfxApProt_State_config);
 #endif
@@ -328,7 +334,8 @@ void IfxPort_modifyPinControllerSelection(Ifx_P *port, uint8 pinIndex, boolean m
 #if (IFX_PROT_ENABLED == 1U)
     IfxApProt_setState((Ifx_PROT_PROT *)&port->PROTSE, IfxApProt_State_config);
 #endif
-    /* FIXME: Discuss having an global variable csrMask like esrMask. But then that would lead to extra memory consumption for a configuration which shall not very frequently in application. It would be a one time setting of who controls the pin(SCR/GETH/EVADC or Tricore) */
+    /* FIXME: Discuss having an global variable csrMask like esrMask. But then that would lead to extra memory consumption for a configuration which shall not very frequently in application.
+     *  It would be a one time setting of who controls the pin(SCR/GETH/EVADC or Tricore) */
 
     Ifx__ldmst(&(port->PCSRSEL.U), 1U << pinIndex, mode << pinIndex);
 
@@ -347,8 +354,8 @@ void IfxPort_initApuConfig(IfxPort_ApuConfig *config)
 
 void IfxPort_initApu(Ifx_P *port, IfxPort_ApuConfig *config)
 {
-    /* Change the state to CONFIG, Configure APU and set PROT state back to RUN */
-    /* Initialize the APU */
+    /* Changes the state to CONFIG, Configures APU and sets PROT state back to RUN */
+    /* Initializes the APU */
     IfxApProt_setState((Ifx_PROT_PROT *)&port->PROTSE, IfxApProt_State_config);
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&port->ACCGRP[config->grpNum], &config->apuConfig);
     IfxApProt_setState((Ifx_PROT_PROT *)&port->PROTSE, IfxApProt_State_run);
@@ -427,16 +434,19 @@ void IfxPort_resetModule(Ifx_P *port)
 #if (IFX_PROT_ENABLED == 1U)
     IfxApProt_transitionState((Ifx_PROT_PROT *)&port->PROTSE, IfxApProt_State_config);
 #endif
-
-    rst->CTRLA.B.KRST = 1;        /* Only if both Kernel reset bits are set a reset is executed */
+    /* Only if both Kernel reset bits are set a reset is executed */
+    rst->CTRLA.B.KRST = 1;
     rst->CTRLB.B.KRST = 1;
 
-    while (0 == rst->STAT.B.KRST) /* Wait until reset is executed */
+    /* Waits until reset is executed */
+    while (0 == rst->STAT.B.KRST)
     {}
 
-    rst->CTRLB.B.STATCLR = 1;     /* Clear Kernel reset status bit */
+    /* Clears Kernel reset status bit */
+    rst->CTRLB.B.STATCLR = 1;
 
-    while (rst->STAT.B.KRST == 1) /* Wait until KRST is cleared, only after this reset sequence is completed */
+    /* Waits until KRST is cleared, only after this reset sequence is completed */
+    while (rst->STAT.B.KRST == 1)
     {}
 
 #if (IFX_PROT_ENABLED == 1U)
@@ -461,5 +471,5 @@ void IfxPort_setPinModex(Ifx_P *port, uint8 pinIndex, IfxPort_Modex modex)
 
 void IfxPort_configureAccessToPort(Ifx_P *port, IfxPort_PadAccessGroup group, void *apConfig)
 {
-    IfxApApu_init((Ifx_ACCEN_ACCEN *)&port->ACCGRP[group], apConfig);  /*Configure the APU group */
+    IfxApApu_init((Ifx_ACCEN_ACCEN *)&port->ACCGRP[group], apConfig);  /* Configure the APU group */
 }

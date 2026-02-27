@@ -2,9 +2,9 @@
  * \file IfxAsclin_Lin.c
  * \brief ASCLIN LIN details
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2024-02-06 14:37:13
  *
  *
  *                                 IMPORTANT NOTICE
@@ -53,41 +53,42 @@
 
 void IfxAsclin_Lin_checkForReceivedHeaderFlags(IfxAsclin_Lin *asclin)
 {
-    Ifx_ASCLIN *asclinSFR = asclin->asclin;            /* getting the pointer to ASCLIN registers from module handler*/
+	/* getting the pointer to ASCLIN registers from module handler */
+    Ifx_ASCLIN *asclinSFR = asclin->asclin;
 
     /* check Rx header end acknowledgement */
-    if (IfxAsclin_getRxHeaderEndFlagStatus(asclinSFR)) /* RHE flag*/
+    if (IfxAsclin_getRxHeaderEndFlagStatus(asclinSFR)) 		 			/* RHE flag */
     {
         IfxAsclin_clearRxHeaderEndFlag(asclinSFR);
         asclin->acknowledgmentFlags.rxHeaderEnd = 1;
     }
 
     /* check for Rx header error flags */
-    if (IfxAsclin_getHeaderTimeoutFlagStatus(asclinSFR))     /* HT flag*/
+    if (IfxAsclin_getHeaderTimeoutFlagStatus(asclinSFR))     		    /* HT flag */
     {
         IfxAsclin_clearHeaderTimeoutFlag(asclinSFR);
         asclin->errorFlagsStatus.headerTimeout = 1;
     }
 
-    if (IfxAsclin_getCollisionDetectionErrorFlagStatus(asclinSFR))     /* CE flag*/
+    if (IfxAsclin_getCollisionDetectionErrorFlagStatus(asclinSFR))      /* CE flag */
     {
         IfxAsclin_clearCollisionDetectionErrorFlag(asclinSFR);
         asclin->errorFlagsStatus.collisionDetectionError = 1;
     }
 
-    if (IfxAsclin_getFrameErrorFlagStatus(asclinSFR)) /* FE flag*/
+    if (IfxAsclin_getFrameErrorFlagStatus(asclinSFR)) 				    /* FE flag */
     {
         IfxAsclin_clearFrameErrorFlag(asclinSFR);
         asclin->errorFlagsStatus.frameError = 1;
     }
 
-    if (IfxAsclin_getLinAutoBaudDetectionErrorFlagStatus(asclinSFR))     /* LA flag*/
+    if (IfxAsclin_getLinAutoBaudDetectionErrorFlagStatus(asclinSFR))	/* LA flag */
     {
         IfxAsclin_clearLinAutoBaudDetectionErrorFlag(asclinSFR);
         asclin->errorFlagsStatus.linAutobaudDetectionError = 1;
     }
 
-    if (IfxAsclin_getLinParityErrorFlagStatus(asclinSFR)) /* LP flag*/
+    if (IfxAsclin_getLinParityErrorFlagStatus(asclinSFR)) 				/* LP flag */
     {
         IfxAsclin_clearLinParityErrorFlag(asclinSFR);
         asclin->errorFlagsStatus.linParityError = 1;
@@ -97,9 +98,10 @@ void IfxAsclin_Lin_checkForReceivedHeaderFlags(IfxAsclin_Lin *asclin)
 
 void IfxAsclin_Lin_checkForReceivedResponseFlags(IfxAsclin_Lin *asclin)
 {
-    Ifx_ASCLIN *asclinSFR = asclin->asclin; /* getting the pointer to ASCLIN registers from module handler*/
+	/* getting the pointer to ASCLIN registers from module handler */
+    Ifx_ASCLIN *asclinSFR = asclin->asclin;
 
-    /* check Rx response end acknowledgement*/
+    /* check Rx response end acknowledgement */
     if (IfxAsclin_getRxResponseEndFlagStatus(asclinSFR))
     {
         IfxAsclin_clearRxResponseEndFlag(asclinSFR);
@@ -107,37 +109,37 @@ void IfxAsclin_Lin_checkForReceivedResponseFlags(IfxAsclin_Lin *asclin)
     }
 
     /* check for Rx response error flags */
-    if (IfxAsclin_getRxFifoOverflowFlagStatus(asclinSFR)) /* RFO flag*/
+    if (IfxAsclin_getRxFifoOverflowFlagStatus(asclinSFR)) 			/* RFO flag */
     {
         IfxAsclin_clearRxFifoOverflowFlag(asclinSFR);
         asclin->errorFlagsStatus.rxFifoOverflow = 1;
     }
 
-    if (IfxAsclin_getCollisionDetectionErrorFlagStatus(asclinSFR))     /* CE flag*/
+    if (IfxAsclin_getCollisionDetectionErrorFlagStatus(asclinSFR))	/* CE flag */
     {
         IfxAsclin_clearCollisionDetectionErrorFlag(asclinSFR);
         asclin->errorFlagsStatus.collisionDetectionError = 1;
     }
 
-    if (IfxAsclin_getFrameErrorFlagStatus(asclinSFR)) /* FE flag*/
+    if (IfxAsclin_getFrameErrorFlagStatus(asclinSFR)) 			   /* FE flag */
     {
         IfxAsclin_clearFrameErrorFlag(asclinSFR);
         asclin->errorFlagsStatus.frameError = 1;
     }
 
-    if (IfxAsclin_getLinChecksumErrorFlagStatus(asclinSFR))     /* LC flag*/
+    if (IfxAsclin_getLinChecksumErrorFlagStatus(asclinSFR))        /* LC flag */
     {
         IfxAsclin_clearLinChecksumErrorFlag(asclinSFR);
         asclin->errorFlagsStatus.linChecksumError = 1;
     }
 
-    if (IfxAsclin_getResponseTimeoutFlagStatus(asclinSFR))     /* RT flag*/
+    if (IfxAsclin_getResponseTimeoutFlagStatus(asclinSFR))     	   /* RT flag*/
     {
         IfxAsclin_clearResponseTimeoutFlag(asclinSFR);
         asclin->errorFlagsStatus.responseTimeout = 1;
     }
 
-    if ((asclin->linMode == IfxAsclin_LinMode_slave) && (IfxAsclin_getBreakDetectedFlagStatus(asclinSFR))) /* BD flag only in slave mode*/
+    if ((asclin->linMode == IfxAsclin_LinMode_slave) && (IfxAsclin_getBreakDetectedFlagStatus(asclinSFR))) /* BD flag only in slave mode */
     {
         IfxAsclin_clearBreakDetectedFlag(asclinSFR);
         asclin->errorFlagsStatus.breakDetected = 1;
@@ -147,35 +149,36 @@ void IfxAsclin_Lin_checkForReceivedResponseFlags(IfxAsclin_Lin *asclin)
 
 void IfxAsclin_Lin_checkForTransmittedHeaderFlags(IfxAsclin_Lin *asclin)
 {
-    Ifx_ASCLIN *asclinSFR = asclin->asclin;            /* getting the pointer to ASCLIN registers from module handler*/
+	/* getting the pointer to ASCLIN registers from module handler */
+    Ifx_ASCLIN *asclinSFR = asclin->asclin;
 
     /* check Tx header end acknowledgement */
-    if (IfxAsclin_getTxHeaderEndFlagStatus(asclinSFR)) /* THE flag*/
+    if (IfxAsclin_getTxHeaderEndFlagStatus(asclinSFR)) 				/* THE flag */
     {
         IfxAsclin_clearTxHeaderEndFlag(asclinSFR);
         asclin->acknowledgmentFlags.txHeaderEnd = 1;
     }
 
-    /* check for Tx header error flags */
-    if (IfxAsclin_getHeaderTimeoutFlagStatus(asclinSFR))     /* HT flag*/
+    /* Check for Tx header error flags */
+    if (IfxAsclin_getHeaderTimeoutFlagStatus(asclinSFR))    	    /* HT flag */
     {
         IfxAsclin_clearHeaderTimeoutFlag(asclinSFR);
         asclin->errorFlagsStatus.headerTimeout = 1;
     }
 
-    if (IfxAsclin_getCollisionDetectionErrorFlagStatus(asclinSFR))     /* CE flag*/
+    if (IfxAsclin_getCollisionDetectionErrorFlagStatus(asclinSFR))	/* CE flag */
     {
         IfxAsclin_clearCollisionDetectionErrorFlag(asclinSFR);
         asclin->errorFlagsStatus.collisionDetectionError = 1;
     }
 
-    if (IfxAsclin_getFrameErrorFlagStatus(asclinSFR)) /* FE flag*/
+    if (IfxAsclin_getFrameErrorFlagStatus(asclinSFR)) 				/* FE flag */
     {
         IfxAsclin_clearFrameErrorFlag(asclinSFR);
         asclin->errorFlagsStatus.frameError = 1;
     }
 
-    if (IfxAsclin_getLinParityErrorFlagStatus(asclinSFR)) /* LP flag*/
+    if (IfxAsclin_getLinParityErrorFlagStatus(asclinSFR)) 			/* LP flag */
     {
         IfxAsclin_clearLinParityErrorFlag(asclinSFR);
         asclin->errorFlagsStatus.linParityError = 1;
@@ -185,35 +188,36 @@ void IfxAsclin_Lin_checkForTransmittedHeaderFlags(IfxAsclin_Lin *asclin)
 
 void IfxAsclin_Lin_checkForTransmittedResponseFlags(IfxAsclin_Lin *asclin)
 {
-    Ifx_ASCLIN *asclinSFR = asclin->asclin;              /* getting the pointer to ASCLIN registers from module handler*/
+	/* getting the pointer to ASCLIN registers from module handler */
+    Ifx_ASCLIN *asclinSFR = asclin->asclin;
 
     /* check Tx response end acknowledgement */
-    if (IfxAsclin_getTxResponseEndFlagStatus(asclinSFR)) /* TRE flag*/
+    if (IfxAsclin_getTxResponseEndFlagStatus(asclinSFR)) 		   /* TRE flag */
     {
         IfxAsclin_clearTxResponseEndFlag(asclinSFR);
         asclin->acknowledgmentFlags.txResponseEnd = 1;
     }
 
     /* check for Tx response error flags */
-    if (IfxAsclin_getTxFifoOverflowFlagStatus(asclinSFR)) /* TFO flag*/
+    if (IfxAsclin_getTxFifoOverflowFlagStatus(asclinSFR)) 		    /* TFO flag */
     {
         IfxAsclin_clearTxFifoOverflowFlag(asclinSFR);
         asclin->errorFlagsStatus.txFifoOverflow = 1;
     }
 
-    if (IfxAsclin_getCollisionDetectionErrorFlagStatus(asclinSFR))     /* CE flag*/
+    if (IfxAsclin_getCollisionDetectionErrorFlagStatus(asclinSFR))	/* CE flag */
     {
         IfxAsclin_clearCollisionDetectionErrorFlag(asclinSFR);
         asclin->errorFlagsStatus.collisionDetectionError = 1;
     }
 
-    if (IfxAsclin_getResponseTimeoutFlagStatus(asclinSFR))     /* RT flag*/
+    if (IfxAsclin_getResponseTimeoutFlagStatus(asclinSFR))     	    /* RT flag */
     {
         IfxAsclin_clearResponseTimeoutFlag(asclinSFR);
         asclin->errorFlagsStatus.responseTimeout = 1;
     }
 
-    if ((asclin->linMode == IfxAsclin_LinMode_slave) && (IfxAsclin_getBreakDetectedFlagStatus(asclinSFR))) /* BD flag only in slave mode*/
+    if ((asclin->linMode == IfxAsclin_LinMode_slave) && (IfxAsclin_getBreakDetectedFlagStatus(asclinSFR))) /* BD flag only in slave mode */
     {
         IfxAsclin_clearBreakDetectedFlag(asclinSFR);
         asclin->errorFlagsStatus.breakDetected = 1;
@@ -223,14 +227,14 @@ void IfxAsclin_Lin_checkForTransmittedResponseFlags(IfxAsclin_Lin *asclin)
 
 void IfxAsclin_Lin_clearFlagsStatus(IfxAsclin_Lin *asclin)
 {
-    /*clear acknowledgement flags status */
+    /* clear acknowledgement flags status */
     asclin->acknowledgmentFlags.txHeaderEnd   = 0;
     asclin->acknowledgmentFlags.rxHeaderEnd   = 0;
     asclin->acknowledgmentFlags.txResponseEnd = 0;
     asclin->acknowledgmentFlags.rxResponseEnd = 0;
     asclin->acknowledgmentFlags.txCompleted   = 0;
 
-    /* clear error flags status*/
+    /* clear error flags status */
     asclin->errorFlagsStatus.headerTimeout             = 0;
     asclin->errorFlagsStatus.collisionDetectionError   = 0;
     asclin->errorFlagsStatus.frameError                = 0;
@@ -246,18 +250,24 @@ void IfxAsclin_Lin_clearFlagsStatus(IfxAsclin_Lin *asclin)
 
 void IfxAsclin_Lin_disableModule(IfxAsclin_Lin *asclin)
 {
-    Ifx_ASCLIN *asclinSFR = asclin->asclin;       /* getting the pointer to ASCLIN registers from module handler*/
+	/* getting the pointer to ASCLIN registers from module handler */
+    Ifx_ASCLIN *asclinSFR = asclin->asclin;
 
-    IfxAsclin_setDisableModuleRequest(asclinSFR); /* disabling the module*/
+    IfxAsclin_setDisableModuleRequest(asclinSFR);	/* disabling the module */
 }
 
 
 void IfxAsclin_Lin_ignoreHeader(IfxAsclin_Lin *asclin)
 {
-    Ifx_ASCLIN *asclinSFR = asclin->asclin;                                                  /* getting the pointer to ASCLIN registers from module handler*/
-    IfxAsclin_enableRxFifoInlet(asclinSFR, FALSE);                                           /* disable Rx FIFO*/
-    IfxAsclin_setHeaderResponseSelect(asclinSFR, IfxAsclin_HeaderResponseSelect_headerOnly); /* set header only mode*/
-    IfxAsclin_clearAllFlags(asclinSFR);                                                      /* clear all flags*/
+	/* getting the pointer to ASCLIN registers from module handler */
+    Ifx_ASCLIN *asclinSFR = asclin->asclin;
+
+    /* disable Rx FIFO */
+    IfxAsclin_enableRxFifoInlet(asclinSFR, FALSE);
+    /* set header only mode */
+    IfxAsclin_setHeaderResponseSelect(asclinSFR, IfxAsclin_HeaderResponseSelect_headerOnly);
+    /* clear all flags */
+    IfxAsclin_clearAllFlags(asclinSFR);
 }
 
 
@@ -266,62 +276,62 @@ IfxAsclin_Status IfxAsclin_Lin_initModule(IfxAsclin_Lin *asclin, const IfxAsclin
     Ifx_ASCLIN      *asclinSFR = config->asclin;                        /* pointer to ASCLIN registers */
     IfxAsclin_Status status    = IfxAsclin_Status_noError;
 
-    asclin->asclin = asclinSFR;                                         /* adding register pointer to module handler*/
-    IfxAsclin_enableModule(asclinSFR);                                  /* enabling the module*/
+    asclin->asclin = asclinSFR;                                         /* adding register pointer to module handler */
+    IfxAsclin_enableModule(asclinSFR);                                  /* enabling the module */
 
     /* mode initialisation */
-    IfxAsclin_setClockSource(asclinSFR, IfxAsclin_ClockSource_noClock); /* disabling the clock*/
-    IfxAsclin_setFrameMode(asclinSFR, IfxAsclin_FrameMode_initialise);  /* setting the module in Initialise mode*/
-    IfxAsclin_setPrescaler(asclinSFR, config->btc.prescaler);           /* setting the prescaler*/
-    IfxAsclin_setClockSource(asclinSFR, config->clockSource);           /* setting the clock source*/
+    IfxAsclin_setClockSource(asclinSFR, IfxAsclin_ClockSource_noClock); /* disabling the clock */
+    IfxAsclin_setFrameMode(asclinSFR, IfxAsclin_FrameMode_initialise);  /* setting the module in Initialise mode */
+    IfxAsclin_setPrescaler(asclinSFR, config->btc.prescaler);           /* setting the prescaler */
+    IfxAsclin_setClockSource(asclinSFR, config->clockSource);           /* setting the clock source */
 
     /* baudrate generation in both modes */
     status = (IfxAsclin_Status)IfxAsclin_setBitTiming(asclinSFR, config->brg.baudrate,
         config->btc.oversampling,
         config->bsc.samplePointPosition,
-        config->bsc.medianFilter);                                      /* setting the baudrate bit fields to generate the required baudrate*/
+        config->bsc.medianFilter);                                      /* setting the baudrate bit fields to generate the required baudrate */
 
     /* lin mode initialisation */
-    IfxAsclin_setRxInput(asclinSFR, config->alti);                      /* selecting the Rx(alternate) input pin*/
-    IfxAsclin_setClockSource(asclinSFR, IfxAsclin_ClockSource_noClock); /* disabling the clock again*/
+    IfxAsclin_setRxInput(asclinSFR, config->alti);                      /* selecting the Rx(alternate) input pin */
+    IfxAsclin_setClockSource(asclinSFR, IfxAsclin_ClockSource_noClock); /* disabling the clock again */
 
-    IfxAsclin_setFrameMode(asclinSFR, config->frameMode);               /* setting the module in Lin mode*/
-    IfxAsclin_setLinMode(asclinSFR, config->linMode);                   /* configuring lin mode of operation (master/slave)*/
+    IfxAsclin_setFrameMode(asclinSFR, config->frameMode);               /* setting the module in Lin mode */
+    IfxAsclin_setLinMode(asclinSFR, config->linMode);                   /* configuring lin mode of operation (master/slave) */
 
     /* auto baud rate detection in slave mode */
     if (config->linMode == IfxAsclin_LinMode_slave)
     {
-        IfxAsclin_enableAutoBaudrateDetection(asclinSFR, config->brd.abd);                 /* setting the auto baudrate detection (enable/disable)*/
-        IfxAsclin_setBrdUpperlimt(asclinSFR, config->brd.upperLimit);                      /* setting the upper limit for abd*/
-        IfxAsclin_setBrdLowerlimt(asclinSFR, config->brd.lowerLimit);                      /* setting the lower limit for abd*/
+        IfxAsclin_enableAutoBaudrateDetection(asclinSFR, config->brd.abd);                 /* setting the auto baudrate detection (enable/disable) */
+        IfxAsclin_setBrdUpperlimt(asclinSFR, config->brd.upperLimit);                      /* setting the upper limit for abd */
+        IfxAsclin_setBrdLowerlimt(asclinSFR, config->brd.lowerLimit);                      /* setting the lower limit for abd */
     }
 
     /* frame control initialisation */
-    IfxAsclin_enableParity(asclinSFR, config->frame.parityEnable);                         /* setting parity (enable/disable)*/
-    IfxAsclin_setParityType(asclinSFR, config->frame.parityType);                          /* setting parity type (odd/even)*/
-    IfxAsclin_setStopBit(asclinSFR, config->frame.stopBit);                                /* setting the stop bit*/
-    IfxAsclin_enableCollisionDetection(asclinSFR, config->frame.collisionDetectionEnable); /* setting collision detection (enable/disable)*/
-    IfxAsclin_setShiftDirection(asclinSFR, config->frame.shiftDir);                        /* setting the shift direction*/
+    IfxAsclin_enableParity(asclinSFR, config->frame.parityEnable);                         /* setting parity (enable/disable) */
+    IfxAsclin_setParityType(asclinSFR, config->frame.parityType);                          /* setting parity type (odd/even) */
+    IfxAsclin_setStopBit(asclinSFR, config->frame.stopBit);                                /* setting the stop bit */
+    IfxAsclin_enableCollisionDetection(asclinSFR, config->frame.collisionDetectionEnable); /* setting collision detection (enable/disable) */
+    IfxAsclin_setShiftDirection(asclinSFR, config->frame.shiftDir);                        /* setting the shift direction */
 
     /* data control initialisation */
-    IfxAsclin_setDataLength(asclinSFR, config->data.dataLength);                           /* setting the number of bytes to be transfered*/
-    IfxAsclin_setHeaderResponseSelect(asclinSFR, config->data.headerOnly);                 /* setting the header only or header and response mode*/
-    IfxAsclin_setLinResponseTimeoutMode(asclinSFR, config->data.responseTimeoutMode);      /* setting the response timeout mode (frame/response)*/
-    IfxAsclin_setChecksumMode(asclinSFR, config->data.checksum);                           /* setting the checksum mode (classic/enhanced)*/
-    IfxAsclin_setLinResponseTimeoutThreshold(asclinSFR, config->data.responseTimeout);     /* setting the lin response timeout threshold*/
+    IfxAsclin_setDataLength(asclinSFR, config->data.dataLength);                           /* setting the number of bytes to be transfered */
+    IfxAsclin_setHeaderResponseSelect(asclinSFR, config->data.headerOnly);                 /* setting the header only or header and response mode */
+    IfxAsclin_setLinResponseTimeoutMode(asclinSFR, config->data.responseTimeoutMode);      /* setting the response timeout mode (frame/response) */
+    IfxAsclin_setChecksumMode(asclinSFR, config->data.checksum);                           /* setting the checksum mode (classic/enhanced) */
+    IfxAsclin_setLinResponseTimeoutThreshold(asclinSFR, config->data.responseTimeout);     /* setting the lin response timeout threshold */
 
     /* lin control initialisation */
-    IfxAsclin_enableHardwareChecksum(asclinSFR, config->lin.csEnable);                     /* setting the hardware checksum (enable/disable)*/
-    IfxAsclin_setChecksumInjection(asclinSFR, config->lin.csi);                            /* setting checksum injection*/
+    IfxAsclin_enableHardwareChecksum(asclinSFR, config->lin.csEnable);                     /* setting the hardware checksum (enable/disable) */
+    IfxAsclin_setChecksumInjection(asclinSFR, config->lin.csi);                            /* setting checksum injection */
 
     /* master specific initialisation */
     if (config->linMode == IfxAsclin_LinMode_master)
     {
-        IfxAsclin_setIdleDelay(asclinSFR, config->frame.idleDelay);          /* setting idle delay for master*/
-        IfxAsclin_setLeadDelay(asclinSFR, config->frame.leadDelay);          /* setting lead delay for master mode*/
-        IfxAsclin_setLinBreakLength(asclinSFR, config->lin.breakLength);     /* setting the break generation length*/
-        IfxAsclin_setLinHeaderTimeout(asclinSFR, config->lin.headerTimeout); /* setting the header timeout value for master*/
-        asclin->receiveIdEnable = config->receiveIdEnable;                   /* echoing the selection of receiving Id in its own Rx FIFO*/
+        IfxAsclin_setIdleDelay(asclinSFR, config->frame.idleDelay);          /* setting idle delay for master */
+        IfxAsclin_setLeadDelay(asclinSFR, config->frame.leadDelay);          /* setting lead delay for master mode */
+        IfxAsclin_setLinBreakLength(asclinSFR, config->lin.breakLength);     /* setting the break generation length */
+        IfxAsclin_setLinHeaderTimeout(asclinSFR, config->lin.headerTimeout); /* setting the header timeout value for master */
+        asclin->receiveIdEnable = config->receiveIdEnable;                   /* echoing the selection of receiving Id in its own Rx FIFO */
     }
 
     /* slave specific initialisation */
@@ -334,18 +344,18 @@ IfxAsclin_Status IfxAsclin_Lin_initModule(IfxAsclin_Lin *asclin, const IfxAsclin
     }
 
     /* fifo control initialisation */
-    IfxAsclin_setTxFifoInletWidth(asclinSFR, config->fifo.inWidth);   /* setting Tx FIFO inlet width*/
-    IfxAsclin_setRxFifoOutletWidth(asclinSFR, config->fifo.outWidth); /* setting Rx FIFO outlet width*/
-    IfxAsclin_setRxBufferMode(asclinSFR, config->fifo.buffMode);      /* setting Rx FIFO mode*/
-    IfxAsclin_enableTxFifoOutlet(asclinSFR, FALSE);                   /* disabling Rx FIFO for recieving*/
-    IfxAsclin_enableRxFifoInlet(asclinSFR, FALSE);                    /* disabling Tx FIFO for transmitting*/
-    IfxAsclin_flushRxFifo(asclinSFR);                                 /* flushing Rx FIFO*/
-    IfxAsclin_flushTxFifo(asclinSFR);                                 /* flushing Tx FIFO*/
+    IfxAsclin_setTxFifoInletWidth(asclinSFR, config->fifo.inWidth);   /* setting Tx FIFO inlet width */
+    IfxAsclin_setRxFifoOutletWidth(asclinSFR, config->fifo.outWidth); /* setting Rx FIFO outlet width */
+    IfxAsclin_setRxBufferMode(asclinSFR, config->fifo.buffMode);      /* setting Rx FIFO mode */
+    IfxAsclin_enableTxFifoOutlet(asclinSFR, FALSE);                   /* disabling Rx FIFO for recieving */
+    IfxAsclin_enableRxFifoInlet(asclinSFR, FALSE);                    /* disabling Tx FIFO for transmitting */
+    IfxAsclin_flushRxFifo(asclinSFR);                                 /* flushing Rx FIFO */
+    IfxAsclin_flushTxFifo(asclinSFR);                                 /* flushing Tx FIFO */
 
-    IfxAsclin_disableAllFlags(asclinSFR);                             /* disable all flags*/
-    IfxAsclin_clearAllFlags(asclinSFR);                               /* clear all flags*/
+    IfxAsclin_disableAllFlags(asclinSFR);                             /* disable all flags */
+    IfxAsclin_clearAllFlags(asclinSFR);                               /* clear all flags */
 
-    /* Initialising the Interrupts */
+    /* initialising the Interrupts */
     asclin->isInterruptMode = config->isInterruptMode;
     IfxSrc_Tos  tos  = config->interrupt.typeOfService;
     IfxSrc_VmId vmid = config->interrupt.vmId;
@@ -391,7 +401,7 @@ IfxAsclin_Status IfxAsclin_Lin_initModule(IfxAsclin_Lin *asclin, const IfxAsclin
             IfxSrc_enable(src);
         }
 
-        if (config->interrupt.exPriority > 0) /*These interrupts are not serviced by dma*/
+        if (config->interrupt.exPriority > 0) /* these interrupts are not serviced by dma */
         {
             volatile Ifx_SRC_SRCR *src;
             src = IfxAsclin_getSrcPointerEr(asclinSFR);
@@ -413,11 +423,11 @@ IfxAsclin_Status IfxAsclin_Lin_initModule(IfxAsclin_Lin *asclin, const IfxAsclin
             IfxSrc_enable(src);
         }
 
-        /*Update FLAGSENABLE register in one shot*/
+        /* update FLAGSENABLE register in one shot */
         asclinSFR->FLAGSENABLE.U = flagsenable.U;
     }
 
-    /* Pin mapping*/
+    /* pin mapping */
     const IfxAsclin_Lin_Pins *pins = config->pins;
 
     if (pins != NULL_PTR)
@@ -437,9 +447,9 @@ IfxAsclin_Status IfxAsclin_Lin_initModule(IfxAsclin_Lin *asclin, const IfxAsclin
         }
     }
 
-    IfxAsclin_setClockSource(asclinSFR, config->clockSource); /* setting the clock source*/
+    IfxAsclin_setClockSource(asclinSFR, config->clockSource); /* setting the clock source */
 
-    asclin->linMode = config->linMode;                        /* echoing the mode of operation to module handler*/
+    asclin->linMode = config->linMode;                        /* echoing the mode of operation to module handler */
 
     return status;
 }
@@ -448,59 +458,59 @@ IfxAsclin_Status IfxAsclin_Lin_initModule(IfxAsclin_Lin *asclin, const IfxAsclin
 void IfxAsclin_Lin_initModuleConfig(IfxAsclin_Lin_Config *config, Ifx_ASCLIN *asclin)
 {
     config->asclin      = asclin;
-    config->frameMode   = IfxAsclin_FrameMode_lin;                                             /* LIN mode*/
-    config->linMode     = IfxAsclin_LinMode_master;                                            /* Lin Master mode*/
-    config->clockSource = IfxAsclin_ClockSource_ascFastClock;                                  /* Asclin fast clock, fasclinf*/
-    config->alti        = IfxAsclin_RxInputSelect_0;                                           /* alternate input 0;*/
+    config->frameMode   = IfxAsclin_FrameMode_lin;                                             /* LIN mode */
+    config->linMode     = IfxAsclin_LinMode_master;                                            /* Lin Master mode */
+    config->clockSource = IfxAsclin_ClockSource_ascFastClock;                                  /* Asclin fast clock, fasclinf */
+    config->alti        = IfxAsclin_RxInputSelect_0;                                           /* alternate input 0; */
 
-    /* Default values for baudrate */
-    config->brg.baudrate                   = 19200.0f;                                         /* default baudrate (the fractional dividier setup will be calculated in initModule)*/
-    /* Default Values for Bit Timings */
-    config->btc.prescaler                  = 4;                                                /* default prescaler*/
-    config->btc.oversampling               = IfxAsclin_OversamplingFactor_16;                  /* default oversampling factor*/
-    /* Default Values for Bit sampling */
-    config->bsc.filterDepth                = 24U;                                              /* digital glitch filter depth 24*/
-    config->bsc.medianFilter               = IfxAsclin_SamplesPerBit_one;                      /* one sample per bit*/
-    config->bsc.samplePointPosition        = IfxAsclin_SamplePointPosition_3;                  /* sample point position at 3*/
-    /* Default Values for Frame Control */
-    config->frame.parityEnable             = FALSE;                                            /* disable parity*/
+    /* default values for baudrate */
+    config->brg.baudrate                   = 19200.0f;                                         /* default baudrate (the fractional dividier setup will be calculated in initModule) */
+    /* default Values for Bit Timings */
+    config->btc.prescaler                  = 4;                                                /* default prescaler */
+    config->btc.oversampling               = IfxAsclin_OversamplingFactor_16;                  /* default oversampling factor */
+    /* default Values for Bit sampling */
+    config->bsc.filterDepth                = 24U;                                              /* digital glitch filter depth 24 */
+    config->bsc.medianFilter               = IfxAsclin_SamplesPerBit_one;                      /* one sample per bit */
+    config->bsc.samplePointPosition        = IfxAsclin_SamplePointPosition_3;                  /* sample point position at 3 */
+    /* default Values for Frame Control */
+    config->frame.parityEnable             = FALSE;                                            /* disable parity */
     config->frame.parityType               = IfxAsclin_ParityType_even;                        /* even parity (if parity enabled) */
     config->frame.stopBit                  = IfxAsclin_StopBit_1;                              /* one stop bit */
     config->frame.shiftDir                 = IfxAsclin_ShiftDirection_lsbFirst;                /* shift diection LSB first */
     config->frame.collisionDetectionEnable = FALSE;
-    /* Default Values for Data Control */
+    /* default Values for Data Control */
     config->data.dataLength                = IfxAsclin_DataLength_8;                           /* number of bytes of the response */
     config->data.headerOnly                = IfxAsclin_HeaderResponseSelect_headerAndResponse; /* header and response */
     config->data.responseTimeoutMode       = IfxAsclin_LinResponseTimeoutMode_frameTimeout;    /* frame timeout */
     config->data.checksum                  = IfxAsclin_Checksum_enhanced;                      /* enhanced checksum */
     config->data.responseTimeout           = 255;
-    /* Default Values for fifo Control */
+    /* default Values for fifo Control */
     config->fifo.outWidth                  = IfxAsclin_RxFifoOutletWidth_1;                    /* 8-bit wide read */
     config->fifo.inWidth                   = IfxAsclin_TxFifoInletWidth_1;                     /* 8-bit wide write */
     config->fifo.buffMode                  = IfxAsclin_ReceiveBufferMode_rxFifo;               /* RxFIFO */
-    /* Default Values for Lin Control */
+    /* default Values for Lin Control */
     config->lin.csEnable                   = TRUE;                                             /* checksum enable */
     config->lin.csi                        = IfxAsclin_ChecksumInjection_written;              /* 8-bit wide write */
 
-    /* Default Values for Interrupt Config */
-    config->interrupt.rxPriority    = 0;                                                       /* receive interrupt priority 0*/
-    config->interrupt.txPriority    = 0;                                                       /* transmit interrupt priority 0*/
-    config->interrupt.exPriority    = 0;                                                       /* error interrupt priority 0*/
-    config->interrupt.typeOfService = IfxSrc_Tos_cpu0;                                         /* type of service CPU0*/
+    /* default Values for Interrupt Config */
+    config->interrupt.rxPriority    = 0;                                                       /* receive interrupt priority 0 */
+    config->interrupt.txPriority    = 0;                                                       /* transmit interrupt priority 0 */
+    config->interrupt.exPriority    = 0;                                                       /* error interrupt priority 0 */
+    config->interrupt.typeOfService = IfxSrc_Tos_cpu0;                                         /* type of service CPU0 */
     config->interrupt.vmId          = IfxSrc_VmId_0;
-    config->isInterruptMode         = FALSE;                                                   /* default is in polling mode*/
+    config->isInterruptMode         = FALSE;                                                   /* default is in polling mode */
 
     /* configuration for master mode */
     {
         config->receiveIdEnable   = FALSE;                 /* receive Id in Rx Fifo after sending */
         config->frame.idleDelay   = IfxAsclin_IdleDelay_2; /* idle dalay 2 bits */
-        config->frame.leadDelay   = IfxAsclin_LeadDelay_1; /*lead delay in master 1 bit */
-        /* Default Values for Lin Control */
+        config->frame.leadDelay   = IfxAsclin_LeadDelay_1; /* lead delay in master 1 bit */
+        /* default Values for Lin Control */
         config->lin.breakLength   = 13;                    /* break generation length 13 */
         config->lin.headerTimeout = 56;                    /* header timeout value in master 56 */
     }
 
-    /*configuration for enabling interrupts*/
+    /* configuration for enabling interrupts */
     {
         config->interrupt.enabledInterrupt.rxReceivedHeader            = FALSE;
         config->interrupt.enabledInterrupt.rxReceivedResponse          = FALSE;
@@ -519,15 +529,19 @@ void IfxAsclin_Lin_initModuleConfig(IfxAsclin_Lin_Config *config, Ifx_ASCLIN *as
         config->interrupt.enabledInterrupt.exTransmitFIFOOverflow      = FALSE;
     }
 
-    config->pins = NULL_PTR;                               /* pins to null pointer*/
+    /* pins to null pointer */
+    config->pins = NULL_PTR;
 }
 
 
 void IfxAsclin_Lin_receiveHeader(IfxAsclin_Lin *asclin, uint8 *id)
 {
     boolean result = 0;
-    IfxAsclin_Lin_prepareHeaderReception(asclin);          /* prepare for header reception */
-    result |= IfxAsclin_Lin_waitForReceivedHeader(asclin); /* wait until receive header end acknowledgemnet*/
+
+    /* prepare for header reception */
+    IfxAsclin_Lin_prepareHeaderReception(asclin);
+    /* wait until receive header end acknowledgemnet */
+    result |= IfxAsclin_Lin_waitForReceivedHeader(asclin);
 
     if (result == 1)
     {
@@ -535,7 +549,8 @@ void IfxAsclin_Lin_receiveHeader(IfxAsclin_Lin *asclin, uint8 *id)
     }
     else
     {
-        IfxAsclin_Lin_readHeader(asclin, id);           /*read the ID byte*/
+    	/* read the ID byte */
+        IfxAsclin_Lin_readHeader(asclin, id);
     }
 }
 
@@ -543,8 +558,11 @@ void IfxAsclin_Lin_receiveHeader(IfxAsclin_Lin *asclin, uint8 *id)
 void IfxAsclin_Lin_receiveResponse(IfxAsclin_Lin *asclin, uint8 *data, uint32 length)
 {
     boolean result = 0;
-    IfxAsclin_Lin_prepareResponseReception(asclin, length);  /* prepare the response reception */
-    result |= IfxAsclin_Lin_waitForReceivedResponse(asclin); /* wait until receive response end acknowledgemnet or an error is occured*/
+
+    /* prepare the response reception */
+    IfxAsclin_Lin_prepareResponseReception(asclin, length);
+    /* wait until receive response end acknowledgemnet or an error is occured */
+    result |= IfxAsclin_Lin_waitForReceivedResponse(asclin);
 
     if (result == 1)
     {
@@ -552,7 +570,8 @@ void IfxAsclin_Lin_receiveResponse(IfxAsclin_Lin *asclin, uint8 *data, uint32 le
     }
     else
     {
-        IfxAsclin_Lin_readResponse(asclin, data, length); /* read the data bytes */
+    	/* read the data bytes */
+        IfxAsclin_Lin_readResponse(asclin, data, length);
     }
 }
 
@@ -560,27 +579,38 @@ void IfxAsclin_Lin_receiveResponse(IfxAsclin_Lin *asclin, uint8 *data, uint32 le
 void IfxAsclin_Lin_sendHeader(IfxAsclin_Lin *asclin, uint8 *id)
 {
     boolean     result    = 0;
-    Ifx_ASCLIN *asclinSFR = asclin->asclin;            /* getting the pointer to ASCLIN registers from module handler*/
-    IfxAsclin_clearAllFlags(asclinSFR);                /* clearing all flags*/
 
-    if (asclin->receiveIdEnable)                       /* if receiving the sent id byte into its own Rx FIFO is selected*/
+    /* getting the pointer to ASCLIN registers from module handler */
+    Ifx_ASCLIN *asclinSFR = asclin->asclin;
+    /* clearing all flags */
+    IfxAsclin_clearAllFlags(asclinSFR);
+
+    if (asclin->receiveIdEnable)                       /* if receiving the sent id byte into its own Rx FIFO is selected */
     {
-        IfxAsclin_flushRxFifo(asclinSFR);              /* flushing Rx FIFO*/
-        IfxAsclin_enableRxFifoInlet(asclinSFR, TRUE);  /* enabling Rx FIFO */
+    	/* flushing Rx FIFO */
+        IfxAsclin_flushRxFifo(asclinSFR);
+        /* enabling Rx FIFO */
+        IfxAsclin_enableRxFifoInlet(asclinSFR, TRUE);
     }
     else
     {
-        IfxAsclin_enableRxFifoInlet(asclinSFR, FALSE);            /* disabling Rx FIFO */
+    	/* disabling Rx FIFO */
+        IfxAsclin_enableRxFifoInlet(asclinSFR, FALSE);
     }
 
-    IfxAsclin_flushTxFifo(asclinSFR);                             /* flushing Tx FIFO */
-    IfxAsclin_enableTxFifoOutlet(asclinSFR, TRUE);                /* enabling Tx FIFO for transmitting*/
-    IfxAsclin_write8(asclinSFR, id, 1U);                          /* writing the ID byte */
-    IfxAsclin_setTransmitHeaderRequestFlag(asclinSFR);            /* setting THRQS flag */
+    /* flushing Tx FIFO */
+    IfxAsclin_flushTxFifo(asclinSFR);
+    /* enabling Tx FIFO for transmitting */
+    IfxAsclin_enableTxFifoOutlet(asclinSFR, TRUE);
+    /* writing the ID byte */
+    IfxAsclin_write8(asclinSFR, id, 1U);
+    /* setting THRQS flag */
+    IfxAsclin_setTransmitHeaderRequestFlag(asclinSFR);
 
-    if (asclin->isInterruptMode == FALSE)                         /*Only for Polling Mode*/
+    if (asclin->isInterruptMode == FALSE)                         /* only for Polling Mode */
     {
-        result |= IfxAsclin_Lin_waitForTransmittedHeader(asclin); /* waiting until transmit header end acknowledgemnet */
+    	/* waiting until transmit header end acknowledgemnet */
+        result |= IfxAsclin_Lin_waitForTransmittedHeader(asclin);
 
         if (result == 1)
         {
@@ -599,15 +629,26 @@ void IfxAsclin_Lin_sendHeader(IfxAsclin_Lin *asclin, uint8 *id)
 void IfxAsclin_Lin_sendResponse(IfxAsclin_Lin *asclin, uint8 *data, uint32 length)
 {
     boolean     result    = 0;
-    Ifx_ASCLIN *asclinSFR = asclin->asclin;                                 /* getting the pointer to ASCLIN registers from module handler*/
-    IfxAsclin_setDataLength(asclinSFR, (IfxAsclin_DataLength)(length - 1)); /* set number of bytes to be transfered */
-    IfxAsclin_clearAllFlags(asclinSFR);                                     /* clear all flags */
-    IfxAsclin_flushTxFifo(asclinSFR);                                       /* flushing Tx FIFO */
-    IfxAsclin_enableRxFifoInlet(asclinSFR, FALSE);                          /* disable Rx FIFO */
-    IfxAsclin_enableTxFifoOutlet(asclinSFR, TRUE);                          /* enable Tx FIFO for transmitting */
-    IfxAsclin_write8(asclinSFR, data, length);                              /* write the data bytes; */
-    IfxAsclin_setTransmitResponseRequestFlag(asclinSFR);                    /* set TRRQS flag */
-    result |= IfxAsclin_Lin_waitForTransmittedResponse(asclin);             /* wait until transmit response end acknowledgemnet */
+
+    /* getting the pointer to ASCLIN registers from module handler */
+    Ifx_ASCLIN *asclinSFR = asclin->asclin;
+
+    /* set number of bytes to be transfered */
+    IfxAsclin_setDataLength(asclinSFR, (IfxAsclin_DataLength)(length - 1));
+    /* clear all flags */
+    IfxAsclin_clearAllFlags(asclinSFR);
+    /* flushing Tx FIFO */
+    IfxAsclin_flushTxFifo(asclinSFR);
+    /* disable Rx FIFO */
+    IfxAsclin_enableRxFifoInlet(asclinSFR, FALSE);
+    /* enable Tx FIFO for transmitting */
+    IfxAsclin_enableTxFifoOutlet(asclinSFR, TRUE);
+    /* write the data bytes; */
+    IfxAsclin_write8(asclinSFR, data, length);
+    /* set TRRQS flag */
+    IfxAsclin_setTransmitResponseRequestFlag(asclinSFR);
+    /* wait until transmit response end acknowledgemnet */
+    result |= IfxAsclin_Lin_waitForTransmittedResponse(asclin);
 
     if (result == 1)
     {
@@ -619,7 +660,9 @@ void IfxAsclin_Lin_sendResponse(IfxAsclin_Lin *asclin, uint8 *data, uint32 lengt
 boolean IfxAsclin_Lin_waitForReceivedHeader(IfxAsclin_Lin *asclin)
 {
     boolean result = 0;
-    IfxAsclin_Lin_clearFlagsStatus(asclin);     /* clear all aknowledgement and error flags status */
+
+    /* clear all aknowledgement and error flags status */
+    IfxAsclin_Lin_clearFlagsStatus(asclin);
 
     /* wait until receive header end acknowledgemnet has been detected  */
     while (asclin->acknowledgmentFlags.rxHeaderEnd != 1)
@@ -644,9 +687,11 @@ boolean IfxAsclin_Lin_waitForReceivedHeader(IfxAsclin_Lin *asclin)
 boolean IfxAsclin_Lin_waitForReceivedResponse(IfxAsclin_Lin *asclin)
 {
     boolean result = 0;
-    IfxAsclin_Lin_clearFlagsStatus(asclin);     /* clear all aknowledgement and error flags status */
 
-    /* wait until receive response end acknowledgemnet has been detected  */
+    /* clear all aknowledgement and error flags status */
+    IfxAsclin_Lin_clearFlagsStatus(asclin);
+
+    /* wait until receive response end acknowledgemnet has been detected */
     while (asclin->acknowledgmentFlags.rxResponseEnd != 1)
     {
         IfxAsclin_Lin_checkForReceivedResponseFlags(asclin);
@@ -670,7 +715,9 @@ boolean IfxAsclin_Lin_waitForReceivedResponse(IfxAsclin_Lin *asclin)
 boolean IfxAsclin_Lin_waitForTransmittedHeader(IfxAsclin_Lin *asclin)
 {
     boolean result = 0;
-    IfxAsclin_Lin_clearFlagsStatus(asclin);     /* clear all aknowledgement and error flags status */
+
+    /* clear all aknowledgement and error flags status */
+    IfxAsclin_Lin_clearFlagsStatus(asclin);
 
     /* wait until transmit header end acknowledgemnet has been detected */
     while (asclin->acknowledgmentFlags.txHeaderEnd != 1)
@@ -694,7 +741,9 @@ boolean IfxAsclin_Lin_waitForTransmittedHeader(IfxAsclin_Lin *asclin)
 boolean IfxAsclin_Lin_waitForTransmittedResponse(IfxAsclin_Lin *asclin)
 {
     boolean result = 0;
-    IfxAsclin_Lin_clearFlagsStatus(asclin);     /* clear all aknowledgement and error flags status */
+
+    /* clear all aknowledgement and error flags status */
+    IfxAsclin_Lin_clearFlagsStatus(asclin);
 
     /* wait until transmit response end acknowledgemnet has been detected */
     while (asclin->acknowledgmentFlags.txResponseEnd != 1)
@@ -717,9 +766,10 @@ boolean IfxAsclin_Lin_waitForTransmittedResponse(IfxAsclin_Lin *asclin)
 
 void IfxAsclin_Lin_isrError(IfxAsclin_Lin *asclin)
 {
-    Ifx_ASCLIN *asclinSFR = asclin->asclin; /* getting the pointer to ASCLIN registers from module handler*/
+	/* getting the pointer to ASCLIN registers from module handler */
+    Ifx_ASCLIN *asclinSFR = asclin->asclin;
 
-    /* store and clear the flags*/
+    /* store and clear the flags */
     if (IfxAsclin_getLinParityErrorFlagStatus(asclinSFR))
     {
         IfxAsclin_clearLinParityErrorFlag(asclinSFR);
@@ -786,7 +836,7 @@ void IfxAsclin_Lin_isrError(IfxAsclin_Lin *asclin)
         asclin->acknowledgmentFlags.txCompleted = 1;
     }
 
-    /*Update acknowledgment flags*/
+    /* update acknowledgment flags */
     if ((asclin->linFrameData.flags.txHeaderInProgress == 1)
         && ((asclin->errorFlagsStatus.headerTimeout == 1)
             || (asclin->errorFlagsStatus.collisionDetectionError == 1)
@@ -839,15 +889,16 @@ void IfxAsclin_Lin_isrError(IfxAsclin_Lin *asclin)
 
 void IfxAsclin_Lin_isrReceive(IfxAsclin_Lin *asclin)
 {
-    Ifx_ASCLIN *asclinSFR = asclin->asclin; /* getting the pointer to ASCLIN registers from module handler*/
+	/* getting the pointer to ASCLIN registers from module handler */
+    Ifx_ASCLIN *asclinSFR = asclin->asclin;
 
     if (IfxAsclin_getRxHeaderEndFlagStatus(asclinSFR))
     {
         IfxAsclin_clearRxHeaderEndFlag(asclinSFR);
-        IfxAsclin_Lin_readHeader(asclin, &(asclin->linFrameData.headerID)); /*read the ID byte*/
+        IfxAsclin_Lin_readHeader(asclin, &(asclin->linFrameData.headerID)); /* read the ID byte */
         asclin->acknowledgmentFlags.rxHeaderEnd       = 1;
         asclin->linFrameData.flags.rxHeaderInProgress = FALSE;
-        asclinSFR->TXFIFOCON.B.ENO                    = 0;                  /*TX FIFO Outlet is disabled*/
+        asclinSFR->TXFIFOCON.B.ENO                    = 0;                  /* TX FIFO Outlet is disabled */
     }
 
     if (IfxAsclin_getRxResponseEndFlagStatus(asclinSFR))
@@ -862,7 +913,8 @@ void IfxAsclin_Lin_isrReceive(IfxAsclin_Lin *asclin)
 
 void IfxAsclin_Lin_isrTransmit(IfxAsclin_Lin *asclin)
 {
-    Ifx_ASCLIN *asclinSFR = asclin->asclin; /* getting the pointer to ASCLIN registers from module handler*/
+	/* getting the pointer to ASCLIN registers from module handler */
+    Ifx_ASCLIN *asclinSFR = asclin->asclin;
 
     /* clear H/w Flag and update S/w Flags */
     if (IfxAsclin_getTxHeaderEndFlagStatus(asclinSFR))
@@ -883,8 +935,10 @@ void IfxAsclin_Lin_isrTransmit(IfxAsclin_Lin *asclin)
 
 void IfxAsclin_Lin_sendFrame(IfxAsclin_Lin *asclin, IfxAsclin_Lin_PduType *pduptr)
 {
-    Ifx_ASCLIN *asclinSFR = asclin->asclin;                     /* getting the pointer to ASCLIN registers from module handler*/
-    IfxAsclin_setChecksumMode(asclinSFR, pduptr->checksumMode); /* setting the checksum mode (classic/enhanced)*/
+	 /* getting the pointer to ASCLIN registers from module handler */
+    Ifx_ASCLIN *asclinSFR = asclin->asclin;
+    /* setting the checksum mode (classic/enhanced) */
+    IfxAsclin_setChecksumMode(asclinSFR, pduptr->checksumMode);
     asclin->linFrameData.headerID = pduptr->pid;
 
     if (pduptr->direction == IfxAsclin_Lin_Direction_TransmitHeader)
@@ -893,7 +947,7 @@ void IfxAsclin_Lin_sendFrame(IfxAsclin_Lin *asclin, IfxAsclin_Lin_PduType *pdupt
         asclin->linFrameData.txResponseLength       = 0;
         asclin->linFrameData.flags.txSendHeaderOnly = TRUE;
 
-        /*Enable Interrupt flags for Header Transmission*/
+        /* enable Interrupt flags for Header Transmission */
         Ifx_ASCLIN_FLAGSENABLE flagsenable;
         flagsenable.U            = 0;
         flagsenable.B.THE        = 1;
@@ -908,29 +962,30 @@ void IfxAsclin_Lin_sendFrame(IfxAsclin_Lin *asclin, IfxAsclin_Lin_PduType *pdupt
 
     else if ((pduptr->direction == IfxAsclin_Lin_Direction_TransmitHeaderAndResponse) || (pduptr->direction == IfxAsclin_Lin_Direction_TransmitHeaderAndReceiveResponse))
     {
-        IfxAsclin_setDataLength(asclinSFR, (IfxAsclin_DataLength)(pduptr->dataLength - 1)); /* set number of bytes to be transfered */
+    	/* set number of bytes to be transfered */
+        IfxAsclin_setDataLength(asclinSFR, (IfxAsclin_DataLength)(pduptr->dataLength - 1));
 
-        /*Configure RXFIFO*/
+        /* configure RXFIFO */
         Ifx_ASCLIN_RXFIFOCON rxfifocon;
         rxfifocon.U            = asclinSFR->RXFIFOCON.U;
 
-        rxfifocon.B.BUF        = 0; /*RX in FIFO Mode*/
-        rxfifocon.B.FLUSH      = 1; /*Empty Rx Fifo*/
-        rxfifocon.B.ENI        = 1; /*RX FIFO Inlet is enabled*/
+        rxfifocon.B.BUF        = 0; /* RX in FIFO Mode */
+        rxfifocon.B.FLUSH      = 1; /* Empty Rx Fifo */
+        rxfifocon.B.ENI        = 1; /* RX FIFO Inlet is enabled */
 
         asclinSFR->RXFIFOCON.U = rxfifocon.U;
 
-        /*Configure TXFIFO*/
+        /* configure TXFIFO */
         Ifx_ASCLIN_TXFIFOCON txfifocon;
         txfifocon.U            = asclinSFR->TXFIFOCON.U;
 
-        txfifocon.B.FLUSH      = 1; /*Empty Tx Fifo*/
-        txfifocon.B.ENO        = 1; /*TX FIFO Outlet is enabled*/
+        txfifocon.B.FLUSH      = 1; /* Empty Tx Fifo */
+        txfifocon.B.ENO        = 1; /* TX FIFO Outlet is enabled */
 
         asclinSFR->TXFIFOCON.U = txfifocon.U;
 
-        /*Clear interrupt event flags*/
-        IfxAsclin_clearAllFlags(asclinSFR);                /* clearing all flags*/
+        /* clear interrupt event flags */
+        IfxAsclin_clearAllFlags(asclinSFR);	/* clearing all flags */
         IfxAsclin_Lin_clearFlagsStatus(asclin);
 
         Ifx_ASCLIN_FLAGSENABLE flagsenable;
@@ -938,12 +993,12 @@ void IfxAsclin_Lin_sendFrame(IfxAsclin_Lin *asclin, IfxAsclin_Lin_PduType *pdupt
 
         if (pduptr->direction == IfxAsclin_Lin_Direction_TransmitHeaderAndResponse)
         {
-            /*Enable Tx interrupts*/
+            /* enable Tx interrupts */
             flagsenable.B.THE = 1;
             flagsenable.B.TRE = 1;
             flagsenable.B.HTE = 1;
 
-            /*Enable Ex interrupts*/
+            /* enable Ex interrupts */
             flagsenable.B.TFOE                                 = 1;
             flagsenable.B.CEE                                  = 1;
             flagsenable.B.FEE                                  = 1;
@@ -962,13 +1017,13 @@ void IfxAsclin_Lin_sendFrame(IfxAsclin_Lin *asclin, IfxAsclin_Lin_PduType *pdupt
         }
         else if (pduptr->direction == IfxAsclin_Lin_Direction_TransmitHeaderAndReceiveResponse)
         {
-            /*Enable Rx interrupts*/
+            /* enable Rx interrupts */
             flagsenable.B.RRE = 1;
             flagsenable.B.THE = 1;
             flagsenable.B.RHE = 1;
             flagsenable.B.HTE = 1;
 
-            /*Enable Ex interrupts*/
+            /* enable Ex interrupts */
             flagsenable.B.RFOE                                 = 1;
             flagsenable.B.CEE                                  = 1;
             flagsenable.B.FEE                                  = 1;
@@ -976,7 +1031,7 @@ void IfxAsclin_Lin_sendFrame(IfxAsclin_Lin *asclin, IfxAsclin_Lin_PduType *pdupt
             flagsenable.B.LCE                                  = 1;
             flagsenable.B.BDE                                  = 1;
 
-            asclinSFR->RXFIFOCON.B.ENI                         = 1; /*RX FIFO Inlet is enabled*/
+            asclinSFR->RXFIFOCON.B.ENI                         = 1; /* RX FIFO Inlet is enabled */
 
             asclin->linFrameData.flags.txSendResponse          = TRUE;
             asclin->linFrameData.flags.txSendHeaderOnly        = FALSE;
@@ -989,11 +1044,11 @@ void IfxAsclin_Lin_sendFrame(IfxAsclin_Lin *asclin, IfxAsclin_Lin_PduType *pdupt
 
         asclinSFR->FLAGSENABLE.U = flagsenable.U;
 
-        IfxAsclin_write8(asclinSFR, &(pduptr->pid), 1U);                      /* writing the ID byte */
+        IfxAsclin_write8(asclinSFR, &(pduptr->pid), 1U);                            /* writing the ID byte */
 
         if (pduptr->direction == IfxAsclin_Lin_Direction_TransmitHeaderAndResponse)
         {
-            IfxAsclin_write8(asclinSFR, pduptr->dataPtr, pduptr->dataLength);                      /* writing data bytes */
+            IfxAsclin_write8(asclinSFR, pduptr->dataPtr, pduptr->dataLength);       /* writing data bytes */
 
             Ifx_ASCLIN_FLAGSSET flagsset;
             flagsset.U            = asclinSFR->FLAGSSET.U;

@@ -2,9 +2,9 @@
  * \file IfxPsi5s.c
  * \brief PSI5S  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-03-29 08:49:54
  *
  *
  *                                 IMPORTANT NOTICE

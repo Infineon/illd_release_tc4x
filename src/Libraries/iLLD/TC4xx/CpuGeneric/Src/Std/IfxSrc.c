@@ -2,7 +2,7 @@
  * \file IfxSrc.c
  * \brief SRC basic functionality
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -78,11 +78,14 @@ void IfxSrc_setOtgbSrnIndex(volatile Ifx_INT *intr, IfxSrc_OtgbSrnIndex srnIndex
 
 void IfxSrc_initOtgb(volatile Ifx_INT *intr, IfxSrc_OtgbConfig *OtgbConfig)
 {
+	/* Configures the trigger for the Otgb source */
     IfxSrc_configOtgbTriggerSet(intr, OtgbConfig->trigger);
+    /* Used to select the OTGB Bus for the selected triggerSet */
     IfxSrc_configOtgbBusSelect(intr, OtgbConfig->busSelect);
 
     if (OtgbConfig->trigger == IfxSrc_TrigSet_is)
     {
+    	/* Used to select only one SRN index and corresponding SRN index Value */
         IfxSrc_setOtgbSrnIndex(intr, (IfxSrc_OtgbSrnIndex)0U, &OtgbConfig->srnIndexVal);
         IfxSrc_setOtgbSrnIndex(intr, (IfxSrc_OtgbSrnIndex)1U, &OtgbConfig->srnIndexVal);
         IfxSrc_setOtgbSrnIndex(intr, (IfxSrc_OtgbSrnIndex)2U, &OtgbConfig->srnIndexVal);
@@ -90,17 +93,19 @@ void IfxSrc_initOtgb(volatile Ifx_INT *intr, IfxSrc_OtgbConfig *OtgbConfig)
     }
     else if (OtgbConfig->trigger == IfxSrc_TrigSet_sp)
     {
+    	/* Configures interrupt triggers for OTGB service provider based on the provided configuration */
         IfxSrc_configOtgbServiceProviderTrigger(intr, &OtgbConfig->spConfig);
     }
     else
     {
-        /* configured to SPA trigger Set */
+        /* Configured to SPA trigger Set */
     }
 }
 
 
 void IfxSrc_initOtgbConfig(IfxSrc_OtgbConfig *OtgbConfig)
 {
+	/* Initializes the OTGB configuration structure with default values */
     OtgbConfig->trigger                  = IfxSrc_TrigSet_is;
     OtgbConfig->busSelect                = IfxSrc_OtgbBusSel_otgb0;
     OtgbConfig->srnIndexVal.srnIndexVal0 = 0;
