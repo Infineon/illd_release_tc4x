@@ -3,7 +3,7 @@
  * \brief PCIE CAP details
  * \ingroup IfxLld_Pcie
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *

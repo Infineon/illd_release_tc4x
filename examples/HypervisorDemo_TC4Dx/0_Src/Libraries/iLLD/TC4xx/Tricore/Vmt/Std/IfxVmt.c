@@ -2,9 +2,9 @@
  * \file IfxVmt.c
  * \brief VMT  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-12-11 18:19:30
  *
  *
  *                                 IMPORTANT NOTICE
@@ -39,6 +39,10 @@
  * DEALINGS IN THE SOFTWARE.
  *
  *
+ * \author Thorsten Klose<Thorsten.Klose@Infineon.com>
+ * \author Rabeyrin Emmanuel<Emmanuel.Rabeyrin@infineon.com>
+ * \author SaiKiran Bollu<SaiKiran.Bollu@Infineon.com>
+ * \author Thorsten Klose<Thorsten.Klose@Infineon.com>
  *
  */
 
@@ -114,7 +118,7 @@ void IfxVmt_clearSramStart(IfxVmt_MbistSel mbistSel)
 
     /* start init operation */
     mc->MCONTROL.U = (1 << IFX_VMT_MC_MCONTROL_SRAM_CLR_OFF) | (1 << IFX_VMT_MC_MCONTROL_START_OFF); /* START = SRAM_CLR = 1 */
-    mc->MCONTROL.U &= ~(1 << IFX_VMT_MC_MCONTROL_SRAM_CLR_OFF);
+    mc->MCONTROL.U &= ~(1 << IFX_VMT_MC_MCONTROL_START_OFF);   /* Clear MCONTROL START bit */
 }
 
 
@@ -156,12 +160,9 @@ void IfxVmt_readSramAddress(IfxVmt_MbistSel mbistSel, uint16 sramAddress)
     Ifx_VMT_MC *mc;
     mc = IfxVmt_getDmtuMcInstancePtr(mbistSel);
 
-    /* configure MBIST for single read opeation */
-    uint16      mcontrolMask = 0x4000;                                                               /* set USERED flag */
-
-    mc->MCONTROL.U = mcontrolMask | (1 << IFX_VMT_MC_MCONTROL_DIR_OFF);
+    /* Configure MBIST for single read operation */
+    mc->MCONTROL.U = (1 << IFX_VMT_MC_MCONTROL_DIR_OFF);
     mc->CONFIG0.U  = (1 << IFX_VMT_MC_CONFIG0_NUMACCS_OFF) | (1 << IFX_VMT_MC_CONFIG0_ACCSTYPE_OFF); /* 1 read access */
-    /* ensure that linear scrambling is used */
 
     mc->CONFIG1.U = 0;                                                                               /* ensure that linear scrambling is used */
 
@@ -169,8 +170,8 @@ void IfxVmt_readSramAddress(IfxVmt_MbistSel mbistSel, uint16 sramAddress)
     mc->RANGE.U = sramAddress;
 
     /* Start operation */
-    mc->MCONTROL.U = mcontrolMask | (1 << IFX_VMT_MC_MCONTROL_DIR_OFF) | (1 << IFX_VMT_MC_MCONTROL_START_OFF);
-    mc->MCONTROL.U = mcontrolMask | (1 << IFX_VMT_MC_MCONTROL_DIR_OFF);
+    mc->MCONTROL.U = (1 << IFX_VMT_MC_MCONTROL_DIR_OFF) | (1 << IFX_VMT_MC_MCONTROL_START_OFF);
+    mc->MCONTROL.U = (1 << IFX_VMT_MC_MCONTROL_DIR_OFF);
 
     /* wait for the end of the fill operation */
     while (!IfxVmt_isMbistDone(mbistSel))
@@ -385,11 +386,9 @@ void IfxVmt_writeSramAddress(IfxVmt_MbistSel mbistSel, uint16 sramAddress)
     Ifx_VMT_MC *mc;
     mc = IfxVmt_getDmtuMcInstancePtr(mbistSel);
 
-    /* configure MBIST for single write opeation */
-    uint16      mcontrolMask = 0x4000;                                                               /* set USERED flag */
-    mc->MCONTROL.U = mcontrolMask | (1 << IFX_VMT_MC_MCONTROL_DIR_OFF);
+    /* Configure MBIST for single write operation */
+    mc->MCONTROL.U = (1 << IFX_VMT_MC_MCONTROL_DIR_OFF);
     mc->CONFIG0.U  = (1 << IFX_VMT_MC_CONFIG0_NUMACCS_OFF) | (0 << IFX_VMT_MC_CONFIG0_ACCSTYPE_OFF); /* 1 write access */
-    /* ensure that linear scrambling is used */
 
     mc->CONFIG1.U = 0;                                                                               /* ensure that linear scrambling is used */
 
@@ -397,12 +396,10 @@ void IfxVmt_writeSramAddress(IfxVmt_MbistSel mbistSel, uint16 sramAddress)
     mc->RANGE.U = sramAddress;
 
     /* Start operation */
-
-    mc->MCONTROL.U = mcontrolMask | (1 << IFX_VMT_MC_MCONTROL_DIR_OFF) | (1 << IFX_VMT_MC_MCONTROL_START_OFF);
-    mc->MCONTROL.U = mcontrolMask | (1 << IFX_VMT_MC_MCONTROL_DIR_OFF);
+    mc->MCONTROL.U = (1 << IFX_VMT_MC_MCONTROL_DIR_OFF) | (1 << IFX_VMT_MC_MCONTROL_START_OFF);
+    mc->MCONTROL.U = (1 << IFX_VMT_MC_MCONTROL_DIR_OFF);
 
     /* Wait for the end of the operation */
-
     while (!IfxVmt_isMbistDone(mbistSel))
     {
         __nop();
@@ -475,7 +472,7 @@ sint8 IfxVmt_K1Check(IfxVmt_K1CheckFailIdInfo *k1Check)
 
         /* check CRC */
 
-        if (k1Check->backupData->crc != IfxCpu_calculateCrc32((uint32 *)k1Check->backupAddr, IFXVMT_NUM_WORD_DATA_CRC))
+        if (k1Check->backupData->crc != IfxCpu_calculateCrc32((uint32 *)k1Check->backupAddr, IFXVMT_NUM_WORD_DATA_CRC, 0))
         {
             return -1; /* user has to configure to safe state */
         }

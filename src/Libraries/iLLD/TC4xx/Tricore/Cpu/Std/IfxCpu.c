@@ -2,7 +2,7 @@
  * \file IfxCpu.c
  * \brief CPU  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -62,7 +62,7 @@ boolean IfxCpu_acquireMutex(IfxCpu_mutexLock *lock)
     spinLockVal =
         (uint32)__cmpAndSwap(((unsigned int *)lock), spinLockVal, 0);
 
-    /* Check if the SpinLock WAS set before the attempt to acquire spinlock */
+    /* Checks if the SpinLock WAS set before the attempt to acquire spinlock */
     if (spinLockVal == 0)
     {
         retVal = TRUE;
@@ -72,47 +72,40 @@ boolean IfxCpu_acquireMutex(IfxCpu_mutexLock *lock)
 }
 
 
-/* CPU Overlay is not supported for all TC4XX derivatives.*/
+/* CPU Overlay is not supported for all TC4XX derivatives.*/ 
 #if defined(CPU_OVERLAY_SUPPORTED)
 uint32 IfxCpu_disableOverlayBlock(uint32 cpu, uint32 ovcBlock)
 {
     uint32 result = 0;
-
-    SCU_OVCCON.U = 0x00060000 | (0x1 << (0xf & cpu));
-    switch (cpu)
+	
+	if(cpu < IFXCPU_NUM_MODULES)
 	{
-		case 0: 
-			SCU_OVCENABLE.B.OVEN0 = 0;
-			break;
-		case 1: 
-			SCU_OVCENABLE.B.OVEN1 = 0;
-			break; 
-		case 2: 
-			SCU_OVCENABLE.B.OVEN2 = 0;
-			break; 
-		case 3: 
-			SCU_OVCENABLE.B.OVEN3 = 0; 
-			break; 
-		case 4: 
-			SCU_OVCENABLE.B.OVEN4 = 0;
-			break; 
-		case 5: 
-			SCU_OVCENABLE.B.OVEN5 = 0;
-			break; 
-		default:
-			result |= 0xdeadbeef;
-			break; 
-    }
+		/* CPU Base Address Offset */
+		uint32 cpuOffset = IFXCPU_CPU_ADDR_OFFSET;
 
-	/* Clear ovcBlock */
-    uint32 cpuOffset = IFXCPU_CPU_ADDR_OFFSET;
-    uint32 index = cpu;
-    Ifx_CPU *cpuSFR = (Ifx_CPU *)((uint32)&MODULE_CPU0 + index * cpuOffset);
-
-	/* Configure ovcBlock */
-    cpuSFR->BLK[ovcBlock].RABR.U  = 0x0;
-    cpuSFR->BLK[ovcBlock].OTAR.U  = 0x0;
-    cpuSFR->BLK[ovcBlock].OMASK.U = 0x0;
+		/* Get the CPUx Base Address */
+		Ifx_CPU *cpuSFR = (Ifx_CPU *)((uint32)&MODULE_CPU0 + cpu * cpuOffset);
+	  
+		/* Set to Kernel Reset value */
+		cpuSFR->BLK[ovcBlock].RABR.U = 0x0;
+		cpuSFR->BLK[ovcBlock].OTAR.U = 0x0;
+		cpuSFR->BLK[ovcBlock].OMASK.U = 0x0FFFFFE0;
+	  
+		/* Disable Overlay */
+		SCU_OVCCON.U = 	( 0x1UL << cpu  /*CSEL0*/ )|
+						( 0x0UL << 16   /*OVSTRT*/)|
+						( 0x1UL << 17   /*OVSTP*/ )|
+						( 0x1UL << 18   /*DCINVAL*/)| /* Data Cache Invalidate (may be needed) */
+						( 0x1UL << 24   /*OVCONF*/ )|
+						( 0x0UL << 25   /*POVCONF*/); /* Enable write to OVCCON */
+	  
+		/* Overlay disabled on CPUx */
+		SCU_OVCENABLE.U &= ~(0x1UL << cpu);
+	}
+	else
+	{
+		result = 0xdeadbeef;
+	}
 	
 	return result;
 }
@@ -120,80 +113,48 @@ uint32 IfxCpu_disableOverlayBlock(uint32 cpu, uint32 ovcBlock)
 uint32 IfxCpu_enableOverlayBlock(uint32 cpu, uint32 ovcBlock, uint32 ovcMemory, uint32 ovcAddrMask, uint32 sourceBaseAddr, uint32 destinBaseAddr)
 {
 	uint32 result = 0;
-
-	if (cpu == IfxCpu_ResourceCpu_0)
-	{
-		SCU_ACCENNOM_WRA.U = 0xFFFFFFFF;
-		SCU_ACCENNOM_WRB.U = 0xFF;
-    }
 	
-	/* Configure Overlay */
-	uint32 cpuOffset = IFXCPU_CPU_ADDR_OFFSET;
-    uint32 index =  cpu;
-    Ifx_CPU *cpuSFR = (Ifx_CPU *)((uint32)&MODULE_CPU0 + index * cpuOffset);
-	
-	/* Configure ovcBlock */
-	cpuSFR->BLK[ovcBlock].RABR.U  = (destinBaseAddr & 0x003FFFE0) | (ovcMemory << 24);
-    cpuSFR->BLK[ovcBlock].OTAR.U  = (sourceBaseAddr & 0x0FFFFFE0);
-    cpuSFR->BLK[ovcBlock].OMASK.U = (ovcAddrMask    & 0x0001FFE0);
-
-	/* Enable Overlay in SCU */
-	switch (cpu)
+	if(cpu < IFXCPU_NUM_MODULES)
 	{
-		case 0: 
-			SCU_OVCENABLE.B.OVEN0 = 1;
-			break; 
-		case 1: 
-			SCU_OVCENABLE.B.OVEN1 = 1; 
-			break; 
-		case 2: 
-			SCU_OVCENABLE.B.OVEN2 = 1; 
-			break; 
-		case 3: 
-			SCU_OVCENABLE.B.OVEN3 = 1; 
-			break; 
-		case 4: 
-			SCU_OVCENABLE.B.OVEN4 = 1; 
-			break; 
-		case 5: 
-			SCU_OVCENABLE.B.OVEN5 = 1; 
-			break; 
-		default:
-			result |= 0xdeadbeef;      
-			break; 
-    }
+		/* CPU Base Address Offset */
+		uint32 cpuOffset = IFXCPU_CPU_ADDR_OFFSET;
 
-	Ifx_SCU_OVCCON ovcCon;
-    ovcCon.B.OVCONF_P  = 0x1;
-    ovcCon.B.OVCONF  = 0x1;
-    ovcCon.B.OVSTRT  = 0x1;
+		/* Get the CPUx Base Address */
+		Ifx_CPU *cpuSFR = (Ifx_CPU *)((uint32)&MODULE_CPU0 + cpu * cpuOffset);
 
-	switch(cpu)
+		/* Configure Overlay Block */
+
+		/* Set up the Redirected Address Base Register (RABR)  */
+		cpuSFR->BLK[ovcBlock].RABR.U = 	(0x1UL << 31)|             /* Configure OVEN (Overlay Enabled) */
+										(ovcMemory << 24)|       /* Configure OMEM (Overlay Memory Select) */
+										(destinBaseAddr);        /* Configure OBASE (Overlay Base Address) */
+
+		/* Set up the Overlay Target Address Register (OTAR) */
+		cpuSFR->BLK[ovcBlock].OTAR.U =  sourceBaseAddr;
+
+		/* Set up the Overlay Mask Register (OMASK) */
+		cpuSFR->BLK[ovcBlock].OMASK.U = (ovcAddrMask << 5);
+
+		/* Enable the overlay Block in the Overlay Range Select Register (OSEL) */
+		cpuSFR->OSEL.U |= (0x1UL<<ovcBlock);
+
+		/* Overlay enabled on CPUx */
+		SCU_OVCENABLE.U |= (0x1UL<<cpu);
+
+
+		/* Turn on Overlay memory and enable block   */
+		SCU_OVCCON.U = 	( 0x1UL << cpu  /*CSELx*/   )|
+						( 0x1UL << 16   /*OVSTRT*/  )|
+						( 0x0UL << 17   /*OVSTP*/   )|
+						( 0x1UL << 18   /*DCINVAL*/ )| /* Data Cache Invalidate (may be needed) */
+						( 0x1UL << 24   /*OVCONF*/  )|
+						( 0x0UL << 25   /*POVCONF*/ ); /* Enable write to OVCCON */
+	}
+	else
 	{
-        case 0:  
-			ovcCon.B.CSEL0 = 1;  
-			break; 
-		case 1:  
-			ovcCon.B.CSEL1 = 1;  
-			break; 
-		case 2:  
-			ovcCon.B.CSEL2 = 1;  
-			break; 
-        case 3:  
-			ovcCon.B.CSEL3 = 1;  
-			break; 
-        case 4:  
-			ovcCon.B.CSEL4 = 1;  
-			break; 
-		case 5:  
-			ovcCon.B.CSEL5 = 1;  
-			break; 
-        default: 
-			break;                      
-    }
-
-	SCU_OVCCON.U = ovcCon.U;
-	
+		result = 0xdeadbeef;
+	}
+		
 	return result;
 }
 #endif /* CPU_OVERLAY_SUPPORTED */
@@ -221,7 +182,7 @@ IfxCpu_ResourceCpu IfxCpu_getIndex(Ifx_CPU *cpu)
 uint32 IfxCpu_getRandomValue(uint32 *seed)
 {
     /*************************************************************************
-     * the choice of a and m is important for a long period of the LCG
+     * The choice of a and m is important for a long period of the LCG
      * with a =  279470273 and
      *       m = 4294967291
      * a maximum period of 2^32-5 is given
@@ -232,7 +193,7 @@ uint32 IfxCpu_getRandomValue(uint32 *seed)
      ***************************************************************************/
     uint32 x = *seed;
 
-    /* a seed of 0 is not allowed, and therefore will be changed to a valid value */
+    /* A seed of 0 is not allowed, and therefore will be changed to a valid value */
     if (x == 0)
     {
         x = 42;
@@ -298,7 +259,7 @@ boolean IfxCpu_setProgramCounter(Ifx_CPU *cpu, uint32 programCounter)
 {
     boolean retVal = TRUE;
 
-    /* Set the PC
+    /* Sets the PC
      * Workaround Since the IfxCpu_regdef.h file is not generated correctly
      * */
     Ifx_CPU_PC *pc;
@@ -330,7 +291,7 @@ boolean IfxCpu_setSpinLock(IfxCpu_spinLock *lock, uint32 timeoutCount)
         spinLockVal =
             (uint32)__cmpAndSwap(((unsigned int *)lock), spinLockVal, 0);
 
-        /* Check if the SpinLock WAS set before the attempt to acquire spinlock */
+        /* Checks if the SpinLock WAS set before the attempt to acquire spinlock */
         if (spinLockVal == 0)
         {
             retVal = TRUE;
@@ -352,11 +313,12 @@ boolean IfxCpu_startCore(Ifx_CPU *cpu, uint32 programCounter)
     /* Set the PC */
     retVal &= IfxCpu_setProgramCounter(cpu, programCounter);
 
+    /* Releases boot halt mode if required */
     {
         Ifx_CPU_BOOTCON *bootcon;
         bootcon = (Ifx_CPU_BOOTCON *)((unsigned int)cpu + 0x1FE60U);
 
-        /* release boot halt mode if required */
+        /* Releases boot halt mode if required */
         if (bootcon->B.BHALT)
         {
             bootcon->B.BHALT = 0U;
@@ -367,7 +329,7 @@ boolean IfxCpu_startCore(Ifx_CPU *cpu, uint32 programCounter)
 }
 
 
-boolean IfxCpu_waitEvent(IfxCpu_syncEvent *event, uint32 timeoutMilliSec)
+boolean IfxCpu_waitEvent(IfxCpu_syncEvent *event, uint32 timeoutMilliSec, const uint8 expectedCoreMask)
 {
     volatile uint32 *sync          = (volatile uint32 *)IFXCPU_GLB_ADDR_DSPR(((__mfcr(CPU_CORE_ID)) & (0x7U)), event);
 
@@ -376,7 +338,7 @@ boolean IfxCpu_waitEvent(IfxCpu_syncEvent *event, uint32 timeoutMilliSec)
     uint32           stmCount      = (uint32)((IfxClock_getStmFrequency() / 1000) * timeoutMilliSec);
     uint64           stmCountBegin = CPU0_STM_ABS.U;
 
-    while ((*sync & IFXCPU_CFG_ALLCORE_DONE) != IFXCPU_CFG_ALLCORE_DONE)
+    while ((*sync & expectedCoreMask) != expectedCoreMask)
     {
         __nop();
 
@@ -420,9 +382,8 @@ void IfxCpu_triggerCpuReset(IfxCpu_ResourceCpu coreIndex)
     }
 
     else
-
     {
-//Do nothing because one cannot set the endinit back from the same CPU which is reset
+    	/* Do nothing because one cannot set the endinit back from the same CPU which is reset */
     }
 }
 
@@ -545,12 +506,14 @@ void IfxCpu_disableInterruptsAllExceptMaster(IfxCpu_ResourceCpu masterCpu)
 
 void IfxCpu_initProt(Ifx_PROT_PROT *prot, IfxApProt_ProtConfig *config)
 {
+	/* Initializes the PROT */
     IfxApProt_init(prot, config);
 }
 
 
 void IfxCpu_initApu(Ifx_PROT_PROT *prot, Ifx_ACCEN_ACCEN *accen, IfxApApu_ApuConfig *config, uint8 selValue)
 {
+	/* Initializes the APU */
     IfxApProt_setState(prot, IfxApProt_State_config);
     IfxApApu_init(accen, config);
     IfxApProt_setProtectionRegionSelect(prot, selValue);
@@ -566,8 +529,9 @@ void IfxCpu_invalidateDataCache(void)
     Ifx_SCU_OVCCON       ovccon;
 
     cpu = IfxCpu_getCoreIndex();
-
+    /* Initializes the default configuration for the PROT */
     IfxApProt_initConfig(&protseConfig);
+    /* Initializes the default configuration for the APU */
     IfxApApu_initConfig(&apuConfig);
 
     protseConfig.protOwner.ownerDefined = TRUE;
@@ -605,14 +569,14 @@ void IfxCpu_invalidateDataCache(void)
         break;
     }
 
-    /* Change the State to from init to run */
+    /* Changes the State to from init to run */
     protseConfig.protState = IfxApProt_State_run;
 
-    /*Initialise the PROTs */
+    /* Initializes the PROTs */
     IfxApProt_init((Ifx_PROT_PROT *)&MODULE_SCU.PROTSE, &protseConfig);
 
-    /* change the state to CONFIG, configure APU and set PROT state back to run */
-    /* Initialise the APU */
+    /* Changes the state to CONFIG, configure APU and set PROT state back to run */
+    /* Initializes the APU */
     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SCU.PROTSE, IfxApProt_State_config);
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_SCU.ACCENNOM, &apuConfig);
     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SCU.PROTSE, IfxApProt_State_run);
@@ -625,10 +589,19 @@ void IfxCpu_invalidateDataCache(void)
 void IfxCpu_configureAccessToCpus(IfxApApu_ApuConfig *apuConfig)
 {
     uint8 index;
-
+#if ON_AURIX_VP == 0
     for (index = 0; index < IFXCPU_NUM_MODULES; index++)
     {
         Ifx_CPU *cpu = IfxCpu_cfg_indexMap[index].module;
+        /* Initializes the APU */
         IfxApApu_init((Ifx_ACCEN_ACCEN *)&cpu->ACCENSFRCFG, (IfxApApu_ApuConfig *)apuConfig);
     }
+#else
+	for (index = 0; index < IFXCPU_NUM_SAFE_MODULES; index++)
+    {
+        Ifx_CPU *cpu = IfxCpu_cfg_indexMap[index].module;
+        /* Initializes the APU */
+        IfxApApu_init((Ifx_ACCEN_ACCEN *)&cpu->ACCENSFRCFG, (IfxApApu_ApuConfig *)apuConfig);
+    }
+#endif
 }

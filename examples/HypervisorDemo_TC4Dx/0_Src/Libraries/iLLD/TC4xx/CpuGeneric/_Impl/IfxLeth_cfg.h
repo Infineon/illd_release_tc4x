@@ -3,9 +3,9 @@
  * \brief LETH on-chip implementation data
  * \ingroup IfxLld_Leth
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-10-10 12:00:00
  *
  *
  *                                 IMPORTANT NOTICE
@@ -42,6 +42,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  *
+ * \author Yadunandan Puttaswamy<yadunandan.puttaswamy@infineon.com>
  *
  * Implementation layer
  *
@@ -65,7 +66,7 @@
 #include "Ifx_Cfg.h"
 
 #if defined DEVICE_TC4DX
-#include "IfxLeth_cfg_TC4Dx.h"
+#include "TC4Dx/IfxLeth_cfg_TC4Dx.h"
 #endif
 
 #endif /* IFXLETH_CFG_H */

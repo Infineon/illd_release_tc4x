@@ -3,9 +3,9 @@
  * \brief HSPHY MP8G details
  * \ingroup IfxLld_Hsphy
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-07-30 13:43:07
  *
  *
  *                                 IMPORTANT NOTICE
@@ -69,47 +69,46 @@
 /******************************************************************************/
 
 /** \brief Resets the HSPHY module and waits for the reset to complete.
- * \param hsphyRegPtr Pointer to the HSPHY register structure.
- * \return TRUE Indicates a timeout error occurred during the reset process.
+ * \param[inout] hsphyRegPtr Pointer to the HSPHY register structure.
+ * \retval TRUE Indicates a timeout error occurred during the reset process, else FALSE.
  */
 IFX_EXTERN boolean IfxHsphy_Mp8g_resetModule(Ifx_HSPHY *hsphyRegPtr);
 
 /** \brief Sets the reference clock selection for the specified PHY device.
- * \param hsphyRegPtr Pointer to the HSPHY register structure.
- * \param phyIndex PHY index
- * \param device The target device type for which the reference clock is being set.
- * \return TRUE The reference clock selection was successfully configured.
+ * \param[inout] hsphyRegPtr Pointer to the HSPHY register structure.
+ * \param[in] phyIndex PHY index. Range \ref IfxHsphy_PhyIndex
+ * \param[in] device The target device type for which the reference clock is being set. Range \ref IfxHsphy_TrgtDevice
+ * \retval TRUE The reference clock selection was successfully configured.
  */
 IFX_EXTERN boolean IfxHsphy_Mp8g_setPhyRefClockSel(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_PhyIndex phyIndex, IfxHsphy_TrgtDevice device);
 
 /** \brief Select the function of operation
- * \param hsphyRegPtr Pointer to the HSPHY register structure.
- * \param phyIndex PHY index
- * \param device Target device type to configure the HSPHY module for.
- * \return TRUE: Configuration was successful.
- *  FALSE: Function selection not succesful
+ * \param[inout] hsphyRegPtr Pointer to the HSPHY register structure.
+ * \param[in] phyIndex PHY index. range \ref IfxHsphy_PhyIndex
+ * \param[in] device Target device type to configure the HSPHY module for. Range \ref IfxHsphy_TrgtDevice
+ * \retval TRUE if Configuration was successful else FALSE.
  */
 IFX_EXTERN boolean IfxHsphy_Mp8g_selFunction(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_PhyIndex phyIndex, IfxHsphy_TrgtDevice device);
 
 /** \brief Check if the PHY is ready after reset
- * \param hsphyRegPtr Pointer to the HSPHY register structure.
- * \param phyIndex PHY index
- * \return TRUE: The PHY is ready	FALSE:Error
+ * \param[in] hsphyRegPtr Pointer to the HSPHY register structure.
+ * \param[in] phyIndex PHY index. Range \ref IfxHsphy_PhyIndex
+ * \retval TRUE if the PHY is ready	else FALSE
  */
 IFX_EXTERN boolean IfxHsphy_Mp8g_isPhyReady(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_PhyIndex phyIndex);
 
 /** \brief Check if the external loading of the application into SRAM is complete
- * \param hsphyRegPtr Pointer to the HSPHY register structure.
- * \param phyIndex PHY index
- * \return TRUE: Application SRAM loading complete	FALSE:Error
+ * \param[inout] hsphyRegPtr Pointer to the HSPHY register structure.
+ * \param[in] phyIndex PHY index. Range \ref IfxHsphy_PhyIndex
+ * \retval TRUE ifthe application SRAM loading complete, else FALSE
  */
 IFX_EXTERN boolean IfxHsphy_Mp8g_setExtLdDone(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_PhyIndex phyIndex);
 
 /** \brief Power Down PHY
- * \param hsphySFR HPSHY pointer
- * \param phyIndex PHY index
- * \param phyPowerMode 0: PHY power up 1: PHY power down
- * \return None
+ * \param[inout] hsphySFR HPSHY pointer
+ * \param[in] phyIndex PHY index. Range \ref IfxHsphy_PhyIndex
+ * \param[in] phyPowerMode 0: PHY power up 1: PHY power down. Range \ref IfxHsphy_PhyPowerMode
+ * \retval None
  */
 IFX_EXTERN void IfxHsphy_Mp8g_PowerDownReset(Ifx_HSPHY *hsphySFR, IfxHsphy_PhyIndex phyIndex, IfxHsphy_PhyPowerMode phyPowerMode);
 

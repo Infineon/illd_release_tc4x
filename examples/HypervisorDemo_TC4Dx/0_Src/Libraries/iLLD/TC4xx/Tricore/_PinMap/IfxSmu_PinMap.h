@@ -3,9 +3,9 @@
  * \brief SMU  details
  * \ingroup IfxLld_Smu
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-09-08 12:56:42
  *
  *
  *                                 IMPORTANT NOTICE

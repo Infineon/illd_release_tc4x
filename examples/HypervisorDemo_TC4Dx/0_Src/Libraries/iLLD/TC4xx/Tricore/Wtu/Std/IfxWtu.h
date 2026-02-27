@@ -3,9 +3,9 @@
  * \brief WTU  basic functionality
  * \ingroup IfxLld_Wtu
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-04-08 13:12:29
  *
  *
  *                                 IMPORTANT NOTICE
@@ -40,6 +40,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  *
+ * \author Govind Sharma<Govind.Sharma@infineon.com>
  *
  * This file contains the APIs for Watchdog timer uint and other Protection related functions.
  *

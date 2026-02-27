@@ -2,9 +2,9 @@
  * \file IfxI2c.c
  * \brief I2C  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2026-02-02 17:41:10
  *
  *
  *                                 IMPORTANT NOTICE
@@ -526,12 +526,23 @@ IfxI2c_Status IfxI2c_read(IfxI2c_I2cStdDevice *i2cDevice, volatile uint8 *data, 
         return status;
     }
 
-    /* check if there is an unexpected TX_OFL error */
-    if (IfxI2c_getErrorInterruptSourceStatus(i2c, IfxI2c_ErrorInterruptSource_txFifoOverflow) == TRUE)
+    /* check if there is an unexpected TX_OFL or TX_UFL  error */
+    if ((IfxI2c_getErrorInterruptSourceStatus(i2c, IfxI2c_ErrorInterruptSource_txFifoOverflow) == TRUE) ||
+    		(IfxI2c_getErrorInterruptSourceStatus(i2c, IfxI2c_ErrorInterruptSource_txFifoUnderflow) == TRUE))
     {
         /* we have a FIFO overflow, jump back to caller */
         /* clear the FIFO overflow interrupt bit */
-        IfxI2c_clearErrorInterruptSource(i2c, IfxI2c_ErrorInterruptSource_txFifoOverflow);
+    	if (IfxI2c_getErrorInterruptSourceStatus(i2c, IfxI2c_ErrorInterruptSource_txFifoOverflow) == TRUE)
+    	{
+    		IfxI2c_clearErrorInterruptSource(i2c, IfxI2c_ErrorInterruptSource_txFifoOverflow);
+    	}
+
+        /* we have a FIFO underflow, jump back to caller */
+        /* clear the FIFO underflow interrupt bit */
+    	if (IfxI2c_getErrorInterruptSourceStatus(i2c, IfxI2c_ErrorInterruptSource_txFifoUnderflow) == TRUE)
+    	{
+    		IfxI2c_clearErrorInterruptSource(i2c, IfxI2c_ErrorInterruptSource_txFifoUnderflow);
+    	}
 
         /* go to state LISTENING via transition M6 */
         /* wait for TX_END is set */
@@ -700,6 +711,18 @@ IfxI2c_Status IfxI2c_read(IfxI2c_I2cStdDevice *i2cDevice, volatile uint8 *data, 
         status = IfxI2c_Status_error;
         /* wait for TX_END */
     }
+
+    /* check if there is an unexpected RX_UFL error */
+	if (IfxI2c_getErrorInterruptSourceStatus(i2c, IfxI2c_ErrorInterruptSource_rxFifoUnderflow) == TRUE)
+	{
+        /* we have a FIFO underflow, jump back to caller */
+        /* clear the FIFO underflow interrupt bit */
+        IfxI2c_clearErrorInterruptSource(i2c, IfxI2c_ErrorInterruptSource_rxFifoUnderflow);
+
+        /* return that we have an error */
+        status = IfxI2c_Status_error;
+        /* wait for TX_END */
+	}
 
     if ((i2cDevice->speedMode == IfxI2c_Mode_HighSpeed) && (IfxI2c_getProtocolInterruptSourceStatus(i2c, IfxI2c_ProtocolInterruptSource_masterCode) == TRUE))
     {
@@ -942,12 +965,24 @@ IfxI2c_Status IfxI2c_write(IfxI2c_I2cStdDevice *i2cDevice, volatile uint8 *data,
         return status;
     }
 
-    /* check if there is an unexpected TX_OFL error */
-    if (IfxI2c_getErrorInterruptSourceStatus(i2c, IfxI2c_ErrorInterruptSource_txFifoOverflow) == TRUE)
+    /* check if there is an unexpected TX_OFL or TX_UFL error */
+    if ((IfxI2c_getErrorInterruptSourceStatus(i2c, IfxI2c_ErrorInterruptSource_txFifoOverflow) == TRUE) ||
+    		(IfxI2c_getErrorInterruptSourceStatus(i2c, IfxI2c_ErrorInterruptSource_txFifoUnderflow) == TRUE))
     {
         /* we have a FIFO overflow, jump back to caller */
         /* clear the FIFO overflow interrupt bit */
-        IfxI2c_clearErrorInterruptSource(i2c, IfxI2c_ErrorInterruptSource_txFifoOverflow);
+    	if (IfxI2c_getErrorInterruptSourceStatus(i2c, IfxI2c_ErrorInterruptSource_txFifoOverflow) == TRUE)
+    	{
+    		IfxI2c_clearErrorInterruptSource(i2c, IfxI2c_ErrorInterruptSource_txFifoOverflow);
+    	}
+
+        /* we have a FIFO underflow, jump back to caller */
+        /* clear the FIFO underflow interrupt bit */
+    	if (IfxI2c_getErrorInterruptSourceStatus(i2c, IfxI2c_ErrorInterruptSource_txFifoUnderflow) == TRUE)
+    	{
+    		IfxI2c_clearErrorInterruptSource(i2c, IfxI2c_ErrorInterruptSource_txFifoUnderflow);
+    	}
+
         /* go to state LISTENING via transition M6 */
         /* return that we have an error */
         status = IfxI2c_Status_error;
@@ -1022,12 +1057,23 @@ IfxI2c_Status IfxI2c_switch_to_highspeed(Ifx_I2C *i2c)
         return IfxI2c_Status_al;
     }
 
-    /* check if there is an unexpected TX_OFL error */
-    if (IfxI2c_getErrorInterruptSourceStatus(i2c, IfxI2c_ErrorInterruptSource_txFifoOverflow) == TRUE)
+    /* check if there is an unexpected TX_OFL or TX_UFL error */
+    if ((IfxI2c_getErrorInterruptSourceStatus(i2c, IfxI2c_ErrorInterruptSource_txFifoOverflow) == TRUE) ||
+        		(IfxI2c_getErrorInterruptSourceStatus(i2c, IfxI2c_ErrorInterruptSource_txFifoUnderflow) == TRUE))
     {
         /* we have a FIFO overflow, jump back to caller */
         /* clear the FIFO overflow interrupt bit */
-        IfxI2c_clearErrorInterruptSource(i2c, IfxI2c_ErrorInterruptSource_txFifoOverflow);
+    	if (IfxI2c_getErrorInterruptSourceStatus(i2c, IfxI2c_ErrorInterruptSource_txFifoOverflow) == TRUE)
+		{
+			IfxI2c_clearErrorInterruptSource(i2c, IfxI2c_ErrorInterruptSource_txFifoOverflow);
+		}
+
+		/* we have a FIFO underflow, jump back to caller */
+		/* clear the FIFO underflow interrupt bit */
+		if (IfxI2c_getErrorInterruptSourceStatus(i2c, IfxI2c_ErrorInterruptSource_txFifoUnderflow) == TRUE)
+		{
+			IfxI2c_clearErrorInterruptSource(i2c, IfxI2c_ErrorInterruptSource_txFifoUnderflow);
+		}
 
         /* go to state LISTENING via transition M6 */
         /* we wait until TX_END is set */

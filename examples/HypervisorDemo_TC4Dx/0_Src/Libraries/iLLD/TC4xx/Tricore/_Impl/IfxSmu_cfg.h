@@ -3,10 +3,9 @@
  * \brief SMU on-chip implementation data
  * \ingroup IfxLld_Smu
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
- * Date: 2024-07-02 08:35:30
+ * Date: 2025-10-09 08:35:30
  *
  * Version: MC_ACE_A3G_HWA_SMU/V0.4.1.1.0
  *                                 IMPORTANT NOTICE
@@ -67,7 +66,7 @@
 #include "Ifx_Cfg.h"
 
 #if defined DEVICE_TC4DX
-#include "IfxSmu_cfg_TC4Dx.h"
+#include "TC4Dx/IfxSmu_cfg_TC4Dx.h"
 #endif
 
 #endif /* IFXSMU_CFG_H */

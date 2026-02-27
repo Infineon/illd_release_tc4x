@@ -2,9 +2,9 @@
  * \file IfxEgtm.c
  * \brief EGTM  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-10-04 07:36:09
  *
  *
  *                                 IMPORTANT NOTICE
@@ -65,7 +65,7 @@ boolean IfxEgtm_ConnectToMsc(IfxEgtm_Cluster egtmCluster, IfxEgtm_TrigSource egt
     uint32  idx        = 0U;
     uint32  indexAltIn = 0U;
 
-    /* 1. Check whether MSC Set is present in table */
+    /* 1. Checks whether MSC Set is present in table */
     if (IfxEgtm_Cfg_MscSetTable[mscOut->mscSet] != NULL_PTR)
     {
         /* Get number of values in table from first index and loop through all entries */
@@ -81,7 +81,7 @@ boolean IfxEgtm_ConnectToMsc(IfxEgtm_Cluster egtmCluster, IfxEgtm_TrigSource egt
         uint8 mscLevel2MuxIndex;
         mscLevel2MuxIndex = (uint8)mscOut->mscSelect;
 
-        /* 2. Check whether MSC module is present */
+        /* 2. Checks whether MSC module is present */
         if ((result == TRUE) && (IfxEgtm_Cfg_MscAltInputTable[mscLevel2MuxIndex] != NULL_PTR))
         {
             for (indexAltIn = 0u; indexAltIn < IFXEGTM_CFG_NUMMSCALTINPUT; indexAltIn++) /* loop through all AltInput SEL values */
@@ -99,7 +99,7 @@ boolean IfxEgtm_ConnectToMsc(IfxEgtm_Cluster egtmCluster, IfxEgtm_TrigSource egt
             }
         }
 
-        /* 4. Perform Multiplexer connection */
+        /* 4. Performs Multiplexer connection */
         if (result == TRUE)
         {
             uint32 shift, mask, sel;
@@ -211,7 +211,7 @@ void IfxEgtm_initAp(Ifx_EGTM *egtm, IfxEgtm_ApConfig *config)
     IfxEgtm_initCtrlProt(egtm, &(config->ctrlApConfig.proteConfig));
 
     /* Change the state to CONFIG, Configure APU and set PROT state back to RUN */
-    /* Initialize the APU */
+    /* Initializes the APU */
     (void)IfxApProt_setState((volatile Ifx_PROT_PROT *)(volatile void *)&(egtm->PROTSE), IfxApProt_State_config);
     IfxEgtm_initCtrlApu(egtm, &(config->ctrlApConfig.apuConfig));
     (void)IfxApProt_setState((volatile Ifx_PROT_PROT *)(volatile void *)&(egtm->PROTSE), IfxApProt_State_run);

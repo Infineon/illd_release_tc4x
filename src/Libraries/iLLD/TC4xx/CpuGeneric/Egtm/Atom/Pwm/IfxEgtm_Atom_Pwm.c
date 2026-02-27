@@ -2,7 +2,7 @@
  * \file IfxEgtm_Atom_Pwm.c
  * \brief EGTM PWM details
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -102,25 +102,25 @@ boolean IfxEgtm_Atom_Pwm_init(IfxEgtm_Atom_Pwm_Driver *driver, const IfxEgtm_Ato
             IfxEgtm_Atom_Agc_enableChannelUpdate(driver->agc, driver->atomChannel, FALSE);
         }
 
-        /* Set channel to start counter when trigger is received */
+        /* Sets channel to start counter when trigger is received */
         IfxEgtm_Atom_Agc_enableChannel(driver->agc, config->atomChannel, TRUE, FALSE);
 
-        /* Set channel to start PWM output when trigger is received */
+        /* Sets channel to start PWM output when trigger is received */
         IfxEgtm_Atom_Agc_enableChannelOutput(driver->agc, config->atomChannel, TRUE, FALSE);
 
-        /* Set Signal Polarity value here */
+        /* Sets Signal Polarity value here */
         IfxEgtm_Atom_Ch_setSignalLevel(atomSFR, driver->atomChannel, config->signalLevel);
 
-        /* Set ATOM signal output mode as PWM */
+        /* Sets ATOM signal output mode as PWM */
         IfxEgtm_Atom_Ch_setMode(atomSFR, driver->atomChannel, config->mode);
 
-        /* Set ATOM channel clock source */
+        /* Sets ATOM channel clock source */
         IfxEgtm_Atom_Ch_setClockSource(atomSFR, driver->atomChannel, config->clock);
 
         /* Reset counter to 0 */
         IfxEgtm_Atom_Ch_setCounterValue(atomSFR, driver->atomChannel, 0);
 
-        /* Enable and initialize interrupts if chosen */
+        /* Enables and initialize interrupts if chosen */
         if ((config->interrupt.ccu0Enabled == TRUE) || (config->interrupt.ccu1Enabled == TRUE))
         {
             volatile Ifx_SRC_SRCR *src;
@@ -130,7 +130,7 @@ boolean IfxEgtm_Atom_Pwm_init(IfxEgtm_Atom_Pwm_Driver *driver, const IfxEgtm_Ato
             IfxSrc_init(src, config->interrupt.isrProvider, config->interrupt.isrPriority, config->interrupt.vmId);
             IfxSrc_enable(src);
         }
-        /* Disable interrupt */
+        /* Disables interrupt */
         else
         {
             channel->IRQ_EN.U = 0u;
@@ -142,23 +142,23 @@ boolean IfxEgtm_Atom_Pwm_init(IfxEgtm_Atom_Pwm_Driver *driver, const IfxEgtm_Ato
 #if IFXEGTM_PWM_IS_HIGH_RES_AVAILABLE
         if (config->hrSupport == TRUE)
         {
-            /* Enable High res signal generation from ATOM Channel */
+            /* Enables High res signal generation from ATOM Channel */
             IfxEgtm_Atom_Ch_setHresEn(atomSFR, config->atomChannel, TRUE);
 
-            /* Enable HRPWM module */
+            /* Enables HRPWM module */
             IfxEgtm_setHrpwmEnable(driver->egtm, (IfxEgtm_Hrpwm)config->cluster, TRUE);
 
-            /* Enable HRPWM channel */
+            /* Enables HRPWM channel */
             IfxEgtm_setHrpwmChannelEnable(driver->egtm, (IfxEgtm_Hrpwm)config->cluster, config->hrChannel, TRUE);
 
-            /* Connect Atom channel x to HRPWM channel y */
+            /* Connects Atom channel x to HRPWM channel y */
             IfxEgtm_Atom_connectHrpwmChannel(config->cluster, config->atomChannel, config->hrChannel);
 
-            /* Calculate new period and duty. Last 5 bits are for micro steps */
+            /* Calculates new period and duty. Last 5 bits are for micro steps */
             period    = (config->period << IFXEGTM_ATOM_PWM_HR_STEP_LENGTH) | ((uint32)(config->hrStepsPeriod & (uint32)0x1Fu));
             dutyCycle = (config->dutyCycle << IFXEGTM_ATOM_PWM_HR_STEP_LENGTH) | ((uint32)(config->hrStepsDuty & (uint32)0x1Fu));
 
-            /* Connect HRPWM Pin */
+            /* Connects HRPWM Pin */
             if (config->pin.hrpwmPin != NULL_PTR)
             {
                 IfxEgtm_PinMap_setHrpwmOut(config->pin.hrpwmPin, config->pin.outputMode, config->pin.padDriver);
@@ -178,19 +178,19 @@ boolean IfxEgtm_Atom_Pwm_init(IfxEgtm_Atom_Pwm_Driver *driver, const IfxEgtm_Ato
             IfxEgtm_Atom_Ch_setCompareOne(atomSFR, driver->atomChannel, dutyCycle);
         }
 
-        /* Connect output pin to Atom channel */
+        /* Connects output pin to Atom channel */
         if (config->pin.outputPin != NULL_PTR)
         {
             IfxEgtm_PinMap_setAtomTout(config->pin.outputPin, config->pin.outputMode, config->pin.padDriver);
         }
 
-        /* Connect Msc to Atom channel */
+        /* Connects Msc to Atom channel */
         if (config->mscOut != NULL_PTR)
         {
             (void)IfxEgtm_ConnectToMsc(config->cluster, IfxEgtm_TrigSource_atom, (IfxEgtm_TrigChannel)config->atomChannel, config->mscOut);
         }
 
-        /* Start channel by giving a trigger */
+        /* Starts channel by giving a trigger */
         if (config->immediateStartEnabled == TRUE)
         {
             IfxEgtm_Atom_Agc_trigger(driver->agc);
@@ -245,28 +245,28 @@ void IfxEgtm_Atom_Pwm_initConfig(IfxEgtm_Atom_Pwm_Config *config, Ifx_EGTM *egtm
     *config = defaultConfig;
 
     /* Copy SFR */
-    config->egtm = egtm;
+    config->egtm = egtm; 
 }
 
 
 void IfxEgtm_Atom_Pwm_start(IfxEgtm_Atom_Pwm_Driver *driver, boolean immediate)
 {
-    /* Enable channel if not enabled already */
+    /* Enables channel if not enabled already */
     IfxEgtm_Atom_Agc_enableChannel(driver->agc, driver->atomChannel, TRUE, immediate);
     IfxEgtm_Atom_Agc_enableChannelOutput(driver->agc, driver->atomChannel, TRUE, immediate);
 
-    /* Trigger the start now */
+    /* Triggers the start now */
     IfxEgtm_Atom_Agc_trigger(driver->agc);
 }
 
 
 void IfxEgtm_Atom_Pwm_stop(IfxEgtm_Atom_Pwm_Driver *driver, boolean immediate)
 {
-    /* Disable channels */
+    /* Disables channels */
     IfxEgtm_Atom_Agc_enableChannel(driver->agc, driver->atomChannel, FALSE, immediate);
     IfxEgtm_Atom_Agc_enableChannelOutput(driver->agc, driver->atomChannel, FALSE, immediate);
 
-    /* Trigger the stop now */
+    /* Triggers the stop now */
     IfxEgtm_Atom_Agc_trigger(driver->agc);
 }
 
@@ -278,13 +278,13 @@ void IfxEgtm_Atom_Pwm_updateHrsteps(IfxEgtm_Atom_Pwm_Driver *driver, uint8 hrSte
 
     if (hrStepType == IfxEgtm_Atom_Pwm_HrstepType_period)
     {
-        /* Read current value */
+        /* Reads current value */
         uint32 period = IfxEgtm_Atom_Ch_getCompareZero(atomSFR, driver->atomChannel);
 
-        /* Clear last 5 bits and then replace with new bits */
+        /* Clears last 5 bits and then replace with new bits */
         period = (period & (uint32)~0x1Fu) | ((uint32)hrSteps & (uint32)0x1Fu);
 
-        /* Write to register */
+        /* Writes to register */
         if (driver->synchronousUpdateEnabled == TRUE)
         {
             IfxEgtm_Atom_Ch_setCompareZeroShadow(atomSFR, driver->atomChannel, period);
@@ -296,13 +296,13 @@ void IfxEgtm_Atom_Pwm_updateHrsteps(IfxEgtm_Atom_Pwm_Driver *driver, uint8 hrSte
     }
     else /* IfxEgtm_Atom_Pwm_HrstepType_dutyCycle */
     {
-        /* Read current value */
+        /* Reads current value */
         uint32 duty = IfxEgtm_Atom_Ch_getCompareOne(atomSFR, driver->atomChannel);
 
         /* Clear last 5 bits and then replace with new bits */
         duty = (duty & (uint32)~0x1Fu) | ((uint32)hrSteps & (uint32)0x1Fu);
 
-        /* Write to register */
+        /* Writes to register */
         if (driver->synchronousUpdateEnabled == TRUE)
         {
             IfxEgtm_Atom_Ch_setCompareOneShadow(atomSFR, driver->atomChannel, duty);
@@ -314,6 +314,7 @@ void IfxEgtm_Atom_Pwm_updateHrsteps(IfxEgtm_Atom_Pwm_Driver *driver, uint8 hrSte
     }
 }
 #endif	/* #if IFXEGTM_PWM_IS_HIGH_RES_AVAILABLE */
+
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

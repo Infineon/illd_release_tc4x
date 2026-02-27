@@ -2,7 +2,7 @@
  * \file IfxScrCpuIrq.c
  * \brief SCR CPU  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -53,7 +53,9 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+
 #include "IfxScrCpuIrq.h"
+
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

@@ -3,9 +3,9 @@
  * \brief ASCLIN on-chip implementation data
  * \ingroup IfxLld_Asclin
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-10-09 11:50:57
  *
  *
  *                                 IMPORTANT NOTICE
@@ -60,7 +60,7 @@
 #include "Ifx_Cfg.h"
 
 #if defined DEVICE_TC4DX
-#include "IfxAsclin_cfg_TC4Dx.h"
+#include "TC4Dx/IfxAsclin_cfg_TC4Dx.h"
 #endif
 
 #endif /* IFXASCLIN_CFG_H */

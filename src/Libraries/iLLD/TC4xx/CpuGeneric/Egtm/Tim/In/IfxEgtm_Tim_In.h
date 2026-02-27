@@ -3,7 +3,7 @@
  * \brief EGTM IN details
  * \ingroup IfxLld_Egtm
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -94,9 +94,9 @@
  *     // Give an interrupt on new value
  *     timInConfig.capture.irqOnNewVal          = TRUE;
  *     // Configure the Input
- *     timInConfig.filter.input                 = IfxEgtm_Tim_In_Input_currentChannel;
- *     timInConfig.filter.inputPin              = &IfxEgtm_TIM0_0_P02_0_IN;
- *     timInConfig.filter.inputPinMode          = IfxPort_InputMode_pullDown;
+ *     timInConfig.inputSrc                 	= IfxEgtm_Tim_In_Src_channelCurrentOrPrevious;
+ *     timInConfig.inputPin              		= &IfxEgtm_TIM0_0_P02_0_IN;
+ *     timInConfig.inputPinMode          		= IfxPort_InputMode_pullDown;
  *
  *     // Initialize the TIM Channel now
  *     IfxEgtm_Tim_In_init(&timIn, &timInConfig);
@@ -192,9 +192,9 @@ typedef enum
  */
 typedef enum
 {
-    IfxEgtm_Tim_In_SrcForLutIn2_external_capture            = 0,  /**< \brief Use the External Capture input */
-    IfxEgtm_Tim_In_SrcForLutIn2_inputSignal_previousChannel = 1,  /**< \brief Use the Input Signal from Previous Channel */
-    IfxEgtm_Tim_In_SrcForLutIn2_outputSignal_tssmMode       = 2   /**< \brief Use the Output signal in the TSSM mode */
+    IfxEgtm_Tim_In_SrcForLutIn2_external_capture                = 0,  /**< \brief Use the External Capture input */
+    IfxEgtm_Tim_In_SrcForLutIn2_outputSignal_previousChannel    = 1,  /**< \brief Use the Input Signal from Previous Channel */
+    IfxEgtm_Tim_In_SrcForLutIn2_outputSignal_tssmMode           = 2   /**< \brief Use the Output signal in the TSSM mode */
 } IfxEgtm_Tim_In_SrcForLutIn2;
 
 /******************************************************************************/
@@ -214,7 +214,7 @@ typedef struct
     IfxEgtm_Cmu_Clk           clock;                   /**< \brief Timer input clock */
     Ifx_Pwm_Mode              mode;                    /**< \brief PWM mode, only Ifx_Pwm_Mode_leftAligned and Ifx_Pwm_Mode_righAligned are supported */
     IfxEgtm_Tim_In_ActiveEdge activeEdge;              /**< \brief Active edge to be selected as falling, raising or both */
-    uint32                    gateCount;               /**< \brief Shadow count value */
+    uint32                    gateCount;               /**< \brief Shadow count value. Range: 0 to 0xFFFFFF */
 } IfxEgtm_Tim_In_ConfigCapture;
 
 /** \brief Configuration structure for TIM filter
@@ -247,8 +247,8 @@ typedef struct
 typedef struct
 {
     Ifx_EGTM_CLS_TIM_CH *channel;                     /**< \brief TIM channel used */
-    uint32               periodTick;                  /**< \brief Period value in clock ticks */
-    uint32               pulseLengthTick;             /**< \brief Duty value in clock ticks */
+    uint32               periodTick;                  /**< \brief Period value in clock ticks. Range: 0 to 0xFFFFFF */
+    uint32               pulseLengthTick;             /**< \brief Duty value in clock ticks. Range: 0 to 0xFFFFFF */
     boolean              dataCoherent;                /**< \brief TRUE, if the duty and period values are measured from the same period */
     boolean              overflowCnt;                 /**< \brief TRUE if the last measurement show an overflow in CNT */
     boolean              newData;                     /**< \brief TRUE when values are updated, and  if none of the counter CNT, CNTS have overflowed */
@@ -258,7 +258,7 @@ typedef struct
     float32              captureClockFrequency;       /**< \brief Capture clock frequency in Hz */
     IfxEgtm_Tim          clsIndex;                    /**< \brief Index of the CLS module being used. */
     IfxEgtm_Tim_Ch       channelIndex;                /**< \brief Index of the TIM channel being used. */
-    uint16               edgeCount;                   /**< \brief number of edges counted. */
+    uint16               edgeCount;                   /**< \brief number of edges counted.  Range: 0 to 0xFFFF */
     boolean              softwareInputSet;            /**< \brief flag to check if the software input is provided */
     Ifx_EGTM_CLS_TIM    *tim;                         /**< \brief Pointer to TIM module */
 } IfxEgtm_Tim_In;
@@ -297,52 +297,70 @@ typedef struct
 /******************************************************************************/
 
 /** \brief Clear the new data flag
- * \param driver TIM Input object
- * \return None
+ *
+ * \param[inout] driver TIM Input object
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tim_In_clearNewData(IfxEgtm_Tim_In *driver);
 
 /** \brief return the dutycycle in percent
- * \param driver TIM Input object
- * \param dataCoherent If true, the duty cycle has been calculated with coherent values for the period and duty, else the period and duty value are from 2 adjacent periods
- * \return duty
+ *
+ * \param[in] driver       TIM Input object
+ * \param[in] dataCoherent If true, the duty cycle has been calculated with coherent values for the period and duty, else the period and duty value are from 2 adjacent periods
+ *
+ * \retval duty
  */
 IFX_INLINE float32 IfxEgtm_Tim_In_getDutyPercent(IfxEgtm_Tim_In *driver, boolean *dataCoherent);
 
 /** \brief Return the period in second
- * \param driver TIM Input object
- * \return period value in seconds
+ *
+ * \param[in] driver TIM Input object
+ *
+ * \retval period value in seconds
  */
 IFX_INLINE float32 IfxEgtm_Tim_In_getPeriodSecond(IfxEgtm_Tim_In *driver);
 
 /** \brief Return the period value in tick
- * \param driver TIM Input object
- * \return period value in ticks
+ *
+ * \param[in] driver TIM Input object
+ *
+ * \retval period value in ticks
  */
 IFX_INLINE sint32 IfxEgtm_Tim_In_getPeriodTicks(IfxEgtm_Tim_In *driver);
 
 /** \brief Return the pulse length value in tick
- * \param driver TIM Input object
- * \return pulse length
+ *
+ * \param[in] driver TIM Input object
+ *
+ * \retval pulse length
  */
 IFX_INLINE sint32 IfxEgtm_Tim_In_getPulseLengthTick(IfxEgtm_Tim_In *driver);
 
 /** \brief Indicates if data were lost
- * \param driver TIM Input object
- * \return TRUE if Data is lost FALSE otherwise
+ *
+ * \param[in] driver TIM Input object
+ *
+ * \retval TRUE if Data is lost FALSE otherwise
  */
 IFX_INLINE boolean IfxEgtm_Tim_In_isDataLost(IfxEgtm_Tim_In *driver);
 
 /** \brief Indicates if new data are present (new data flag)
- * \param driver TIM Input object
- * \return TRUE if New Data FALSE otherwise
+ *
+ * \param[in] driver TIM Input object
+ *
+ * \retval TRUE if New Data FALSE otherwise
  */
 IFX_INLINE boolean IfxEgtm_Tim_In_isNewData(IfxEgtm_Tim_In *driver);
 
 /** \brief Configures the Software Input
- * \param driver TIM Input Object
- * \param softwareInput Software Input for the LUT
- * \return None
+ *
+ * \param[inout] driver        TIM Input Object
+ * \param[in]    softwareInput Software Input for the LUT
+ *                             Range: TRUE: Software input is provided.
+ *                                    FALSE: Software input is not provided
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tim_In_configureSoftwareInput(IfxEgtm_Tim_In *driver, boolean softwareInput);
 
@@ -351,29 +369,37 @@ IFX_INLINE void IfxEgtm_Tim_In_configureSoftwareInput(IfxEgtm_Tim_In *driver, bo
 /******************************************************************************/
 
 /** \brief Initializes the input capture object
- * \param driver TIM Input object
- * \param config Configuration structure for the input capture Timer
- * \return TRUE on success else FALSE
+ *
+ * \param[inout] driver TIM Input object
+ * \param[in]    config Configuration structure for the input capture Timer
+ *
+ * \retval TRUE on success else FALSE
  */
 IFX_EXTERN boolean IfxEgtm_Tim_In_init(IfxEgtm_Tim_In *driver, const IfxEgtm_Tim_In_Config *config);
 
 /** \brief Initializes the configuration structure to default
- * \param config Configuration structure for the input capture Timer
- * \param egtm Pointer to EGTM module
- * \return None
+ *
+ * \param[inout] config Configuration structure for the input capture Timer
+ * \param[in]    egtm   Pointer to EGTM module
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Tim_In_initConfig(IfxEgtm_Tim_In_Config *config, Ifx_EGTM *egtm);
 
 /** \brief will update the  driver state\n
  * To be called in the interrupt generated by the IfxEgtm_Tim_In driver
- * \param driver TIM Input object
- * \return None
+ *
+ * \param[inout] driver TIM Input object
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Tim_In_onIsr(IfxEgtm_Tim_In *driver);
 
 /** \brief Updates the period and duty cycle
- * \param driver TIM Input object
- * \return None
+ *
+ * \param[inout] driver TIM Input object
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Tim_In_update(IfxEgtm_Tim_In *driver);
 

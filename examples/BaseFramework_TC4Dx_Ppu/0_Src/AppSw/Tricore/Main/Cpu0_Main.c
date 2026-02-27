@@ -43,7 +43,6 @@
 #include "Ifx_Cfg.h"
 #include "IfxCpu.h"
 #include "IfxWtu.h"
-#include "AllowAccess.h"
 #include "PpuInterface.h"
 #include "IfxCpu_Trap.h"
 
@@ -60,8 +59,6 @@ void core0_main(void)
 
 	/* Enable interrupts by setting the IE bit */
 	IfxCpu_enableInterrupts();
-
-	allowAccess();
 
     /* Start up the PPU */
     PpuInterface_startPpu();

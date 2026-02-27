@@ -3,9 +3,9 @@
  * \brief EGTM PWM details
  * \ingroup IfxLld_Egtm
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-03-29 09:36:37
  *
  *
  *                                 IMPORTANT NOTICE
@@ -255,7 +255,7 @@ typedef struct
     IfxPort_PadDriver     padDriver;        /**< \brief Pad driver */
 #if IFXEGTM_PWM_IS_HIGH_RES_AVAILABLE	
     IfxEgtm_Hrpwm_Out    *hrpwmPin;         /**< \brief HRPWM pin */
-#endif	
+#endif	/* #if IFXEGTM_PWM_IS_HIGH_RES_AVAILABLE */	
 } IfxEgtm_Atom_Pwm_pin;
 
 /** \} */
@@ -271,8 +271,8 @@ typedef struct
     IfxEgtm_Atom_Ch            atomChannel;                    /**< \brief ATOM channel to be used for PWM */
     IfxEgtm_Atom_Ch_ClkSrc     clock;                          /**< \brief Clock source for selected ATOM channel */
     IfxEgtm_Atom_Mode          mode;                           /**< \brief Mode of operation of ATOM channel. Only PWM is supported */
-    uint32                     period;                         /**< \brief Period in ticks */
-    uint32                     dutyCycle;                      /**< \brief Duty Cycle in ticks */
+    uint32                     period;                         /**< \brief Period in ticks. Range: 0 to 0x00FFFFFF */
+    uint32                     dutyCycle;                      /**< \brief Duty Cycle in ticks. Range: 0 to 0x00FFFFFF */
     Ifx_ActiveState            signalLevel;                    /**< \brief Signal Level when duty is active */
     IfxEgtm_Atom_Pwm_Interrupt interrupt;                      /**< \brief Configuration structure for interrupt */
     IfxEgtm_Atom_Pwm_pin       pin;                            /**< \brief Configuration structure for output pin */
@@ -284,8 +284,8 @@ typedef struct
 #if IFXEGTM_PWM_IS_HIGH_RES_AVAILABLE	
     boolean                    hrSupport;                      /**< \brief Enable/Disable the High resolution support for ATOM */
     IfxEgtm_Hrpwm_Ch           hrChannel;                      /**< \brief HRPWM channel used */
-    uint8                      hrStepsPeriod;                  /**< \brief HRPWM micro step Period (Range: 0..32) */
-    uint8                      hrStepsDuty;                    /**< \brief HRPWM micro step Duty Cycle (Range 0..32) */
+    uint8                      hrStepsPeriod;                  /**< \brief HRPWM micro step Period. Range: 0 to 0x20 */
+    uint8                      hrStepsDuty;                    /**< \brief HRPWM micro step Duty CycleRange. Range: 0 to 0x20 */
 #endif	
 } IfxEgtm_Atom_Pwm_Config;
 
@@ -305,7 +305,7 @@ typedef struct
 #if IFXEGTM_PWM_IS_HIGH_RES_AVAILABLE	
     boolean                hrSupport;                      /**< \brief Enable/Disable the High resolution support for ATOM */
     IfxEgtm_Hrpwm_Ch       hrChannel;                      /**< \brief HRPWM channel used */
-#endif
+#endif	/* #if IFXEGTM_PWM_IS_HIGH_RES_AVAILABLE */
 } IfxEgtm_Atom_Pwm_Driver;
 
 /** \} */
@@ -318,43 +318,116 @@ typedef struct
 /******************************************************************************/
 
 /** \brief initializes the Timer object
- * \param driver ATOM Handle
- * \param config Configuration structure for ATOM
- * \return TRUE on success else FALSE
+ *
+ * \param[inout] driver ATOM Handle
+ * \param[in]    config Configuration structure for ATOM
+ *
+ * \retval TRUE on success else FALSE
  */
 IFX_EXTERN boolean IfxEgtm_Atom_Pwm_init(IfxEgtm_Atom_Pwm_Driver *driver, const IfxEgtm_Atom_Pwm_Config *config);
 
 /** \brief Initializes the configuration structure to default
- * \param config This parameter is initialized by the function
- * \param egtm Pointer to EGTM module
- * \return None
+ *
+ * \param[inout] config This parameter is initialized by the function
+ * \param[in]    egtm   Pointer to EGTM module
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Atom_Pwm_initConfig(IfxEgtm_Atom_Pwm_Config *config, Ifx_EGTM *egtm);
 
 /** \brief Starts the PWM generation from the configured channel.
- * \param driver handle for the PWM device.
- * \param immediate immediate start or not.
- * \return None
+ *
+ * \param[inout] driver    Handle for the PWM device.
+ * \param[in]    immediate Immediate start or not.
+ *                         Range: TRUE: Immediate start FALSE: No Immediate start
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Atom_Pwm_start(IfxEgtm_Atom_Pwm_Driver *driver, boolean immediate);
 
 /** \brief Stops the PWM generation from the configured channel
- * \param driver handle for the PWM device
- * \param immediate immediate start or not.
- * \return None
+ *
+ * \param[inout] driver    Handle for the PWM device
+ * \param[in]    immediate Immediate start or not.
+ *                         Range: TRUE: Immediate start FALSE: No Immediate start
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Atom_Pwm_stop(IfxEgtm_Atom_Pwm_Driver *driver, boolean immediate);
 
 #if IFXEGTM_PWM_IS_HIGH_RES_AVAILABLE
 /** \brief This API updates the micro steps of period/duty during run time
- * \param driver ATOM Handle
- * \param hrSteps high resolution step value
- * \param hrStepType high resolution step is for Period/Duytcycle
- * \return None
+ *
+ * \param[inout] driver     ATOM Handle
+ * \param[in]    hrSteps    High resolution step value
+ *                          Range: 0 to 0xF.
+ * \param[in]    hrStepType High resolution step is for Period/Duytcycle
+ *                          Range: \ref: IfxEgtm_Atom_Pwm_HrstepType
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Atom_Pwm_updateHrsteps(IfxEgtm_Atom_Pwm_Driver *driver, uint8 hrSteps, IfxEgtm_Atom_Pwm_HrstepType hrStepType);
-#endif
+#endif	/* #if IFXEGTM_PWM_IS_HIGH_RES_AVAILABLE */
+
+/******************************************************************************/
+/*-------------------------Inline Function Prototypes-------------------------*/
+/******************************************************************************/
+
+/** \brief Updates PWM duty cycle
+ *
+ * \param[inout] driver      ATOM Handle
+ * \param[in]    requestDuty Requested duty in %
+ *                           Range: 0.0 to 100.0
+ *
+ * \retval None
+ */
+IFX_INLINE void IfxEgtm_Atom_Pwm_setDuty(IfxEgtm_Atom_Pwm_Driver *driver, float32 requestDuty);
 
 /** \} */
+
+/******************************************************************************/
+/*---------------------Inline Function Implementations------------------------*/
+/******************************************************************************/
+
+void IfxEgtm_Atom_Pwm_setDuty(IfxEgtm_Atom_Pwm_Driver *driver, float32 requestDuty)
+{
+    uint32 period;
+    uint32 dutyCycle;
+
+    /* Handle non-positive / invalid duty */
+    if (requestDuty < 0.0f)
+    {
+	   requestDuty = 0.0f;
+    }
+    else if (requestDuty > 100.0f)
+    {
+	   requestDuty = 100.0f;
+    }
+
+    /* Use configured period value according to selected update mode */
+    if (driver->synchronousUpdateEnabled == TRUE)
+    {
+    	period = IfxEgtm_Atom_Ch_getCompareZeroShadow(driver->atom, driver->atomChannel);
+    }
+    else
+    {
+        period = IfxEgtm_Atom_Ch_getCompareZero(driver->atom, driver->atomChannel);
+    }
+
+    /* Duty in ticks = period * (requestDuty in percent / 100%) */
+    dutyCycle = (uint32)(((float32)period * requestDuty * 0.01f) + 0.5f);
+
+    /* Clamp to period to avoid overflow caused by rounding */
+    dutyCycle = (dutyCycle <= period) ? dutyCycle : period;
+
+    if (driver->synchronousUpdateEnabled == TRUE)
+    {
+        IfxEgtm_Atom_Ch_setCompareOneShadow(driver->atom, driver->atomChannel, dutyCycle);
+    }
+    else
+    {
+        IfxEgtm_Atom_Ch_setCompareOne(driver->atom, driver->atomChannel, dutyCycle);
+    }
+}
 
 #endif /* IFXEGTM_ATOM_PWM_H */

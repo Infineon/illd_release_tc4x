@@ -2,9 +2,9 @@
  * \file IfxClock_PinMap_TC4Dx_BGA292_COM.c
  * \brief CLOCK  details
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2022-07-01 09:01:23
  *
  *
  *                                 IMPORTANT NOTICE

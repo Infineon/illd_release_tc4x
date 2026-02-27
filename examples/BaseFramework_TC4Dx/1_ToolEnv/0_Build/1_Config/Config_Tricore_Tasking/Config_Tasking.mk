@@ -7,7 +7,7 @@
 #                                                                             #
 #                                                                             #
 # Infineon Technologies AG (Infineon) is supplying this file for use          #
-# exclusively with Infineon’s microcontroller products. This file can be      #
+# exclusively with Infineonâ€™s microcontroller products. This file can be      #
 # freely distributed within development tools that are supporting such        #
 # microcontroller products.                                                   #
 #                                                                             #
@@ -19,7 +19,7 @@
 #                                                                             #
 ###############################################################################
 
-B_TASKING_TRICORE_PATH= C:\Tools\Compilers\Tasking\SmartCode v10.3r1p1\ctc
+B_TASKING_TRICORE_PATH= C:\Tools\Compilers\TASKING\SmartCode v10.4r1\ctc
 
 B_TASKING_TRICORE_CC_OPTIONS= --core=tc1.8 --default-near-size=0 --fp-model=1 \
 	--global-type-checking --iso=11 --language=+volatile --optimize=2 --tradeoff=1 --user-mode=hypervisor \
@@ -36,5 +36,4 @@ B_TASKING_TRICORE_LIB_INC=
 
 #Libraries to include shall be listed with option -l, with following format.
 #B_GNUC_TRICORE_LIBS=-l<lib name>[ -l<lib name>][..]
-B_TASKING_TRICORE_LIBS= -lrt -lfp_fpu -lc
-
+B_TASKING_TRICORE_LIBS= -lrt -lfp -lc

@@ -3,9 +3,9 @@
  * \brief I2C on-chip implementation data
  * \ingroup IfxLld_I2c
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-07-23 11:51:39
  *
  *
  *                                 IMPORTANT NOTICE
@@ -60,7 +60,7 @@
 #include "Ifx_Cfg.h"
 
 #if defined DEVICE_TC4DX
-#include "IfxI2c_cfg_TC4Dx.h"
+#include "TC4Dx/IfxI2c_cfg_TC4Dx.h"
 #endif
 
 #endif /* IFXI2C_CFG_H */

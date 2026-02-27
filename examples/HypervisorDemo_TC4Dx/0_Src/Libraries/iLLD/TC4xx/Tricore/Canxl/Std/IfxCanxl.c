@@ -2,9 +2,9 @@
  * \file IfxCanxl.c
  * \brief CANXL  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2024-09-09 10:03:05
  *
  *
  *                                 IMPORTANT NOTICE
@@ -39,6 +39,9 @@
  * DEALINGS IN THE SOFTWARE.
  *
  *
+ * \author Yadunandan Puttaswamy<yadunandan.puttaswamy@infineon.com>
+ * \author Shreyas Shubhankar<shreyas.shubhankar@infineon.com>
+ * \author Chetan Arvind Walvekar<chetanarvind.walvekar@infineon.com>
  *
  */
 

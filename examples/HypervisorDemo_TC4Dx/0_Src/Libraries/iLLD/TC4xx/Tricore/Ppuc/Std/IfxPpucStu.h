@@ -3,9 +3,9 @@
  * \brief PPUC  basic functionality
  * \ingroup IfxLld_Ppuc
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-11-25 11:46:35
  *
  *
  *                                 IMPORTANT NOTICE
@@ -131,6 +131,7 @@
 #include "_Impl/IfxPpuc_cfg.h"
 #include "Cpu/Std/IfxCpu_Intrinsics.h"
 #include "IfxPpu_reg.h"
+#include "Ap/Std/IfxApApu.h"
 
 /******************************************************************************/
 /*-----------------------------------Macros-----------------------------------*/
@@ -471,6 +472,12 @@ IFX_EXTERN void IfxPpucStu_initChannel(Ifx_PPU *ppuc, uint8 channelNum, uint32 s
  * \return None
  */
 IFX_EXTERN void IfxPpucStu_initChannelConfig(IfxPpucStu_channelConfig *channelConfig);
+
+/** \brief Configures access to the PPU STU DMI module.
+ * \param apConfig config pointer to configuration structure.
+ * \return None
+ */
+IFX_EXTERN void IfxPpucStu_configureAccessToPpucStuDmi(IfxApApu_ApuConfig *apConfig);
 
 /** \} */
 

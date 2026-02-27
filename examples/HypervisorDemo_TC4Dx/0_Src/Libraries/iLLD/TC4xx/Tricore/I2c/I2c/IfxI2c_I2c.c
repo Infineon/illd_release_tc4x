@@ -2,9 +2,9 @@
  * \file IfxI2c_I2c.c
  * \brief I2C I2C details
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2024-07-16 07:40:36
  *
  *
  *                                 IMPORTANT NOTICE
@@ -108,12 +108,18 @@ void IfxI2c_I2c_initModule(IfxI2c_I2c *i2c, const IfxI2c_I2c_Config *config)
     Ifx_I2C      *i2cSFR             = config->i2c;
     i2c->i2c = i2cSFR;
 
+    /* Enable the I2C module */
     IfxI2c_enableModule(i2cSFR);
-    IfxI2c_stop(i2cSFR);                                                                   // enter config Mode
+
+    /* Stop the I2C module */
+    IfxI2c_stop(i2cSFR);        
+    
+    /* Enter config mode */
     IfxI2c_configureAsMaster(i2cSFR);
 
     if (config->peripheralMode == IfxI2c_MasterNotSlave_slave)
     {
+    	/* Configure peripheral as slave */
         IfxI2c_configureAsSlave(i2cSFR);
     }
 
@@ -122,29 +128,33 @@ void IfxI2c_I2c_initModule(IfxI2c_I2c *i2c, const IfxI2c_I2c_Config *config)
         addressConfiglocal.addressConfig.masterCodeEnable = TRUE;
     }
 
+    /* Configure address fifo */
     IfxI2c_configureAddrFifo(i2cSFR, &addressConfiglocal);
 
-    IfxI2c_setBaudrate(i2cSFR, config->baudrate); /*In high speed mode the baud rate must be higher then 400kHz */
+    /* In high speed mode the baud rate must be higher then 400kHz */
+    IfxI2c_setBaudrate(i2cSFR, config->baudrate); 
 
     if (config->pins != NULL_PTR)
     {
+    	/* Initialise the I2C SCL and SDA pins with the specified SCL, SDA and Pad Driver configuration */
         IfxI2c_initSclSdaPin(config->pins->scl, config->pins->sda, config->pins->padDriver);
     }
 
-    /* to see protocol interrupt in register RIS enable the corresponding sources */
+    /* To see protocol interrupt in register RIS enable the corresponding sources */
     IfxI2c_enableProtocolInterruptSource(i2cSFR, IfxI2c_ProtocolInterruptSource_arbitrationLost);
     IfxI2c_enableProtocolInterruptSource(i2cSFR, IfxI2c_ProtocolInterruptSource_notAcknowledgeReceived);
     IfxI2c_enableProtocolInterruptSource(i2cSFR, IfxI2c_ProtocolInterruptSource_transmissionEnd);
     IfxI2c_enableProtocolInterruptSource(i2cSFR, IfxI2c_ProtocolInterruptSource_receiveMode);
-    /* to see error interrupt in register RIS enable the corresponding sources */
+    /* To see error interrupt in register RIS enable the corresponding sources */
     IfxI2c_enableErrorInterruptSource(i2cSFR, IfxI2c_ErrorInterruptSource_rxFifoUnderflow);
     IfxI2c_enableErrorInterruptSource(i2cSFR, IfxI2c_ErrorInterruptSource_rxFifoOverflow);
     IfxI2c_enableErrorInterruptSource(i2cSFR, IfxI2c_ErrorInterruptSource_txFifoUnderflow);
     IfxI2c_enableErrorInterruptSource(i2cSFR, IfxI2c_ErrorInterruptSource_txFifoOverflow);
 
-    /* start the I2C module */
+    /* Start the I2C module */
     IfxI2c_run(i2cSFR);
 
+    /* Initialise the I2C with the current Baud rate, Bus status, and set status to OK */
     i2c->baudrate  = IfxI2c_getBaudrate(i2cSFR);
     i2c->busStatus = IfxI2c_getBusStatus(i2cSFR);
     i2c->status    = IfxI2c_I2c_Status_ok;

@@ -2,7 +2,7 @@
  * \file IfxAsclin.c
  * \brief ASCLIN  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -53,20 +53,24 @@
 
 void IfxAsclin_disableModule(Ifx_ASCLIN *asclin)
 {
-    IfxAsclin_setDisableModuleRequest(asclin);  /* disables the module*/
+	/* disables the module */
+    IfxAsclin_setDisableModuleRequest(asclin);
 }
 
 
 void IfxAsclin_enableAscErrorFlags(Ifx_ASCLIN *asclin, boolean parEnable, boolean rfoEnable)
 {
-    IfxAsclin_enableParityErrorFlag(asclin, parEnable);     /* enables parity error*/
-    IfxAsclin_enableRxFifoOverflowFlag(asclin, rfoEnable);  /* enables Rx fifo Overflow error*/
+	/* enables parity error */
+    IfxAsclin_enableParityErrorFlag(asclin, parEnable);
+    /* enables Rx fifo Overflow error */
+    IfxAsclin_enableRxFifoOverflowFlag(asclin, rfoEnable);
 }
 
 
 void IfxAsclin_enableModule(Ifx_ASCLIN *asclin)
 {
-    IfxAsclin_setEnableModuleRequest(asclin);   /* enables the module*/
+	/* enables the module */
+    IfxAsclin_setEnableModuleRequest(asclin);
 }
 
 
@@ -90,11 +94,13 @@ Ifx_ASCLIN *IfxAsclin_getAddress(IfxAsclin_Index asclin)
 uint32 IfxAsclin_getFaFrequency(Ifx_ASCLIN *asclin)
 {
     uint32                frequency;
-    IfxAsclin_ClockSource clockSource = (IfxAsclin_ClockSource)IfxAsclin_getClockSource(asclin);    /* gets the current clock source*/
+    /* gets the current clock source */
+    IfxAsclin_ClockSource clockSource = (IfxAsclin_ClockSource)IfxAsclin_getClockSource(asclin);
 
     switch (clockSource)
     {
-    case IfxAsclin_ClockSource_noClock: /* gets the respective frequency*/
+    /* gets the respective frequency */
+    case IfxAsclin_ClockSource_noClock:
         frequency = 0;
         break;
     case IfxAsclin_ClockSource_ascFastClock:
@@ -215,15 +221,18 @@ void IfxAsclin_resetModule(Ifx_ASCLIN *asclin)
 #if (IFX_PROT_ENABLED == 1U)
     IfxApProt_setState((Ifx_PROT_PROT *)&(asclin->PROTE), IfxApProt_State_config);
 #endif
-    asclin->RST.CTRLA.B.KRST = 1;           /* Only if both Kernel reset bits are set a reset is executed */
+    asclin->RST.CTRLA.B.KRST = 1;           /* only if both Kernel reset bits are set a reset is executed */
     asclin->RST.CTRLB.B.KRST = 1;
 
-    while (0 == asclin->RST.STAT.B.KRST)    /* Wait until reset is executed */
+    /* wait until reset is executed */
+    while (0 == asclin->RST.STAT.B.KRST)
     {}
 
-    asclin->RST.CTRLB.B.STATCLR = 1;        /* Clear Kernel reset status bit */
+    /* clear Kernel reset status bit */
+    asclin->RST.CTRLB.B.STATCLR = 1;
 
-    while (asclin->RST.STAT.B.KRST == 1)    /* Wait until KRST is cleared, only after this reset sequence is completed */
+    /* wait until KRST is cleared, only after this reset sequence is completed */
+    while (asclin->RST.STAT.B.KRST == 1)
     {}
 
 #if (IFX_PROT_ENABLED == 1U)
@@ -251,22 +260,22 @@ boolean IfxAsclin_setBitTiming(Ifx_ASCLIN *asclin, float32 baudrate, IfxAsclin_O
     uint32                d      = 0, n, dBest = 1, nBest = 1;
     float32               f;
 
-    /* Get the prescaler value */
+    /* get the prescaler value */
     uint32                prescaler      = asclin->BITCON.B.PRESCALER + 1;
-    /* Get the PD frequency */
+    /* get the PD frequency */
     float32               fpd            = IfxAsclin_getPdFrequency(asclin);
     /* min. value of (l_oversampling + 1) is 4 */
     uint32                l_oversampling = (IfxAsclin_OversamplingFactor)__maxu((oversampling + 1), 4);
     samplepoint = (IfxAsclin_SamplePointPosition)__maxu(samplepoint, 1);
-    /* Calculate the required  fOvs */
+    /* calculate the required  fOvs */
     fOvs        = baudrate * l_oversampling;
     float32               relError   = fOvs;
     float32               limit;                                         /* save the error limit */
     boolean               terminated = FALSE;
-    float32               newRelError;                                   //modified by Hassan
-    uint32                adder_facL, adder_facH, adder_facL_min, count; //modified by Hassan
+    float32               newRelError;
+    uint32                adder_facL, adder_facH, adder_facL_min, count;
 
-    /* Increment the limit with the increase in baud rate */
+    /* increment the limit with the increase in baud rate */
     if (baudrate <= 6000)
     {
         limit = 0.01f * fOvs;
@@ -288,9 +297,9 @@ boolean IfxAsclin_setBitTiming(Ifx_ASCLIN *asclin, float32 baudrate, IfxAsclin_O
         limit = 0.000001f * fOvs;
     }
 
-    /* Calculate the possible denominator "d" */
+    /* calculate the possible denominator "d" */
     d = (uint32)(fpd / fOvs);
-    /* Initialize "numerator" n with 1 */
+    /* initialize "numerator" n with 1 */
     n = 1;
 
     if (d == 0)
@@ -306,7 +315,7 @@ boolean IfxAsclin_setBitTiming(Ifx_ASCLIN *asclin, float32 baudrate, IfxAsclin_O
             }
             else
             {
-                /* fall back to default values as desired baud rate cannot be achieved with the prescaler > 0*/
+                /* fall back to default values as desired baud rate cannot be achieved with the prescaler > 0 */
                 prescaler      = 1;
                 l_oversampling = (uint32)(IfxAsclin_OversamplingFactor_16 + 1);
                 fpd            = (float32)IfxAsclin_getFaFrequency(asclin) / prescaler;
@@ -322,7 +331,7 @@ boolean IfxAsclin_setBitTiming(Ifx_ASCLIN *asclin, float32 baudrate, IfxAsclin_O
         /* check if the current baud rate fits in for the 12-bit  "d", for max. l_oversampling value. */
         if (((uint32)(fpd / (baudrate * 16))) >> 12)
         {
-            /* Increase the value of the prescaler to generate the required baudrate */
+            /* increase the value of the prescaler to generate the required baudrate */
             while (d >> 12)
             {
                 prescaler++;
@@ -339,7 +348,7 @@ boolean IfxAsclin_setBitTiming(Ifx_ASCLIN *asclin, float32 baudrate, IfxAsclin_O
         }
         else
         {
-            /* Increase the value of the oversampling to generate the required baudrate */
+            /* increase the value of the oversampling to generate the required baudrate */
             while (d >> 12)
             {
                 l_oversampling++;
@@ -411,16 +420,16 @@ boolean IfxAsclin_setBitTiming(Ifx_ASCLIN *asclin, float32 baudrate, IfxAsclin_O
     asclin->BRG.B.DENOMINATOR = dBest;
     asclin->BRG.B.NUMERATOR   = nBest;
 
-    /* Set the clock divider value */
+    /* set the clock divider value */
     asclin->BITCON.B.PRESCALER = prescaler - 1;
 
-    /* Set the SHIFT frequency */
+    /* set the SHIFT frequency */
     asclin->BITCON.B.OVERSAMPLING = l_oversampling - 1;
 
-    /* Set the sampling point */
+    /* set the sampling point */
     asclin->BITCON.B.SAMPLEPOINT = samplepoint;
 
-    /* Set the median filter */
+    /* set the median filter */
     asclin->BITCON.B.SM = medianFilter ? 1 : 0;
 
     IfxAsclin_setClockSource(asclin, source);
@@ -437,13 +446,13 @@ void IfxAsclin_setBitTimingValues(Ifx_ASCLIN *asclin, IfxAsclin_BitTimingConfig 
     asclin->BRG.B.DENOMINATOR = config->denominator;
     asclin->BRG.B.NUMERATOR   = config->numerator;
 
-    /* Set the SHIFT frequency */
+    /* set the SHIFT frequency */
     asclin->BITCON.B.OVERSAMPLING = (config->oversampling - 1);
 
-    /* Set the sampling point */
+    /* set the sampling point */
     asclin->BITCON.B.SAMPLEPOINT = config->samplepoint;
 
-    /* Set the median filter */
+    /* set the median filter */
     asclin->BITCON.B.SM = (config->sm) ? 1 : 0;
 
     IfxAsclin_setClockSource(asclin, source);
@@ -452,9 +461,10 @@ void IfxAsclin_setBitTimingValues(Ifx_ASCLIN *asclin, IfxAsclin_BitTimingConfig 
 
 void IfxAsclin_setClockSource(Ifx_ASCLIN *asclin, IfxAsclin_ClockSource clockSource)
 {
-    asclin->CSR.B.CLKSEL = clockSource; /* selects the given clock source*/
+	/* selects the given clock source */
+    asclin->CSR.B.CLKSEL = clockSource;
 
-    /* Waits TW or polls for CSR.CON to change */
+    /* waits TW or polls for CSR.CON to change */
     if (clockSource == IfxAsclin_ClockSource_noClock)
     {
         while (IfxAsclin_getClockStatus(asclin) != 0U)
@@ -515,8 +525,8 @@ void IfxAsclin_initAp(Ifx_ASCLIN *asclin, IfxAsclin_ApConfig *config)
     IfxApProt_init((Ifx_PROT_PROT *)&asclin->PROTE, &config->proteConfig);
     IfxApProt_init((Ifx_PROT_PROT *)&asclin->PROTSE, &config->protseConfig);
 
-    /* Change the state to CONFIG, Configure APU and set PROT state back to RUN */
-    /* Initialize the APU */
+    /* change the state to CONFIG, Configure APU and set PROT state back to RUN */
+    /* initialize the APU */
     IfxApProt_setState((Ifx_PROT_PROT *)&asclin->PROTSE, IfxApProt_State_config);
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&asclin->ACCEN, &config->apuConfig);
     IfxApProt_setState((Ifx_PROT_PROT *)&asclin->PROTSE, IfxApProt_State_run);

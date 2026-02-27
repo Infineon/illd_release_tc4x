@@ -2,9 +2,9 @@
  * \file IfxPmsPm.c
  * \brief PMS  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-09-27 12:05:34
  *
  *
  *                                 IMPORTANT NOTICE

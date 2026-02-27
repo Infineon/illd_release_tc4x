@@ -3,9 +3,9 @@
  * \brief SENT SENT details
  * \ingroup IfxLld_Sent
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-04-25 05:27:20
  *
  *
  *                                 IMPORTANT NOTICE

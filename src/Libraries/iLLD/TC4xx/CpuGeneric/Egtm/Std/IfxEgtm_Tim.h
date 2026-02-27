@@ -3,7 +3,7 @@
  * \brief EGTM  basic functionality
  * \ingroup IfxLld_Egtm
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -77,6 +77,9 @@
 
 /** \addtogroup IfxLld_Egtm_Std_Tim_Enumerations
  * \{ */
+/** \brief Enum Selection for CLSi_TIM_CHx_CNTS register
+ * Definition in Ifx_EGTM_CLS_TIM_CH_CTRL.B.CNTS_SEL
+ */
 typedef enum
 {
     IfxEgtm_Tim_CntsSel_cntReg = 0,
@@ -92,6 +95,7 @@ typedef enum
 } IfxEgtm_Tim_FilterCounter;
 
 /** \brief Enum for Filter counter Frequency Selection
+ * Definition in Ifx_EGTM_CLS_TIM_CH_CTRL.B.GPR0_SEL
  */
 typedef enum
 {
@@ -101,7 +105,7 @@ typedef enum
     IfxEgtm_Tim_FilterCounterFreqSel_cmuClk7 = 3   /**< \brief FLT_CNT counts with CMU_CLK7 */
 } IfxEgtm_Tim_FilterCounterFreqSel;
 
-/** \brief Enum for Filter mode
+/** \brief Enum for GprSel
  */
 typedef enum
 {
@@ -109,6 +113,9 @@ typedef enum
     IfxEgtm_Tim_FilterMode_individualDeglitchTime         /**< \brief Individual deglitch mode */
 } IfxEgtm_Tim_FilterMode;
 
+/** \brief Enum for Filter mode
+ * Definition in Ifx_EGTM_CLS_TIM_CH_CTRL.B.FLT_MODE_FE
+ */
 typedef enum
 {
     IfxEgtm_Tim_GprSel_tbuTs0 = 0,
@@ -117,12 +124,16 @@ typedef enum
     IfxEgtm_Tim_GprSel_cnts
 } IfxEgtm_Tim_GprSel;
 
+/** \brief Enum for input control
+ */
 typedef enum
 {
     IfxEgtm_Tim_Input_currentChannel = 0,
     IfxEgtm_Tim_Input_adjacentChannel
 } IfxEgtm_Tim_Input;
 
+/** \brief Enum for Irq mode
+ */
 typedef enum
 {
     IfxEgtm_Tim_IrqMode_level = 0,        /**< \brief Level Mode */
@@ -132,6 +143,8 @@ typedef enum
     IfxEgtm_Tim_IrqMode_none = -1         /**< \brief none */
 } IfxEgtm_Tim_IrqMode;
 
+/** \brief Enum for Irq type
+ */
 typedef enum
 {
     IfxEgtm_Tim_IrqType_newVal        = 0,  /**< \brief New measurement value detected by SMU of channel */
@@ -142,6 +155,8 @@ typedef enum
     IfxEgtm_Tim_IrqType_glitchDetect  = 5   /**< \brief A glitch was detected by the TIM filter of channel */
 } IfxEgtm_Tim_IrqType;
 
+/** \brief Enum for Mode control
+ */
 typedef enum
 {
     IfxEgtm_Tim_Mode_pwmMeasurement = 0,  /**< \brief TPWM */
@@ -232,240 +247,342 @@ typedef struct
 /******************************************************************************/
 
 /** \brief This function clears the Aux input Source selection for the  given channel
- * \param egtm Pointer to EGTM module
- * \param clsIndex TIM instance number
- * \param channel Channel index
- * \return None
+ *
+ * \param[inout] egtm     Pointer to EGTM module
+ * \param[in]    clsIndex TIM instance number
+ *                        Range: \ref: IfxEgtm_Cluster
+ * \param[in]    channel  Channel index
+ *                        Range: \ref: IfxEgtm_Tim_Ch
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tim_Ch_clearAuxInputSourceSelection(Ifx_EGTM *egtm, IfxEgtm_Cluster clsIndex, IfxEgtm_Tim_Ch channel);
 
 /** \brief Clears the counter overflow flag
- * \param channel TIM channel pointer
- * \return None
+ *
+ * \param[inout] channel TIM channel pointer
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tim_Ch_clearCntOverflowEvent(Ifx_EGTM_CLS_TIM_CH *channel);
 
 /** \brief Clears the data lost flag
- * \param channel TIM channel pointer
- * \return None
+ *
+ * \param[inout] channel TIM channel pointer
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tim_Ch_clearDataLostEvent(Ifx_EGTM_CLS_TIM_CH *channel);
 
 /** \brief Clears the event counter overflow flag
- * \param channel TIM channel pointer
- * \return None
+ *
+ * \param[inout] channel TIM channel pointer
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tim_Ch_clearEcntOverflowEvent(Ifx_EGTM_CLS_TIM_CH *channel);
 
 /** \brief Clears the glitch flag
- * \param channel TIM channel pointer
- * \return None
+ *
+ * \param[inout] channel TIM channel pointer
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tim_Ch_clearGlitchEvent(Ifx_EGTM_CLS_TIM_CH *channel);
 
 /** \brief Clears the new value flag
- * \param channel TIM channel pointer
- * \return None
+ *
+ * \param[inout] channel TIM channel pointer
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tim_Ch_clearNewValueEvent(Ifx_EGTM_CLS_TIM_CH *channel);
 
 /** \brief Clear the interrupt notification.
- * \param channel TIM channel pointer
- * \param irqType Interrupt type
- * \return None
+ *
+ * \param[inout] channel TIM channel pointer
+ * \param[in]    irqType Interrupt type
+ *                       Range: \ref: IfxEgtm_Tim_IrqType
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tim_Ch_clearNotification(Ifx_EGTM_CLS_TIM_CH *channel, IfxEgtm_Tim_IrqType irqType);
 
 /** \brief Returns the Capture Clock Frequency
- * \param egtm Pointer to EGTM module
- * \param channel Pointer to TIM channel base
- * \return Capture clock frequency
+ *
+ * \param[in] egtm    Pointer to EGTM module
+ * \param[in] channel Pointer to TIM channel base
+ *                    Range: \ref: Ifx_EGTM_CLS_TIM_CH
+ *
+ * \retval Capture clock frequency
  */
 IFX_INLINE float32 IfxEgtm_Tim_Ch_getCaptureClockFrequency(Ifx_EGTM *egtm, Ifx_EGTM_CLS_TIM_CH *channel);
 
 /** \brief Returns the capture clock source selected
- * \param channel TIM channel pointer
- * \return capture clock source
+ *
+ * \param[in] channel TIM channel pointer
+ *
+ * \retval capture clock source
+ * Range: \ref: IfxEgtm_Cmu_Clk
  */
 IFX_INLINE IfxEgtm_Cmu_Clk IfxEgtm_Tim_Ch_getCaptureClockSource(Ifx_EGTM_CLS_TIM_CH *channel);
 
 /** \brief Returns the Filter clock source selected
- * \param channel TIM channel pointer
- * \return Filter clock source
+ *
+ * \param[in] channel TIM channel pointer
+ *
+ * \retval Filter clock source
+ * Range: \ref: IfxEgtm_Cmu_Tim_Filter_Clk
  */
 IFX_INLINE IfxEgtm_Cmu_Tim_Filter_Clk IfxEgtm_Tim_Ch_getFilterClockSource(Ifx_EGTM_CLS_TIM_CH *channel);
 
 /** \brief Returns the status of channel  notification
- * \param channel TIM channel pointer
- * \param irqType Interrupt type
- * \return Status of channel notification
+ *
+ * \param[in] channel TIM channel pointer
+ * \param[in] irqType Interrupt type
+ *                    Range: \ref: IfxEgtm_Tim_IrqType
+ *
+ * \retval Status of channel notification
+ * Range: TRUE if the notification is active.
+ * 		  FALSE otherwise
  */
 IFX_INLINE boolean IfxEgtm_Tim_Ch_getNotification(Ifx_EGTM_CLS_TIM_CH *channel, IfxEgtm_Tim_IrqType irqType);
 
 /** \brief Returns a pointer to the TIM channel SRC
- * \param egtm Pointer to EGTM module
- * \param tim Specifies the tim module no
- * \param channel Channel index
- * \return Pointer to the TIM channel SRC
+ *
+ * \param[in] egtm    Pointer to EGTM module
+ * \param[in] tim     Specifies the tim module no
+ *                    Range: \ref: IfxEgtm_Tim
+ * \param[in] channel Channel index
+ *                    Range: \ref: IfxEgtm_Tim_Ch
+ *
+ * \retval Pointer to the TIM channel SRC
  */
 IFX_INLINE volatile Ifx_SRC_SRCR *IfxEgtm_Tim_Ch_getSrcPointer(Ifx_EGTM *egtm, IfxEgtm_Tim tim, IfxEgtm_Tim_Ch channel);
 
 /** \brief Returns the Timeout Clock Frequency
- * \param egtm Pointer to EGTM module
- * \param channel Pointer to TIM channel base
- * \return Timeout clock frequency
+ *
+ * \param[in] egtm    Pointer to EGTM module
+ * \param[in] channel Pointer to TIM channel base
+ *
+ * \retval Timeout clock frequency
  */
 IFX_INLINE float32 IfxEgtm_Tim_Ch_getTimeoutClockFrequency(Ifx_EGTM *egtm, Ifx_EGTM_CLS_TIM_CH *channel);
 
 /** \brief Returns the Timeout clock source selected
- * \param channel TIM channel pointer
- * \return Timeout clock source
+ *
+ * \param[in] channel TIM channel pointer
+ *
+ * \retval Timeout clock source
+ * Range: \ref: IfxEgtm_Cmu_Clk
  */
 IFX_INLINE IfxEgtm_Cmu_Clk IfxEgtm_Tim_Ch_getTimeoutClockSource(Ifx_EGTM_CLS_TIM_CH *channel);
 
 /** \brief Test the counter overflow flag
- * \param channel TIM channel pointer
- * \return TRUE if the flag is set, else FALSE
+ *
+ * \param[in] channel TIM channel pointer
+ *
+ * \retval TRUE if the counter overflow flag is set,FALSE otherwise.
  */
 IFX_INLINE boolean IfxEgtm_Tim_Ch_isCntOverflowEvent(Ifx_EGTM_CLS_TIM_CH *channel);
 
 /** \brief Test the data lost flag
- * \param channel TIM channel pointer
- * \return TRUE if the flag is set, else FALSE
+ *
+ * \param[in] channel TIM channel pointer
+ *
+ * \retval TRUE If the data lost event flag is set.
+ *  	   FALSE If the data lost event flag is not set.
  */
 IFX_INLINE boolean IfxEgtm_Tim_Ch_isDataLostEvent(Ifx_EGTM_CLS_TIM_CH *channel);
 
 /** \brief Test the event counter overflow flag
- * \param channel TIM channel pointer
- * \return TRUE if the flag is set, else FALSE
+ *
+ * \param[in] channel TIM channel pointer
+ *
+ * \retval TRUE If the event counter overflow flag is set.
+ *         FALSE If the event counter overflow flag is not set.
  */
 IFX_INLINE boolean IfxEgtm_Tim_Ch_isEcntOverflowEvent(Ifx_EGTM_CLS_TIM_CH *channel);
 
 /** \brief Test the glitch flag
- * \param channel TIM channel pointer
- * \return TRUE if the flag is set, else FALSE
+ *
+ * \param[in] channel TIM channel pointer
+ *
+ * \retval TRUE If glitch flag is set.
+ *         FALSE If glitch flag is not set.
  */
 IFX_INLINE boolean IfxEgtm_Tim_Ch_isGlitchEvent(Ifx_EGTM_CLS_TIM_CH *channel);
 
 /** \brief Test the new value flag
- * \param channel TIM channel pointer
- * \return TRUE if the flag is set, else FALSE
+ *
+ * \param[in] channel TIM channel pointer
+ *
+ * \retval TRUE if the new value flag is set,FALSE otherwise.
  */
 IFX_INLINE boolean IfxEgtm_Tim_Ch_isNewValueEvent(Ifx_EGTM_CLS_TIM_CH *channel);
 
 /** \brief set the Auxiliary input source selection of a particular channel.
- * \param egtm Pointer to EGTM module
- * \param clsIndex TIM instance number
- * \param channel Channel index
- * \return None
+ *
+ * \param[inout] egtm     Pointer to EGTM module
+ * \param[in]    clsIndex TIM instance number
+ *                        Range: \ref: IfxEgtm_Cluster
+ * \param[in]    channel  Channel index
+ *                        Range: \ref: IfxEgtm_Tim_Ch
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tim_Ch_setAuxInputSourceSelection(Ifx_EGTM *egtm, IfxEgtm_Cluster clsIndex, IfxEgtm_Tim_Ch channel);
 
 /** \brief Set the channel notification
- * \param channel TIM channel pointer
- * \param irqOnNewVal If TRUE, the interrupt on new value is enabled
- * \param irqOnCntOverflow If TRUE, the interrupt on CNT overflow is enabled
- * \param irqOnEcntOverflow If TRUE, the interrupt on ECNT overflow is enabled
- * \param irqOnDatalost If TRUE, the interrupt on data lost (GPR0, GPR1) is enabled
- * \return None
+ *
+ * \param[inout] channel           TIM channel pointer
+ * \param[in]    irqOnNewVal       If TRUE, the interrupt on new value is enabled
+ * \param[in]    irqOnCntOverflow  If TRUE, the interrupt on CNT overflow is enabled
+ * \param[in]    irqOnEcntOverflow If TRUE, the interrupt on ECNT overflow is enabled
+ * \param[in]    irqOnDatalost     If TRUE, the interrupt on data lost (GPR0, GPR1) is enabled
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tim_Ch_setChannelNotification(Ifx_EGTM_CLS_TIM_CH *channel, boolean irqOnNewVal, boolean irqOnCntOverflow, boolean irqOnEcntOverflow, boolean irqOnDatalost);
 
 /** \brief Set the channel clock source
- * \param channel TIM channel pointer
- * \param clk Selected clock
- * \return None
+ *
+ * \param[inout] channel TIM channel pointer
+ * \param[in]    clk     Selected clock
+ *                       Range: \ref: IfxEgtm_Cmu_Clk
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tim_Ch_setClockSource(Ifx_EGTM_CLS_TIM_CH *channel, IfxEgtm_Cmu_Clk clk);
 
 /** \brief This function configures the Falling edge Filter Parameter.
- * \param channel TIM channel pointer
- * \param filterTime Falling edge Filter Parameter.
- * \return None
+ *
+ * \param[inout] channel    TIM channel pointer
+ * \param[in]    filterTime Falling edge Filter Parameter.
+ *                          Range: 0 tp 0x00FFFFFF
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tim_Ch_setFallingEdgeFilterTime(Ifx_EGTM_CLS_TIM_CH *channel, uint32 filterTime);
 
 /** \brief Set the filter notification
- * \param channel TIM channel pointer
- * \param irqOnGlitch If TRUE, the interrupt on glitch is enabled
- * \return None
+ *
+ * \param[inout] channel     TIM channel pointer
+ * \param[in]    irqOnGlitch If TRUE, the interrupt on glitch is enabled
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tim_Ch_setFilterNotification(Ifx_EGTM_CLS_TIM_CH *channel, boolean irqOnGlitch);
 
 /** \brief This function configures the Input source selection register.
- * \param tim TIM instance number
- * \param channel Channel index
- * \param inputSource Input source to Channel
- * \return None
+ *
+ * \param[inout] tim         TIM instance number
+ * \param[in]    channel     Channel index
+ *                           Range: \ref: IfxEgtm_Tim_Ch
+ * \param[in]    inputSource Input source to Channel
+ *                           Range: \ref: IfxEgtm_Tim_InputSourceSelect
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tim_Ch_setInputSourceSelection(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_Tim_Ch channel, IfxEgtm_Tim_InputSourceSelect inputSource);
 
 /** \brief This function configures the TIM channel IRQ mode
- * \param channel TIM channel pointer
- * \param mode Notification Mode
- * \return None
+ *
+ * \param[inout] channel TIM channel pointer
+ * \param[in]    mode    Notification Mode
+ *                       Range: \ref: IfxEgtm_IrqMode
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tim_Ch_setNotificationMode(Ifx_EGTM_CLS_TIM_CH *channel, IfxEgtm_IrqMode mode);
 
 /** \brief set the Interrupt Notification
- * \param channel TIM channel pointer
- * \param irqType Interrupt type
- * \return None
+ *
+ * \param[inout] channel TIM channel pointer
+ * \param[in]    irqType Interrupt type
+ *                       Range: \ref: IfxEgtm_Tim_IrqType
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tim_Ch_setNotification(Ifx_EGTM_CLS_TIM_CH *channel, IfxEgtm_Tim_IrqType irqType);
 
 /** \brief Set the timeout notification
- * \param channel TIM channel pointer
- * \param irqOnTimeout If TRUE, the interrupt on timeout is enabled
- * \return None
+ *
+ * \param[inout] channel      TIM channel pointer
+ * \param[in]    irqOnTimeout If TRUE, the interrupt on timeout is enabled
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tim_Ch_setTimeoutNotification(Ifx_EGTM_CLS_TIM_CH *channel, boolean irqOnTimeout);
 
 /** \brief This function configures theRaising edge Filter Parameter.
- * \param channel TIM channel pointer
- * \param filterTime Raising edge Filter Parameter.
- * \return None
+ *
+ * \param[inout] channel    TIM channel pointer
+ * \param[in]    filterTime Raising edge Filter Parameter.
+ *                          Range: 0 to 0x00FFFFFF
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tim_Ch_setRisingEdgeFilterTime(Ifx_EGTM_CLS_TIM_CH *channel, uint32 filterTime);
 
 /** \brief This function configures the Shadow counter register.
- * \param channel TIM channel pointer
- * \param shadowCounter Shadow counter value
- * \return None
+ *
+ * \param[inout] channel       TIM channel pointer
+ * \param[in]    shadowCounter Shadow counter value
+ *                             Range: 0 to 0x00FFFFFF
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tim_Ch_setShadowCounter(Ifx_EGTM_CLS_TIM_CH *channel, uint32 shadowCounter);
 
 /** \brief Returns the pointer to the TIM channel
- * \param tim Pointer to Tim base
- * \param channel TIM channel
- * \return Pointer to TIM channel base
+ *
+ * \param[in] tim     Pointer to Tim base
+ * \param[in] channel TIM channel
+ *                    Range: \ref: IfxEgtm_Tim_Ch
+ *
+ * \retval Pointer to TIM channel base
  */
 IFX_INLINE volatile Ifx_EGTM_CLS_TIM_CH *IfxEgtm_Tim_getChannel(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_Tim_Ch channel);
 
 /** \brief Reset the specified TIM channel
- * \param tim Pointer to EGTM TIM instance
- * \param channel Channel index
- * \return None
+ *
+ * \param[inout] tim     Pointer to EGTM TIM instance
+ * \param[in]    channel Channel index
+ *                       Range: \ref: IfxEgtm_Tim_Ch
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tim_Ch_resetChannel(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_Tim_Ch channel);
 
 /** \brief sets the TIMINSEL register with the required mux setting
- * \param timIndex Index of TIM module
- * \param channelIndex index of TIM channel
- * \param tinSel MUX value selection
- * \return None
+ *
+ * \param[inout] timIndex     Index of TIM module
+ * \param[in]    channelIndex Index of TIM channel
+ *                            Range: \ref: IfxEgtm_Tim_Ch
+ * \param[in]    tinSel       MUX value selection
+ *                            Range: 0 to 0xFFFFFFFF
+ *
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tim_Ch_setTimTin(IfxEgtm_Tim timIndex, IfxEgtm_Tim_Ch channelIndex, uint32 tinSel);
 
 /** \brief Get count of TIM channel
- * \param channel Pointer to TIM channel base
- * \return number of count
+ *
+ * \param[in] channel Pointer to TIM channel base
+ *
+ * \retval number of count
+ * Range: 0 to 0x00FFFFFF
  */
 IFX_INLINE uint32 IfxEgtm_Tim_Ch_getCountValue(Ifx_EGTM_CLS_TIM_CH *channel);
 
 /** \brief Get shadow count of TIM channel
- * \param channel Pointer to TIM channel base
- * \return number of shadow count
+ *
+ * \param[in] channel Pointer to TIM channel base
+ *
+ * \retval number of shadow count
+ * Range: 0 to 0x00FFFFFF
  */
 IFX_INLINE uint32 IfxEgtm_Tim_Ch_getShadowCountValue(Ifx_EGTM_CLS_TIM_CH *channel);
 
@@ -474,16 +591,21 @@ IFX_INLINE uint32 IfxEgtm_Tim_Ch_getShadowCountValue(Ifx_EGTM_CLS_TIM_CH *channe
 /******************************************************************************/
 
 /** \brief Returns the Filter Clock Frequency
- * \param egtm Pointer to EGTM module
- * \param channel Pointer to TIM channel base
- * \return Filter clock frequency
+ *
+ * \param[in] egtm    Pointer to EGTM module
+ * \param[in] channel Pointer to TIM channel base
+ *
+ * \retval Filter clock frequency
  */
 IFX_EXTERN float32 IfxEgtm_Tim_Ch_getFilterClockFrequency(Ifx_EGTM *egtm, Ifx_EGTM_CLS_TIM_CH *channel);
 
 /** \brief This function configures the TIM channel Control register
- * \param channel TIM channel pointer
- * \param control channel control configuration
- * \return None
+ *
+ * \param[inout] channel TIM channel pointer
+ * \param[in]    control Channel control configuration
+ *                       Range: \ref: IfxEgtm_Tim_ChannelControl
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Tim_Ch_setControl(Ifx_EGTM_CLS_TIM_CH *channel, IfxEgtm_Tim_ChannelControl control);
 

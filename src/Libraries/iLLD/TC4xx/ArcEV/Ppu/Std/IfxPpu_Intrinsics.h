@@ -2,7 +2,7 @@
  * \file IfxCpu_Intrinsics.h
  * \ingroup IfxLld_Cpu_Intrinsics Intrinsics
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2019 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -52,7 +52,11 @@
 #include "IfxCpu_IntrinsicsWindriver.h"
 
 #elif defined(__TASKING__)
+#if defined(__CTC__)
 #include "IfxCpu_IntrinsicsTasking.h"
+#else
+#include "IfxPpu_IntrinsicsTasking.h"
+#endif	
 
 #elif defined(__HIGHTEC__) && !defined(__clang__)
 #include "IfxCpu_IntrinsicsGnuc.h"

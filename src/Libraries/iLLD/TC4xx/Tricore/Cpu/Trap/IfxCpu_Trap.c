@@ -3,7 +3,7 @@
  * \brief This file contains the APIs for Trap related functions.
  *
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -116,6 +116,8 @@
 *******************************************************************************/
 IFX_INLINE IfxCpu_Trap IfxCpu_Trap_extractTrapInfo(uint8 trapClass, uint32 tin)
 {
+	/* Extracts trap information for a given trap class and ID */
+
     IfxCpu_Trap trapInfo;
     trapInfo.tAddr  = (unsigned int)__getA11();
     trapInfo.tClass = trapClass;
@@ -128,8 +130,12 @@ IFX_INLINE IfxCpu_Trap IfxCpu_Trap_extractTrapInfo(uint8 trapClass, uint32 tin)
 IFX_TRAP_HANDLER
 void IfxCpu_Trap_memoryManagementError(uint32 tin)
 {
+	/* Handles memory management traps */
+
     volatile IfxCpu_Trap trapWatch;
+    /* Retrieves details about the memory management trap event */
     trapWatch = IfxCpu_Trap_extractTrapInfo(IfxCpu_Trap_Class_memoryManagement, tin);
+    /* Invokes the configured hook for memory management trap handling */
     IFX_CFG_CPU_TRAP_MME_HOOK(trapWatch);
     IFX_CFG_CPU_TRAP_DEBUG;
     IFX_TRAP_RET;
@@ -139,8 +145,12 @@ void IfxCpu_Trap_memoryManagementError(uint32 tin)
 IFX_TRAP_HANDLER
 void IfxCpu_Trap_internalProtectionError(uint32 tin)
 {
+	/* Handles internal protection traps */
+
     volatile IfxCpu_Trap trapWatch;
+    /* Retrieves details about internal protection trap event*/
     trapWatch = IfxCpu_Trap_extractTrapInfo(IfxCpu_Trap_Class_internalProtection, tin);
+    /* Invokes the configured hook for internal protection trap handling */
     IFX_CFG_CPU_TRAP_IPE_HOOK(trapWatch);
     IFX_CFG_CPU_TRAP_DEBUG;
     IFX_TRAP_RET;
@@ -150,8 +160,12 @@ void IfxCpu_Trap_internalProtectionError(uint32 tin)
 IFX_TRAP_HANDLER
 void IfxCpu_Trap_instructionError(uint32 tin)
 {
+    /* Handles instruction errors traps */
+
     volatile IfxCpu_Trap trapWatch;
+    /* Retrieves details about instruction errors trap event */
     trapWatch = IfxCpu_Trap_extractTrapInfo(IfxCpu_Trap_Class_instructionErrors, tin);
+    /* Invokes the configured hook for instruction errors trap handling */
     IFX_CFG_CPU_TRAP_IE_HOOK(trapWatch);
     IFX_CFG_CPU_TRAP_DEBUG;
     IFX_TRAP_RET;
@@ -161,8 +175,12 @@ void IfxCpu_Trap_instructionError(uint32 tin)
 IFX_TRAP_HANDLER
 void IfxCpu_Trap_contextManagementError(uint32 tin)
 {
+    /* Handles context management traps */
+
     volatile IfxCpu_Trap trapWatch;
+    /* Retrieves details about context management trap event */
     trapWatch = IfxCpu_Trap_extractTrapInfo(IfxCpu_Trap_Class_contextManagement, tin);
+    /* Invokes the configured hook for context management trap handling */
     IFX_CFG_CPU_TRAP_CME_HOOK(trapWatch);
     IFX_CFG_CPU_TRAP_DEBUG;
     IFX_TRAP_RET;
@@ -172,8 +190,12 @@ void IfxCpu_Trap_contextManagementError(uint32 tin)
 IFX_TRAP_HANDLER
 void IfxCpu_Trap_busError(uint32 tin)
 {
+    /* Handles bus errors traps */
+
     volatile IfxCpu_Trap trapWatch;
+    /* Retrieves details about bus errors trap event */
     trapWatch = IfxCpu_Trap_extractTrapInfo(IfxCpu_Trap_Class_bus, tin);
+    /* Invokes the configured hook for bus errors trap handling */
     IFX_CFG_CPU_TRAP_BE_HOOK(trapWatch);
     IFX_CFG_CPU_TRAP_DEBUG;
     IFX_TRAP_RET;
@@ -183,8 +205,12 @@ void IfxCpu_Trap_busError(uint32 tin)
 IFX_TRAP_HANDLER
 void IfxCpu_Trap_assertion(uint32 tin)
 {
+    /* Handles assertion traps */
+
     volatile IfxCpu_Trap trapWatch;
+    /* Retrieves details about assertion trap event */
     trapWatch = IfxCpu_Trap_extractTrapInfo(IfxCpu_Trap_Class_assertion, tin);
+    /* Invokes the configured hook for assertion trap handling */
     IFX_CFG_CPU_TRAP_ASSERT_HOOK(trapWatch);
     IFX_CFG_CPU_TRAP_DEBUG;
     IFX_TRAP_RET;
@@ -194,8 +220,12 @@ void IfxCpu_Trap_assertion(uint32 tin)
 IFX_TRAP_HANDLER
 void IfxCpu_Trap_systemCall_Cpu0(uint32 tin)
 {
-    volatile IfxCpu_Trap trapWatch;
+    /* Handles system call traps for CPU0 */
+
+    volatile IfxCpu_Trap trapWatch = {.tCpu = 0};
+    /* Retrieves details about system call trap event for CPU0 */
     trapWatch = IfxCpu_Trap_extractTrapInfo(IfxCpu_Trap_Class_systemCall, tin);
+    /* Invokes the configured hook for system call trap handling */
     IFX_CFG_CPU_TRAP_SYSCALL_CPU0_HOOK(trapWatch);
     IFX_TRAP_RET;
 }
@@ -205,8 +235,12 @@ void IfxCpu_Trap_systemCall_Cpu0(uint32 tin)
 IFX_TRAP_HANDLER
 void IfxCpu_Trap_systemCall_Cpu1(uint32 tin)
 {
-    volatile IfxCpu_Trap trapWatch;
+    /* Handles system call traps for CPU1 */
+
+    volatile IfxCpu_Trap trapWatch = {.tCpu = 1};
+    /* Retrieves details about system call trap event for CPU1 */
     trapWatch = IfxCpu_Trap_extractTrapInfo(IfxCpu_Trap_Class_systemCall, tin);
+    /* Invokes the configured hook for system call trap handling */
     IFX_CFG_CPU_TRAP_SYSCALL_CPU1_HOOK(trapWatch);
     IFX_TRAP_RET;
 }
@@ -218,8 +252,12 @@ void IfxCpu_Trap_systemCall_Cpu1(uint32 tin)
 IFX_TRAP_HANDLER
 void IfxCpu_Trap_systemCall_Cpu2(uint32 tin)
 {
-    volatile IfxCpu_Trap trapWatch;
+    /* Handles system call traps for CPU2 */
+
+    volatile IfxCpu_Trap trapWatch = {.tCpu = 2};
+    /* Retrieves details about system call trap event for CPU2 */
     trapWatch = IfxCpu_Trap_extractTrapInfo(IfxCpu_Trap_Class_systemCall, tin);
+    /* Invokes the configured hook for system call trap handling */
     IFX_CFG_CPU_TRAP_SYSCALL_CPU2_HOOK(trapWatch);
     IFX_TRAP_RET;
 }
@@ -231,8 +269,12 @@ void IfxCpu_Trap_systemCall_Cpu2(uint32 tin)
 IFX_TRAP_HANDLER
 void IfxCpu_Trap_systemCall_Cpu3(uint32 tin)
 {
-    volatile IfxCpu_Trap trapWatch;
+    /* Handles system call traps for CPU3 */
+
+    volatile IfxCpu_Trap trapWatch = {.tCpu = 3};
+    /* Retrieves details about system call trap event for CPU3 */
     trapWatch = IfxCpu_Trap_extractTrapInfo(IfxCpu_Trap_Class_systemCall, tin);
+    /* Invokes the configured hook for system call trap handling */
     IFX_CFG_CPU_TRAP_SYSCALL_CPU3_HOOK(trapWatch);
     IFX_TRAP_RET;
 }
@@ -244,8 +286,12 @@ void IfxCpu_Trap_systemCall_Cpu3(uint32 tin)
 IFX_TRAP_HANDLER
 void IfxCpu_Trap_systemCall_Cpu4(uint32 tin)
 {
-    volatile IfxCpu_Trap trapWatch;
+    /* Handles system call traps for CPU4 */
+
+    volatile IfxCpu_Trap trapWatch = {.tCpu = 4};
+    /* Retrieves details about system call trap event for CPU4 */
     trapWatch = IfxCpu_Trap_extractTrapInfo(IfxCpu_Trap_Class_systemCall, tin);
+    /* Invokes the configured hook for system call trap handling */
     IFX_CFG_CPU_TRAP_SYSCALL_CPU4_HOOK(trapWatch);
     IFX_TRAP_RET;
 }
@@ -257,8 +303,12 @@ void IfxCpu_Trap_systemCall_Cpu4(uint32 tin)
 IFX_TRAP_HANDLER
 void IfxCpu_Trap_systemCall_Cpu5(uint32 tin)
 {
-    volatile IfxCpu_Trap trapWatch;
+    /* Handles system call traps for CPU5 */
+
+    volatile IfxCpu_Trap trapWatch = {.tCpu = 5};
+    /* Retrieves details about system call trap event for CPU5 */
     trapWatch = IfxCpu_Trap_extractTrapInfo(IfxCpu_Trap_Class_systemCall, tin);
+    /* Invokes the configured hook for system call trap handling */
     IFX_CFG_CPU_TRAP_SYSCALL_CPU5_HOOK(trapWatch);
     IFX_TRAP_RET;
 }
@@ -269,9 +319,13 @@ void IfxCpu_Trap_systemCall_Cpu5(uint32 tin)
 IFX_TRAP_HANDLER
 void IfxCpu_Trap_nonMaskableInterrupt(uint32 tin)
 {
+    /* Handles non-maskable interrupt traps */
+
     volatile IfxCpu_Trap trapWatch;
+    /* Retrieves details about non-maskable interrupt trap event */
     trapWatch = IfxCpu_Trap_extractTrapInfo(IfxCpu_Trap_Class_nonMaskableInterrupt, tin);
-    IFX_CFG_CPU_TRAP_NMI_HOOK(trapWatch);
+    /* Invokes the configured hook for non-maskable interrupt trap handling */
+    IFX_CFG_CPU_TRAP_NMI_HOOK(trapWatch);    
     IFX_TRAP_RET;
 }
 
@@ -299,13 +353,23 @@ IFX_USED void IfxCpu_Trap_vectorTable0(void) __attribute__((naked,aligned(256)))
 #endif
 IFX_USED void IfxCpu_Trap_vectorTable0(void)
 {
+	/* Sets up the trap service routines for CPU0 */
+
+	/* Map Memory Management Error trap to its handler for CPU0 */
     IfxCpu_Tsr_CallTSR(IfxCpu_Trap_memoryManagementError);
+    /* Map Internal Protection Error trap to its handler for CPU0 */
     IfxCpu_Tsr_CallTSR(IfxCpu_Trap_internalProtectionError);
+    /* Map Instruction Error trap to its handler for CPU0 */
     IfxCpu_Tsr_CallTSR(IfxCpu_Trap_instructionError);
+    /*  Map Context Management Error trap to its handler for CPU0 */
     IfxCpu_Tsr_CallTSR(IfxCpu_Trap_contextManagementError);
+    /* Map Bus Error trap to its handler for CPU0 */
     IfxCpu_Tsr_CallTSR(IfxCpu_Trap_busError);
+    /* Map Assertion trap to its handler for CPU0 */
     IfxCpu_Tsr_CallTSR(IfxCpu_Trap_assertion);
+    /* Map System Call trap to its handler for CPU0 */
     IfxCpu_Tsr_CallTSR(IfxCpu_Trap_systemCall_Cpu0);
+    /* Map Non-Maskable Interrupt trap to its handler for CPU0 */
     IfxCpu_Tsr_CallTSR(IfxCpu_Trap_nonMaskableInterrupt);
 }
 
@@ -331,6 +395,9 @@ IFX_USED void IfxCpu_Trap_vectorTable1(void) __attribute__((naked,aligned(256)))
 #endif
 IFX_USED void IfxCpu_Trap_vectorTable1(void)
 {
+	/* Sets up the trap service routines for CPU1 */
+
+	/* Mapping each trap class to its handler */
     IfxCpu_Tsr_CallTSR(IfxCpu_Trap_memoryManagementError);
     IfxCpu_Tsr_CallTSR(IfxCpu_Trap_internalProtectionError);
     IfxCpu_Tsr_CallTSR(IfxCpu_Trap_instructionError);
@@ -366,6 +433,9 @@ IFX_USED void IfxCpu_Trap_vectorTable2(void) __attribute__((naked,aligned(256)))
 
 IFX_USED void IfxCpu_Trap_vectorTable2(void)
 {
+	/* Sets up the trap service routines for CPU2 */
+
+	/* Mapping each trap class to its handler */
     IfxCpu_Tsr_CallTSR(IfxCpu_Trap_memoryManagementError);
     IfxCpu_Tsr_CallTSR(IfxCpu_Trap_internalProtectionError);
     IfxCpu_Tsr_CallTSR(IfxCpu_Trap_instructionError);
@@ -401,6 +471,9 @@ IFX_USED void IfxCpu_Trap_vectorTable3(void) __attribute__((naked,aligned(256)))
 
 IFX_USED void IfxCpu_Trap_vectorTable3(void)
 {
+	/* Sets up the trap service routines for CPU3 */
+
+	/* Mapping each trap class to its handler */
     IfxCpu_Tsr_CallTSR(IfxCpu_Trap_memoryManagementError);
     IfxCpu_Tsr_CallTSR(IfxCpu_Trap_internalProtectionError);
     IfxCpu_Tsr_CallTSR(IfxCpu_Trap_instructionError);
@@ -436,6 +509,9 @@ IFX_USED void IfxCpu_Trap_vectorTable4(void) __attribute__((naked,aligned(256)))
 
 IFX_USED void IfxCpu_Trap_vectorTable4(void)
 {
+	/* Sets up the trap service routines for CPU4 */
+
+	/* Mapping each trap class to its handler */
     IfxCpu_Tsr_CallTSR(IfxCpu_Trap_memoryManagementError);
     IfxCpu_Tsr_CallTSR(IfxCpu_Trap_internalProtectionError);
     IfxCpu_Tsr_CallTSR(IfxCpu_Trap_instructionError);
@@ -471,6 +547,9 @@ IFX_USED void IfxCpu_Trap_vectorTable5(void) __attribute__((naked,aligned(256)))
 
 IFX_USED void IfxCpu_Trap_vectorTable5(void)
 {
+	/* Sets up the trap service routines for CPU5 */
+
+	/* Mapping each trap class to its handler */
     IfxCpu_Tsr_CallTSR(IfxCpu_Trap_memoryManagementError);
     IfxCpu_Tsr_CallTSR(IfxCpu_Trap_internalProtectionError);
     IfxCpu_Tsr_CallTSR(IfxCpu_Trap_instructionError);

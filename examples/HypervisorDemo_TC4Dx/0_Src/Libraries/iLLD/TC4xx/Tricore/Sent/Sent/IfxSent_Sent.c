@@ -2,9 +2,9 @@
  * \file IfxSent_Sent.c
  * \brief SENT SENT details
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-04-07 15:17:11
  *
  *
  *                                 IMPORTANT NOTICE

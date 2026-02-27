@@ -2,7 +2,7 @@
  * \file IfxClock.c
  * \brief CLOCK  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -139,13 +139,13 @@ IFX_CONST IfxClock_Config           IfxClock_defaultClockConfig = {
 };
 
 IFX_CONST IfxClock_Mod_Config       IfxClock_defaultModConfig = {
-    IfxClock_ModEn_disabled,                                    /* disable is default */
-    IfxClock_ModulationAmplitude_1p25,                          /* default value */
+    IfxClock_ModEn_disabled,                                    /* Disable is default */
+    IfxClock_ModulationAmplitude_1p25,                          /* Default value */
 };
 
 IFX_CONST IfxClock_perPllMod_Config IfxClock_defaultPerPllModConfig = {
-    IfxClock_ModEn_disabled,                                          /* disable is default */
-    IfxClock_PerPllModulationAmplitude_0p10,                          /* default value */
+    IfxClock_ModEn_disabled,                                          /* Disable is default */
+    IfxClock_PerPllModulationAmplitude_0p10,                          /* Default value */
 };
 
 uint32                              IfxClock_xtalFrequency = IFX_CFG_CLOCK_XTAL_FREQUENCY;
@@ -203,8 +203,8 @@ boolean IfxClock_calXCorrParameters(float32 RGainNom, IfxClock_XCorr_Values *XCo
     XGain_Temp    = 0;
     XTol_Temp     = 0;
 
-    /* algorithm to find out the right XCORR and XGain values */
-    /* loop through the allowed XGain values and see if XCORR arrives in range of 150-350 */
+    /* Algorithm to find out the right XCORR and XGain values */
+    /* Loop through the allowed XGain values and see if XCORR arrives in range of 150-350 */
     for (xgain_index = IfxClock_XGain_4p0; xgain_index >= IfxClock_XGain_0p25; xgain_index--)
     {
         XCorrNom_Temp = IFXCLOCK_GET_XCORR_NOM(Fosc_MHz, RGainNom, IfxClock_X_Gain_Value[xgain_index]);
@@ -225,10 +225,10 @@ boolean IfxClock_calXCorrParameters(float32 RGainNom, IfxClock_XCorr_Values *XCo
     if (XCorr_Temp != 0)
     {
         XTol_Temp = IFXCLOCK_GET_XTOL(XCorr_Temp);
-        status    = 0; /* we have found a good XCorr and XGain value combo */
+        status    = 0; /* We have found a good XCorr and XGain value combo */
     }
 
-    /* write back */
+    /* Write back */
     XCorr_P->XCorrNom = XCorrNom_Temp;
     XCorr_P->XCorr    = XCorr_Temp;
     XCorr_P->XGain    = XGain_Temp;
@@ -243,6 +243,8 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
 {
     uint32 timeoutCycleCount = 0U;
     uint8  initError         = 0U;
+
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     timeoutCycleCount = IFXCLOCK_CCUCON_LCK_BIT_TIMEOUT_COUNT;
 
 #if (IFX_PROT_ENABLED == 1U)
@@ -261,16 +263,18 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
         IfxSmu_setSafetyAlarmAction(IfxSmu_Alarm_SF_CLOCKING_PeripheralPllCrystalClockFrequencyOutOfRange, IfxSmu_InternalAlarmAction_disabled, index);
     }
 
-    /* If Crystal Osc powered down then do the Osc power-up, since it takes ~3ms to power up*/
+    /* If Crystal Osc powered down then do the Osc power-up, since it takes ~3ms to power up */
     /* TC49xA step workaround due to HW bug */
     if (CLOCK_OSCCON.B.MODE == 7U)
     {
         CLOCK_OSCCON.B.MODE = 3U;
         Ifx__mem_barrier
 #if (IFX_CFG_CLOCK_EXT_CLOCK == 1)
-        CLOCK_OSCCON.B.MODE = 2U;     /* external clock selected */
+		/* External clock selected */
+        CLOCK_OSCCON.B.MODE = 2U;
 #else
-        CLOCK_OSCCON.B.MODE = 0U;     /*oscillator enabled */
+        /* Oscillator enabled */
+        CLOCK_OSCCON.B.MODE = 0U;
 #endif /* #if (IFX_CFG_CLOCK_EXT_CLOCK == 1) */
     }
     else
@@ -302,7 +306,7 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
 
             if ((uint32)(pllCfg->xtalFrequency / 1000000U) >= 16U)
             {
-                scuOscmon.B.OSCVAL = (uint32)(pllCfg->xtalFrequency / 1000000U) - 15U; /*XTAL range 16MHz to 50MHz*/
+                scuOscmon.B.OSCVAL = (uint32)(pllCfg->xtalFrequency / 1000000U) - 15U; /* XTAL range 16MHz to 50MHz */
             }
             else
             {
@@ -311,10 +315,11 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
 
             scuOscmon.B.SMONEN = 1U;
             scuOscmon.B.PMONEN = 1U;
-            /*Note: Oscillator Watchdog Reset (OSCRES) is not required when the PLLs are powered down*/
+            /* Note: Oscillator Watchdog Reset (OSCRES) is not required when the PLLs are powered down */
             CLOCK_OSCMON1.U    = scuOscmon.U;
         }
 
+        /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
         timeoutCycleCount = IFXCLOCK_CCUCON_LCK_BIT_TIMEOUT_COUNT;
 
         while (CLOCK_CCUSTAT.B.LCK != 0U)
@@ -326,6 +331,7 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
 
         CLOCK_OSCCON.U    = osccon.U;
 
+        /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
         timeoutCycleCount = IFXCLOCK_CCUCON_LCK_BIT_TIMEOUT_COUNT;
 
         while (CLOCK_CCUSTAT.B.LCK != 0U)
@@ -389,7 +395,6 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
             }
 
             /* Step 2. Check for CCU lock bit with a timeout of at least 100 micro seconds */
-
             timeoutCycleCount = IFXCLOCK_CCUSTAT_LCK_BIT_TIMEOUT_COUNT;
 
             while (CLOCK_CCUSTAT.B.LCK != 0U)
@@ -401,6 +406,7 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
 
             CLOCK_SYSPLLCON0.U = 0x00001800u;
 
+            /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
             timeoutCycleCount  = IFXCLOCK_CCUCON_LCK_BIT_TIMEOUT_COUNT;
 
             while (CLOCK_CCUSTAT.B.LCK != 0U)
@@ -410,8 +416,8 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
 
 #endif
 
-            /* Step 3. Configure K-dividers in SYSPLLCON1 register*/
-            /* K2PREDIV = div by 2 and K2DIV = 0x01*/
+            /* Step 3. Configure K-dividers in SYSPLLCON1 register */
+            /* K2PREDIV = div by 2 and K2DIV = 0x01 */
 
             CLOCK_SYSPLLCON1.U = IFXCLOCK_SYSPLL_KXDIV_KXPREDIV_INITIAL_VALUE;
 
@@ -420,7 +426,6 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
             Ifx_CLOCK_SYSPLLCON0 sysPllCon0;
 
             sysPllCon0.U        = CLOCK_SYSPLLCON0.U;
-            sysPllCon0.U        = CLOCK_SYSPLLCON0.U;
             sysPllCon0.B.PDIV   = pllCfg->sysPllConfig.pDivider;
             sysPllCon0.B.NDIV   = pllCfg->sysPllConfig.nDivider;
             sysPllCon0.B.PLLPWR = 1;
@@ -428,7 +433,6 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
             CLOCK_SYSPLLCON0.U  = sysPllCon0.U;
 
             /* Step 5. Check for CCU lock bit with a timeout of at least 100 micro seconds */
-
             timeoutCycleCount = IFXCLOCK_CCUSTAT_LCK_BIT_TIMEOUT_COUNT;
 
             while (CLOCK_CCUSTAT.B.LCK != 0U)
@@ -436,8 +440,7 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
                 IFXCLOCK_LOOP_TIMEOUT_CHECK(timeoutCycleCount, initError);
             }
 
-            /* Step 6. Check if PLL is powered: SYSPLLSTAT.PWRSTAT == 1 with a timeout of at least 100 micro seconds*/
-
+            /* Step 6. Check if PLL is powered: SYSPLLSTAT.PWRSTAT == 1 with a timeout of at least 100 micro seconds */
             timeoutCycleCount = IFXCLOCK_CCUSTAT_LCK_BIT_TIMEOUT_COUNT;
 
             while (CLOCK_SYSPLLSTAT.B.PWRSTAT != 1U)
@@ -448,7 +451,7 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
             /* Step 7. Wait for 1ms to avoid jitter */
             IfxClock_waitWithWdtService(IFXCLOCK_SYSPLL_POWERUP_WAITTIME); /* 1 mS */
 
-            /* Step 8. Check for SysPLL lock with a timeout of at least 100 micro seconds*/
+            /* Step 8. Check for SysPLL lock with a timeout of at least 100 micro seconds */
             timeoutCycleCount = IFXCLOCK_CCUSTAT_LCK_BIT_TIMEOUT_COUNT;
 
             while (CLOCK_SYSPLLSTAT.B.PLLLOCK != 1U)
@@ -457,20 +460,24 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
             }
 
             /* Step 9. Configure KxPREDIV */
-            /* Set K2PREDIV to final value */
 
+			/* Set K2PREDIV and K3PREDIV to final value */
+
+            
             Ifx_CLOCK_SYSPLLCON1 sysPllCon1;
 
             sysPllCon1.U          = CLOCK_SYSPLLCON1.U;
 
             sysPllCon1.B.K2PREDIV = pllCfg->sysPllConfig.k2PreDivider;
+
+			sysPllCon1.B.K3PREDIV = pllCfg->sysPllConfig.k3PreDivider;
+
             CLOCK_SYSPLLCON1.U    = sysPllCon1.U;
 
             /* Step 10. Wait for 10 micro seconds  */
-            /* Check for CCU lock bit with delay of 100 micro seconds*/
-
             IfxClock_waitWithWdtService(IFXCLOCK_CCUSTAT_LCK_WAITTIME); /* 10 micro seconds */
 
+            /* Check for CCU lock bit with delay of 100 micro seconds */
             timeoutCycleCount = IFXCLOCK_CCUSTAT_LCK_BIT_TIMEOUT_COUNT;
 
             while (CLOCK_CCUSTAT.B.LCK != 0U)
@@ -479,16 +486,20 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
             }
 
             /* Step 11. Configure KxDIV */
-            /* Step 11.a. Set K2DIV to final value */
+
+			/* Step 11.a. Set K2DIV and K3DIV to final value */
+
 
             sysPllCon1.U       = CLOCK_SYSPLLCON1.U;
 
             sysPllCon1.B.K2DIV = pllCfg->sysPllConfig.k2Divider;
 
+			sysPllCon1.B.K3DIV = pllCfg->sysPllConfig.k3Divider;
+
+
             CLOCK_SYSPLLCON1.U = sysPllCon1.U;
 
             /* Step 11.b. Check for CCU lock bit with a timeout of at least 100 micro seconds */
-
             timeoutCycleCount = IFXCLOCK_CCUSTAT_LCK_BIT_TIMEOUT_COUNT;
 
             while (CLOCK_CCUSTAT.B.LCK != 0U)
@@ -502,9 +513,10 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
             /* Step 1. PLL off */
 			/* For device TC44X, by default PLL will be in off state */ 
 
+
             if (CLOCK_PERPLLSTAT.B.PWRSTAT == 1)
             {
-                if ((CLOCK_CCUSTAT.B.CLKSELP == 0x1) || (CLOCK_CCUSTAT.B.CLKSELP == 0x2))
+                if (CLOCK_CCUSTAT.B.CLKSELP == 0x1)
                 {
                     CLOCK_PERPLLCON0.B.PLLPWR = 0;
                 }
@@ -515,8 +527,8 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
                 }
             }
 
-            /* Step 2. Check for CCU lock bit with a timeout of at least 100 micro seconds*/
 
+            /* Step 2. Check for CCU lock bit with a timeout of at least 100 micro seconds*/
             timeoutCycleCount = IFXCLOCK_CCUSTAT_LCK_BIT_TIMEOUT_COUNT;
 
             while (CLOCK_CCUSTAT.B.LCK != 0U)
@@ -530,7 +542,6 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
             CLOCK_PERPLLCON1.U = IFXCLOCK_PERPLL_KXPREDIV_INITIAL_VALUE;
 
             /* Step 3b. Check for CCU lock bit with a timeout of at least 100 micro seconds*/
-
             timeoutCycleCount = IFXCLOCK_CCUSTAT_LCK_BIT_TIMEOUT_COUNT;
 
             while (CLOCK_CCUSTAT.B.LCK != 0U)
@@ -549,7 +560,6 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
             CLOCK_PERPLLCON1.U = perPllCon1.U;
 
             /* Step 3d. Check for CCU lock bit with a timeout of at least 100 micro seconds*/
-
             timeoutCycleCount = IFXCLOCK_CCUSTAT_LCK_BIT_TIMEOUT_COUNT;
 
             while (CLOCK_CCUSTAT.B.LCK != 0U)
@@ -559,6 +569,7 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
 
 #ifdef IXCLOCK_PTE_WORKAROUND
 
+            /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
             timeoutCycleCount = IFXCLOCK_CCUCON_LCK_BIT_TIMEOUT_COUNT;
 
             while (CLOCK_CCUSTAT.B.LCK != 0U)
@@ -575,7 +586,6 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
             Ifx_CLOCK_PERPLLCON0 perPllCon0;
 
             perPllCon0.U        = CLOCK_PERPLLCON0.U;
-            perPllCon0.U        = CLOCK_PERPLLCON0.U;
             perPllCon0.B.PDIV   = pllCfg->perPllConfig.pDivider;
             perPllCon0.B.NDIV   = pllCfg->perPllConfig.nDivider;
             perPllCon0.B.PLLPWR = 1;
@@ -583,7 +593,6 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
             CLOCK_PERPLLCON0.U  = perPllCon0.U;
 
             /* Step 5. Check for CCU lock bit with a timeout of at least 100 micro seconds*/
-
             timeoutCycleCount = IFXCLOCK_CCUSTAT_LCK_BIT_TIMEOUT_COUNT;
 
             while (CLOCK_CCUSTAT.B.LCK != 0U)
@@ -592,7 +601,6 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
             }
 
             /* Step 6. Check if PLL is powered: PERPLLSTAT.PWRSTAT == 1 with a timeout of at least 100 micro seconds*/
-
             timeoutCycleCount = IFXCLOCK_CCUSTAT_LCK_BIT_TIMEOUT_COUNT;
 
             while (CLOCK_PERPLLSTAT.B.PWRSTAT != 1U)
@@ -623,10 +631,11 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
             CLOCK_PERPLLCON1.U    = perPllCon1.U;
 
             /* Step 10. Wait for 10 micro seconds  */
-            /* Check for CCU lock bit with a timeout of at least 100 micro seconds*/
+            /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
 
             IfxClock_waitWithWdtService(IFXCLOCK_CCUSTAT_LCK_WAITTIME); /* 10 micro seconds */
 
+            /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
             timeoutCycleCount = IFXCLOCK_CCUSTAT_LCK_BIT_TIMEOUT_COUNT;
 
             while (CLOCK_CCUSTAT.B.LCK != 0U)
@@ -644,8 +653,7 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
 
             CLOCK_PERPLLCON1.U = perPllCon1.U;
 
-            /* Step 11.b. Check for CCU lock bit with a timeout of at least 100 micro seconds*/
-
+            /* Step 11.b. Check for CCU lock bit with a timeout of at least 100 micro seconds */
             timeoutCycleCount = IFXCLOCK_CCUSTAT_LCK_BIT_TIMEOUT_COUNT;
 
             while (CLOCK_CCUSTAT.B.LCK != 0U)
@@ -673,6 +681,7 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
         ccucon0.B.CLKSELS = IfxClock_SysClockSourceSelect_ramp;
         ccucon0.B.CLKSELP = IfxClock_SysClockSourceSelect_back;
 
+        /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
         timeoutCycleCount = IFXCLOCK_CCUCON_LCK_BIT_TIMEOUT_COUNT;
 
         while (CLOCK_CCUSTAT.B.LCK != 0U)
@@ -683,6 +692,7 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
         CLOCK_CCUCON.U = ccucon0.U;
     }
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     timeoutCycleCount = IFXCLOCK_CCUCON_LCK_BIT_TIMEOUT_COUNT;
 
     while (CLOCK_RAMPSTAT.B.FLLLOCK != 1U)
@@ -693,9 +703,10 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
     {
         Ifx_CLOCK_RAMPCON0 rampcon;
         rampcon.U         = CLOCK_RAMPCON0.U;
-        rampcon.B.UFL     = pllCfg->rampConfig.rampOscUpperFreqLimit; //upper target frequency in 1 MHz steps
+        rampcon.B.UFL     = pllCfg->rampConfig.rampOscUpperFreqLimit; /* Upper target frequency in 1 MHz steps */
         rampcon.B.CMD     = IfxClock_RampSeqCmd_rampUp;
 
+        /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
         timeoutCycleCount = IFXCLOCK_CCUCON_LCK_BIT_TIMEOUT_COUNT;
 
         while (CLOCK_CCUSTAT.B.LCK != 0U)
@@ -739,9 +750,11 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
     {
         Ifx_CLOCK_CCUCON ccucon;
         ccucon.U          = CLOCK_CCUCON.U;
-        ccucon.B.CLKSELP  = pllCfg->PerClockSourceSelect; /*Select the Clock source */
+        /* Select the Clock source */
+        ccucon.B.CLKSELP  = pllCfg->PerClockSourceSelect;
         ccucon.B.CLKSELS  = pllCfg->SysClockSourceSelect;
 
+        /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
         timeoutCycleCount = IFXCLOCK_CCUCON_LCK_BIT_TIMEOUT_COUNT;
 
         while (CLOCK_CCUSTAT.B.LCK != 0U)
@@ -980,7 +993,7 @@ uint32 IfxClock_getPerPllFrequency1(void)
     uint8    preDiv[4] = {10u, 20u, 12u, 16u};
     oscFreq       = IfxClock_getOscFrequency();
 
-    pllFrequency1 = (oscFreq * (clock->PERPLLCON0.B.NDIV + 1u)) / ((clock->PERPLLCON0.B.PDIV + 1u) * ((clock->PERPLLCON1.B.K2DIV + 1u) * (preDiv[clock->PERPLLCON1.B.K2PREDIV]) / 10u ));
+    pllFrequency1 = (oscFreq * (clock->PERPLLCON0.B.NDIV + 1u) * 10u) / ((clock->PERPLLCON0.B.PDIV + 1u) * (clock->PERPLLCON1.B.K2DIV + 1u) * (preDiv[clock->PERPLLCON1.B.K2PREDIV]));
     pllFrequency1 = pllFrequency1 * clock->PERPLLSTAT.B.PLLLOCK * clock->PERPLLSTAT.B.PWRSTAT;
     return (uint32)pllFrequency1;
 }
@@ -994,7 +1007,7 @@ uint32 IfxClock_getPerPllFrequency2(void)
 
     uint8      preDiv[16] = IFXCLOCK_PERPLL_FREQ2_PREDIV;
     oscFreq       = IfxClock_getOscFrequency();
-    pllFrequency2 = (oscFreq * (clock->PERPLLCON0.B.NDIV + 1)) / ((clock->PERPLLCON0.B.PDIV + 1) * ((clock->PERPLLCON1.B.K3DIV + 1) * (preDiv[clock->PERPLLCON1.B.K3PREDIV]) / 10u ));
+    pllFrequency2 = (oscFreq * (clock->PERPLLCON0.B.NDIV + 1) * 10u) / ((clock->PERPLLCON0.B.PDIV + 1) * (clock->PERPLLCON1.B.K3DIV + 1) * (preDiv[clock->PERPLLCON1.B.K3PREDIV]));
     pllFrequency2 = pllFrequency2 * clock->PERPLLSTAT.B.PLLLOCK * clock->PERPLLSTAT.B.PWRSTAT;
     return (uint32)pllFrequency2;
 }
@@ -1007,7 +1020,7 @@ uint32 IfxClock_getPerPllFrequency3(void)
     uint64     oscFreq;
     uint8    preDiv[4] = {10u, 20u, 12u, 16u};
     oscFreq       = IfxClock_getOscFrequency();
-    pllFrequency3 = (oscFreq * (clock->PERPLLCON0.B.NDIV + 1)) / ((clock->PERPLLCON0.B.PDIV + 1) * ((clock->PERPLLCON1.B.K4DIV + 1) * (preDiv[clock->PERPLLCON1.B.K4PREDIV]) / 10u ));
+    pllFrequency3 = (oscFreq * (clock->PERPLLCON0.B.NDIV + 1) * 10u) / ((clock->PERPLLCON0.B.PDIV + 1) * (clock->PERPLLCON1.B.K4DIV + 1) * (preDiv[clock->PERPLLCON1.B.K4PREDIV]));
     pllFrequency3 = pllFrequency3 * clock->PERPLLSTAT.B.PLLLOCK * clock->PERPLLSTAT.B.PWRSTAT;
     return (uint32)pllFrequency3;
 }
@@ -1053,7 +1066,7 @@ uint32 IfxClock_getPllFrequency(void)
     uint8    preDiv[4] = {10u, 20u, 12u, 16u};
 
     oscFreq = IfxClock_getOscFrequency();
-    freq    = (oscFreq * (clock->SYSPLLCON0.B.NDIV + 1)) / ((clock->SYSPLLCON0.B.PDIV + 1) * ((clock->SYSPLLCON1.B.K2DIV + 1) * (preDiv[clock->SYSPLLCON1.B.K2PREDIV]) / 10u ));
+    freq    = (oscFreq * (clock->SYSPLLCON0.B.NDIV + 1) * 10u) / ((clock->SYSPLLCON0.B.PDIV + 1) * (clock->SYSPLLCON1.B.K2DIV + 1) * (preDiv[clock->SYSPLLCON1.B.K2PREDIV]));
     freq    = freq * clock->SYSPLLSTAT.B.PLLLOCK * clock->SYSPLLSTAT.B.PWRSTAT;
     return (uint32)freq;
 }
@@ -1282,8 +1295,10 @@ boolean IfxClock_init(const IfxClock_Config *config)
 
     if (!status)
     {
-        IfxClock_modulation_init(config->modulationConfig);             /* initialize system Pll modulation */
-        IfxClock_perPllModulation_init(config->perPllmodulationConfig); /* initialize peripheral Pll modulation */
+    	/* Initialize system Pll modulation */
+        IfxClock_modulation_init(config->modulationConfig);
+        /* Initialize peripheral Pll modulation */
+        IfxClock_perPllModulation_init(config->perPllmodulationConfig);
     }
 
 #endif
@@ -1321,8 +1336,10 @@ void IfxClock_modulation_init(const IfxClock_Mod_Config *Mod_Cfg)
     Ifx_CLOCK_SYSPLLCON0         syspllcon0;
     Ifx_CLOCK_SYSPLLCON2         syspllcon2;
 
-    if (mod_enable == IfxClock_ModEn_enabled)   /* do this only if modulation is enabled */
+    /* Do this only if modulation is enabled */
+    if (mod_enable == IfxClock_ModEn_enabled)
     {
+    	/* Check for CCU lock bit with a timeout of at least 100 micro seconds */
         while (CLOCK_CCUSTAT.B.LCK != 0U)
         {
             IFXCLOCK_LOOP_TIMEOUT_CHECK(timeoutCycleCount, initError);
@@ -1338,12 +1355,13 @@ void IfxClock_modulation_init(const IfxClock_Mod_Config *Mod_Cfg)
         IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_config);
 #endif
 
-        /* write all registers here */
+        /* Write all registers here */
 
         /* Write SYSPLLCON2 with RGain */
         syspllcon2.U        = CLOCK_SYSPLLCON2.U;
         syspllcon2.B.MODCFG = IFXCLOCK_GET_MODCFG(RGain_P.RGainHex);
 
+        /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
         while (CLOCK_CCUSTAT.B.LCK != 0U)
         {
             IFXCLOCK_LOOP_TIMEOUT_CHECK(timeoutCycleCount, initError);
@@ -1354,14 +1372,16 @@ void IfxClock_modulation_init(const IfxClock_Mod_Config *Mod_Cfg)
 
         CLOCK_SMODCON0.B.CAL_EN = 1;
 #if !defined(IFX_ILLD_PPU_USAGE)
-        IfxClock_waitWithWdtService(IFXCLOCK_MODULATION_CAL_EN_TOGGLE_WAIT_TIME); /* 100 nano second wait to ensure toggling */
+        /* 100 nano second wait to ensure toggling */
+        IfxClock_waitWithWdtService(IFXCLOCK_MODULATION_CAL_EN_TOGGLE_WAIT_TIME);
 #endif
         CLOCK_SMODCON0.B.CAL_EN = 0;
 
-        /* enable modulation now */
+        /* Enable modulation now */
         syspllcon0.U       = CLOCK_SYSPLLCON0.U;
         syspllcon0.B.MODEN = (uint32)IfxClock_ModEn_enabled;
 
+        /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
         while (CLOCK_CCUSTAT.B.LCK != 0U)
         {
             IFXCLOCK_LOOP_TIMEOUT_CHECK(timeoutCycleCount, initError);
@@ -1399,6 +1419,7 @@ uint32 IfxClock_setAsclinFFrequency(uint32 asclinFFreq)
 
     perccucon1.B.ASCLINFDIV = clkdiv[asclinFDiv];
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1408,6 +1429,7 @@ uint32 IfxClock_setAsclinFFrequency(uint32 asclinFFreq)
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_run);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1449,6 +1471,7 @@ uint32 IfxClock_setAsclinSFrequency(uint32 asclinSFreq)
 
     perccucon1.B.ASCLINSDIV = clkdiv[asclinSDiv];
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1458,6 +1481,7 @@ uint32 IfxClock_setAsclinSFrequency(uint32 asclinSFreq)
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_run);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1485,6 +1509,7 @@ uint32 IfxClock_setFsi2Frequency(uint32 fsi2Freq)
     ccucon0.B.FSI2DIV = fsi2Div;
     ccucon0.B.UP      = 1;
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1494,6 +1519,7 @@ uint32 IfxClock_setFsi2Frequency(uint32 fsi2Freq)
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_run);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1521,6 +1547,7 @@ uint32 IfxClock_setCpbFrequency(uint32 cpbFreq)
     sysccucon0.B.CPBDIV = clkdiv[cpbDiv];
     sysccucon0.B.UP     = 1;
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1530,6 +1557,7 @@ uint32 IfxClock_setCpbFrequency(uint32 cpbFreq)
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_run);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1555,6 +1583,7 @@ uint32 IfxClock_setFsiFrequency(uint32 fsiFreq)
     ccucon0.B.FSIDIV = fsiDiv;
     ccucon0.B.UP     = 1;
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1564,6 +1593,7 @@ uint32 IfxClock_setFsiFrequency(uint32 fsiFreq)
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_run);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1592,6 +1622,7 @@ uint32 IfxClock_setGtmFrequency(uint32 gtmFreq)
     sysccucon1.B.GTMDIV = clkdiv[gtmDiv];
     sysccucon1.B.UP     = 1;
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1601,6 +1632,7 @@ uint32 IfxClock_setGtmFrequency(uint32 gtmFreq)
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_run);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1625,6 +1657,7 @@ uint32 IfxClock_setI2cFrequency(uint32 i2cFreq)
     perccucon0.U        = CLOCK_PERCCUCON0.U;
     perccucon0.B.I2CDIV = clkdiv[i2cDiv];
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1634,6 +1667,7 @@ uint32 IfxClock_setI2cFrequency(uint32 i2cFreq)
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_run);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1674,6 +1708,7 @@ uint32 IfxClock_setMcanFrequency(uint32 mcanFreq)
 
     perccucon0.B.MCANDIV = clkdiv[mcanDiv];
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1683,6 +1718,7 @@ uint32 IfxClock_setMcanFrequency(uint32 mcanFreq)
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_run);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1707,6 +1743,7 @@ uint32 IfxClock_setMcanhFrequency(uint32 mcanhFreq)
     sysccucon1.B.MCANHDIV = clkdiv[mcanhDiv];
     sysccucon1.B.UP       = 1;
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1716,6 +1753,7 @@ uint32 IfxClock_setMcanhFrequency(uint32 mcanhFreq)
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_run);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1757,6 +1795,7 @@ uint32 IfxClock_setMscFrequency(uint32 mscFreq)
 
     perccucon0.B.MSCDIV = clkdiv[mscDiv];
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1766,6 +1805,7 @@ uint32 IfxClock_setMscFrequency(uint32 mscFreq)
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_run);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1806,6 +1846,7 @@ uint32 IfxClock_setQspiFrequency(uint32 qspiFreq)
 
     perccucon0.B.QSPIDIV = clkdiv[qspiDiv];
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1815,6 +1856,7 @@ uint32 IfxClock_setQspiFrequency(uint32 qspiFreq)
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_run);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1839,6 +1881,7 @@ uint32 IfxClock_setSpbFrequency(uint32 spbFreq)
     sysccucon0.B.SPBDIV = clkdiv[spbDiv];
     sysccucon0.B.UP     = 1;
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1848,6 +1891,7 @@ uint32 IfxClock_setSpbFrequency(uint32 spbFreq)
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_run);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1872,6 +1916,7 @@ uint32 IfxClock_setSriFrequency(uint32 sriFreq)
     sysccucon0.B.SRIDIV = clkdiv[sriDiv];
     sysccucon0.B.UP     = 1;
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1881,6 +1926,7 @@ uint32 IfxClock_setSriFrequency(uint32 sriFreq)
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_run);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1907,6 +1953,7 @@ uint32 IfxClock_setRcbFrequency(uint32 rcbFreq)
     sysccucon1.B.RCBDIV = clkdiv[rcbDiv];
     sysccucon1.B.UP     = 1;
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1916,6 +1963,7 @@ uint32 IfxClock_setRcbFrequency(uint32 rcbFreq)
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_run);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1942,6 +1990,7 @@ uint32 IfxClock_setStmFrequency(uint32 stmFreq)
     sysccucon0.B.STMDIV = clkdiv[stmDiv];
     sysccucon0.B.UP     = 1;
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1951,6 +2000,7 @@ uint32 IfxClock_setStmFrequency(uint32 stmFreq)
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_run);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1976,6 +2026,7 @@ uint32 IfxClock_setTpbFrequency(uint32 tpbFreq)
     sysccucon0.B.TPBDIV = clkdiv[tpbDiv];
     sysccucon0.B.UP     = 1;
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -1985,6 +2036,7 @@ uint32 IfxClock_setTpbFrequency(uint32 tpbFreq)
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_run);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -2010,6 +2062,7 @@ uint32 IfxClock_setXGeth0Frequency(uint32 gethFreq)
     sysccucon1.B.GETHDIV = clkdiv[gethDiv];
     sysccucon1.B.UP      = 1;
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -2019,6 +2072,7 @@ uint32 IfxClock_setXGeth0Frequency(uint32 gethFreq)
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_run);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -2045,6 +2099,7 @@ uint32 IfxClock_seteGtmFrequency(uint32 eGtmFreq)
     sysccucon1.B.EGTMDIV = clkdiv[eGtmDiv];
     sysccucon1.B.UP      = 1;
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -2054,6 +2109,7 @@ uint32 IfxClock_seteGtmFrequency(uint32 eGtmFreq)
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_run);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -2109,11 +2165,13 @@ uint32 IfxClock_setXspiFrequency(uint32 xSpiFreq)
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_config);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
     CLOCK_PERPLLCON1.U = perPllCon1.U;
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -2136,6 +2194,7 @@ uint32 IfxClock_initPll3Dividers(IfxClock_K4divider k4Div, IfxClock_K4PreDivider
     perpllcon1.B.K4DIV    = k4Div;
     perpllcon1.B.K4PREDIV = k4PreDiv;
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -2149,6 +2208,7 @@ uint32 IfxClock_initPll3Dividers(IfxClock_K4divider k4Div, IfxClock_K4PreDivider
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_run);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -2175,10 +2235,12 @@ boolean IfxClock_switchToBackupClock(const IfxClock_Config *cfg)
         Ifx_CLOCK_CCUCON ccucon0;
         ccucon0.U         = CLOCK_CCUCON.U;
 #if !defined(IFX_CLOCK_DISABLE_RAMPCON)
-        ccucon0.B.CLKSELS = IfxClock_SysClockSourceSelect_ramp; /*Select the Rampcon as fsource0/1/2 for the clock distribution */
+        /* Select the Rampcon as fsource0/1/2 for the clock distribution */
+        ccucon0.B.CLKSELS = IfxClock_SysClockSourceSelect_ramp;
 #endif
         ccucon0.B.CLKSELP = IfxClock_SysClockSourceSelect_back;
 
+        /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
         while (CLOCK_CCUSTAT.B.LCK != 0U)
         {}
 
@@ -2186,15 +2248,16 @@ boolean IfxClock_switchToBackupClock(const IfxClock_Config *cfg)
     }
 
 #if !defined(IFX_CLOCK_DISABLE_RAMPCON)
-    // TODO:  check for PSTAT needed or Not ?
+    /* TODO:  check for PSTAT needed or Not ? */
     /* Configure the Ramp oscillator (RAMPCON UFL, SZ, WAIT) for the desired Sys PLL frequency (100MHZ) and enable CMD to ramp down.
      * Enable clock source (CCUCON.CLKSELS = RAMP) to RAMPCON frequency. */
     {
         Ifx_CLOCK_RAMPCON0 rampcon;
         rampcon.U     = CLOCK_RAMPCON0.U;
-        rampcon.B.UFL = 100;                               /*upper target frequency in 1 MHz steps */
+        rampcon.B.UFL = 100;                               /* Upper target frequency in 1 MHz steps */
         rampcon.B.CMD = IfxClock_RampSeqCmd_rampDown;
 
+        /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
         while (CLOCK_CCUSTAT.B.LCK != 0U)
         {}
 
@@ -2218,18 +2281,19 @@ boolean IfxClock_switchToBackupClock(const IfxClock_Config *cfg)
         uint32 timeoutCycleCount;
         uint8  i;
 
-        /*Start Pll ramp down sequence */
+        /* Start Pll ramp down sequence */
         for (pllStepsCount = cfg->sysPllThrottleConfig.numOfSteps; pllStepsCount > 0; pllStepsCount--)
-        {                   /*iterate through number of pll steps */
+        {
+        	/* Iterate through number of pll steps */
             timeoutCycleCount = IFXCLOCK_PLL_K2DIV_COUNT << 5;
 
             while ((CLOCK_CCUSTAT.B.LCK != 0U) && timeoutCycleCount--)
             {}
 
-            /*Now set the K2 divider value for the step corresponding to step count */
+            /* Now set the K2 divider value for the step corresponding to step count */
             CLOCK_SYSPLLCON1.B.K2DIV = cfg->sysPllThrottleConfig.pllSteps[pllStepsCount - 1];
 
-            /*Wait for 6 PLL0 cycles corresponding to the pll step */
+            /* Wait for 6 PLL0 cycles corresponding to the pll step */
             for (i = 0; i < IFXCLOCK_PLL_K2DIV_COUNT; i++)
             {}
         }
@@ -2239,13 +2303,16 @@ boolean IfxClock_switchToBackupClock(const IfxClock_Config *cfg)
     {
         Ifx_CLOCK_CCUCON ccucon0;
         ccucon0.U         = CLOCK_CCUCON.U;
-        ccucon0.B.CLKSELS = IfxClock_SysClockSourceSelect_back; /*Select the Rampcon as fsource0/1/2 for the clock distribution */
+        /* Select the Rampcon as fsource0/1/2 for the clock distribution */
+        ccucon0.B.CLKSELS = IfxClock_SysClockSourceSelect_back;
 
+        /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
         while (CLOCK_CCUSTAT.B.LCK != 0U)
         {}
 
         CLOCK_CCUCON.U = ccucon0.U;
 
+        /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
         while (CLOCK_CCUSTAT.B.LCK != 0U)
         {}
     }
@@ -2270,7 +2337,7 @@ uint32 IfxClock_getSriCsFrequency(void)
 
     if (CLOCK_SYSCCUCON0.B.LPDIV == 0)
     {
-        /*Not in low power mode */
+        /* Not in low power mode */
         if (CLOCK_SYSCCUCON0.B.SRICSDIV == 0U)
         {
             sriFrequency = IfxClock_getSriFrequency();
@@ -2354,6 +2421,7 @@ uint32 IfxClock_setCanXLFrequency(uint32 canXLFreq)
 
     perccucon1.B.CANXLDIV = clkdiv[canDiv];
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -2363,6 +2431,7 @@ uint32 IfxClock_setCanXLFrequency(uint32 canXLFreq)
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_run);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -2387,6 +2456,7 @@ uint32 IfxClock_setCanXLhFrequency(uint32 canXlhFreq)
     sysccucon1.B.CANXLHDIV = clkdiv[canhDiv];
     sysccucon1.B.UP        = 1;
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -2396,6 +2466,7 @@ uint32 IfxClock_setCanXLhFrequency(uint32 canXlhFreq)
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_run);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -2421,6 +2492,7 @@ uint32 IfxClock_setLethFrequency(uint32 lethFreq)
     sysccucon1.B.LETHDIV = clkdiv[lethDiv];
     sysccucon1.B.UP      = 1;
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -2430,6 +2502,7 @@ uint32 IfxClock_setLethFrequency(uint32 lethFreq)
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_run);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -2454,7 +2527,7 @@ void IfxClock_enableExtClockOut0(IfxClock_ClkSel0 Clk_Sel, const uint32 freqHz, 
         {
             extfdcon.B.DM = 1U;
 
-            /* normal divider mode */
+            /* Normal divider mode */
             if (freqHz == (IfxClock_getSpbFrequency() / 2))
             {
                 extfdcon.B.STEP = 0x3FFu;
@@ -2466,7 +2539,7 @@ void IfxClock_enableExtClockOut0(IfxClock_ClkSel0 Clk_Sel, const uint32 freqHz, 
         }
         else
         {
-            /* fractional divider mode */
+            /* Fractional divider mode */
             extfdcon.B.DM   = 2U;
             extfdcon.B.STEP = (uint32)(((2u * freqHz) * 1024u) / (IfxClock_getSpbFrequency()));
         }
@@ -2515,7 +2588,8 @@ uint32 IfxClock_getExtClock0Frequency(void)
 {
     uint32 freq = 0u;
 
-    if (CLOCK_EXTCON.B.EN0) //	EXTCLK0 enabled
+    /* EXTCLK0 enabled */
+    if (CLOCK_EXTCON.B.EN0)
     {
         switch (CLOCK_EXTCON.B.SEL0)
         {
@@ -2617,7 +2691,8 @@ uint32 IfxClock_getExtClock1Frequency(void)
 {
     uint32 freq = 0u;
 
-    if (CLOCK_EXTCON.B.EN1)     //	EXTCLK1 enabled
+    /* EXTCLK1 enabled */
+    if (CLOCK_EXTCON.B.EN1)
     {
         switch (CLOCK_EXTCON.B.SEL1)
         {
@@ -2735,9 +2810,10 @@ boolean IfxClock_configureRampOscillator(uint32 rampFreq, IfxClock_RampSeqCmd ra
         /*	Configure the Ramp oscillator (RAMPCON UFL) for the desired Sys PLL frequency (100MHZ) and enable CMD to ramp down */
         Ifx_CLOCK_RAMPCON0 rampcon;
         rampcon.U     = CLOCK_RAMPCON0.U;
-        rampcon.B.UFL = 100;                                              //upper target frequency in 1 MHz steps
+        rampcon.B.UFL = 100;                                              /* Upper target frequency in 1 MHz steps. */
         rampcon.B.CMD = IfxClock_RampSeqCmd_rampDown;
 
+        /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
         while (CLOCK_CCUSTAT.B.LCK != 0U)
         {}
 
@@ -2787,8 +2863,10 @@ void IfxClock_perPllModulation_init(const IfxClock_perPllMod_Config *Mod_Cfg)
     Ifx_CLOCK_PERPLLCON0               perpllcon0;
     Ifx_CLOCK_PERPLLCON2               perpllcon2;
 
-    if (mod_enable == IfxClock_ModEn_enabled)   /* do this only if modulation is enabled */
+    /* Do this only if modulation is enabled */
+    if (mod_enable == IfxClock_ModEn_enabled)
     {
+    	/* Check for CCU lock bit with a timeout of at least 100 micro seconds */
         while (CLOCK_CCUSTAT.B.LCK != 0U)
         {
             IFXCLOCK_LOOP_TIMEOUT_CHECK(timeoutCycleCount, initError);
@@ -2810,6 +2888,7 @@ void IfxClock_perPllModulation_init(const IfxClock_perPllMod_Config *Mod_Cfg)
         perpllcon2.U        = CLOCK_PERPLLCON2.U;
         perpllcon2.B.MODCFG = IFXCLOCK_GET_MODCFG(RGain_P.RGainHex);
 
+        /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
         while (CLOCK_CCUSTAT.B.LCK != 0U)
         {
             IFXCLOCK_LOOP_TIMEOUT_CHECK(timeoutCycleCount, initError);
@@ -2817,6 +2896,7 @@ void IfxClock_perPllModulation_init(const IfxClock_perPllMod_Config *Mod_Cfg)
 
         CLOCK_PERPLLCON2.U = perpllcon2.U;
 
+        /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
         while (CLOCK_CCUSTAT.B.LCK != 0U)
         {
             IFXCLOCK_LOOP_TIMEOUT_CHECK(timeoutCycleCount, initError);
@@ -2824,6 +2904,7 @@ void IfxClock_perPllModulation_init(const IfxClock_perPllMod_Config *Mod_Cfg)
 
         CLOCK_PMODCON0.U = 0x0;
 
+        /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
         while (CLOCK_CCUSTAT.B.LCK != 0U)
         {
             IFXCLOCK_LOOP_TIMEOUT_CHECK(timeoutCycleCount, initError);
@@ -2831,20 +2912,23 @@ void IfxClock_perPllModulation_init(const IfxClock_perPllMod_Config *Mod_Cfg)
 
         CLOCK_PMODCON0.B.CAL_EN = 1;
 #if !defined(IFX_ILLD_PPU_USAGE)
-        IfxClock_waitWithWdtService(IFXCLOCK_MODULATION_CAL_EN_TOGGLE_WAIT_TIME); /* 100 nano second wait to ensure toggling */
+        /* 100 nano second wait to ensure toggling */
+        IfxClock_waitWithWdtService(IFXCLOCK_MODULATION_CAL_EN_TOGGLE_WAIT_TIME);
 #endif
 
+        /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
         while (CLOCK_CCUSTAT.B.LCK != 0U)
         {
             IFXCLOCK_LOOP_TIMEOUT_CHECK(timeoutCycleCount, initError);
         }
 
         CLOCK_PMODCON0.B.CAL_EN = 0;
-        /* enable modulation now */
+        /* Enable modulation now */
 
         perpllcon0.U       = CLOCK_PERPLLCON0.U;
         perpllcon0.B.MODEN = (uint32)IfxClock_ModEn_enabled;
 
+        /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
         while (CLOCK_CCUSTAT.B.LCK != 0U)
         {
             IFXCLOCK_LOOP_TIMEOUT_CHECK(timeoutCycleCount, initError);
@@ -2865,6 +2949,7 @@ void IfxClock_perPllModulation_init(const IfxClock_perPllMod_Config *Mod_Cfg)
     IFX_UNUSED_PARAMETER(initError)
 }
 
+
 #if IFXCLOCK_IS_EXTCLK_XSPISL_AVAILABLE
 uint32 IfxClock_setXspislFrequency(uint32 xspislFreq)
 {
@@ -2882,6 +2967,7 @@ uint32 IfxClock_setXspislFrequency(uint32 xspislFreq)
     perccucon1.U           = CLOCK_PERCCUCON1.U;
     perccucon1.B.XSPISLDIV = clkdiv[xspislDiv];
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -2891,6 +2977,7 @@ uint32 IfxClock_setXspislFrequency(uint32 xspislFreq)
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_run);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -3019,7 +3106,7 @@ boolean IfxClock_disableAudioPll(void)
     Ifx_CLOCK_APLLCON0 ApllCon0;
     ApllCon0.U = CLOCK_APLLCON0.U;
 
-    /* Check for CCU lock bit with a timeout of at least 100 micro seconds*/
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {
         IFXCLOCK_LOOP_TIMEOUT_CHECK(timeoutCycleCount, initError);
@@ -3042,6 +3129,7 @@ boolean IfxClock_enableAudioPll(IfxClock_AudioConfig *pllCfg)
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_config);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {
         IFXCLOCK_LOOP_TIMEOUT_CHECK(timeoutCycleCount, initError);
@@ -3072,7 +3160,6 @@ boolean IfxClock_enableAudioPll(IfxClock_AudioConfig *pllCfg)
         {
             /* Step 1. PLL off (By default PLL will be in off state) */
             /* Step 2. Check for CCU lock bit with a timeout of at least 100 micro seconds */
-
             timeoutCycleCount = IFXCLOCK_CCUSTAT_LCK_BIT_TIMEOUT_COUNT;
 
             while (CLOCK_CCUSTAT.B.LCK != 0U)
@@ -3187,8 +3274,10 @@ boolean IfxClock_enableAudioPll(IfxClock_AudioConfig *pllCfg)
     {
         Ifx_CLOCK_CCUCON ccucon;
         ccucon.U          = CLOCK_CCUCON.U;
-        ccucon.B.CLKSELA  = pllCfg->AudioClockSourceSelect; /*Select the Clock source */
+        /* Select the Clock source */
+        ccucon.B.CLKSELA  = pllCfg->AudioClockSourceSelect;
 
+        /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
         timeoutCycleCount = IFXCLOCK_CCUCON_LCK_BIT_TIMEOUT_COUNT;
 
         while (CLOCK_CCUSTAT.B.LCK != 0U)
@@ -3279,6 +3368,7 @@ uint32 IfxClock_setPpuFrequency(uint32 ppuFreq)
         perccucon0.B.PPUDIV = 0;
     }
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 
@@ -3288,6 +3378,7 @@ uint32 IfxClock_setPpuFrequency(uint32 ppuFreq)
     IfxApProt_setState((Ifx_PROT_PROT *)&CLOCK_PROTE, IfxApProt_State_run);
 #endif
 
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {}
 

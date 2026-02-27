@@ -2,7 +2,7 @@
  * \file IfxAdc_Tmadc.c
  * \brief ADC TMADC details
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -52,8 +52,11 @@
 /******************************************************************************/
 
 /** \brief Function to convert buffer size in word to Dma circular buffer enum
- * \param size Size of buffer in words
- * \return Size of buffer in enum of dma circular buffer
+ *
+ * \param[in] size Size of buffer in words
+ *
+ * \retval Size of buffer in enum of dma circular buffer
+ * Range: 0 to 0xFFFF
  */
 IFX_INLINE uint16 IfxAdc_Tmadc_getDmaCircularBufferSize(uint16 size);
 
@@ -62,31 +65,39 @@ IFX_INLINE uint16 IfxAdc_Tmadc_getDmaCircularBufferSize(uint16 size);
 /******************************************************************************/
 
 /** \brief Function to configure DMA for TMADC channel
- * \param queue Pointer to queue configuration
- * \param channel Pointer to handle of Tmadc channel
- * \return None
+ *
+ * \param[inout] queue   Pointer to queue configuration
+ * \param[in]    channel Pointer to handle of Tmadc channel
+ *
+ * \retval None
  */
 IFX_STATIC void IfxAdc_Tmadc_configureDma(IfxAdc_Tmadc_QueueConfig *queue, IfxAdc_Tmadc_Ch *channel);
 
 /** \brief Function to the configure DMA for TMADC group
- * \param groupConfig Pointer to group configuration
- * \param group Pointer to handle of Tmadc group
- * \return None
+ *
+ * \param[inout] groupConfig Pointer to group configuration
+ * \param[in]    group       Pointer to handle of Tmadc group
+ *
+ * \retval None
  */
 IFX_STATIC void IfxAdc_Tmadc_configureDmaForGroup(IfxAdc_Tmadc_GroupConfig *groupConfig, IfxAdc_Tmadc_Group *group);
 
 /** \brief Function to initialize the result buffer.
- * \param queueConfig Pointer to queue configuration
- * \param channel Pointer to handle of Tmadc channel
- * \return Return
- * IfxAdc_Status_success --> Setting up of result buffer is successful
- * IfxAdc_Status_failure --> Issue in setting up of result buffer
+ *
+ * \param[in]    queueConfig Pointer to queue configuration
+ * \param[inout] channel     Pointer to handle of Tmadc channel
+ *
+ * \retval 
+ * Return IfxAdc_Status_success --> Setting up of result buffer is successful
+ * Return IfxAdc_Status_failure --> Issue in setting up of result buffer
  */
 IFX_STATIC IfxAdc_Status IfxAdc_Tmadc_initBuffer(IfxAdc_Tmadc_QueueConfig *queueConfig, IfxAdc_Tmadc_Ch *channel);
 
 /** \brief Function to update internal handle information from DMA.
- * \param channel Pointer to handle of Tmadc channel
- * \return None
+ *
+ * \param[inout] channel Pointer to handle of Tmadc channel
+ *
+ * \retval None
  */
 IFX_STATIC void IfxAdc_Tmadc_updateHandleInfoFromDma(IfxAdc_Tmadc_Ch *channel);
 

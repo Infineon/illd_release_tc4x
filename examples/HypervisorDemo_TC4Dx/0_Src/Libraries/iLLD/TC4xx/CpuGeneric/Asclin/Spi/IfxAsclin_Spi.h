@@ -3,9 +3,9 @@
  * \brief ASCLIN SPI details
  * \ingroup IfxLld_Asclin
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-10-22 06:25:09
  *
  *
  *                                 IMPORTANT NOTICE
@@ -246,9 +246,11 @@ typedef enum
  */
 typedef struct
 {
-    float32                      baudrate;           /**< \brief value of the required baudrate */
-    uint16                       prescaler;          /**< \brief BITCON.PRESCALER, predivider to generate the baud rate */
-    IfxAsclin_OversamplingFactor oversampling;       /**< \brief BITCON.OVERSAMPLING, postdivider, used for oversampling */
+    float32                      baudrate;           /**< \brief Value of the required baudrate.
+     	 	 	 	 	 	 	 	 	 	 	 	  * Range: Min baud rate fA/ 268435456 MBaud(= 0.37 Baud @ 100 MHz fA module clock)
+                                                      *        Max baud rate fA/ 4 MBaud (= 25 MBaud @ 100 MHz fA module clock) */
+    uint16                       prescaler;          /**< \brief BITCON.PRESCALER, predivider to generate the baud rate. Range: 0 to 4095 */
+    IfxAsclin_OversamplingFactor oversampling;       /**< \brief BITCON.OVERSAMPLING, postdivider, used for oversampling. */
 } IfxAsclin_Spi_Baudrate;
 
 /** \brief Structure for Bit Sampling
@@ -262,10 +264,10 @@ typedef struct
  */
 typedef struct
 {
-    uint8 frameError : 1;          /**< \brief frame error */
-    uint8 rxFifoOverflow : 1;      /**< \brief receive FIFO overflow error */
-    uint8 rxFifoUnderflow : 1;     /**< \brief receive FIFO underflow error */
-    uint8 txFifoOverflow : 1;      /**< \brief transmit FIFO overflow error */
+    uint8 frameError : 1;          /**< \brief Frame error. Range: 0 - Last message received error free, 1 - Last message received with framing error */
+    uint8 rxFifoOverflow : 1;      /**< \brief Receive FIFO overflow error. Range: 0 - No overflow error occurred, 1 - Overflow error occurred */
+    uint8 rxFifoUnderflow : 1;     /**< \brief Receive FIFO underflow error. Range: 0 - No underflow error occurred, 1 - Underflow error occurred */
+    uint8 txFifoOverflow : 1;      /**< \brief Transmit FIFO overflow error. Range: 0 - No overflow error occurred, 1 - Overflow error occurred */
 } IfxAsclin_Spi_ErrorFlags;
 
 /** \brief Structure for FIFO Control
@@ -305,10 +307,10 @@ typedef struct
  */
 typedef struct
 {
-    uint16      txPriority;          /**< \brief transmit interrupt priority */
-    uint16      rxPriority;          /**< \brief receive interrupt priority */
-    uint16      erPriority;          /**< \brief error interrupt priority */
-    IfxSrc_Tos  typeOfService;       /**< \brief type of interrupt service */
+    uint16      txPriority;          /**< \brief Transmit interrupt priority. Range: 0 to 255 */
+    uint16      rxPriority;          /**< \brief Receive interrupt priority. Range: 0 to 255 */
+    uint16      erPriority;          /**< \brief Error interrupt priority. Range: 0 to 255 */
+    IfxSrc_Tos  typeOfService;       /**< \brief Type of interrupt service */
     IfxSrc_VmId vmId;                /**< \brief Virtual Machine Number */
 } IfxAsclin_Spi_InterruptConfig;
 
@@ -316,8 +318,8 @@ typedef struct
  */
 typedef struct
 {
-    void  *data;          /**< \brief pointer to user data */
-    uint32 pending;       /**< \brief job remaining (count of the data) */
+    void  *data;          /**< \brief Pointer to user data */
+    uint32 pending;       /**< \brief Job remaining (count of the data). Range: 0 to FIFO size */
 } IfxAsclin_Spi_Job;
 
 /** \brief Structure for SPI pin configuration
@@ -343,13 +345,13 @@ typedef struct
  */
 typedef struct
 {
-    Ifx_ASCLIN              *asclin;                   /**< \brief pointer to ASCLIN registers */
-    IfxAsclin_Spi_Job        txJob;                    /**< \brief structure for Tx job */
-    IfxAsclin_Spi_Job        rxJob;                    /**< \brief structure for Rx job */
-    uint32                   sending;                  /**< \brief sending in progress status */
-    IfxAsclin_Spi_ErrorFlags errorFlags;               /**< \brief structure for error flags status */
-    uint8                    dataWidth;                /**< \brief width of the data in bytes */
-    boolean                  transferInProgress;       /**< \brief status of the transfer In progress */
+    Ifx_ASCLIN              *asclin;                   /**< \brief Pointer to ASCLIN registers */
+    IfxAsclin_Spi_Job        txJob;                    /**< \brief Structure for Tx job */
+    IfxAsclin_Spi_Job        rxJob;                    /**< \brief Structure for Rx job */
+    uint32                   sending;                  /**< \brief Sending in progress status. Range: 1 - sending in progress, 0 - sending not in progress */
+    IfxAsclin_Spi_ErrorFlags errorFlags;               /**< \brief Structure for error flags status */
+    uint8                    dataWidth;                /**< \brief Width of the data in bytes. Range: 1 in case of 8 bit wide, 2 in case of 16 bit wide */
+    boolean                  transferInProgress;       /**< \brief Status of the transfer in progress. Range: TRUE if transfer in-progress, FALSE if transfer not in-progress */
 } IfxAsclin_Spi;
 
 /** \brief Configuration structure of the module
@@ -367,7 +369,7 @@ typedef struct
     IfxAsclin_Spi_InterruptConfig    interrupt;         /**< \brief structure for interrupt configuration */
     IFX_CONST IfxAsclin_Spi_Pins    *pins;              /**< \brief structure for SPI pins */
     IfxAsclin_ClockSource            clockSource;       /**< \brief CSR.CLKSEL, clock source selection */
-    boolean                          parity;            /**< \brief FRAMECON.PEN, parity enable */
+    boolean                          parity;            /**< \brief FRAMECON.PEN, parity enable. Range: TRUE: Enabled, FALSE: Disabled */
 } IfxAsclin_Spi_Config;
 
 /** \} */
@@ -379,28 +381,37 @@ typedef struct
 /*-------------------------Global Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Disables the module
- * \param asclin module handle
- * \return None
+/**
+ * \brief Disables the module.
+ *
+ * \param[inout] asclin Module handle.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAsclin_Spi_disableModule(IfxAsclin_Spi *asclin);
 
-/** \brief Initialises the module
- * \param asclin module handle
- * \param config predefined configuration structure of the module
- * \return Status
+/**
+ * \brief Initialises the module.
  *
- * A coding example can be found in \ref IfxLld_Asclin_Spi_Usage
+ * \param[inout] asclin Module handle.
+ * \param[in] 	 config Predefined configuration structure of the module.
+ *
+ * \retval IfxAsclin_Status Status of the initialization (IfxAsclin_Status_noError or IfxAsclin_Status_configurationError).
+ *
+ * \note A coding example can be found in \ref IfxLld_Asclin_Spi_Usage
  *
  */
 IFX_EXTERN IfxAsclin_Status IfxAsclin_Spi_initModule(IfxAsclin_Spi *asclin, const IfxAsclin_Spi_Config *config);
 
-/** \brief Fills the configuration structure with default values
- * \param config predefined configuration structure of the module
- * \param asclin pointer to ASCLIN registers
- * \return None
+/**
+ * \brief Fills the configuration structure with default values.
  *
- * A coding example can be found in \ref IfxLld_Asclin_Spi_Usage
+ * \param[out] config Predefined configuration structure of the module.
+ * \param[in]  asclin Pointer to ASCLIN registers.
+ *
+ * \retval None
+ *
+ * \note A coding example can be found in \ref IfxLld_Asclin_Spi_Usage
  *
  */
 IFX_EXTERN void IfxAsclin_Spi_initModuleConfig(IfxAsclin_Spi_Config *config, Ifx_ASCLIN *asclin);
@@ -414,24 +425,33 @@ IFX_EXTERN void IfxAsclin_Spi_initModuleConfig(IfxAsclin_Spi_Config *config, Ifx
 /*-------------------------Global Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief ISR error routine.
+/**
+ * \brief ISR error routine.
  *
- * Currently it only stores error flags in the handle (asclin->errorFlags) whenever an error happens.
- * The user software could react on these flags, e.g. re-initialising the module.
- * \param asclin module handle
- * \return None
+ * \note Currently it only stores error flags in the handle (asclin->errorFlags) whenever an error happens.
+ *       The user software could react on these flags, e.g. re-initialising the module.
+ *
+ * \param[inout] asclin Module handle.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAsclin_Spi_isrError(IfxAsclin_Spi *asclin);
 
-/** \brief ISR receive routine
- * \param asclin module handle
- * \return None
+/**
+ * \brief ISR receive routine.
+ *
+ * \param[inout] asclin Module handle.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAsclin_Spi_isrReceive(IfxAsclin_Spi *asclin);
 
-/** \brief ISR transmit routine
- * \param asclin module handle
- * \return None
+/**
+ * \brief ISR transmit routine.
+ *
+ * \param[inout] asclin Module handle.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAsclin_Spi_isrTransmit(IfxAsclin_Spi *asclin);
 
@@ -444,27 +464,40 @@ IFX_EXTERN void IfxAsclin_Spi_isrTransmit(IfxAsclin_Spi *asclin);
 /*-------------------------Global Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief starts the data exchange
- * \param asclin module handle
- * \param src pointer to transmit data buffer
- * \param dest pointer to receive data buffer
- * \param count count of the data
- * \return status
+/**
+ * \brief starts the data exchange.
  *
- * A coding example can be found in \ref IfxLld_Asclin_Spi_Usage
+ * \param[inout] asclin Module handle.
+ * \param[in]    src    Pointer to transmit data buffer.
+ * 						Range: Valid memory address or NULL_PTR (for receive-only operations).
+ * \param[out]   dest   Pointer to receive data buffer
+ * 						Range: Valid memory address or NULL_PTR (for transmit-only operations).
+ * \param[in]    count  Count of the data
+ * 						Range: 1 to the size of the Tx/Rx buffers (configured during initialization).
+ *
+ * \retval IfxAsclin_Spi_Status Status of the exchange operation (IfxAsclin_Spi_Status_ok, IfxAsclin_Spi_Status_busy,
+ * or IfxAsclin_Spi_Status_unknown).
+ *
+ * \note A coding example can be found in \ref IfxLld_Asclin_Spi_Usage
  *
  */
 IFX_EXTERN IfxAsclin_Spi_Status IfxAsclin_Spi_exchange(IfxAsclin_Spi *asclin, void *src, void *dest, uint32 count);
 
-/** \brief Reads data from the Rx FIFO based on the outlet width
- * \param asclin module handle
- * \return None
+/**
+ * \brief Reads data from the Rx FIFO based on the outlet width.
+ *
+ * \param[inout] asclin Module handle.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAsclin_Spi_read(IfxAsclin_Spi *asclin);
 
-/** \brief Writes data into the Tx FIFO based on the inlet width
- * \param asclin module handle
- * \return None
+/**
+ * \brief Writes data into the Tx FIFO based on the inlet width.
+ *
+ * \param[inout] asclin Module handle.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxAsclin_Spi_write(IfxAsclin_Spi *asclin);
 
@@ -475,8 +508,11 @@ IFX_EXTERN void IfxAsclin_Spi_write(IfxAsclin_Spi *asclin);
 /******************************************************************************/
 
 /**
- * \param asclin module handle
- * \return status of the on going job
+ * \brief Retrieves the current status of the ASCLIN SPI module.
+ *
+ * \param[in] asclin Module handle.
+ *
+ * \retval IfxAsclin_Spi_Status Status of the on going job (IfxAsclin_Spi_Status_ok or IfxAsclin_Spi_Status_busy).
  */
 IFX_EXTERN IfxAsclin_Spi_Status IfxAsclin_Spi_getStatus(IfxAsclin_Spi *asclin);
 #endif /* IFXASCLIN_SPI_H */

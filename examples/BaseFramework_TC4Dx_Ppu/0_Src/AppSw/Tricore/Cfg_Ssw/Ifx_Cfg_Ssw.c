@@ -373,8 +373,13 @@ void Ifx_Ssw_Keyoff_SafetyLibraryTests(void)
 #if IFX_CFG_SSW_ENABLE_AP_INIT == 1U
 #include "IfxCpu_reg.h"
 #include "IfxInt_reg.h"
+void allowAccess(void);
+
 void Ifx_Ssw_AP_Init(void)
 {
+	/* Configure access to peripherals */
+	allowAccess();
+
     /* Access for the Core specific SFRRs, DSPRs,
      * DMLUs , INTs and STMs enabled for all
      * masters. This needs to be updated

@@ -1,7 +1,7 @@
 /**
  * \file IfxCpu_IntrinsicsGhs.h
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD_1_0_1_10_0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -54,6 +54,9 @@
 /******************************************************************************/
 /* *INDENT-OFF* */
 #define STRINGIFY(x)    #x
+
+/* Endian Swap for CRC32 Calculation*/
+#define CPU_CRC_ENDIAN_SWAP 0  /* No Swap by default*/
 
 typedef void (*voidfunc)();
 
@@ -1231,13 +1234,33 @@ IFX_INLINE void Ifx__setStackPointer(void *stackAddr)
     __asm__ volatile ("mov.aa a10, %0": : "a" (stackAddr));
 }
 
-IFX_INLINE uint32 IfxCpu_calculateCrc32(uint32 *startaddress, uint8 length)
+/** \brief Calculate CRC32 over a data block
+ *
+ * \param[in] startaddress Pointer to starting address of data block (32-bit aligned)
+ * \param[in] length       Number of 32-bit words to process (0 to 0xFFFFFFFF, i.e. up to 16GB)
+ * \param[in] seed         Initial seed value for CRC calculation (use 0 for standard CRC32)
+ *
+ * \retval uint32 Calculated CRC32 value
+ */
+IFX_INLINE uint32 IfxCpu_calculateCrc32(uint32 *startaddress, uint32 length, uint32 seed)
 {
-    uint32 returnvalue = 0; /* set seed value to 0 */
+    uint32 returnvalue = seed;
+    uint32 dataWord;
+    
     for (;length > 0; length--)
     {
-          /* calculate the CRC over all data */
-        __asm__ ("CRC32B.W %0,%0,%1" : "+d" (returnvalue) : "d" (*startaddress)); 
+        dataWord = *startaddress;
+        
+#if CPU_CRC_ENDIAN_SWAP
+        /* Convert to big-endian: swap bytes within the 32-bit word */
+        dataWord = ((dataWord & 0x000000FFU) << 24) |
+                  ((dataWord & 0x0000FF00U) << 8)  |
+                  ((dataWord & 0x00FF0000U) >> 8)  |
+                  ((dataWord & 0xFF000000U) >> 24);
+#endif
+        
+        /* Calculate the CRC over current data word */
+        __asm__ ("CRC32B.W %0,%0,%1" : "+d" (returnvalue) : "d" (dataWord)); 
         startaddress++;
     }
     return returnvalue;

@@ -2,9 +2,9 @@
  * \file IfxFce_Crc.c
  * \brief FCE CRC details
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-09-04 12:56:11
  *
  *
  *                                 IMPORTANT NOTICE
@@ -67,13 +67,13 @@ uint32 IfxFce_Crc_calculateCrc(IfxFce_Crc_Crc *fce, const uint32 *crcData, uint1
     uint32            crcResultValue;
     uint32           *dataPtr = (uint32 *)crcData;
 
-    /*set the Legth*/
+    /* Sets the Length */
     IfxFce_setChannelCrcLength(fce->fce, crcChannel, crcDataLength);
 
-    /*set the expected CRC*/
+    /* Sets the expected CRC */
     IfxFce_setExpectedCrc(fce->fce, crcChannel, fce->expectedCrc);
 
-    /*Configure CRC register*/
+    /* Configures CRC register */
     IfxFce_setCrcstartValue(fce->fce, crcChannel, crcStartValue);
 
     volatile Ifx_FCE_IN_IR *InputData = &fceSFR->IN[fce->crcChannel].IR;
@@ -117,7 +117,7 @@ uint32 IfxFce_Crc_calculateCrc(IfxFce_Crc_Crc *fce, const uint32 *crcData, uint1
     }
     else
     {
-        /* input in INIT register */
+        /* Input in INIT register */
         for (inputDataCounter = 0; inputDataCounter < crcDataLength; ++inputDataCounter)
         {
             InputData->U = *(dataPtr++);
@@ -132,18 +132,21 @@ uint32 IfxFce_Crc_calculateCrc(IfxFce_Crc_Crc *fce, const uint32 *crcData, uint1
 
 void IfxFce_Crc_clearErrorFlags(IfxFce_Crc_Crc *fce)
 {
+	/* Clears the error flags */
     IfxFce_clearCrcErrorFlags(fce->fce, fce->crcChannel);
 }
 
 
 void IfxFce_Crc_deInitModule(IfxFce_Crc_Crc *fce)
 {
+	/* Resets the FCE hardware module */
     IfxFce_resetModule(fce->fce);
 }
 
 
 Ifx_FCE_IN_STS IfxFce_Crc_getInterruptStatus(IfxFce_Crc_Crc *fce)
 {
+	/* Gets the current CRC interrupt status */
     return IfxFce_getCrcInterruptStatus(fce->fce, fce->crcChannel);
 }
 
@@ -176,6 +179,7 @@ void IfxFce_Crc_initCrc(IfxFce_Crc_Crc *fceCrc, const IfxFce_Crc_CrcConfig *crcC
     IfxApProt_setState((Ifx_PROT_PROT *)&fceSFR->PROTE, IfxApProt_State_config);
 #endif
 
+    /* Writes configuration to FCE channel configuration register */
     fceSFR->IN[crcConfig->crcChannel].CFG.U = tempCFG.U;
 
 #if (IFX_PROT_ENABLED == 1U)
@@ -191,14 +195,15 @@ void IfxFce_Crc_initCrc(IfxFce_Crc_Crc *fceCrc, const IfxFce_Crc_CrcConfig *crcC
         IfxDma_Dma_createModuleHandle(&dma, dmaSFR);
         IfxDma_Dma_Config dmaConfig;
 
-        /* Load default module configuration into configuration structure */
+        /* Loads default module configuration into configuration structure */
         IfxDma_Dma_initModuleConfig(&dmaConfig, dmaSFR);
 
-        /* Initialize module with configuration. */
+        /* Initializes module with configuration. */
         /* Application to provide ACCEN write access to DMA used */
         IfxDma_Dma_initModule(&dma, &dmaConfig);
 
         IfxDma_Dma_ChannelConfig dmaChannelCfg;
+        /* Initializes the DMA module channel configuration */
         IfxDma_Dma_initChannelConfig(&dmaChannelCfg, &dma);
 
         dmaChannelCfg.channelId                        = crcConfig->fceChannelId;
@@ -206,6 +211,7 @@ void IfxFce_Crc_initCrc(IfxFce_Crc_Crc *fceCrc, const IfxFce_Crc_CrcConfig *crcC
         dmaChannelCfg.operationMode                    = IfxDma_ChannelOperationMode_continuous;
         dmaChannelCfg.destinationAddressCircularRange  = IfxDma_ChannelIncrementCircular_4,
         dmaChannelCfg.destinationCircularBufferEnabled = TRUE,
+		/* Initializes the DMA channel */
         IfxDma_Dma_initChannel(&fceCrc->fceDmaChannel, &dmaChannelCfg);
     }
 }
@@ -213,6 +219,7 @@ void IfxFce_Crc_initCrc(IfxFce_Crc_Crc *fceCrc, const IfxFce_Crc_CrcConfig *crcC
 
 void IfxFce_Crc_initCrcConfig(IfxFce_Crc_CrcConfig *crcConfig, IfxFce_Crc *fce)
 {
+	/* Initializes the CRC configuration with default values */
     crcConfig->fce                           = fce->fce;
     crcConfig->crcKernel                     = IfxFce_CrcKernel_0;
     crcConfig->crcChannel                    = IfxFce_CrcChannel_0;
@@ -222,7 +229,7 @@ void IfxFce_Crc_initCrcConfig(IfxFce_Crc_CrcConfig *crcConfig, IfxFce_Crc *fce)
     crcConfig->crc32BitReflectionEnabled     = TRUE;
     crcConfig->swapOrderOfBytes              = FALSE;
     crcConfig->crcResultInverted             = TRUE;
-    crcConfig->enabledInterrupts.crcMismatch = FALSE; // enable if CRC is already known
+    crcConfig->enabledInterrupts.crcMismatch = FALSE; /* Enable if CRC is already known */
     crcConfig->enabledInterrupts.configError = TRUE;
     crcConfig->enabledInterrupts.lengthError = TRUE;
     crcConfig->enabledInterrupts.busError    = TRUE;
@@ -237,10 +244,14 @@ void IfxFce_Crc_initModule(IfxFce_Crc *fce, const IfxFce_Crc_Config *config)
     fce->fce = config->fce;
     Ifx_FCE               *fceSFR = config->fce;
 
+    /* Enables the FCE hardware module */
     IfxFce_enableModule(fceSFR);
 
+    /* Returns the SRC pointer for given FCE instance */
     volatile Ifx_SRC_SRCR *src = IfxFce_getSrcPointer(fceSFR);
+    /* Initializes interrupt source with configured type of service and priority */
     IfxSrc_init(src, config->isrTypeOfService, config->isrPriority, config->vmId);
+    /* Enables the interrupt source */
     IfxSrc_enable(src);
 }
 

@@ -2,9 +2,9 @@
  * \file IfxCanxl_cfg.c
  * \brief CANXL on-chip implementation data
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2024-09-09 10:03:04
  *
  *
  *                                 IMPORTANT NOTICE

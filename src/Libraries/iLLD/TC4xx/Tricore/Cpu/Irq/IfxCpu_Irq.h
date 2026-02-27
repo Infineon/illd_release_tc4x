@@ -3,7 +3,7 @@
  * \brief CPU  basic functionality
  * \ingroup IfxLld_Cpu
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -76,8 +76,10 @@
  * This API installs the isr to SW interrupt vector.
  * This must be used only when IFX_USE_SW_MANAGED_INT is defined in Ifx_Cfg.h
  *
- * \param isrFuncPointer pointer to ISR function.
- * \param serviceReqPrioNumber ISR priority.
+ * \param[in] isrFuncPointer       Pointer to ISR function.
+ * \param[in] serviceReqPrioNumber ISR priority. Range: 0 to 0xFF.
+ *
+ * \retval None
  */
 
 IFX_EXTERN void IfxCpu_Irq_installInterruptHandler(void *isrFuncPointer, uint32 serviceReqPrioNumber);
@@ -94,8 +96,10 @@ IFX_INLINE void interruptHandlerInstall(uint32 srpn, uint32 addr)
 /** \addtogroup IfxLld_Cpu_Irq_Usage
  * \{  */
 /** \brief API to get type of service of the caller CPU.
- * \param coreId core id of the core
- * \return type of service for the corresponding CPU.
+ *
+ * \param[in] coreId Core id of the core. Range: \ref IfxCpu_ResourceCpu.
+ *
+ * \retval IfxSrc_Tos Type of service for the corresponding CPU. Range: \ref IfxSrc_Tos.
  */
 IFX_EXTERN IfxSrc_Tos IfxCpu_Irq_getTos(IfxCpu_ResourceCpu coreId);
 

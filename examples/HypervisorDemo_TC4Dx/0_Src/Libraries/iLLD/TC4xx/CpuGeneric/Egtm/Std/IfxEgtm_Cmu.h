@@ -3,9 +3,9 @@
  * \brief EGTM  basic functionality
  * \ingroup IfxLld_Egtm
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-03-29 09:36:29
  *
  *
  *                                 IMPORTANT NOTICE
@@ -77,6 +77,8 @@ typedef enum
     IfxEgtm_Cmu_Clk_7
 } IfxEgtm_Cmu_Clk;
 
+/** \brief External clock
+ */
 typedef enum
 {
     IfxEgtm_Cmu_Eclk_0 = 0,
@@ -84,6 +86,8 @@ typedef enum
     IfxEgtm_Cmu_Eclk_2
 } IfxEgtm_Cmu_Eclk;
 
+/** \brief Fixed clock
+ */
 typedef enum
 {
     IfxEgtm_Cmu_Fxclk_0 = 0,
@@ -94,6 +98,7 @@ typedef enum
 } IfxEgtm_Cmu_Fxclk;
 
 /** \brief Tim Filter counter frequency select
+ * Definition in Ifx_EGTM_CLS_TIM_CH_CTRL.B.FLT_CNT_FRQ
  */
 typedef enum
 {
@@ -113,82 +118,112 @@ typedef enum
 /******************************************************************************/
 
 /** \brief Enable / Disable the configurable, fixed, and external clocks
- * \param egtm Pointer to EGTM module
- * \param clkMask Enable / Disable mask.
- * \return None
+ *
+ * \param[inout] egtm    Pointer to EGTM module
+ * \param[in]    clkMask Enable / Disable mask.
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Cmu_enableClocks(Ifx_EGTM *egtm, uint32 clkMask);
 
 /** \brief Returns the EGTM global clock frequency in Hz
- * \param egtm Pointer to EGTM module
- * \return EGTM global clock frequency in Hz
+ *
+ * \param[in] egtm Pointer to EGTM module
+ *
+ * \retval EGTM global clock frequency in Hz
  */
 IFX_INLINE float32 IfxEgtm_Cmu_getGclkFrequency(Ifx_EGTM *egtm);
 
 /** \brief returns the CMU module frequency in Hz. This is only for CMU module frequency.
  * For EGTM SYS frequency: IfxEgtm_getSysClkFrequency() is to be used.
- * \param egtm Pointer to EGTM module
- * \return EGTM module frequency in Hz
+ *
+ * \param[in] egtm Pointer to EGTM module
+ *
+ * \retval EGTM module frequency in Hz
  */
 IFX_INLINE float32 IfxEgtm_Cmu_getModuleFrequency(Ifx_EGTM *egtm);
 
 /** \brief Returns the configurable clock enable status
- * \param egtm Pointer to EGTM module
- * \param clkIndex Index of the configurable clock 0=CMU_CLK0, 1=CMU_CLK1, ...
- * \return TRUE The clock is enabled, FALSE The clock is disabled
+ *
+ * \param[in] egtm     Pointer to EGTM module
+ * \param[in] clkIndex Index of the configurable clock 0=CMU_CLK0, 1=CMU_CLK1, ...
+ *                     Range: \ref: IfxEgtm_Cmu_Clk
+ *
+ * \retval TRUE The clock is enabled, FALSE The clock is disabled
  */
 IFX_INLINE boolean IfxEgtm_Cmu_isClkClockEnabled(Ifx_EGTM *egtm, IfxEgtm_Cmu_Clk clkIndex);
 
 /** \brief Returns the external clock enable status
- * \param egtm Pointer to EGTM module
- * \param clkIndex Index of the external clock 0=CMU_ECLK0, 1=CMU_ECLK1, ...
- * \return TRUE The clock is enabled, FALSE The clock is disabled
+ *
+ * \param[in] egtm     Pointer to EGTM module
+ * \param[in] clkIndex Index of the external clock 0=CMU_ECLK0, 1=CMU_ECLK1, ...
+ *                     Range: \ref: IfxEgtm_Cmu_Clk
+ *
+ * \retval TRUE The clock is enabled, FALSE The clock is disabled
  */
 IFX_INLINE boolean IfxEgtm_Cmu_isEclkClockEnabled(Ifx_EGTM *egtm, IfxEgtm_Cmu_Eclk clkIndex);
 
 /** \brief Returns the fixed clock enable status
- * \param egtm Pointer to EGTM module
- * \return TRUE The clock is enabled, FALSE The clock is disabled
+ *
+ * \param[in] egtm Pointer to EGTM module
+ *
+ * \retval TRUE The clock is enabled, FALSE The clock is disabled
  */
 IFX_INLINE boolean IfxEgtm_Cmu_isFxClockEnabled(Ifx_EGTM *egtm);
 
 /** \brief Select the clock input for CLK6 and CLK7
  * note The frequency can only be modified when the corresponding clock is disabled using IfxEgtm_Cmu_enableClocks()
- * \param egtm Pointer to EGTM module
- * \param clkIndex Index of the configurable clock 0=CMU_CLK0, 1=CMU_CLK1, ...
- * \param useGlobal if TRUE, uses the global clock as an input, else use the SUB_INC input
- * \return None
+ *
+ * \param[inout] egtm      Pointer to EGTM module
+ * \param[in]    clkIndex  Index of the configurable clock 0=CMU_CLK0, 1=CMU_CLK1, ...
+ *                         Range: \ref: IfxEgtm_Cmu_Clk
+ * \param[in]    useGlobal If TRUE, uses the global clock as an input, else use the SUB_INC input
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Cmu_selectClkInput(Ifx_EGTM *egtm, IfxEgtm_Cmu_Clk clkIndex, boolean useGlobal);
 
 /** \brief Sets the count value for the clock divider of a configurable clock divider block
  * Tcmu_clk[clkIndex] = (count + 1) * Tcmu_gclk_en
  * Note: Ensure CLSi_CMU_CLK_EN.EN_CLKx and CLSi_CMU_CLK_EN.EN_ECLKz (z=1) are disabled before calling this API. API doesn't perform any check.
- * \param egtm Pointer to GTM module
- * \param clkIndex Index of the configurable clock 0=CMU_CLK0, 1=CMU_CLK1, ...
- * \param count Count value for the clock divider
- * \return None
+ *
+ * \param[inout] egtm     Pointer to GTM module
+ * \param[in]    clkIndex Index of the configurable clock 0=CMU_CLK0, 1=CMU_CLK1, ...
+ *                        Range: \ref: IfxEgtm_Cmu_Clk
+ * \param[in]    count    Count value for the clock divider
+ *                        Range: 0 to 0x00FFFFFF
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Cmu_setClkCount(Ifx_EGTM *egtm, IfxEgtm_Cmu_Clk clkIndex, uint32 count);
 
 /** \brief Sets the numerator and denominator for External clock
  * Tcmu_eclk[clkIndex] = (numerator / denominator) * Tcls0_clk
  * Note: Ensure CLSi_CMU_CLK_EN.EN_ECLKz is disabled before calling this API. API doesn't perform any check.
- * \param egtm Pointer to GTM module
- * \param clkIndex Index of the external clock 0=CMU_ECLK0, 1=CMU_ECLK1, ...
- * \param numerator Numerator for external clock divider. Defines numerator of the fractional divider
- * \param denominator Denominator for external clock divider. Defines denominator of the fractional divider
- * \return None
+ *
+ * \param[inout] egtm        Pointer to GTM module
+ * \param[in]    clkIndex    Index of the external clock 0=CMU_ECLK0, 1=CMU_ECLK1, ...
+ *                           Range: \ref: IfxEgtm_Cmu_Clk
+ * \param[in]    numerator   Numerator for external clock divider. Defines numerator of the fractional divider
+ *                           Range: 0 to 0x00FFFFFF
+ * \param[in]    denominator Denominator for external clock divider. Defines denominator of the fractional divider
+ *                           Range: 0 to 0x00FFFFFF
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Cmu_setEclkDivider(Ifx_EGTM *egtm, IfxEgtm_Cmu_Eclk clkIndex, uint32 numerator, uint32 denominator);
 
 /** \brief Sets the numerator and denominator for Global clock
  * Tcmu_gclk_en = (numerator / denominator) * Tcls0_clk
  * Note: Ensure CLSi_CMU_CLK_EN.EN_CLKx and CLSi_CMU_CLK_EN.EN_FXCLK are disabled before calling this API. API doesn't perform any check.
- * \param egtm Pointer to GTM module
- * \param numerator Numerator for global clock resolution generator. Defines numerator of the fractional divider.
- * \param denominator Denominator for global clock resolution generator. Defines denominator of the fractional divider.
- * \return None
+ *
+ * \param[inout] egtm        Pointer to GTM module
+ * \param[in]    numerator   Numerator for global clock resolution generator. Defines numerator of the fractional divider.
+ *                           Range: 0 to 0x00FFFFFF
+ * \param[in]    denominator Denominator for global clock resolution generator. Defines denominator of the fractional divider.
+ *                           Range: 0 to 0x00FFFFFF
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Cmu_setGclkDivider(Ifx_EGTM *egtm, uint32 numerator, uint32 denominator);
 
@@ -197,49 +232,66 @@ IFX_INLINE void IfxEgtm_Cmu_setGclkDivider(Ifx_EGTM *egtm, uint32 numerator, uin
 /******************************************************************************/
 
 /** \brief Returns the EGTM configurable clock frequency in Hz
- * \param egtm Pointer to EGTM module
- * \param clkIndex Index of the configurable clock 0=CMU_CLK0, 1=CMU_CLK1, ...
- * \param assumeEnabled When TRUE, attempt to calculate the frequency as if the clock is enabled.
- * \return EGTM configurable clock frequency in Hz
+ *
+ * \param[in] egtm          Pointer to EGTM module
+ * \param[in] clkIndex      Index of the configurable clock 0=CMU_CLK0, 1=CMU_CLK1, ...
+ *                          Range: \ref: IfxEgtm_Cmu_Clk
+ * \param[in] assumeEnabled When TRUE, attempt to calculate the frequency as if the clock is enabled.
+ *
+ * \retval EGTM configurable clock frequency in Hz
  */
 IFX_EXTERN float32 IfxEgtm_Cmu_getClkFrequency(Ifx_EGTM *egtm, IfxEgtm_Cmu_Clk clkIndex, boolean assumeEnabled);
 
 /** \brief Returns the EGTM external clock frequency in Hz
- * \param egtm Pointer to EGTM module
- * \param clkIndex Index of the external clock 0=CMU_ECLK0, 1=CMU_ECLK1, ...
- * \param assumeEnabled When TRUE, attempt to calculate the frequency as if the clock is enabled.
- * \return EGTM external clock frequency in Hz
+ *
+ * \param[in] egtm          Pointer to EGTM module
+ * \param[in] clkIndex      Index of the external clock 0=CMU_ECLK0, 1=CMU_ECLK1, ...
+ *                          Range: \ref: IfxEgtm_Cmu_Clk
+ * \param[in] assumeEnabled When TRUE, attempt to calculate the frequency as if the clock is enabled.
+ *
+ * \retval EGTM external clock frequency in Hz
  */
 IFX_EXTERN float32 IfxEgtm_Cmu_getEclkFrequency(Ifx_EGTM *egtm, IfxEgtm_Cmu_Eclk clkIndex, boolean assumeEnabled);
 
 /** \brief Returns the EGTM fixed clock frequency in Hz
- * \param egtm Pointer to EGTM module
- * \param clkIndex Index of the fixed clock 0=CMU_FXCLK0, 1=CMU_FXCLK1, ...
- * \param assumeEnabled When TRUE, attempt to calculate the frequency as if the clock is enabled.
- * \return EGTM fixed clock frequency in Hz
+ *
+ * \param[in] egtm          Pointer to EGTM module
+ * \param[in] clkIndex      Index of the fixed clock 0=CMU_FXCLK0, 1=CMU_FXCLK1, ...
+ *                          Range: \ref: IfxEgtm_Cmu_Clk
+ * \param[in] assumeEnabled When TRUE, attempt to calculate the frequency as if the clock is enabled.
+ *
+ * \retval EGTM fixed clock frequency in Hz
  */
 IFX_EXTERN float32 IfxEgtm_Cmu_getFxClkFrequency(Ifx_EGTM *egtm, IfxEgtm_Cmu_Fxclk clkIndex, boolean assumeEnabled);
 
 /** \brief Set the EGTM configurable clock frequency in Hz
- * \param egtm Pointer to EGTM module
- * \param clkIndex Index of the configurable clock 0=CMU_CLK0, 1=CMU_CLK1, ...
- * \param frequency Frequency in Hz
- * \return None
+ *
+ * \param[inout] egtm      Pointer to EGTM module
+ * \param[in]    clkIndex  Index of the configurable clock 0=CMU_CLK0, 1=CMU_CLK1, ...
+ *                         Range: \ref: IfxEgtm_Cmu_Clk
+ * \param[in]    frequency Frequency in Hz
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Cmu_setClkFrequency(Ifx_EGTM *egtm, IfxEgtm_Cmu_Clk clkIndex, float32 frequency);
 
 /** \brief Set the EGTM external clock frequency in Hz
- * \param egtm Pointer to EGTM module
- * \param clkIndex Index of the external clock 0=CMU_ECLK0, 1=CMU_ECLK1, ...
- * \param frequency Frequency in Hz
- * \return None
+ *
+ * \param[inout] egtm      Pointer to EGTM module
+ * \param[in]    clkIndex  Index of the external clock 0=CMU_ECLK0, 1=CMU_ECLK1, ...
+ *                         Range: \ref: IfxEgtm_Cmu_Clk
+ * \param[in]    frequency Frequency in Hz
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Cmu_setEclkFrequency(Ifx_EGTM *egtm, IfxEgtm_Cmu_Eclk clkIndex, float32 frequency);
 
 /** \brief Set the EGTM global clock frequency in Hz
- * \param egtm Pointer to EGTM module
- * \param frequency Frequency in Hz
- * \return None
+ *
+ * \param[inout] egtm      Pointer to EGTM module
+ * \param[in]    frequency Frequency in Hz
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_Cmu_setGclkFrequency(Ifx_EGTM *egtm, float32 frequency);
 

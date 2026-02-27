@@ -2,9 +2,9 @@
  * \file IfxApProt.c
  * \brief AP  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2022-10-28 10:16:42
  *
  *
  *                                 IMPORTANT NOTICE

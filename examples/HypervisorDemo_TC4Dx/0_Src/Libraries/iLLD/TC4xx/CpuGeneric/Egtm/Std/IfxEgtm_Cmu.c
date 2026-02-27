@@ -2,9 +2,9 @@
  * \file IfxEgtm_Cmu.c
  * \brief EGTM  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-04-03 07:27:20
  *
  *
  *                                 IMPORTANT NOTICE
@@ -157,10 +157,12 @@ float32 IfxEgtm_Cmu_getFxClkFrequency(Ifx_EGTM *egtm, IfxEgtm_Cmu_Fxclk clkIndex
 
     if ((IfxEgtm_Cmu_isFxClockEnabled(egtm) == TRUE) || (assumeEnabled != FALSE))
     {
+    	/* Gets the current Fx clock selection */
         fxSelect = egtm->CLS->CMU.FXCLK_CTRL.B.FXCLK_SEL;
 
         if (fxSelect == 0u)
         {
+        	/* Get the EGTM global clock frequency */
             frequency = IfxEgtm_Cmu_getGclkFrequency(egtm);
         }
         else if (fxSelect <= 8u)
@@ -175,21 +177,27 @@ float32 IfxEgtm_Cmu_getFxClkFrequency(Ifx_EGTM *egtm, IfxEgtm_Cmu_Fxclk clkIndex
         switch (clkIndex)
         {
         case IfxEgtm_Cmu_Fxclk_0:
+        	/* Fx clock 0: no divider */
             frequency = frequency / (float32)1.0f;
             break;
         case IfxEgtm_Cmu_Fxclk_1:
+        	/* Fx clock 1: divide by 16 */
             frequency = frequency / (float32)16.0f;
             break;
         case IfxEgtm_Cmu_Fxclk_2:
+        	/* Fx clock 1: divide by 256 */
             frequency = frequency / (float32)256.0f;
             break;
         case IfxEgtm_Cmu_Fxclk_3:
+        	/* Fx clock 1: divide by 4096 */
             frequency = frequency / (float32)4096.0f;
             break;
         case IfxEgtm_Cmu_Fxclk_4:
+        	/* Fx clock 1: divide by 65536 */
             frequency = frequency / (float32)65536.0f;
             break;
         default:
+        	/* Invalid clkIndex: return 0 */
             frequency = (float32)0.0f;
             break;
         }
@@ -199,6 +207,7 @@ float32 IfxEgtm_Cmu_getFxClkFrequency(Ifx_EGTM *egtm, IfxEgtm_Cmu_Fxclk clkIndex
         frequency = (float32)0.0f;
     }
 
+    /* Returns the calculated frequency */
     return frequency;
 }
 
@@ -209,34 +218,44 @@ void IfxEgtm_Cmu_setClkFrequency(Ifx_EGTM *egtm, IfxEgtm_Cmu_Clk clkIndex, float
     uint32  cnt = (uint32)t;
 
     if ((t - (float32)cnt) > (float32)0.5f)
-    {                           /* Round to nearest */
+    {
+    	/* Round to nearest */
         cnt++;
     }
 
+    /* Updates the clock control register based on the clock index */
     switch (clkIndex)
     {
     case IfxEgtm_Cmu_Clk_0:
+    	/* Updates the clock control register for clock 0 */
         egtm->CLS->CMU.CLK0.CTRL.B.CLK_CNT = cnt;
         break;
     case IfxEgtm_Cmu_Clk_1:
+    	/* Updates the clock control register for clock 1 */
         egtm->CLS->CMU.CLK1.CTRL.B.CLK_CNT = cnt;
         break;
     case IfxEgtm_Cmu_Clk_2:
+    	/* Updates the clock control register for clock 2 */
         egtm->CLS->CMU.CLK2.CTRL.B.CLK_CNT = cnt;
         break;
     case IfxEgtm_Cmu_Clk_3:
+    	/* Updates the clock control register for clock 3 */
         egtm->CLS->CMU.CLK3.CTRL.B.CLK_CNT = cnt;
         break;
     case IfxEgtm_Cmu_Clk_4:
+    	/* Updates the clock control register for clock 4 */
         egtm->CLS->CMU.CLK4.CTRL.B.CLK_CNT = cnt;
         break;
     case IfxEgtm_Cmu_Clk_5:
+    	/* Update the clock control register for clock 5 */
         egtm->CLS->CMU.CLK5.CTRL.B.CLK_CNT = cnt;
         break;
     case IfxEgtm_Cmu_Clk_6:
+    	/* Updates the clock control register for clock 6 */
         egtm->CLS->CMU.CLK_6_CTRL.B.CLK_CNT = cnt;
         break;
     case IfxEgtm_Cmu_Clk_7:
+    	/* Updates the clock control register for clock 7 */
         egtm->CLS->CMU.CLK_7_CTRL.B.CLK_CNT = cnt;
         break;
     default:
@@ -286,7 +305,7 @@ void IfxEgtm_Cmu_setEclkFrequency(Ifx_EGTM *egtm, IfxEgtm_Cmu_Eclk clkIndex, flo
     }
 
     egtm->CLS->CMU.ECLK[clkIndex].NUM.B.ECLK_NUM = zBest;
-    egtm->CLS->CMU.ECLK[clkIndex].NUM.B.ECLK_NUM = zBest; /* write twice to be sure */
+    egtm->CLS->CMU.ECLK[clkIndex].NUM.B.ECLK_NUM = zBest; /* Write twice to be sure */
     egtm->CLS->CMU.ECLK[clkIndex].DEN.B.ECLK_DEN = nBest;
 }
 
@@ -332,7 +351,7 @@ void IfxEgtm_Cmu_setGclkFrequency(Ifx_EGTM *egtm, float32 frequency)
     }
 
     egtm->CLS->CMU.GCLK_NUM.B.GCLK_NUM = zBest;
-    egtm->CLS->CMU.GCLK_NUM.B.GCLK_NUM = zBest;   /* write twice to be sure */
+    egtm->CLS->CMU.GCLK_NUM.B.GCLK_NUM = zBest;   /* Write twice to be sure */
     egtm->CLS->CMU.GCLK_DEN.B.GCLK_DEN = nBest;
 }
 

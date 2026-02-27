@@ -2,7 +2,7 @@
  * \file CompilerHighTec.c.h
  * \brief Startup Software configuration. Can configure which core to be enabled.
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2020 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -44,7 +44,9 @@
 /*******************************************************************************
 **                      Includes                                              **
 *******************************************************************************/
+#if !defined(IFX_ILLD_PPU_USAGE)
 #include "Ifx_Ssw.h"
+#endif
 
 /******************************************************************************/
 /*                          Macros                                            */

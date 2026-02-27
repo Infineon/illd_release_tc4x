@@ -2,7 +2,7 @@
  * \file IfxPpucStu.c
  * \brief PPUC basic functionality
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -133,6 +133,13 @@ void IfxPpucStu_initChannelConfig(IfxPpucStu_channelConfig *channelConfig)
     };
     *channelConfig = defaultConfig;
 }
+
+
+void IfxPpucStu_configureAccessToPpucStuDmi(IfxApApu_ApuConfig *apConfig)
+{
+    IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_PPU_APU.AP.ACCEN.STUDMI, apConfig);
+}
+
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

@@ -2,9 +2,9 @@
  * \file IfxDre_Dre.c
  * \brief DRE DRE details
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2022-12-21 10:12:27
  *
  *
  *                                 IMPORTANT NOTICE
@@ -39,6 +39,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  *
+ * \author Yadunandan Puttaswamy<yadunandan.puttaswamy@infineon.com>
  *
  */
 
@@ -65,209 +66,253 @@ void IfxDre_Dre_initModule(IfxDre_Dre *dre, IfxDre_Dre_Config *config)
     Ifx_DRE *dreSFR = config->dre;
     dre->dre = dreSFR;
 
-    /* if module is not enabled*/
+    uint8 i = 0;
+    IfxDre_InterruptLine   index = IfxDre_InterruptLine_0;
+
+    /* If module is not enabled */
     if (IfxDre_isModuleEnabled(dreSFR) != TRUE)
     {
-        /* Enable module, disregard Sleep Mode request*/
+        /* Enable module, disregard Sleep Mode request */
         IfxDre_enableModule(dreSFR);
     }
 
-    /*Routing Table Config*/
+    /* Routing Table Config */
     dreSFR->RT[0].CONFIG.U = config->rt0Config.size;
     dreSFR->RT[1].CONFIG.U = config->rt1Config.size;
     dreSFR->RT[2].CONFIG.U = config->rt2Config.size;
     dreSFR->RT[3].CONFIG.U = config->rt3Config.size;
 
-    uint8                  i = 0;
-
-    /*Stream ID Filter Configurations*/
-    Ifx_DRE_SIDF          *sidf = &(dreSFR->SIDF[0]);
-    Ifx_DRE_SIDF_FC        streamFilter;
-    streamFilter.U = 0;
-    IfxDre_StreamIdConfig *streamFilterCfgPtr = &(config->streamFilter0);
-
+    /* Stream ID Filter Configurations */
     for (i = 0; i < IFXDRE_NUM_STREAM_ID_FILTERS; i++)
     {
-        streamFilter.B.FE = streamFilterCfgPtr->enable;
-
-        if (streamFilterCfgPtr->enable)
-        {
-            streamFilter.B.MODE = streamFilterCfgPtr->mode;
-            streamFilter.B.RTI  = streamFilterCfgPtr->routingTableIndex;
-            sidf->FC.U          = streamFilter.U;
-            sidf->FIL1.L.U      = streamFilterCfgPtr->filter1LowerId;
-            sidf->FIL1.H.U      = streamFilterCfgPtr->filter1HigherId;
-            sidf->FIL2.L.U      = streamFilterCfgPtr->filter2LowerId;
-            sidf->FIL2.H.U      = streamFilterCfgPtr->filter2HigherId;
-        }
-
-        sidf++;
-        streamFilterCfgPtr++;
+        IfxDre_Dre_configureStreamIdFilter(
+            dre,
+            ((IfxDre_StreamIdConfig *)&(config->streamFilter0)) + i,
+            i
+        );
     }
 
-    /*Destination Memory Configurations*/
-    Ifx_DRE_DMEM        *dMemPtr   = &(dreSFR->DMEM[0]);
-    IfxDre_MemoryConfig *memCfgPtr = &(config->mem0Cfg);
-    Ifx_DRE_DMEM_CONFIG  dMemCfgSfrVar;
-    dMemCfgSfrVar.U = 0;
-
+    /* Destination Memory Configurations */
     for (i = 0; i < IFXDRE_NUM_DMEM; i++)
     {
-        if (memCfgPtr->enable)
-        {
-            dMemPtr->RP.U        = (memCfgPtr->resourcePartitionIndex & 0x7);
-
-            dMemCfgSfrVar.B.EN1  = 1;
-            dMemCfgSfrVar.B.EN2  = 1;
-            dMemCfgSfrVar.B.AST  = memCfgPtr->appendStatus;
-            dMemCfgSfrVar.B.ATH  = memCfgPtr->appendTiming;
-            dMemCfgSfrVar.B.INP  = memCfgPtr->interruptNodePointer; /*Valid values are 0 - 7, 8 - 15 are reserved and considered as 0*/
-            dMemCfgSfrVar.B.OA   = memCfgPtr->offsetAddress;        /*Valid values are 32 (0x20) bytes for Classical CAN frames and 82 (0x58) bytes for CAN FD frames */
-            dMemCfgSfrVar.B.CTYP = memCfgPtr->messageType;
-
-            dMemPtr->CONFIG.U    = dMemCfgSfrVar.U;
-
-            dMemPtr->MODE.B.TYP  = memCfgPtr->pduMode;
-            dMemPtr->MODE.B.TRIG = memCfgPtr->triggerMode;
-            dMemPtr->MODE.B.BUF  = memCfgPtr->bufferMode;
-            dMemPtr->MODE.B.FOM  = memCfgPtr->overflowMode;
-
-            /*S/w write with 1/non zero will reset the bits.*/
-            dMemPtr->STATUS.U = IFXDRE_DMEM_STATUS_CLEAR;
-        }
-
-        dMemPtr++;
-        memCfgPtr++;
+        IfxDre_Dre_configureDestinationMemory(
+            dre,
+            ((IfxDre_MemoryConfig *)&(config->mem0Cfg)) + i,
+            i
+        );
     }
 
-    /*EOBUF Config*/
-    Ifx_DRE_EOBUF                  *eobufSfrGroup = &(dreSFR->EOBUF[0]);
-    IfxDre_EthernetOutputBufConfig *eobufCfgPtr   = &(config->ethernetOutputBuffer0);
-
+    /* EOBUF Config */
     for (i = 0; i < IFXDRE_NUM_EOBUF_BUFFERS; i++)
     {
-        Ifx_DRE_EOBUF_CONFIG eobufConfig;
-        eobufConfig.U           = 0;
-        eobufConfig.B.PL        = eobufCfgPtr->payloadLength;
-        /*Valid values are IfxCan_DestinationId_Ethernet1 or IfxCan_DestinationId_Ethernet2*/
-        eobufConfig.B.DID       = eobufCfgPtr->destinationId;
-        eobufConfig.B.HE        = eobufCfgPtr->headerEnable;
-        eobufConfig.B.TTM       = eobufCfgPtr->triggerMode;
-        eobufSfrGroup->CONFIG.U = eobufConfig.U;
-
-        /*MAC Configurations*/
-        Ifx_DRE_EOBUF_MAC *mac0 = &(eobufSfrGroup->MAC);
-        mac0->H0.U        = (eobufCfgPtr->macDestinationAddress0) << 16;
-        mac0->H1.U        = eobufCfgPtr->macDestinationAddress1;
-        mac0->H2.U        = eobufCfgPtr->macSourceAddress0;
-        mac0->H3.U        = eobufCfgPtr->macSourceAddress1;
-        mac0->H3.B.TPID_H = (eobufCfgPtr->tpId >> 8);       /*MSB of Tag*/
-        mac0->H3.B.TPID_L = (eobufCfgPtr->tpId & (0x00FF)); /*LSB of Tag*/
-
-        Ifx_DRE_EOBUF_MAC_H4 h4;
-        h4.U          = 0;
-        h4.B.VTAG_L   = (eobufCfgPtr->vlanTag & 0x00FF);
-        h4.B.VTAG_H   = (eobufCfgPtr->vlanTag >> 8);
-        h4.B.AVTPET_L = (eobufCfgPtr->avtpEtherType & 0x00FF);
-        h4.B.AVTPET_H = (eobufCfgPtr->avtpEtherType >> 8);
-        mac0->H4.U    = h4.U;
-
-        /*NTSCF and STREAM ID Configurations*/
-        Ifx_DRE_EOBUF_NTSCF *ntscf = &(eobufSfrGroup->NTSCF);
-        ntscf->H0.B.SV = eobufCfgPtr->isStreamIdValid;
-        ntscf->H0.B.SN = eobufCfgPtr->ntscfSequenceNumber;
-
-        if (eobufCfgPtr->isStreamIdValid)
-        {
-            ntscf->STREAM0_ID.B.ID0 = ((eobufCfgPtr->streamIdHigher & 0xFF000000) >> 24); /* Stream ID [63:54] */
-            ntscf->STREAM0_ID.B.ID1 = ((eobufCfgPtr->streamIdHigher & 0x00FF0000) >> 16); /* Stream ID [53:48] */
-            ntscf->STREAM0_ID.B.ID2 = ((eobufCfgPtr->streamIdHigher & 0x0000FF00) >> 8);  /* Stream ID [47:40] */
-            ntscf->STREAM0_ID.B.ID3 = ((eobufCfgPtr->streamIdHigher & 0x000000FF));       /* Stream ID [39:32] */
-
-            ntscf->STREAM1_ID.B.ID4 = ((eobufCfgPtr->streamIdLower & 0xFF000000) >> 24);  /* Stream ID [31:24] */
-            ntscf->STREAM1_ID.B.ID5 = ((eobufCfgPtr->streamIdLower & 0x00FF0000) >> 16);  /* Stream ID [23:16] */
-            ntscf->STREAM1_ID.B.ID6 = ((eobufCfgPtr->streamIdLower & 0x0000FF00) >> 8);   /* Stream ID [15:8] */
-            ntscf->STREAM1_ID.B.ID7 = ((eobufCfgPtr->streamIdLower & 0x000000FF));        /* Stream ID [7:0] */
-        }
-
-        /*Clear Status bits*/
-        eobufSfrGroup->STATUS.B.TXREQ = 1; /*Write of 1 clears the bit set by H/w*/
-        eobufSfrGroup->STATUS.B.TTL   = 1;
-
-        /*Clear Error bits*/
-        eobufSfrGroup->ERROR.B.TDESE = 1;
-        eobufSfrGroup->ERROR.B.WDTE  = 1;
-
-        /*Transmit Trigger Configurations*/
-        Ifx_DRE_EOBUF_TTC ttc;
-        ttc.U = 0;
-
-        if (eobufCfgPtr->triggerMode == IfxDre_TriggerMode_bufferFillLevel)
-        {
-            ttc.B.BUFT = eobufCfgPtr->bufferThreshold; /*Must be less than max ACF Payload*/
-        }
-        else if (eobufCfgPtr->triggerMode == IfxDre_TriggerMode_frameCount)
-        {
-            ttc.B.TFL = eobufCfgPtr->triggerFillLevel;
-        }
-        else if (eobufCfgPtr->triggerMode == IfxDre_TriggerMode_timeTriggered)
-        {
-            ttc.B.TP                 = eobufCfgPtr->timer.timerPrescalar;
-            eobufSfrGroup->TTS.B.TRV = eobufCfgPtr->timer.timerReloadValue;
-        }
-
-        eobufSfrGroup->TTC.U = ttc.U;
-
-        eobufSfrGroup++;
-        eobufCfgPtr++;
+        IfxDre_Dre_configureEthernetOutputBuffer(
+            dre,
+            ((IfxDre_EthernetOutputBufConfig *)&(config->ethernetOutputBuffer0)) + i,
+            i
+        );
     }
 
-    /*EIBUF Config*/
-    Ifx_DRE_EIBUF                 *eibufSfrGroup = &(dreSFR->EIBUF[0]);
-    Ifx_DRE_EIBUF_CONFIG           eibufConfig;
-    IfxDre_EthernetInputBufConfig *eibufCfgPtr   = &(config->ethernetInputBuffer0);
-
+    /* EIBUF Config */
     for (i = 0; i < IFXDRE_NUM_EIBUF_BUFFERS; i++)
     {
-        eibufConfig.U                = 0;
-        eibufConfig.U                = (eibufCfgPtr->ntscfStartAddress & (IFX_DRE_EIBUF_CONFIG_NTSCF_SA_MSK << IFX_DRE_EIBUF_CONFIG_NTSCF_SA_OFF)); /*NTSCF_SA*/
-        eibufConfig.B.RRF            = eibufCfgPtr->enableRejectRemoteFrame;
-        eibufSfrGroup->CONFIG.U      = eibufConfig.U;
-
-        eibufSfrGroup->STATUS.B.BPRC = 1; /*Clear Pending Request*/
-
-        eibufSfrGroup->ERROR.U       = 3; /*Clear Error Status bits*/
-
-        eibufCfgPtr++;
-        eibufSfrGroup++;
+        IfxDre_Dre_configureEthernetInputBuffer(
+            dre,
+            ((IfxDre_EthernetInputBufConfig *)&(config->ethernetInputBuffer0)) + i,
+            i
+        );
     }
 
-    /*Eth Forwarding*/
+    /* Eth Forwarding */
     dreSFR->FTCFG.B.NRULES = config->numberOfEthRules;
 
-    /*Interrupt Configurations*/
-    /*Clear All Interrupt Enable Bits*/
+    /* Interrupt Configurations */
+    /* Clear All Interrupt Enable Bits */
     dreSFR->IE.U = 0;
-
-    volatile Ifx_SRC_SRCR *src;
-
-    IfxDre_InterruptLine   index = IfxDre_InterruptLine_0;
 
     for (index = IfxDre_InterruptLine_0; index <= IfxDre_InterruptLine_15; index++)
     {
-        if (config->interruptCfg[index].enable)
-        {
-            src = (volatile Ifx_SRC_SRCR *)&(MODULE_SRC.DRE[index]);
-            IfxSrc_init(src, config->interruptCfg[index].typeOfService, config->interruptCfg[index].priority, config->interruptCfg[index].vmId);
-            IfxSrc_enable(src);
-            IfxDre_setInterruptEnable(dreSFR, TRUE, index);
-        }
+    	IfxDre_Dre_configureInterrupt(
+            dre,
+            &(config->interruptCfg[index]),
+            index
+        );
+    }
+}
+
+
+void IfxDre_Dre_configureStreamIdFilter(IfxDre_Dre *dre, IfxDre_StreamIdConfig *streamFilterCfgPtr, uint8 index)
+{
+    Ifx_DRE *dreSFR = dre->dre;
+
+    Ifx_DRE_SIDF *sidf = &(dreSFR->SIDF[index]);
+    Ifx_DRE_SIDF_FC streamFilter;
+    streamFilter.U = 0;
+
+    streamFilter.B.FE = streamFilterCfgPtr->enable;
+
+    if (streamFilterCfgPtr->enable)
+    {
+        streamFilter.B.MODE = streamFilterCfgPtr->mode;
+        streamFilter.B.RTI  = streamFilterCfgPtr->routingTableIndex;
+        sidf->FC.U          = streamFilter.U;
+        sidf->FIL1.L.U      = streamFilterCfgPtr->filter1LowerId;
+        sidf->FIL1.H.U      = streamFilterCfgPtr->filter1HigherId;
+        sidf->FIL2.L.U      = streamFilterCfgPtr->filter2LowerId;
+        sidf->FIL2.H.U      = streamFilterCfgPtr->filter2HigherId;
+    }
+}
+
+
+void IfxDre_Dre_configureDestinationMemory(IfxDre_Dre *dre, IfxDre_MemoryConfig *memCfgPtr, uint8 index)
+{
+    Ifx_DRE *dreSFR = dre->dre;
+    Ifx_DRE_DMEM *dMemPtr = &(dreSFR->DMEM[index]);
+    Ifx_DRE_DMEM_CONFIG dMemCfgSfrVar;
+    dMemCfgSfrVar.U = 0;
+
+    if (memCfgPtr->enable)
+    {
+        dMemPtr->RP.U        = (memCfgPtr->resourcePartitionIndex & 0x7);
+
+        dMemCfgSfrVar.B.EN1  = 1;
+        dMemCfgSfrVar.B.EN2  = 1;
+        dMemCfgSfrVar.B.AST  = memCfgPtr->appendStatus;
+        dMemCfgSfrVar.B.ATH  = memCfgPtr->appendTiming;
+        dMemCfgSfrVar.B.INP  = memCfgPtr->interruptNodePointer; /* Valid values are 0 - 7, 8 - 15 are reserved and considered as 0 */
+        dMemCfgSfrVar.B.OA   = memCfgPtr->offsetAddress;        /* Valid values are 32 (0x20) bytes for Classical CAN frames and 82 (0x58) bytes for CAN FD frames */
+        dMemCfgSfrVar.B.CTYP = memCfgPtr->messageType;
+
+        dMemPtr->CONFIG.U    = dMemCfgSfrVar.U;
+
+        dMemPtr->MODE.B.TYP  = memCfgPtr->pduMode;
+        dMemPtr->MODE.B.TRIG = memCfgPtr->triggerMode;
+        dMemPtr->MODE.B.BUF  = memCfgPtr->bufferMode;
+        dMemPtr->MODE.B.FOM  = memCfgPtr->overflowMode;
+
+        /* S/w write with 1/non zero will reset the bits. */
+        dMemPtr->STATUS.U = IFXDRE_DMEM_STATUS_CLEAR;
+    }
+}
+
+
+void IfxDre_Dre_configureEthernetOutputBuffer(IfxDre_Dre *dre, IfxDre_EthernetOutputBufConfig *eobufCfgPtr, uint8 index)
+{
+    Ifx_DRE *dreSFR = dre->dre;
+    Ifx_DRE_EOBUF *eobufSfrGroup = &(dreSFR->EOBUF[index]);
+
+    Ifx_DRE_EOBUF_CONFIG eobufConfig;
+    eobufConfig.U           = 0;
+    eobufConfig.B.PL        = eobufCfgPtr->payloadLength;
+    /* Valid values are IfxCan_DestinationId_Ethernet1 or IfxCan_DestinationId_Ethernet2 */
+    eobufConfig.B.DID       = eobufCfgPtr->destinationId;
+    eobufConfig.B.HE        = eobufCfgPtr->headerEnable;
+    eobufConfig.B.TTM       = eobufCfgPtr->triggerMode;
+    eobufSfrGroup->CONFIG.U = eobufConfig.U;
+
+    /* MAC Configurations */
+    Ifx_DRE_EOBUF_MAC *mac0 = &(eobufSfrGroup->MAC);
+    mac0->H0.U        = (eobufCfgPtr->macDestinationAddress0) << 16;
+    mac0->H1.U        = eobufCfgPtr->macDestinationAddress1;
+    mac0->H2.U        = eobufCfgPtr->macSourceAddress0;
+    mac0->H3.U        = eobufCfgPtr->macSourceAddress1;
+    /* MSB of Tag */
+    mac0->H3.B.TPID_H = (eobufCfgPtr->tpId >> 8);
+    /* LSB of Tag */
+    mac0->H3.B.TPID_L = (eobufCfgPtr->tpId & (0x00FF));
+
+    Ifx_DRE_EOBUF_MAC_H4 h4;
+    h4.U          = 0;
+    h4.B.VTAG_L   = (eobufCfgPtr->vlanTag & 0x00FF);
+    h4.B.VTAG_H   = (eobufCfgPtr->vlanTag >> 8);
+    h4.B.AVTPET_L = (eobufCfgPtr->avtpEtherType & 0x00FF);
+    h4.B.AVTPET_H = (eobufCfgPtr->avtpEtherType >> 8);
+    mac0->H4.U    = h4.U;
+
+    /* NTSCF and STREAM ID Configurations */
+    Ifx_DRE_EOBUF_NTSCF *ntscf = &(eobufSfrGroup->NTSCF);
+    ntscf->H0.B.SV = eobufCfgPtr->isStreamIdValid;
+    ntscf->H0.B.SN = eobufCfgPtr->ntscfSequenceNumber;
+
+    if (eobufCfgPtr->isStreamIdValid)
+    {
+        ntscf->STREAM0_ID.B.ID0 = ((eobufCfgPtr->streamIdHigher & 0xFF000000) >> 24); /* Stream ID [63:54] */
+        ntscf->STREAM0_ID.B.ID1 = ((eobufCfgPtr->streamIdHigher & 0x00FF0000) >> 16); /* Stream ID [53:48] */
+        ntscf->STREAM0_ID.B.ID2 = ((eobufCfgPtr->streamIdHigher & 0x0000FF00) >> 8);  /* Stream ID [47:40] */
+        ntscf->STREAM0_ID.B.ID3 = ((eobufCfgPtr->streamIdHigher & 0x000000FF));       /* Stream ID [39:32] */
+
+        ntscf->STREAM1_ID.B.ID4 = ((eobufCfgPtr->streamIdLower & 0xFF000000) >> 24);  /* Stream ID [31:24] */
+        ntscf->STREAM1_ID.B.ID5 = ((eobufCfgPtr->streamIdLower & 0x00FF0000) >> 16);  /* Stream ID [23:16] */
+        ntscf->STREAM1_ID.B.ID6 = ((eobufCfgPtr->streamIdLower & 0x0000FF00) >> 8);   /* Stream ID [15:8] */
+        ntscf->STREAM1_ID.B.ID7 = ((eobufCfgPtr->streamIdLower & 0x000000FF));	      /* Stream ID [7:0] */
+    }
+
+    /* Clear Status bits */
+    eobufSfrGroup->STATUS.B.TXREQ = 1; /* Write of 1 clears the bit set by H/w */
+    eobufSfrGroup->STATUS.B.TTL   = 1;
+
+    /* Clear Error bits */
+    eobufSfrGroup->ERROR.B.TDESE = 1;
+    eobufSfrGroup->ERROR.B.WDTE  = 1;
+
+    /* Transmit Trigger Configurations */
+    Ifx_DRE_EOBUF_TTC ttc;
+    ttc.U = 0;
+
+    if (eobufCfgPtr->triggerMode == IfxDre_TriggerMode_bufferFillLevel)
+    {
+    	/* Must be less than max ACF Payload */
+        ttc.B.BUFT = eobufCfgPtr->bufferThreshold;
+    }
+    else if (eobufCfgPtr->triggerMode == IfxDre_TriggerMode_frameCount)
+    {
+        ttc.B.TFL = eobufCfgPtr->triggerFillLevel;
+    }
+    else if (eobufCfgPtr->triggerMode == IfxDre_TriggerMode_timeTriggered)
+    {
+        ttc.B.TP                 = eobufCfgPtr->timer.timerPrescalar;
+        eobufSfrGroup->TTS.B.TRV = eobufCfgPtr->timer.timerReloadValue;
+    }
+
+    eobufSfrGroup->TTC.U = ttc.U;
+}
+
+
+void IfxDre_Dre_configureEthernetInputBuffer(IfxDre_Dre *dre, IfxDre_EthernetInputBufConfig *eibufCfgPtr, uint8 index)
+{
+    Ifx_DRE *dreSFR = dre->dre;
+    Ifx_DRE_EIBUF *eibufSfrGroup = &(dreSFR->EIBUF[index]);
+
+    Ifx_DRE_EIBUF_CONFIG eibufConfig;
+    eibufConfig.U = 0;
+    eibufConfig.U = (eibufCfgPtr->ntscfStartAddress & (IFX_DRE_EIBUF_CONFIG_NTSCF_SA_MSK << IFX_DRE_EIBUF_CONFIG_NTSCF_SA_OFF)); /* NTSCF_SA */
+    eibufConfig.B.RRF = eibufCfgPtr->enableRejectRemoteFrame;
+    eibufSfrGroup->CONFIG.U = eibufConfig.U;
+
+    /* Clear Pending Request */
+    eibufSfrGroup->STATUS.B.BPRC = 1;
+    /* Clear Error Status bits */
+    eibufSfrGroup->ERROR.U = 3;
+}
+
+
+void IfxDre_Dre_configureInterrupt(IfxDre_Dre *dre, IfxDre_InterruptConfig *interruptCfg, IfxDre_InterruptLine index)
+{
+    Ifx_DRE *dreSFR = dre->dre;
+    volatile Ifx_SRC_SRCR *src;
+
+    if (interruptCfg->enable)
+    {
+        src = (volatile Ifx_SRC_SRCR *)&(MODULE_SRC.DRE[index]);
+        IfxSrc_init(src, interruptCfg->typeOfService, interruptCfg->priority, interruptCfg->vmId);
+        IfxSrc_enable(src);
+        IfxDre_setInterruptEnable(dreSFR, TRUE, index);
     }
 }
 
 
 void IfxDre_Dre_initModuleConfig(IfxDre_Dre_Config *config, Ifx_DRE *dre)
 {
+	/* Initialize configuration structure of the DRE Module with default values */
     const IfxDre_Dre_Config defaultConfig = {
         .dre       = NULL_PTR,
 
@@ -758,9 +803,9 @@ void IfxDre_Dre_initModuleConfig(IfxDre_Dre_Config *config, Ifx_DRE *dre)
             .macDestinationAddress1 = 0,
             .macSourceAddress0      = 0,
             .macSourceAddress1      = 0,
-            .tpId                   = 0, /*0x8100 for tagged ethernet frames*/
+            .tpId                   = 0, /* 0x8100 for tagged ethernet frames */
             .vlanTag                = 0,
-            .avtpEtherType          = 0, /*0x22F0 for AVTP frames */
+            .avtpEtherType          = 0, /* 0x22F0 for AVTP frames */
             .isStreamIdValid        = FALSE,
             .ntscfSequenceNumber    = 0,
             .streamIdLower          = 0,
@@ -782,9 +827,9 @@ void IfxDre_Dre_initModuleConfig(IfxDre_Dre_Config *config, Ifx_DRE *dre)
             .macDestinationAddress1 = 0,
             .macSourceAddress0      = 0,
             .macSourceAddress1      = 0,
-            .tpId                   = 0, /*0x8100 for tagged ethernet frames*/
+            .tpId                   = 0, /* 0x8100 for tagged ethernet frames */
             .vlanTag                = 0,
-            .avtpEtherType          = 0, /*0x22F0 for AVTP frames */
+            .avtpEtherType          = 0, /* 0x22F0 for AVTP frames */
             .isStreamIdValid        = FALSE,
             .ntscfSequenceNumber    = 0,
             .streamIdLower          = 0,
@@ -806,9 +851,9 @@ void IfxDre_Dre_initModuleConfig(IfxDre_Dre_Config *config, Ifx_DRE *dre)
             .macDestinationAddress1 = 0,
             .macSourceAddress0      = 0,
             .macSourceAddress1      = 0,
-            .tpId                   = 0, /*0x8100 for tagged ethernet frames*/
+            .tpId                   = 0, /* 0x8100 for tagged ethernet frames */
             .vlanTag                = 0,
-            .avtpEtherType          = 0, /*0x22F0 for AVTP frames */
+            .avtpEtherType          = 0, /* 0x22F0 for AVTP frames */
             .isStreamIdValid        = FALSE,
             .ntscfSequenceNumber    = 0,
             .streamIdLower          = 0,
@@ -830,9 +875,9 @@ void IfxDre_Dre_initModuleConfig(IfxDre_Dre_Config *config, Ifx_DRE *dre)
             .macDestinationAddress1 = 0,
             .macSourceAddress0      = 0,
             .macSourceAddress1      = 0,
-            .tpId                   = 0, /*0x8100 for tagged ethernet frames*/
+            .tpId                   = 0, /* 0x8100 for tagged ethernet frames */
             .vlanTag                = 0,
-            .avtpEtherType          = 0, /*0x22F0 for AVTP frames */
+            .avtpEtherType          = 0, /* 0x22F0 for AVTP frames */
             .isStreamIdValid        = FALSE,
             .ntscfSequenceNumber    = 0,
             .streamIdLower          = 0,
@@ -854,9 +899,9 @@ void IfxDre_Dre_initModuleConfig(IfxDre_Dre_Config *config, Ifx_DRE *dre)
             .macDestinationAddress1 = 0,
             .macSourceAddress0      = 0,
             .macSourceAddress1      = 0,
-            .tpId                   = 0, /*0x8100 for tagged ethernet frames*/
+            .tpId                   = 0, /* 0x8100 for tagged ethernet frames */
             .vlanTag                = 0,
-            .avtpEtherType          = 0, /*0x22F0 for AVTP frames */
+            .avtpEtherType          = 0, /* 0x22F0 for AVTP frames */
             .isStreamIdValid        = FALSE,
             .ntscfSequenceNumber    = 0,
             .streamIdLower          = 0,
@@ -878,9 +923,9 @@ void IfxDre_Dre_initModuleConfig(IfxDre_Dre_Config *config, Ifx_DRE *dre)
             .macDestinationAddress1 = 0,
             .macSourceAddress0      = 0,
             .macSourceAddress1      = 0,
-            .tpId                   = 0, /*0x8100 for tagged ethernet frames*/
+            .tpId                   = 0, /* 0x8100 for tagged ethernet frames */
             .vlanTag                = 0,
-            .avtpEtherType          = 0, /*0x22F0 for AVTP frames */
+            .avtpEtherType          = 0, /* 0x22F0 for AVTP frames */
             .isStreamIdValid        = FALSE,
             .ntscfSequenceNumber    = 0,
             .streamIdLower          = 0,
@@ -1028,7 +1073,7 @@ void IfxDre_Dre_initModuleConfig(IfxDre_Dre_Config *config, Ifx_DRE *dre)
     /* Default Configuration */
     *config = defaultConfig;
 
-    /* take over module pointer */
+    /* Take over module pointer */
     config->dre = dre;
 }
 
@@ -1038,7 +1083,7 @@ void IfxDre_Dre_setSoftwareTrigger(IfxDre_Dre *dre, uint8 bufferIndex)
     Ifx_DRE_EOBUF *eobuf = &(dre->dre->EOBUF[bufferIndex]);
     eobuf->STATUS.B.TXRDY = 1;
 
-    /*Wait till H/w clears the TXRDY flag when the Transmit Ethernet frame is prepared. */
+    /* Wait till H/w clears the TXRDY flag when the Transmit Ethernet frame is prepared. */
     while (eobuf->STATUS.B.TXRDY == 1)
     {}
 }
@@ -1046,44 +1091,45 @@ void IfxDre_Dre_setSoftwareTrigger(IfxDre_Dre *dre, uint8 bufferIndex)
 
 void IfxDre_Dre_setFilterAndRoutingElement(IfxDre_Dre *dre, uint8 tableIndex, uint8 elementIndex, IfxDre_Dre_RoutingConfig *config)
 {
-    /*Compute Address*/
-    uint32  elementOffset       = elementIndex * 8;                                                         /*Size of Ifx_DRE_RT_RR is 8 bytes*/
-	uint32  address             = (((uint32)&MODULE_DRE + IFXDRE_RT_START_OFFSET + (tableIndex * 0x400)) + elementOffset);         /*Absolute RT Start Address + Element Offset*/
+    /* Compute Address */
+    uint32  elementOffset       = elementIndex * 8;                                                         /* Size of Ifx_DRE_RT_RR is 8 bytes */
+	uint32  address             = (((uint32)&MODULE_DRE + IFXDRE_RT_START_OFFSET + (tableIndex * 0x400)) + elementOffset);         /* Absolute RT Start Address + Element Offset */
 
     uint64 *rountingRule64Ptr   = (uint64 *)address;
     uint64  destinationConfig64 = 0;
 
-    /*Configure the filter and destination configurations*/
+    /* Configure the filter and destination configurations */
     if (config->routingType == IfxDre_RoutingType_unicast)
     {
-        /*Destination Configurations*/
+        /* Destination Configurations */
         Ifx_DRE_RT_RE_UCR destinationConfig;
 
-        /*Only CAN Destinations should be configured
-         * because this routing is for CAN messages coming from Ethernet packet*/
+        /* Only CAN Destinations should be configured
+         * because this routing is for CAN messages coming from Ethernet packet */
         destinationConfig.B.DID  = config->destinationId1;
-        destinationConfig.B.MODE = 0; /*Uni-cast Rule*/
+        destinationConfig.B.MODE = 0; /* Uni-cast Rule */
 
         destinationConfig64      = destinationConfig.U;
     }
     else if (config->routingType == IfxDre_RoutingType_multicast)
     {
-        /*Destination Configurations*/
+        /* Destination Configurations */
         Ifx_DRE_RT_RE_MCR destinationConfig;
 
-        /*Only CAN or Memory Destinations should be configured
-         * because this routing is for CAN messages coming from Ethernet packet*/
+        /* Only CAN or Memory Destinations should be configured
+         * because this routing is for CAN messages coming from Ethernet packet */
         destinationConfig.B.DID0 = config->destinationId1;
         destinationConfig.B.DID1 = config->destinationId2;
         destinationConfig.B.DID2 = config->destinationId3;
         destinationConfig.B.DID3 = config->destinationId4;
 
-        destinationConfig.B.MODE = 1; /*Multi-cast Rule*/
+        /* Set Routing Rule Mode to Multi-cast Rule */
+        destinationConfig.B.MODE = 1;
 
         destinationConfig64      = destinationConfig.U;
     }
 
-    /*CAN Acceptance Filter. Destination is taken from the RR element whose filter matches first.*/
+    /* CAN Acceptance Filter. Destination is taken from the RR element whose filter matches first. */
     Ifx_DRE_RT_RE_CIDFC filter;
 
     filter.B.MODE      = config->filterMode;
@@ -1097,9 +1143,9 @@ void IfxDre_Dre_setFilterAndRoutingElement(IfxDre_Dre *dre, uint8 tableIndex, ui
 
 void IfxDre_Dre_setCanAddressDatabaseElement(IfxDre_Dre *dre, IfxDre_Dre_CADConfig *config)
 {
-    /*Compute Address*/
-    uint32  elementOffset = config->elementIndex * IFXDRE_CAD_CAN_OFFSET;                      /*Size of Ifx_DRE_RT_RR is 8 bytes*/
-    uint32  address       = (((uint32)&MODULE_DRE + 0x8000) + elementOffset);                  /*RAM address + Element Offset*/
+    /* Compute Address */
+    uint32  elementOffset = config->elementIndex * IFXDRE_CAD_CAN_OFFSET;                      /* Size of Ifx_DRE_RT_RR is 8 bytes */
+    uint32  address       = (((uint32)&MODULE_DRE + 0x8000) + elementOffset);                  /* RAM address + Element Offset */
 
     uint64 *database64Ptr = (uint64 *)address;
 
@@ -1109,9 +1155,9 @@ void IfxDre_Dre_setCanAddressDatabaseElement(IfxDre_Dre *dre, IfxDre_Dre_CADConf
 
 void IfxDre_Dre_setDMemParameterElement(IfxDre_Dre *dre, IfxDre_Dre_DMemParamConfig *config)
 {
-    /*Compute Address*/
-    uint32  elementOffset = config->elementIndex * IFXDRE_DMEM_PARAM_OFFSET;                                /*Size of 1 DMEM Parameter element is 8 bytes*/
-    uint32  address       = (((uint32)&MODULE_DRE + IFXDRE_DMEM_PARAM_TABLE_START_OFFSET) + elementOffset); /*DMEM Param table start address + Element Offset*/
+    /* Compute Address */
+    uint32  elementOffset = config->elementIndex * IFXDRE_DMEM_PARAM_OFFSET;                                /* Size of 1 DMEM Parameter element is 8 bytes */
+    uint32  address       = (((uint32)&MODULE_DRE + IFXDRE_DMEM_PARAM_TABLE_START_OFFSET) + elementOffset); /* DMEM Param table start address + Element Offset */
 
     uint64 *database64Ptr = (uint64 *)address;
 
@@ -1122,7 +1168,8 @@ void IfxDre_Dre_setDMemParameterElement(IfxDre_Dre *dre, IfxDre_Dre_DMemParamCon
 
 void IfxDre_Dre_initEthAddressDatabase(IfxDre_Dre *dre, IfxDre_Dre_EADConfig *config)
 {
-    uint32    address     = ((uint32)&MODULE_DRE + IFXDRE_EAD_START_OFFSET);                  /*Absolute EAD start address*/
+	/* Absolute EAD start address */
+    uint32    address     = ((uint32)&MODULE_DRE + IFXDRE_EAD_START_OFFSET);
 
     uint32   *databasePtr = (uint32 *)address;
 
@@ -1185,12 +1232,12 @@ void IfxDre_Dre_assignEthResourcePartition(IfxDre_Dre *dre, uint8 rpIndex, IfxDr
 
 void IfxDre_Dre_setWatchdog(IfxDre_Dre *dre, IfxDre_Dre_WdgConfig *config)
 {
-    dre->dre->CWDCFG.B.EN   = 0; /*Must be disabled before re-configuration*/
+    dre->dre->CWDCFG.B.EN   = 0; /* Must be disabled before re-configuration */
     dre->dre->CWDCFG.B.CTO  = config->can.timeoutValue;
     dre->dre->CWDCFG.B.WTOE = config->can.interruptEnable;
     dre->dre->CWDCFG.B.EN   = config->can.enable;
 
-    dre->dre->EWDCFG.B.EN   = 0; /*Must be disabled before re-configuration*/
+    dre->dre->EWDCFG.B.EN   = 0; /* Must be disabled before re-configuration */
     dre->dre->EWDCFG.B.ETO  = config->eth.timeoutValue;
     dre->dre->EWDCFG.B.WTOE = config->eth.interruptEnable;
     dre->dre->EWDCFG.B.EN   = config->eth.enable;
@@ -1217,7 +1264,8 @@ void IfxDre_Dre_initRxEthDescListControlConfig(IfxDre_Dre *dre, uint8 index, Ifx
 
     ctrl.B.DMACH                      = config->dmaChannel;
 
-    ctrl.B.TRIG                       = 1; /*Reset Value. Initially interface must be configured.*/
+    /* Reset Value. Initially interface must be configured. */
+    ctrl.B.TRIG                       = 1;
 
     ctrl.B.IOC                        = config->interruptOnCompletion;
 
@@ -1229,7 +1277,8 @@ void IfxDre_Dre_initRxEthDescListControlConfig(IfxDre_Dre *dre, uint8 index, Ifx
 
     if (config->descriptorPointerConfigEnable)
     {
-        dreSFR->RETHDL[index].CTRL.B.STOP = 1; /* Stop ongoing transaction if any */
+    	/* Stop ongoing transaction if any */
+        dreSFR->RETHDL[index].CTRL.B.STOP = 1;
 
         while (dreSFR->RETHDL[index].CTRL.B.STOPACK != 1)
         {}
@@ -1262,7 +1311,8 @@ void IfxDre_Dre_initTxEthDescListControlConfig(IfxDre_Dre *dre, uint8 index, Ifx
 
     if (config->descriptorPointerConfigEnable)
     {
-        dreSFR->TETHDL[index].CTRL.B.STOP = 1; /* Stop ongoing transaction if any */
+    	/* Stop ongoing transaction if any */
+        dreSFR->TETHDL[index].CTRL.B.STOP = 1;
 
         while (dreSFR->TETHDL[index].CTRL.B.STOPACK != 1)
         {}
@@ -1279,9 +1329,11 @@ void IfxDre_Dre_initTxEthDescListControlConfig(IfxDre_Dre *dre, uint8 index, Ifx
 
 void IfxDre_Dre_setEthForwardingElement(IfxDre_Dre *dre, uint8 index, IfxDre_Dre_FTConfig *config)
 {
-    uint32              address       = ((uint32)&MODULE_DRE + IFXDRE_FT_START_OFFSET); /*Absolute FT start address*/
+	/* Absolute FT start address */
+    uint32              address       = ((uint32)&MODULE_DRE + IFXDRE_FT_START_OFFSET);
 
-    uint64             *database64Ptr = (uint64 *)(address + index * 8);                /*Absolute Forwarding Element address*/
+    /* Absolute Forwarding Element address */
+    uint64             *database64Ptr = (uint64 *)(address + index * 8);
     uint64              lvalue        = 0;
     Ifx_DRE_FT_FE_FRULE configLow32;
     configLow32.U       = 0;
@@ -1299,6 +1351,7 @@ void IfxDre_Dre_setEthForwardingElement(IfxDre_Dre *dre, uint8 index, IfxDre_Dre
 
     *database64Ptr      = lvalue;
 }
+
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

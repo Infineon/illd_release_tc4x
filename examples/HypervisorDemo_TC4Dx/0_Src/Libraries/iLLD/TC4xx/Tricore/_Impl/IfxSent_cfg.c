@@ -2,9 +2,9 @@
  * \file IfxSent_cfg.c
  * \brief SENT on-chip implementation data
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-08-30 14:28:31
  *
  *
  *                                 IMPORTANT NOTICE

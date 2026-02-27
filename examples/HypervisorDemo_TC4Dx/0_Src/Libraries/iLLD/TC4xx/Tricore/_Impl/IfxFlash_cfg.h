@@ -3,9 +3,9 @@
  * \brief FLASH on-chip implementation data
  * \ingroup IfxLld_Flash
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-10-06 06:34:54
  *
  *
  *                                 IMPORTANT NOTICE
@@ -58,7 +58,7 @@
 #include "Ifx_Cfg.h"
 
 #if defined DEVICE_TC4DX
-#include "IfxFlash_cfg_TC4Dx.h"
+#include "TC4Dx/IfxFlash_cfg_TC4Dx.h"
 #endif
 
 #endif /* IFXFLASH_CFG_H */

@@ -3,9 +3,9 @@
  * \brief EGTM  basic functionality
  * \ingroup IfxLld_Egtm
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-11-06 12:52:33
  *
  *
  *                                 IMPORTANT NOTICE
@@ -157,153 +157,226 @@ typedef enum
 /******************************************************************************/
 
 /** \brief returns the base address of selected DTM instance
- * \param egtm pointer to EGTM register base
- * \param cdtmIndex CDTM index
- * \param dtmIndex DTM index
- * \return Base address of DTM
+ *
+ * \param[in] egtm      pointer to EGTM register base
+ * \param[in] cdtmIndex CDTM index
+ *                      Range: \ref: IfxEgtm_Cdtm
+ * \param[in] dtmIndex  DTM index
+ *                      Range: \ref: IfxEgtm_Dtm
+ *
+ * \retval Base address of DTM
  */
 IFX_INLINE Ifx_EGTM_CLS_CDTM_DTM *IfxEgtm_Dtm_getDtmPointer(Ifx_EGTM *egtm, IfxEgtm_Cdtm cdtmIndex, IfxEgtm_Dtm dtmIndex);
 
 /** \brief Sets the clock source for DTM object
- * \param dtm Pointer to the DTM object
- * \param clockSource Clock source for DTM object
- * \return None
+ *
+ * \param[inout] dtm         Pointer to the DTM object
+ * \param[in]    clockSource Clock source for DTM object
+ *                           Range: \ref: IfxEgtm_Dtm_ClockSource
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Dtm_setClockSource(Ifx_EGTM_CLS_CDTM_DTM *dtm, IfxEgtm_Dtm_ClockSource clockSource);
 
 /** \brief Sets the Output 0 Dead Time Path for DTM channel
- * \param dtm Pointer to the DTM object
- * \param channel Channel index
- * \param deadTimePath Dead Time Path for Dtm chhannel output
- * \return None
+ *
+ * \param[inout] dtm          Pointer to the DTM object
+ * \param[in]    channel      Channel index
+ *                            Range: \ref: IfxEgtm_Dtm_Ch
+ * \param[in]    deadTimePath Dead Time Path for Dtm chhannel output
+ *                            Range: \ref: IfxEgtm_Dtm_DeadTimePath
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Dtm_setOutput0DeadTimePath(Ifx_EGTM_CLS_CDTM_DTM *dtm, IfxEgtm_Dtm_Ch channel, IfxEgtm_Dtm_DeadTimePath deadTimePath);
 
 /** \brief Sets the Output 1 Dead Time Path for DTM channel
- * \param dtm Pointer to the DTM object
- * \param channel Channel index
- * \param deadTimePath Dead Time Path for Dtm chhannel output
- * \return None
+ *
+ * \param[inout] dtm          Pointer to the DTM object
+ * \param[in]    channel      Channel index
+ *                            Range: \ref: IfxEgtm_Dtm_Ch
+ * \param[in]    deadTimePath Dead Time Path for Dtm chhannel output
+ *                            Range: \ref: IfxEgtm_Dtm_DeadTimePath
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Dtm_setOutput1DeadTimePath(Ifx_EGTM_CLS_CDTM_DTM *dtm, IfxEgtm_Dtm_Ch channel, IfxEgtm_Dtm_DeadTimePath deadTimePath);
 
 /** \brief Sets the Output Function for DTM channel
- * \param dtm Pointer to the DTM object
- * \param channel Channel index
- * \param output1Function Output 1 function
- * \return None
+ *
+ * \param[inout] dtm             Pointer to the DTM object
+ * \param[in]    channel         Channel index
+ *                               Range: \ref: IfxEgtm_Dtm_Ch
+ * \param[in]    output1Function Output 1 function
+ *                               Range: \ref: IfxEgtm_Dtm_Output1Function
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Dtm_setOutput1Function(Ifx_EGTM_CLS_CDTM_DTM *dtm, IfxEgtm_Dtm_Ch channel, IfxEgtm_Dtm_Output1Function output1Function);
 
 /** \brief Sets the Output Selection for DTM channel
- * \param dtm Pointer to the DTM object
- * \param channel Channel index
- * \param output1Select Output 1 selection
- * \return None
+ *
+ * \param[inout] dtm           Pointer to the DTM object
+ * \param[in]    channel       Channel index
+ *                             Range: \ref: IfxEgtm_Dtm_Ch
+ * \param[in]    output1Select Output 1 selection
+ *                             Range: \ref: IfxEgtm_Dtm_Output1Select
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Dtm_setOutput1Select(Ifx_EGTM_CLS_CDTM_DTM *dtm, IfxEgtm_Dtm_Ch channel, IfxEgtm_Dtm_Output1Select output1Select);
 
 /** \brief Sets the relative rise time
- * \param dtm Pointer to the DTM object
- * \param channel DTM Channel
- * \param relrise Relative rise value in ticks
- * \return None
+ *
+ * \param[inout] dtm     Pointer to the DTM object
+ * \param[in]    channel DTM Channel
+ *                       Range: \ref: IfxEgtm_Dtm_Ch
+ * \param[in]    relrise Relative rise value in ticks
+ *                       Range: 0 to 0x1FFF
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Dtm_setRelrise(Ifx_EGTM_CLS_CDTM_DTM *dtm, IfxEgtm_Dtm_Ch channel, uint16 relrise);
 
 /** \brief Sets the relative fall time
- * \param dtm Pointer to the DTM object
- * \param channel DTM Channel
- * \param relfall Relative fall value in ticks
- * \return None
+ *
+ * \param[inout] dtm     Pointer to the DTM object
+ * \param[in]    channel DTM Channel
+ *                       Range: \ref: IfxEgtm_Dtm_Ch
+ * \param[in]    relfall Relative fall value in ticks
+ *                       Range: 0 to 0x1FFF
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Dtm_setRelfall(Ifx_EGTM_CLS_CDTM_DTM *dtm, IfxEgtm_Dtm_Ch channel, uint16 relfall);
 
 /** \brief Set signal polarity at output 1
- * \param dtm Pointer to the DTM object
- * \param channel DTM Channel
- * \param polarity Polarity on Output 1 Channel x
- * \return None
+ *
+ * \param[inout] dtm      Pointer to the DTM object
+ * \param[in]    channel  DTM Channel
+ *                        Range: \ref: IfxEgtm_Dtm_Ch
+ * \param[in]    polarity Polarity on Output 1 Channel x
+ *                        Range: \ref: IfxEgtm_Dtm_OutputPolarity
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Dtm_setOutput1Polarity(Ifx_EGTM_CLS_CDTM_DTM *dtm, IfxEgtm_Dtm_Ch channel, IfxEgtm_Dtm_OutputPolarity polarity);
 
 /** \brief Enable individual channel fast shutoff
- * \param dtm Pointer to the DTM object
- * \return None
+ *
+ * \param[inout] dtm Pointer to the DTM object
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Dtm_enableIndividualShutoff(Ifx_EGTM_CLS_CDTM_DTM *dtm);
 
 /** \brief Set shutoff input source for the channel
- * \param dtm Pointer to the DTM object
- * \param channel DTM Channel
- * \param input Input source
- * \return None
+ *
+ * \param[inout] dtm     Pointer to the DTM object
+ * \param[in]    channel DTM Channel
+ *                       Range: \ref: IfxEgtm_Dtm_Ch
+ * \param[in]    input   Input source
+ *                       Range: \ref: IfxEgtm_Dtm_ShutoffInput
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Dtm_setShutoffInput(Ifx_EGTM_CLS_CDTM_DTM *dtm, IfxEgtm_Dtm_Ch channel, IfxEgtm_Dtm_ShutoffInput input);
 
 /** \brief Invert shutoff signal for the channel
- * \param dtm Pointer to the DTM object
- * \param channel DTM Channel
- * \param enabled TRUE: invert the signal
- * \return None
+ *
+ * \param[inout]  dtm     Pointer to the DTM object
+ * \param         channel DTM Channel
+ *                        Range: \ref: IfxEgtm_Dtm_Ch
+ * \param         enabled TRUE: invert the signal
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Dtm_setShutoffInputInverter(Ifx_EGTM_CLS_CDTM_DTM *dtm, IfxEgtm_Dtm_Ch channel, boolean enabled);
 
 /** \brief Set shutoff update mode
- * \param dtm Pointer to the DTM object
- * \param channel DTM Channel
- * \param mode Shutoff mode
- * \return None
+ *
+ * \param[inout] dtm     Pointer to the DTM object
+ * \param[in]    channel DTM Channel
+ *                       Range: \ref: IfxEgtm_Dtm_Ch
+ * \param[in]    mode    Shutoff mode
+ *                       Range: 0 to 0xFF
+ *
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Dtm_setShutoffUpdateMode(Ifx_EGTM_CLS_CDTM_DTM *dtm, IfxEgtm_Dtm_Ch channel, uint8 mode);
 
 /** \brief Reset the shutoff signal so as to resume normal DTM output
  * Writing to this register clears internal signal SHUTOFF_SYNC_0
- * \param dtm Pointer to the DTM object
- * \param channel DTM Channel
- * \return None
+ *
+ * \param[inout] dtm     Pointer to the DTM object
+ * \param[in]    channel DTM Channel
+ *                       Range: \ref: IfxEgtm_Dtm_Ch
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Dtm_resetShutoffSignal(Ifx_EGTM_CLS_CDTM_DTM *dtm, IfxEgtm_Dtm_Ch channel);
 
 /** \brief Set output 0 shadow signal level for the channel
- * \param dtm Pointer to the DTM object
- * \param channel DTM Channel
- * \param level signal level
- * \return None
+ *
+ * \param[inout] dtm     Pointer to the DTM object
+ * \param[in]    channel DTM Channel
+ *                       Range: \ref: IfxEgtm_Dtm_Ch
+ * \param[in]    level   Signal level
+ *                       Range: \ref: IfxEgtm_Dtm_Ch
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Dtm_setOutput0ShadowSignalLevel(Ifx_EGTM_CLS_CDTM_DTM *dtm, IfxEgtm_Dtm_Ch channel, IfxEgtm_Dtm_SignalLevel level);
 
 /** \brief Set output 1 shadow signal level for the channel
- * \param dtm Pointer to the DTM object
- * \param channel DTM Channel
- * \param level signal level
- * \return None
+ *
+ * \param[inout] dtm     Pointer to the DTM object
+ * \param[in]    channel DTM Channel
+ *                       Range: \ref: IfxEgtm_Dtm_Ch
+ * \param[in]    level   Signal level
+ *                       Range: \ref: IfxEgtm_Dtm_SignalLevel
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Dtm_setOutput1ShadowSignalLevel(Ifx_EGTM_CLS_CDTM_DTM *dtm, IfxEgtm_Dtm_Ch channel, IfxEgtm_Dtm_SignalLevel level);
 
 /** \brief Set output 0 shadow channel control for the DTM channel
- * \param dtm Pointer to the DTM object
- * \param channel DTM Channel
- * \param control Channel control
- * \return None
+ *
+ * \param[inout] dtm    Pointer to the DTM object
+ * \param[in]   channel DTM Channel
+ *                      Range: \ref: IfxEgtm_Dtm_Ch
+ * \param[in]   control Channel control
+ *                      Range: \ref: IfxEgtm_Dtm_ChannelControl
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Dtm_setOutput0ShadowChannelControl(Ifx_EGTM_CLS_CDTM_DTM *dtm, IfxEgtm_Dtm_Ch channel, IfxEgtm_Dtm_ChannelControl control);
 
 /** \brief Set output 1 shadow channel control for the DTM channel
- * \param dtm Pointer to the DTM object
- * \param channel DTM Channel
- * \param control Channel control
- * \return None
+ *
+ * \param[inout] dtm     Pointer to the DTM object
+ * \param[in]    channel DTM Channel
+ *                       Range: \ref: IfxEgtm_Dtm_Ch
+ * \param[in]    control Channel control
+ *                       Range: \ref: IfxEgtm_Dtm_ChannelControl
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Dtm_setOutput1ShadowChannelControl(Ifx_EGTM_CLS_CDTM_DTM *dtm, IfxEgtm_Dtm_Ch channel, IfxEgtm_Dtm_ChannelControl control);
 
 /** \brief set DTM Channel for High resolution
- * \param egtm pointer to EGTM register base
- * \param cdtmIndex CDTM index
- * \param dtmIndex DTM index
- * \param dtmChannel DTM Channel index
- * \param enabled High resolution supportto be enabled or disabled for DTM channel
- * \return None
+ *
+ * \param[inout] egtm       Pointer to EGTM register base
+ * \param[in]    cdtmIndex  CDTM index
+ *                          Range: \ref: IfxEgtm_Cdtm
+ * \param[in]    dtmIndex   DTM index
+ *                          Range: \ref: IfxEgtm_Dtm
+ * \param[in]    dtmChannel DTM Channel index
+ *                          Range: \ref: IfxEgtm_Dtm_Ch
+ * \param[in]    enabled    High resolution supportto be enabled or disabled for DTM channel
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Dtm_setChHresEnable(Ifx_EGTM *egtm, IfxEgtm_Cdtm cdtmIndex, IfxEgtm_Dtm dtmIndex, IfxEgtm_Dtm_Ch dtmChannel, boolean enabled);
 

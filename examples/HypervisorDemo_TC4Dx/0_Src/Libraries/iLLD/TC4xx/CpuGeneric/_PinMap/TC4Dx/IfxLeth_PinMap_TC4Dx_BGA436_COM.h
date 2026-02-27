@@ -3,9 +3,9 @@
  * \brief LETH  details
  * \ingroup IfxLld_Leth
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-03-05 14:27:11
  *
  *
  *                                 IMPORTANT NOTICE

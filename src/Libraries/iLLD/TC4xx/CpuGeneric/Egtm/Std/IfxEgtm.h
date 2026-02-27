@@ -3,7 +3,7 @@
  * \brief EGTM  basic functionality
  * \ingroup IfxLld_Egtm
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -178,165 +178,226 @@ typedef struct
 /******************************************************************************/
 
 /** \brief Disables the module
- * \param egtm Pointer to EGTM module
- * \return None
+ *
+ * \param[inout] egtm Pointer to EGTM module
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_disable(Ifx_EGTM *egtm);
 
 /** \brief Enables the module
- * \param egtm Pointer to EGTM module
- * \return None
+ *
+ * \param[inout] egtm Pointer to EGTM module
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_enable(Ifx_EGTM *egtm);
 
 /** \brief Returns the status of module enabled or disabled
- * \param egtm Pointer to EGTM module
- * \return status: TRUE/FALSE
+ *
+ * \param[in] egtm Pointer to EGTM module
+ *
+ * \retval Range: TRUE: Off: module is not clocked
+ *                FALSE: Module clock is enabled
  */
 IFX_INLINE boolean IfxEgtm_isEnabled(Ifx_EGTM *egtm);
 
 /** \brief Returns the module's suspend state.
  * TRUE :if module is suspended.
  * FALSE:if module is not yet suspended.
- * \param egtm Pointer to EGTM module registers
- * \return Suspend status (TRUE / FALSE)
+ *
+ * \param[in] egtm Pointer to EGTM module registers
+ *
+ * \retval Range: TRUE: Module is suspended
+ *                FALSE: Module is not (yet) suspended
  */
 IFX_INLINE boolean IfxEgtm_isModuleSuspended(Ifx_EGTM *egtm);
 
 /** \brief Configure the Module to Hard/Soft suspend mode.
  * Note: The api works only when the OCDS is enabled and in Supervisor Mode. When OCDS is disabled the OCS suspend control is ineffective.
- * \param egtm Pointer to EGTM module registers
- * \param mode Module suspend mode
- * \return None
+ *
+ * \param[inout] egtm Pointer to EGTM module registers
+ * \param[in]    mode Module suspend mode
+ *                    Range: \ref: IfxEgtm_SuspendMode
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_setSuspendMode(Ifx_EGTM *egtm, IfxEgtm_SuspendMode mode);
 
 /** \brief returns the EGTM SYSCLK frequency.
  * Refer to the Clock distribution for details on EGTM SYS CLK.
- * \return sysFreq
+ *
+ * \retval sysFreq
  */
 IFX_INLINE uint32 IfxEgtm_getSysClkFrequency(void);
 
 /** \brief returns the cluster frequency of the EGTM cluster.
  * If the cluster is disabled, then it will return 0 as frequency.
- * \param egtm pointer to egtm device
- * \param cluster index of cluster
- * \return cluster frequency
+ *
+ * \param[in] egtm    Pointer to egtm device
+ * \param[in] cluster Index of cluster
+ *                    Range: \ref: IfxEgtm_Cluster
+ *
+ * \retval cluster frequency
+ * Range: 0 to 0xFFFFFFFF
  */
 IFX_INLINE uint32 IfxEgtm_getClusterFrequency(Ifx_EGTM *egtm, IfxEgtm_Cluster cluster);
 
 /** \brief Convert timer ticks to seconds
- * \param clockFreq clockFreq Timer clock frequency
- * \param ticks ticks time value in ticks to be converted
- * \return Return the converted time in s
+ *
+ * \param[in] clockFreq Timer clock frequency
+ * \param[in] ticks     Ticks time value in ticks to be converted
+ *
+ * \retval Return the converted time in s
  */
 IFX_INLINE float32 IfxEgtm_tickToS(float32 clockFreq, uint32 ticks);
 
 /** \brief Convert seconds to timer ticks
- * \param clockFreq clockFreq Timer clock frequency
- * \param seconds seconds time value in seconds to be converted
- * \return Return the converted time in timer ticks
+ *
+ * \param[in] clockFreq Timer clock frequency
+ * \param[in] seconds   Seconds time value in seconds to be converted
+ *
+ * \retval Return the converted time in timer ticks
+ * Range: 0 to 0xFFFFFFFF
  */
 IFX_INLINE uint32 IfxEgtm_sToTick(float32 clockFreq, float32 seconds);
 
 /** \brief Initialize the PORT Safe Endinit
- * \param egtm Pointer to EGTM module
- * \param protseConfig Configuration pointer for the Prot
- * \return None
+ *
+ * \param[inout] egtm         Pointer to EGTM module
+ * \param[in]    protseConfig Configuration pointer for the Prot
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_initProtSe(Ifx_EGTM *egtm, IfxApProt_ProtConfig *protseConfig);
 
 /** \brief Initialize the PORTE for Control logic
- * \param egtm Pointer to EGTM module
- * \param ctrlProteConfig Configuration pointer for the Prot
- * \return None
+ *
+ * \param[inout] egtm            Pointer to EGTM module
+ * \param[in]    ctrlProteConfig Configuration pointer for the Prot
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_initCtrlProt(Ifx_EGTM *egtm, IfxApProt_ProtConfig *ctrlProteConfig);
 
 /** \brief Initialize the APU for the GTM Cluster
- * \param egtm Pointer to EGTM module
- * \param cluster Cluster index of GTM
- * \param clApuConfig Configuration pointer for the Apu
- * \return None
+ *
+ * \param[inout] egtm        Pointer to EGTM module
+ * \param[in]    cluster     Cluster index of GTM
+ *                           Range: \ref: IfxEgtm_Cluster
+ * \param[in]    clApuConfig Configuration pointer for the Apu
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_initClApu(Ifx_EGTM *egtm, IfxEgtm_Cluster cluster, IfxApApu_ApuConfig *clApuConfig);
 
 /** \brief Initialize the APU for Control logic
- * \param egtm Pointer to EGTM module
- * \param ctrlApuConfig Configuration pointer for the Apu
- * \return None
+ *
+ * \param[inout] egtm         Pointer to EGTM module
+ * \param[in]   ctrlApuConfig Configuration pointer for the Apu
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_initCtrlApu(Ifx_EGTM *egtm, IfxApApu_ApuConfig *ctrlApuConfig);
 
 /** \brief Initialize the APU for Wrap logic
- * \param egtm Pointer to EGTM module
- * \param wrapApuConfig Configuration pointer for the Apu
- * \return None
+ *
+ * \param[inout] egtm          Pointer to EGTM module
+ * \param[in]    wrapApuConfig Configuration pointer for the Apu
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_initWrapApu(Ifx_EGTM *egtm, IfxApApu_ApuConfig *wrapApuConfig);
 
 /** \brief Configure Cluster with clock divider
- * \param cluster Cluster of GTM which need to be set
- * \param clockDivider Choose the cluster clock divider mode
- * \return Operation status (TRUE / FALSE)
+ *
+ * \param[inout] cluster      Cluster of GTM which need to be set
+ * \param[in]    clockDivider Choose the cluster clock divider mode
+ *                            Range: \ref: IfxEgtm_ClusterClockDiv
+ *
+ * \retval Operation status (TRUE / FALSE)
  */
 IFX_INLINE boolean IfxEgtm_setClusterClockDiv(IfxEgtm_Cluster cluster, IfxEgtm_ClusterClockDiv clockDivider);
 
 /** \brief Disable clock of cluster
- * \param cluster Cluster of GTM which need to be cleared
- * \return Operation status (TRUE / FALSE)
+ *
+ * \param[in] cluster Cluster of GTM which need to be cleared
+ *                    Range: \ref: IfxEgtm_Cluster
+ *
+ * \retval Operation status (TRUE / FALSE)
  */
 IFX_INLINE boolean IfxEgtm_clearClusterClockDiv(IfxEgtm_Cluster cluster);
 
 /** \brief set or clear Rf Prot bit
- * \param value value to be set for the RF PORT bit
- * \return None
+ *
+ * \param[in] value Value to be set for the RF PORT bit
+ *                  Range: TRUE: SW RST (global), SW interrupt FORCINT, and SW RAM reset functionality is disabled
+ *                         FALSE: SW RST (global), SW interrupt FORCINT, and SW RAM reset functionality is enabled
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_setResetProtection(boolean value);
 
 /** \brief get the status of Rf Prot bit
- * \return set status (TRUE / FALSE)
+ *
+ * \retval set status (TRUE / FALSE)
  */
 IFX_INLINE boolean IfxEgtm_getResetProtection(void);
 
 #if IFXEGTM_PWM_IS_HIGH_RES_AVAILABLE
 /** \brief Enable or Disable the HRPWM Module
- * \param egtm Pointer to EGTM module registers
- * \param hrpwmModule Hrpwm Module enum
- * \param enabled HRPWM module to be enabled or disabled
- * \return None
+ *
+ * \param[inout] egtm        Pointer to EGTM module registers
+ * \param[in]    hrpwmModule Hrpwm Module enum
+ *                           Range: \ref: IfxEgtm_Hrpwm
+ * \param[in]    enabled     Range: TRUE: HRPWM module to be enabled
+ *                                  FALSE: HRPWM module to be disabled
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_setHrpwmEnable(Ifx_EGTM *egtm, IfxEgtm_Hrpwm hrpwmModule, boolean enabled);
 
 /** \brief Enable or Disable the HRPWM Channel
- * \param egtm Pointer to EGTM module registers
- * \param hrpwmModule Hrpwm Module enum
- * \param hrpwmChannel Hrpwm channel enum
- * \param enabled HRPWM module to be enabled or disabled
- * \return None
+ *
+ * \param[inout] egtm          Pointer to EGTM module registers
+ * \param[in]    hrpwmModule   Hrpwm Module enum
+ *                             Range: \ref: IfxEgtm_Hrpwm
+ * \param[in]    hrpwmChannel  Hrpwm channel enum
+ *                             Range: \ref: IfxEgtm_Hrpwm_Ch
+ * \param[in]    enabled       Range: TRUE: HRPWM module to be enabled
+ *                                    FALSE: HRPWM module to be disabled
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_setHrpwmChannelEnable(Ifx_EGTM *egtm, IfxEgtm_Hrpwm hrpwmModule, IfxEgtm_Hrpwm_Ch hrpwmChannel, boolean enabled);
 #endif /* #if IFXEGTM_PWM_IS_HIGH_RES_AVAILABLE */
 
 /** \brief Activates write buffer of AEI Bridge
  * EGTM_CLS0_AEI_BRIDGE_MODE.B.MSK_WR_RSP = 1
- * \param egtm Pointer to eGTM module
- * \return None
+ *
+ * \param[inout] egtm Pointer to eGTM module
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_enableAeiBridgeWriteBuffer(Ifx_EGTM *egtm);
 
 /** \brief Disables write buffer of AEI Bridge
  * EGTM_CLS0_AEI_BRIDGE_MODE.B.MSK_WR_RSP = 0
- * \param egtm Pointer to eGTM module
- * \return None
+ *
+ * \param[inout] egtm Pointer to eGTM module
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_disableAeiBridgeWriteBuffer(Ifx_EGTM *egtm);
 
 /** \brief Writes the operation mode for the AEI bridge
  * EGTM_CLS0_AEI_BRIDGE_MODE.B.BRG_MODE = mode
- * \param egtm Pointer to GTM module
- * \param mode Choose the operation mode
- * \return None
+ *
+ * \param[inout] egtm Pointer to GTM module
+ * \param[in]    mode Choose the operation mode
+ *                    Range: \ref: IfxEgtm_AeiBridgeOpMode
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_setAeiBridgeOpMode(Ifx_EGTM *egtm, IfxEgtm_AeiBridgeOpMode mode);
 
@@ -345,30 +406,42 @@ IFX_INLINE void IfxEgtm_setAeiBridgeOpMode(Ifx_EGTM *egtm, IfxEgtm_AeiBridgeOpMo
 /******************************************************************************/
 
 /** \brief GTM connection to MSC
- * \param egtmCluster Cluster of EGTM which contains the trigger source
- * \param egtmSource Trigger source selected (Atom or Tom)
- * \param Channel channel within the egtmSource
- * \param mscOut msc connection details
- * \return TRUE on success else FALSE
+ *
+ * \param[in] egtmCluster Cluster of EGTM which contains the trigger source
+ *                        Range: \ref: IfxEgtm_Cluster
+ * \param[in] egtmSource  Trigger source selected (Atom or Tom)
+ *                        Range: \ref: IfxEgtm_TrigSource
+ * \param[in] Channel     Channel within the egtmSource
+ *                        Range: \ref: IfxEgtm_TrigChannel
+ * \param[in] mscOut      Msc connection details
+ *                        Range: \ref: IfxEgtm_MscOut
+ *
+ * \retval TRUE on success else FALSE
  */
 IFX_EXTERN boolean IfxEgtm_ConnectToMsc(IfxEgtm_Cluster egtmCluster, IfxEgtm_TrigSource egtmSource, IfxEgtm_TrigChannel Channel, IfxEgtm_MscOut *mscOut);
 
 /** \brief Initialize the PROTs and APUs with default configuration
- * \param config Configuration pointer for the Access Protection
- * \return None
+ *
+ * \param[inout] config Configuration pointer for the Access Protection
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_initApConfig(IfxEgtm_ApConfig *config);
 
 /** \brief Initialize the PORTs and APU
- * \param egtm Pointer to EGTM module
- * \param config Configuration pointer for the Access Protection
- * \return None
+ *
+ * \param[inout] egtm   Pointer to EGTM module
+ * \param[in]    config Configuration pointer for the Access Protection
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_initAp(Ifx_EGTM *egtm, IfxEgtm_ApConfig *config);
 
 /** \brief Configures access to all masters to all the eGTMs in the device
- * \param apConfig pointer to configuration structure.
- * \return None
+ *
+ * \param[in] apConfig Pointer to configuration structure.
+ *
+ * \retval None
  */
 IFX_EXTERN void IfxEgtm_configureAccessToEgtms(IfxApApu_ApuConfig *apConfig);
 

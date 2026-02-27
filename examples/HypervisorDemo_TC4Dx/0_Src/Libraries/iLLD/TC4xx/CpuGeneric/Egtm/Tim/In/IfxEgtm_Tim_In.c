@@ -2,9 +2,9 @@
  * \file IfxEgtm_Tim_In.c
  * \brief EGTM IN details
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-03-28 05:46:40
  *
  *
  *                                 IMPORTANT NOTICE
@@ -73,6 +73,7 @@ boolean IfxEgtm_Tim_In_init(IfxEgtm_Tim_In *driver, const IfxEgtm_Tim_In_Config 
     IfxEgtm_Tim_In_SrcForTimIn  srcForTimIn;
     uint8                       lookupTableValue;
 
+    /* Determine the channel index and cluster index based on the configuration */
     if (config->inputPin != NULL_PTR)
     {
         channelIndex = config->inputPin->channel;
@@ -91,6 +92,7 @@ boolean IfxEgtm_Tim_In_init(IfxEgtm_Tim_In *driver, const IfxEgtm_Tim_In_Config 
 
     lookupTableValue         = config->lookupTableValue;
 
+    /* Gets a pointer to the TIM channel */
     channel                  = IfxEgtm_Tim_getChannel(&config->egtm->CLS[clsIndex].TIM, channelIndex);
     driver->clsIndex         = clsIndex;
     driver->channelIndex     = channelIndex;
@@ -105,8 +107,10 @@ boolean IfxEgtm_Tim_In_init(IfxEgtm_Tim_In *driver, const IfxEgtm_Tim_In_Config 
     driver->softwareInputSet = FALSE;
     driver->tim              = &config->egtm->CLS[clsIndex].TIM;
 
+    /* Configures the timer channel mode */
     channel->CTRL.B.TIM_MODE = (uint8)config->mode;
 
+    /* Sets the channel clock source */
     IfxEgtm_Tim_Ch_setClockSource(channel, config->capture.clock);
 
     driver->captureClockFrequency = IfxEgtm_Tim_Ch_getCaptureClockFrequency(config->egtm, channel);
@@ -118,6 +122,7 @@ boolean IfxEgtm_Tim_In_init(IfxEgtm_Tim_In *driver, const IfxEgtm_Tim_In_Config 
 
         if (config->mode == IfxEgtm_Tim_Mode_gatedPeriodic)
         {
+        	/* Sets the Shadow counter */
             IfxEgtm_Tim_Ch_setShadowCounter(channel, config->capture.gateCount);
         }
     }
@@ -139,10 +144,13 @@ boolean IfxEgtm_Tim_In_init(IfxEgtm_Tim_In *driver, const IfxEgtm_Tim_In_Config 
     if (config->isrPriority)
     {
         volatile Ifx_SRC_SRCR *src;
+        /* Sets the TIM channel IRQ mode */
         IfxEgtm_Tim_Ch_setNotificationMode(channel, config->irqMode);
+        /* Sets the channel notification */
         IfxEgtm_Tim_Ch_setChannelNotification(channel, config->capture.irqOnNewVal,
             config->capture.irqOnCntOverflow, config->capture.irqOnEcntOverflow, config->capture.irqOnDatalost);
 
+        /* Gets a pointer to the TIM channel SRC */
         src = IfxEgtm_Tim_Ch_getSrcPointer(config->egtm, clsIndex, channelIndex);
         IfxSrc_init(src, config->isrProvider, config->isrPriority, config->vmId);
         IfxSrc_enable(src);
@@ -171,8 +179,9 @@ boolean IfxEgtm_Tim_In_init(IfxEgtm_Tim_In *driver, const IfxEgtm_Tim_In_Config 
         {}
 
         channel->CTRL.B.TOCTRL = config->capture.mode == Ifx_Pwm_Mode_leftAligned ? (uint8)IfxEgtm_Tim_Timeout_risingEdge : (uint8)IfxEgtm_Tim_Timeout_fallingEdge;
-        channel->TDUV.U       |= (0xFFFFFFu & (uint32)timeout); //24 bit timeout value
+        channel->TDUV.U       |= (0xFFFFFFu & (uint32)timeout); /* 24 bit timeout value */
 
+        /* Sets the timeout notification */
         IfxEgtm_Tim_Ch_setTimeoutNotification(channel, config->timeout.irqOnTimeout);
     }
 
@@ -208,11 +217,12 @@ boolean IfxEgtm_Tim_In_init(IfxEgtm_Tim_In *driver, const IfxEgtm_Tim_In_Config 
             channel->CTRL.B.CICTRL = (uint8)IfxEgtm_Tim_In_SrcForTimIn_previousChannel;
         }
 
-        driver->softwareInputSet = TRUE;                           //Flag to set the software input if provided.
+        /* Flag to set the software input if provided */
+        driver->softwareInputSet = TRUE;
         break;
 
     default:
-        // if the user doesn't pass any input or passes invalid input, current channel will be configured by default
+        /* if the user doesn't pass any input or passes invalid input, current channel will be configured by default */
         driver->tim->IN_SRC.U  = (((uint32)1u << IFX_EGTM_CLS_TIM_IN_SRC_MODE0_OFF) + ((uint32)1u << IFX_EGTM_CLS_TIM_IN_SRC_VAL0_OFF)) << ((uint8)channelIndex * (IFX_EGTM_CLS_TIM_IN_SRC_VAL0_LEN + IFX_EGTM_CLS_TIM_IN_SRC_MODE0_LEN));
         channel->CTRL.B.CICTRL = (uint8)IfxEgtm_Tim_In_SrcForTimIn_currentChannel;
         break;
@@ -221,26 +231,31 @@ boolean IfxEgtm_Tim_In_init(IfxEgtm_Tim_In *driver, const IfxEgtm_Tim_In_Config 
     /* LUT Bypassed */
     if (config->useLUT == FALSE)
     {
-        driver->tim->CH[channelIndex].ECTRL.B.USE_LUT = (uint32)0u; //Clearing the LUT bits to make sure is not configured.
+    	/* Clearing the LUT bits to make sure is not configured */
+        driver->tim->CH[channelIndex].ECTRL.B.USE_LUT = (uint32)0u;
     }
     else
     {
-        //for LUT_IN2
+        /* For LUT_IN2 */
         switch (input2ForLUT)
         {
         case IfxEgtm_Tim_In_SrcForLutIn2_external_capture:
-            driver->tim->CH[channelIndex].ECTRL.B.USE_LUT = (uint32)1u;                  //setting ECTRL 23rd bit=0 22nd bit = 1
+        	/* Setting ECTRL 23rd bit=0 22nd bit = 1 */
+            driver->tim->CH[channelIndex].ECTRL.B.USE_LUT = (uint32)1u;
             break;
 
-        case IfxEgtm_Tim_In_SrcForLutIn2_inputSignal_previousChannel:
-            driver->tim->CH[channelIndex].ECTRL.B.USE_LUT = (uint32)2u;                  //setting ECTRL 23rd bit=1 22nd bit = 0
+        case IfxEgtm_Tim_In_SrcForLutIn2_outputSignal_previousChannel :
+        	/* Setting ECTRL 23rd bit=1 22nd bit = 0 */
+            driver->tim->CH[channelIndex].ECTRL.B.USE_LUT = (uint32)2u;
             break;
         case IfxEgtm_Tim_In_SrcForLutIn2_outputSignal_tssmMode:
-            driver->tim->CH[channelIndex].ECTRL.B.USE_LUT = (uint32)3u;                  //setting ECTRL 23rd bit=1 22nd bit = 1
+        	/* Setting ECTRL 23rd bit=1 22nd bit = 1 */
+            driver->tim->CH[channelIndex].ECTRL.B.USE_LUT = (uint32)3u;
             break;
         default:
-            //default case is External capture out of this line if the user doesn't pass any thing or passes invalid input
-            driver->tim->CH[channelIndex].ECTRL.B.USE_LUT = (uint32)1u;                  //setting ECTRL 23rd bit=0 22nd bit = 1
+            /* Default case is External capture out of this line if the user doesn't pass any thing or passes invalid input */
+        	/* Setting ECTRL 23rd bit=0 22nd bit = 1 */
+            driver->tim->CH[channelIndex].ECTRL.B.USE_LUT = (uint32)1u;
             break;
         }
     }
@@ -250,10 +265,10 @@ boolean IfxEgtm_Tim_In_init(IfxEgtm_Tim_In *driver, const IfxEgtm_Tim_In_Config 
         IfxEgtm_PinMap_setTimTin(config->inputPin, config->inputPinMode);
     }
 
-    //Contents of the bit field CLSi_TIM_CHx_TDUC.TO_CNT2 determines the lookup table
+    /* Contents of the bit field CLSi_TIM_CHx_TDUC.TO_CNT2 determines the lookup table */
     driver->tim->CH[channelIndex].TDUC.U = (uint32)lookupTableValue << IFX_EGTM_CLS_TIM_CH_TDUC_TO_CNT2_OFF;
 
-    /*Filter configuration */
+    /* Filter configuration */
     if ((config->filter.fallingEdgeMode != IfxEgtm_Tim_In_ConfigFilterMode_none)
         || (config->filter.risingEdgeMode != IfxEgtm_Tim_In_ConfigFilterMode_none))
     {
@@ -334,10 +349,11 @@ boolean IfxEgtm_Tim_In_init(IfxEgtm_Tim_In *driver, const IfxEgtm_Tim_In_Config 
             channel->FLT_RE.B.FLT_RE    = 0;
         }
 
+        /* Sets the filter notification */
         IfxEgtm_Tim_Ch_setFilterNotification(channel, config->filter.irqOnGlitch);
     }
 
-    /* Enable TIM channel */
+    /* Enables TIM channel */
     channel->CTRL.B.TIM_EN = 1;
 
     return result;
@@ -383,6 +399,7 @@ void IfxEgtm_Tim_In_initConfig(IfxEgtm_Tim_In_Config *config, Ifx_EGTM *egtm)
 
 void IfxEgtm_Tim_In_onIsr(IfxEgtm_Tim_In *driver)
 {
+	/* Updates the period and duty cycle */
     IfxEgtm_Tim_In_update(driver);
 }
 
@@ -393,6 +410,7 @@ void IfxEgtm_Tim_In_update(IfxEgtm_Tim_In *driver)
 
     if (driver->dataLost == TRUE)
     {
+    	/* Clears the data lost flag */
         IfxEgtm_Tim_Ch_clearDataLostEvent(driver->channel);
     }
 
@@ -400,6 +418,7 @@ void IfxEgtm_Tim_In_update(IfxEgtm_Tim_In *driver)
 
     if (driver->glitch == TRUE)
     {
+    	/* Clears the glitch flag */
         IfxEgtm_Tim_Ch_clearGlitchEvent(driver->channel);
     }
 
@@ -416,12 +435,13 @@ void IfxEgtm_Tim_In_update(IfxEgtm_Tim_In *driver)
         driver->pulseLengthTick = gpr0.B.GPR0;
         driver->dataCoherent    = (gpr0.B.ECNT == gpr1.B.ECNT) ? TRUE : FALSE;
 
-        // read the edge counter. Register ECNT need accessed in 32 bit mode
+        /* Reads the edge counter. Register ECNT need accessed in 32 bit mode */
         driver->edgeCount = (driver->channel->ECNT.U) & 0xFFFF;
 
         if (IfxEgtm_Tim_Ch_isEcntOverflowEvent(driver->channel) == TRUE)
         {
             driver->edgeCounterUpper++;
+            /* Clears the event counter overflow flag */
             IfxEgtm_Tim_Ch_clearEcntOverflowEvent(driver->channel);
         }
 
@@ -430,9 +450,11 @@ void IfxEgtm_Tim_In_update(IfxEgtm_Tim_In *driver)
         if (driver->overflowCnt == TRUE)
         {
             driver->newData = FALSE;
+            /* Clears the counter overflow flag */
             IfxEgtm_Tim_Ch_clearCntOverflowEvent(driver->channel);
         }
 
+        /* Clears the new value flag */
         IfxEgtm_Tim_Ch_clearNewValueEvent(driver->channel);
     }
 }

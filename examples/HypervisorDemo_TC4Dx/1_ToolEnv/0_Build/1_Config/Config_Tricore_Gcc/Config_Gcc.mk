@@ -19,7 +19,7 @@
 #                                                                             #
 ###############################################################################
 
-B_GCC_TRICORE_PATH:= C:\Tools\Compilers\Gcc\tricore-gcc-2025.02.25
+B_GCC_TRICORE_PATH:= C:\Tools\Compilers\Gcc\tricore-gcc-2025.09
                            
 B_GCC_TRICORE_CC_OPTIONS= -mcpu=tc4DAx -g -O2 -fno-common -fstrict-volatile-bitfields \
                            -ffunction-sections -fdata-sections -Wall -std=c11 -gdwarf-3                           

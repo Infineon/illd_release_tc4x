@@ -2,7 +2,7 @@
  * \file IfxSmu.c
  * \brief SMU  basic functionality 
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -79,12 +79,12 @@ void IfxSmu_setSafetyAlarmAction(IfxSmu_Alarm alarm, IfxSmu_InternalAlarmAction 
     alarmGroupCF2 = ((intAlarmAction >> 2) & 0x01) << alarmPos;
     alarmGroupCF3 = ((intAlarmAction >> 3) & 0x01) << alarmPos;
 
-    /* register protected by SxE (SAFEx_PROTE) and APU-PSAFEx */
+    /* Register protected by SxE (SAFEx_PROTE) and APU-PSAFEx */
 #if (IFX_PROT_ENABLED == 1U)
     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.SAFE[smuSafeIndex].PROTSE, IfxApProt_State_config);
 #endif
 
-    /*Write Config key to configure the SMU registers. */
+    /* Write Config key to configure the SMU registers. */
     MODULE_SMU.SAFE[smuSafeIndex].KEYS.U = (uint32)0x000000bc;
 
     /* Write Alarm configuration into corresponding
@@ -297,7 +297,7 @@ void IfxSmu_smuSafeLockConfigRegisters(boolean smuSafeIndex)
     /* Check if SMU cfg registers is not locked */
     if (MODULE_SMU.SAFE[smuSafeIndex].KEYS.B.PERLCK != 0xFFU)
     {
-	/* register protected by SxE (SAFEx_PROTE) and APU-PSAFEx */
+	/* Register protected by SxE (SAFEx_PROTE) and APU-PSAFEx */
 #if (IFX_PROT_ENABLED == 1U)
         IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.SAFE[smuSafeIndex].PROTSE, IfxApProt_State_config);
 #endif
@@ -332,12 +332,12 @@ boolean IfxSmu_smuSafeUnlockConfigRegisters(boolean smuSafeIndex)
     /* Check if SMU cfg registers is not locked */
     if (MODULE_SMU.SAFE[smuSafeIndex].KEYS.B.PERLCK != 0xFFU)
     {
-	/* register protected by SxE (SAFEx_PROTE) and APU-PSAFEx */
+	/* Register protected by SxE (SAFEx_PROTE) and APU-PSAFEx */
 #if (IFX_PROT_ENABLED == 1U)
         IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.SAFE[smuSafeIndex].PROTSE, IfxApProt_State_config);
 #endif
 
-        /*Write Config key to configure the SMU registers. */
+        /* Write Config key to configure the SMU registers. */
         MODULE_SMU.SAFE[smuSafeIndex].KEYS.U = (uint32)0x000000bc;
 
 #if (IFX_PROT_ENABLED == 1U)
@@ -356,13 +356,13 @@ boolean IfxSmu_smuSafeUnlockConfigRegisters(boolean smuSafeIndex)
 
 void IfxSmu_smuSafeTemporaryLockConfigRegisters(boolean smuSafeIndex)
 {
-    /* register protected by SxE (SAFEx_PROTE) and APU-PSAFEx */
-    /* disable the write-protection for registers */
+    /* Register protected by SxE (SAFEx_PROTE) and APU-PSAFEx */
+    /* Disable the write-protection for registers */
 #if (IFX_PROT_ENABLED == 1U)
     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.SAFE[smuSafeIndex].PROTSE, IfxApProt_State_config);
 #endif
 
-    /*Write Config key to configure temporary lock of the SMU registers. */
+    /* Write Config key to configure temporary lock of the SMU registers. */
     MODULE_SMU.SAFE[smuSafeIndex].KEYS.U = 0U;
 
     /* Restore back the write-protection for registers */
@@ -403,7 +403,7 @@ void IfxSmu_setSecurityAlarmAction(IfxSmu_Alarm alarm, IfxSmu_SecurityAlarmActio
     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.CS.PROTCE, IfxApProt_State_config);
 #endif
 
-    /*Write Config key to configure the SMU registers. */
+    /* Write Config key to configure the SMU registers. */
     MODULE_SMU.CS.KEYS.U = (uint32)0x000000bc;
 
     /* Write Alarm configuration into corresponding
@@ -438,7 +438,7 @@ boolean IfxSmu_setSecurityAlaramStatus(IfxSmu_Alarm alarm)
         /* SMU is in START state */
         /* All SMU Groups are allowed to set alarm status */
 
-        /* disable the write-protection for registers */
+        /* Disable the write-protection for registers */
 	/* register protected by APU-PCS register set and not PROT */
         /* Write 1 in AG bit to set alarm */
         MODULE_SMU.CS.AGCS[alarmGroup].STS.U = ((uint32)0x1U << alarmPos);
@@ -481,7 +481,7 @@ boolean IfxSmu_smuSecurityClearAlarmStatus(IfxSmu_Alarm alarm)
     /* Write SMU_ASCE(0) in CMD register */
     MODULE_SMU.CS.CMD.U = IfxSmu_SecurityCommand_ASCE;
 
-    /* disable the write-protection for registers */
+    /* Disable the write-protection for registers */
 
     /* Write 1 in AG bit to clear alarm */
     MODULE_SMU.CS.AGCS[alarmGroup].STS.U = (uint32)((uint32)0x1U << alarmPos);
@@ -527,7 +527,7 @@ void IfxSmu_smuSecurityLockConfigRegisters(void)
     {
         /* passwd = IfxWtu_getSecurityWatchdogPassword(); */
 	/* Register protected by CE (CS_PROTCE) and APU-PCS */
-        /* disable the write-protection for registers */
+        /* Disable the write-protection for registers */
 #if (IFX_PROT_ENABLED == 1U)
         IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.CS.PROTCE, IfxApProt_State_config);
 #endif
@@ -563,11 +563,11 @@ boolean IfxSmu_smuSecurityUnlockConfigRegisters(void)
     if (MODULE_SMU.CS.KEYS.B.PERLCK != 0xFFU)
     {
         /* Register protected by CE (CS_PROTCE) and APU-PCS */
-	/* disable the write-protection for registers */
+	/* Disable the write-protection for registers */
 #if (IFX_PROT_ENABLED == 1U)
         IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.CS.PROTCE, IfxApProt_State_config);
 #endif
-        /*Write Config key to configure the SMU registers. */
+        /* Write Config key to configure the SMU registers. */
         MODULE_SMU.CS.KEYS.U = (uint32)0x000000bc;
 
         /* Restore back the write-protection for registers */
@@ -588,12 +588,12 @@ boolean IfxSmu_smuSecurityUnlockConfigRegisters(void)
 void IfxSmu_smuSecurityTemporaryLockConfigRegisters(void)
 {
     /* Register protected by CE (CS_PROTCE) and APU-PCS */
-    /* disable the write-protection for registers */
+    /* Disable the write-protection for registers */
 #if (IFX_PROT_ENABLED == 1U)
     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.CS.PROTCE, IfxApProt_State_config);
 #endif
 
-    /*Write Config key to configure temporary lock of the SMU registers. */
+    /* Write Config key to configure temporary lock of the SMU registers. */
     MODULE_SMU.CS.KEYS.U = 0U;
 
     /* Restore back the write-protection for registers */
@@ -605,8 +605,8 @@ void IfxSmu_smuSecurityTemporaryLockConfigRegisters(void)
 
 void IfxSmu_clearRegMonTestModeEnable(uint8 regMonIndex, uint8 testModeEnable)
 {
-    /* register protected by GE (GCC_PROTGE) and APU-PGCC */
-    /* disable the write-protection for registers */
+    /* Register protected by GE (GCC_PROTGE) and APU-PGCC */
+    /* Disable the write-protection for registers */
 #if (IFX_PROT_ENABLED == 1U)
     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.GCC.PROTGE, IfxApProt_State_config);
 #endif
@@ -622,8 +622,8 @@ void IfxSmu_clearRegMonTestModeEnable(uint8 regMonIndex, uint8 testModeEnable)
 
 void IfxSmu_clearRegisterMonitorErrorFlag(uint8 regMonIndex, uint8 errorFlag)
 {
-    /* register protected by GE (GCC_PROTGE) and APU-PGCC */
-    /* disable the write-protection for registers */
+    /* Register protected by GE (GCC_PROTGE) and APU-PGCC */
+    /* Disable the write-protection for registers */
     #if (IFX_PROT_ENABLED == 1U)
  IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.GCC.PROTGE, IfxApProt_State_config);
 #endif
@@ -639,8 +639,8 @@ void IfxSmu_clearRegisterMonitorErrorFlag(uint8 regMonIndex, uint8 errorFlag)
 
 void IfxSmu_clearRegisterMonitorStatus(uint8 regMonIndex, uint8 statusFlag)
 {
-    /* register protected by GE (GCC_PROTGE) and APU-PGCC */
-    /* disable the write-protection for registers */
+    /* Register protected by GE (GCC_PROTGE) and APU-PGCC */
+    /* Disable the write-protection for registers */
     #if (IFX_PROT_ENABLED == 1U)
  IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.GCC.PROTGE, IfxApProt_State_config);
 #endif
@@ -656,13 +656,13 @@ void IfxSmu_clearRegisterMonitorStatus(uint8 regMonIndex, uint8 statusFlag)
 
 void IfxSmu_enableFaultToRunState(boolean smuIndex, boolean stateType)
 {
-    /* register protected by SxE (SAFEx_PROTE) and APU-PSAFEx */
-    /* disable the write-protection for registers */
+    /* Register protected by SxE (SAFEx_PROTE) and APU-PSAFEx */
+    /* Disable the write-protection for registers */
 #if (IFX_PROT_ENABLED == 1U)
     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.SAFE[smuIndex].PROTSE, IfxApProt_State_config);
 #endif
 
-    /*Enable FAULT to RUN State Transition in Alarm Global Configuration . */
+    /* Enable FAULT to RUN State Transition in Alarm Global Configuration . */
     if (stateType == 0)
     {
         MODULE_SMU.SAFE[smuIndex].AGC.B.EFRST0 = 1;
@@ -681,8 +681,8 @@ void IfxSmu_enableFaultToRunState(boolean smuIndex, boolean stateType)
 
 void IfxSmu_configAlarmActionPES(boolean smuIndex, IfxSmu_portEmergencyStop pesField, boolean Action)
 {
-    /*register protected by SxE (SAFEx_PROTE) and APU-PSAFEx */
-    /* disable the write-protection for registers */
+    /* Register protected by SxE (SAFEx_PROTE) and APU-PSAFEx */
+    /* Disable the write-protection for registers */
 #if (IFX_PROT_ENABLED == 1U)
     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.SAFE[smuIndex].PROTSE, IfxApProt_State_config);
 #endif
@@ -811,23 +811,23 @@ boolean IfxSmu_isModuleSuspended(Ifx_SMU* smu)
 {
     Ifx_SMU_OCS ocs;
 
-    /* read the status */
+    /* Read the status */
     ocs.U = smu->OCS.U;
     
-    /* return the status */
+    /* Return the status */
     return ocs.B.SUSSTA;
 }
 
 
 void IfxSmu_setFspMode(boolean smuIndex, boolean fspIndex, IfxSmu_FspMode mode)
 {
-    /* register protected by SxE (SAFEx_PROTE) and APU-PSAFEx */
-    /* disable the write-protection for registers */
+    /* Register protected by SxE (SAFEx_PROTE) and APU-PSAFEx */
+    /* Disable the write-protection for registers */
 #if (IFX_PROT_ENABLED == 1U)
     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.SAFE[smuIndex].PROTSE, IfxApProt_State_config);
 #endif
 
-    /*Write Config key to configure the SMU registers. */
+    /* Write Config key to configure the SMU registers. */
     MODULE_SMU.SAFE[smuIndex].FSP[fspIndex].CON.B.MODE = mode;
 
     /* Restore back the write-protection for registers */
@@ -860,13 +860,13 @@ void IfxSmu_safetyConfigureInterruptGeneration(IfxSmu_InterruptGenerationConfigu
     shift = (config << 2);
     value = (1 << intRequest);
     mask  = ~(7 << shift);
-    /* register protected by SxE (SAFEx_PROTE) and APU-PSAFEx */
-    /* disable the write-protection for registers */
+    /* Register protected by SxE (SAFEx_PROTE) and APU-PSAFEx */
+    /* Disable the write-protection for registers */
 #if (IFX_PROT_ENABLED == 1U)
     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.SAFE[smuIndex].PROTSE, IfxApProt_State_config);
 #endif
 
-    /*Write Config key to configure the SMU registers. */
+    /* Write Config key to configure the SMU registers. */
     MODULE_SMU.SAFE[smuIndex].KEYS.U = (uint32)0x000000bc;
 
     /* Clear the specific bits */
@@ -959,8 +959,8 @@ void IfxSmu_configureSharedSelectionRegister(IfxSmu_SharedType SharedType, IfxSm
 
     if (SharedType == IfxSmu_SharedType_safety)
     {
-         // register protected by GE (GCC_PROTGE) and APU-PGCC
-        /* disable the write-protection for registers */
+        /* Register protected by GE (GCC_PROTGE) and APU-PGCC */
+        /* Disable the write-protection for registers */
 #if (IFX_PROT_ENABLED == 1U)
         IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.GCC.PROTGE, IfxApProt_State_config);
 #endif
@@ -975,7 +975,7 @@ void IfxSmu_configureSharedSelectionRegister(IfxSmu_SharedType SharedType, IfxSm
     else
     {
         /* Register protected by CE (CS_PROTCE) and APU-PCS */
-        /* disable the write-protection for registers */
+        /* Disable the write-protection for registers */
 #if (IFX_PROT_ENABLED == 1U)
         IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.CS.PROTCE, IfxApProt_State_config);
 #endif
@@ -1032,12 +1032,12 @@ void IfxSmu_setSharedSafetyAlarmAction(IfxSmu_Alarm alarm, IfxSmu_InternalAlarmA
     alarmGroupCF1 = ((intAlarmAction >> 1) & 0x01) << alarmPos;
     alarmGroupCF2 = ((intAlarmAction >> 2) & 0x01) << alarmPos;
 
-    /* register protected by SxE (SAFEx_PROTE) and APU-PSAFEx */
+    /* Register protected by SxE (SAFEx_PROTE) and APU-PSAFEx */
 #if (IFX_PROT_ENABLED == 1U)
     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.SAFE[0].PROTSE, IfxApProt_State_config);
 #endif
 
-    /*Write Config key to configure the SMU registers. */
+    /* Write Config key to configure the SMU registers. */
     MODULE_SMU.SAFE[0].KEYS.U = (uint32)0x000000bc;
 
     /* Write Alarm configuration into corresponding
@@ -1077,7 +1077,7 @@ boolean IfxSmu_setSharedSafetyAlarmStatus(IfxSmu_Alarm alarm, boolean smuSafeSta
     {
         /* SMU is in START state */
         /* All SMU Groups are allowed to set alarm status */
-	/* register protected by APU-PSAFEx register set and not PROT */
+	    /* Register protected by APU-PSAFEx register set and not PROT */
         /* Write 1 in AG bit to set alarm */
         MODULE_SMU.SAFE[0].AGSH[alarmGroup].STS.U = ((uint32)0x1U << alarmPos);
     }
@@ -1162,7 +1162,7 @@ boolean IfxSmu_setSharedSecurityAlaramStatus(IfxSmu_Alarm alarm)
         /* SMU is in START state */
         /* All SMU Groups are allowed to set alarm status */
 
-        /* disable the write-protection for registers */
+        /* Disable the write-protection for registers */
 
         /* Write 1 in AG bit to set alarm */
         MODULE_SMU.CS.AGSH[alarmGroup].STS.U = ((uint32)0x1U << alarmPos);
@@ -1262,7 +1262,7 @@ boolean IfxSmu_smuSharedUnlockConfigRegisters(void)
     /* Check if SMU cfg registers is not locked */
     if (MODULE_SMU.GCC.KEYS.B.PERLCK != 0xFFU)
     {
-     /* register protected by GE (GCC_PROTGE) and APU-PGCC */
+     /* Register protected by GE (GCC_PROTGE) and APU-PGCC */
 #if (IFX_PROT_ENABLED == 1U)
         IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.GCC.PROTGE, IfxApProt_State_config);
 #endif
@@ -1286,13 +1286,13 @@ boolean IfxSmu_smuSharedUnlockConfigRegisters(void)
 
 void IfxSmu_smuSharedTemporaryLockConfigRegisters(void)
 {
-    /*register protected by GE (GCC_PROTGE) and APU-PGCC */
-    /* disable the write-protection for registers */
+    /* Register protected by GE (GCC_PROTGE) and APU-PGCC */
+    /* Disable the write-protection for registers */
 #if (IFX_PROT_ENABLED == 1U)
     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.GCC.PROTGE, IfxApProt_State_config);
 #endif
 
-    /*Write Config key to configure temporary lock of the SMU registers. */
+    /* Write Config key to configure temporary lock of the SMU registers. */
     MODULE_SMU.GCC.KEYS.U = 0U;
 
     /* Restore back the write-protection for registers */

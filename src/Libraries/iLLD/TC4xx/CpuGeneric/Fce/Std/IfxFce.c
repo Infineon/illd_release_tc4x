@@ -2,7 +2,7 @@
  * \file IfxFce.c
  * \brief FCE  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -83,14 +83,16 @@ void IfxFce_resetModule(Ifx_FCE *fce)
 #if (IFX_PROT_ENABLED == 1U)
     IfxApProt_setState((Ifx_PROT_PROT *)&fce->PROTE, IfxApProt_State_config);
 #endif
-    fce->RST.CTRLA.B.KRST = 1U;       /* Only if both Kernel reset bits are set a reset is executed */
+    /* Only if both Kernel reset bits are set a reset is executed */
+    fce->RST.CTRLA.B.KRST = 1U;
     fce->RST.CTRLB.B.KRST = 1U;
 
-    while (0 == fce->RST.STAT.B.KRST) /* Wait until reset is executed */
-
+    /* Waits until reset is executed */
+    while (0 == fce->RST.STAT.B.KRST)
     {}
 
-    fce->RST.CTRLB.B.STATCLR = 1U;     /* Clear Kernel reset status bit */
+    /* Clears Kernel reset status bit */
+    fce->RST.CTRLB.B.STATCLR = 1U;
 #if (IFX_PROT_ENABLED == 1U)
     IfxApProt_setState((Ifx_PROT_PROT *)&fce->PROTE, IfxApProt_State_run);
 #endif

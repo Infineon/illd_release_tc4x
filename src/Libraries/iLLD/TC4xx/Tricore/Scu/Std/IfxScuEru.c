@@ -2,7 +2,7 @@
  * \file IfxScuEru.c
  * \brief SCU  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -57,7 +57,7 @@ void IfxScuEru_connectTrigger(IfxScuEru_InputChannel inputChannel, IfxScuEru_Inp
 #if (IFX_PROT_ENABLED == 1U)
     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SCU.PROTSE, IfxApProt_State_config);
 #endif
-    // select appropriate EICRi register for the given input channel X ( i = 0 to 7 and X = 0 to 7 )
+    /* select appropriate EICRi register for the given input channel X ( i = 0 to 7 and X = 0 to 7 ) */
 
     MODULE_SCU.ERU.EICR[inputChannel].B.ONP = triggerSelect;
 #if (IFX_PROT_ENABLED == 1U)
@@ -71,7 +71,7 @@ void IfxScuEru_enableFallingEdgeDetection(IfxScuEru_InputChannel inputChannel)
 #if (IFX_PROT_ENABLED == 1U)
     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SCU.PROTSE, IfxApProt_State_config);
 #endif
-    // select appropriate EICRi register for the given input channel X ( i = 0 to 7 and X = 0 to 7 )
+    /* select appropriate EICRi register for the given input channel X ( i = 0 to 7 and X = 0 to 7 ) */
 
     MODULE_SCU.ERU.EICR[inputChannel].B.FEN = TRUE;
 #if (IFX_PROT_ENABLED == 1U)
@@ -85,7 +85,7 @@ void IfxScuEru_enableExternalInput(IfxScuEru_InputChannel inputChannel)
     Ifx_SCU_ERU_EICR eicr;
     eicr.U = MODULE_SCU.ERU.EICR[inputChannel].U;
 
-    // select appropriate EICRi register for the given input channel X ( i = 0 to 7 and X = 0 to 7 )
+    /* select appropriate EICRi register for the given input channel X ( i = 0 to 7 and X = 0 to 7 ) */
     eicr.B.EIEN   = TRUE;
     eicr.B.EIEN_P = TRUE;
 

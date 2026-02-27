@@ -62,14 +62,14 @@ derivative tc4D
 {
     core tc0
     {
-        architecture = TC1V1.8;
+        architecture = TC1V1.8_DPFPU;
         space_id_offset = 100;           // add 100 to all space IDs in the architecture definition
         copytable_space = vtc:linear;    // use the copy table in the virtual core for 'bss' and initialized data sections
     }
 
     core vtc
     {
-        architecture = TC1V1.8;
+        architecture = TC1V1.8_DPFPU;
         import tc0;                     // add all address spaces of core tc0 to core vtc for linking and locating
     }
 

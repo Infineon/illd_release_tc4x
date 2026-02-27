@@ -3,7 +3,7 @@
  * \brief DRE on-chip implementation data
  * \ingroup IfxLld_Dre
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -63,7 +63,7 @@
 #include "Ifx_Cfg.h"
 
 #if defined DEVICE_TC4DX
-#include "IfxDre_cfg_TC4Dx.h"
+#include "TC4Dx/IfxDre_cfg_TC4Dx.h"
 #endif
 
 #endif /* IFXDRE_CFG_H */

@@ -37,6 +37,7 @@
 #include "IfxCpu_reg.h"
 #include "IfxAdc.h"
 #include "IfxPpucCore.h"
+#include "IfxPpucStu.h"
 #include "IfxEgtm.h"
 #include "IfxQspi.h"
 #include "IfxCan.h"
@@ -118,6 +119,8 @@ void allowAccess(void)
     IfxAdc_configureAccessToAdc((IfxApApu_ApuConfig *)&g_apuConfig);
     IfxPpucCore_configureAccessToPpuc((IfxApApu_ApuConfig *)&g_apuConfig);
     IfxPpucCore_configureAccessToPpucCsm((IfxApApu_ApuConfig *)&g_apuConfig);
+    IfxPpucCore_configureAccessToPpucVccm((IfxApApu_ApuConfig *)&g_apuConfig);
+    IfxPpucStu_configureAccessToPpucStuDmi((IfxApApu_ApuConfig *)&g_apuConfig);
     IfxEgtm_configureAccessToEgtms((IfxApApu_ApuConfig *)&g_apuConfig);
     IfxQspi_configureAccessToQspis((IfxApApu_ApuConfig *)&g_apuConfig);
     IfxCan_configureAccessToCans((IfxApApu_ApuConfig *)&g_apuConfig);

@@ -3,9 +3,9 @@
  * \brief PSI5 on-chip implementation data
  * \ingroup IfxLld_Psi5
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2024-02-05 12:37:52
  *
  *
  *                                 IMPORTANT NOTICE
@@ -60,7 +60,7 @@
 #include "Ifx_Cfg.h"
 
 #if defined DEVICE_TC4DX
-#include "IfxPsi5_cfg_TC4Dx.h"
+#include "TC4Dx/IfxPsi5_cfg_TC4Dx.h"
 #endif
 
 #endif /* IFXPSI5_CFG_H */

@@ -2,9 +2,9 @@
  * \file IfxSdmmc_Sd.c
  * \brief SDMMC SD details
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-07-23 17:01:56
  *
  *
  *                                 IMPORTANT NOTICE

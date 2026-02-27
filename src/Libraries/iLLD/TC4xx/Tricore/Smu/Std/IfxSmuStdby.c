@@ -2,7 +2,7 @@
  * \file IfxSmuStdby.c
  * \brief SMU  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -67,6 +67,8 @@ void IfxSmuStdby_setFaultSignalAlarmConfigEventFlag(void *address, IfxSmu_Alarm 
         fsp0Temp.U &= ~(1U << alarmPos);
     }
 
+    /* AG2iFSP_STDBY register bits protection setting this bit enables the other bits in the registers (FEz) to be
+       changed in the same write operation */
     fsp0Temp.B.BITPROT = 1U;
 
 #if (IFX_PROT_ENABLED == 1U)
@@ -93,7 +95,10 @@ void IfxSmuStdby_setSmuStdbyAlarmStatusFlag(IfxSmu_Alarm alarm, IfxSmuStdby_Alar
 #endif
 
     cmdStdby.U          = SMUSTDBY_CMDSTDBY.U;
+    /* SMU_stdby alarm status bits in AGSTDBYi_STS can be cleared */
     cmdStdby.B.ASCE     = 1;
+    /* CMDSTDBY register bits protection setting this bit enables the other bits in the registers  to
+       be changed in the same write operation*/
     cmdStdby.B.BITPROT  = 1;
     SMUSTDBY_CMDSTDBY.U = cmdStdby.U;
 
@@ -119,6 +124,7 @@ void IfxSmuStdby_setSmuStdbyAlarmStatusFlag(IfxSmu_Alarm alarm, IfxSmuStdby_Alar
 #if IFXSMU_CONFIG_STDBY_SMU
 void IfxSmuStdby_configureAccessToStandbySmu(IfxApApu_ApuConfig *apConfig)
 {
+	/* Initializes and Configures the APU with the config value passed */
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_SMUSTDBY.ACCENSTDBY, apConfig);
 }
 #endif /* #if IFXSMU_CONFIG_STDBY_SMU */

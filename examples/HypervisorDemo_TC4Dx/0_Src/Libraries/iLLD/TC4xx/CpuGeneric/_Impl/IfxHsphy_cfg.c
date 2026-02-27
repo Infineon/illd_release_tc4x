@@ -2,9 +2,9 @@
  * \file IfxHsphy_cfg.c
  * \brief HSPHY on-chip implementation data
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-05-13 09:06:16
  *
  *
  *                                 IMPORTANT NOTICE

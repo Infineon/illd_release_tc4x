@@ -3,7 +3,7 @@
  * \brief HSPHY HSPHY details
  * \ingroup IfxLld_Hsphy
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -294,11 +294,11 @@
  */
 typedef struct
 {
-    IfxHsphy_PhyIndex           phyIdx;              /**< \brief PHY index in HSPHY */
-    IfxHsphy_PadNativeInterface padInterface;        /**< \brief PHY target interface */
-    IfxHsphy_TrgtDevice         trgtDevice;          /**< \brief Target device */
-    uint8                       trgtDeviceIdx;       /**< \brief geth Speed param */
-    IfxHsphy_TrgtDeviceSpeed    deviceSpeed;         /**< \brief Target device Idx */
+    IfxHsphy_PhyIndex           phyIdx;              /**< \brief PHY index in HSPHY. Range \ref IfxHsphy_PhyIndex */
+    IfxHsphy_PadNativeInterface padInterface;        /**< \brief PHY target interface. Range \ref IfxHsphy_PadNativeInterface */
+    IfxHsphy_TrgtDevice         trgtDevice;          /**< \brief Target device. Range \ref IfxHsphy_TrgtDevice */
+    uint8                       trgtDeviceIdx;       /**< \brief geth Speed param. Range 0 - 255 */
+    IfxHsphy_TrgtDeviceSpeed    deviceSpeed;         /**< \brief Target device Idx. Range \ref IfxHsphy_TrgtDeviceSpeed*/
     IFX_CONST void             *cfgData;             /**< \brief cfg data for reference the config data for selected native pad */
 } IfxHsphy_Hsphy_phyConfig;
 
@@ -343,16 +343,16 @@ typedef struct
 /******************************************************************************/
 
 /** \brief Init module API
- * \param hsphy Hsphy struct param
- * \param config Configuration strcuture for HPSHY connection
- * \return status for success ,failure, invalid config ,timeout error
+ * \param[inout] hsphy Hsphy struct param
+ * \param[in] config Configuration strcuture for HPSHY connection
+ * \retval status for success ,failure, invalid config ,timeout error. Range \ref IfxHsphy_status
  */
 IFX_EXTERN IfxHsphy_status IfxHsphy_Hsphy_initModule(IfxHsphy_Hsphy *hsphy, IfxHsphy_Hsphy_Cfg *config);
 
 /** \brief HSPHY bootloading finished and External loading of the application in HSPHY SRAM is complete
- * \param hsphyIdx HSPHY index
- * \param phyIndex PHY index in HSPHY
- * \return TRUE: Successful     FALSE: Error
+ * \param[in] hsphyIdx HSPHY index
+ * \param[in] phyIndex PHY index in HSPHY
+ * \retval TRUE Successful     FALSE Error
  */
 IFX_EXTERN boolean IfxHsphy_Hsphy_initDone(IfxHsphy_hsphyIndex hsphyIdx, IfxHsphy_PhyIndex phyIndex);
 
@@ -363,16 +363,16 @@ IFX_EXTERN boolean IfxHsphy_Hsphy_initDone(IfxHsphy_hsphyIndex hsphyIdx, IfxHsph
 /******************************************************************************/
 
 /** \brief Initializes the HS PHY configuration based on the provided parameters.
- * \param hsphyData Pointer to the HS PHY data structure to be initialized.
- * \param phyConfig Pointer to the HS PHY configuration structure containing the initialization parameters.
- * \return TRUE If the initialization is successful and a valid configuration is found.
+ * \param[inout] hsphyData Pointer to the HS PHY data structure to be initialized.
+ * \param[in] phyConfig Pointer to the HS PHY configuration structure containing the initialization parameters.
+ * \retval TRUE If the initialization is successful and a valid configuration is found, else FALSE.
  */
 IFX_EXTERN boolean IfxHsphy_Hsphy_phyInit(IfxHsphy_Hsphy_phyData *hsphyData, IfxHsphy_Hsphy_phyConfig *phyConfig);
 
 /** \brief init module config API
- * \param hsphy Hsphy param
- * \param config config params
- * \return None
+ * \param[in] hsphy Hsphy param
+ * \param[inout] config config params
+ * \retval None
  */
 IFX_EXTERN void IfxHsphy_Hsphy_initModuleConfig(Ifx_HSPHY *hsphy, IfxHsphy_Hsphy_Cfg *config);
 /** \addtogroup IfxLld_Hsphy_Hsphy_Default

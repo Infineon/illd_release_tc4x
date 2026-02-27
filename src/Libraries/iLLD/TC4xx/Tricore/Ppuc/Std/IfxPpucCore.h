@@ -3,7 +3,7 @@
  * \brief PPUC  basic functionality
  * \ingroup IfxLld_Ppuc
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -292,6 +292,12 @@ IFX_INLINE void IfxPpucCore_requestWakeUp(Ifx_PPU *ppuc);
  * \return None
  */
 IFX_EXTERN void IfxPpucCore_configureAccessToPpucCsm(IfxApApu_ApuConfig *apConfig);
+
+/** \brief Configures access to all masters to the PPU VMEM (VCCM) in the device
+ * \param apConfig config pointer to configuration structure.
+ * \return None
+ */
+IFX_EXTERN void IfxPpucCore_configureAccessToPpucVccm(IfxApApu_ApuConfig *apConfig);
 
 /******************************************************************************/
 /*---------------------Inline Function Implementations------------------------*/

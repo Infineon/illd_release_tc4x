@@ -2,9 +2,9 @@
  * \file IfxSmm.c
  * \brief SMM  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2024-01-17 05:53:10
  *
  *
  *                                 IMPORTANT NOTICE

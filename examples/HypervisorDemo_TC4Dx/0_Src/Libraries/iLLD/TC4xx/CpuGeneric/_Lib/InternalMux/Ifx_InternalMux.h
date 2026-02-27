@@ -2,9 +2,9 @@
  * \file Ifx_InternalMux.h
  * \brief Mux configuration functions
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2015-04-13 14:29:40 GMT$
  *
   *                                 IMPORTANT NOTICE
  *

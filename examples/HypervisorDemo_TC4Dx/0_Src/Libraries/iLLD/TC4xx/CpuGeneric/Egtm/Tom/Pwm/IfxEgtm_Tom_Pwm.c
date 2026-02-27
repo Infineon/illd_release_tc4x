@@ -2,9 +2,9 @@
  * \file IfxEgtm_Tom_Pwm.c
  * \brief EGTM PWM details
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-03-29 09:36:38
  *
  *
  *                                 IMPORTANT NOTICE
@@ -70,6 +70,7 @@ boolean IfxEgtm_Tom_Pwm_init(IfxEgtm_Tom_Pwm_Driver *driver, const IfxEgtm_Tom_P
     driver->clsIndex   = config->cluster;
     driver->tom        = tomSFR;
     driver->tomChannel = config->tomChannel;
+    driver->synchronousUpdateEnabled = config->synchronousUpdateEnabled;
 
     if (config->tomChannel <= IfxEgtm_Tom_Ch_7)
     {
@@ -82,28 +83,28 @@ boolean IfxEgtm_Tom_Pwm_init(IfxEgtm_Tom_Pwm_Driver *driver, const IfxEgtm_Tom_P
         driver->tgc[1] = NULL_PTR; /* NOTE currently no concatenation between TOMs */
     }
 
-    /* Enable update of CM0/1 from shadow registers */
+    /* Enables update of CM0/1 from shadow registers */
     if (config->synchronousUpdateEnabled == TRUE)
     {
         IfxEgtm_Tom_Tgc_enableChannelUpdate(driver->tgc[0], config->tomChannel, TRUE);
     }
 
-    /* Set channel to start counter when trigger is received */
+    /* Sets channel to start counter when trigger is received */
     IfxEgtm_Tom_Tgc_enableChannel(driver->tgc[0], config->tomChannel, TRUE, FALSE);
 
-    /* Set channel to start PWM output when trigger is received */
+    /* Sets channel to start PWM output when trigger is received */
     IfxEgtm_Tom_Tgc_enableChannelOutput(driver->tgc[0], config->tomChannel, TRUE, FALSE);
 
-    /* Set TOM channel clock source */
+    /* Sets TOM channel clock source */
     IfxEgtm_Tom_Ch_setClockSource(tomSFR, config->tomChannel, config->clock);
 
-    /* Set Signal Polarity value here */
+    /* Sets Signal Polarity value here */
     IfxEgtm_Tom_Ch_setSignalLevel(tomSFR, config->tomChannel, config->signalLevel);
 
-    /* Reset counter to 0 */
+    /* Resets counter to 0 */
     IfxEgtm_Tom_Ch_setCounterValue(tomSFR, driver->tomChannel, 0);
 
-    /* Enable and initialize interrupts if chosen */
+    /* Enables and initialize interrupts if chosen */
     if ((config->interrupt.ccu0Enabled == TRUE) || (config->interrupt.ccu1Enabled == TRUE))
     {
         volatile Ifx_SRC_SRCR *src;
@@ -113,14 +114,14 @@ boolean IfxEgtm_Tom_Pwm_init(IfxEgtm_Tom_Pwm_Driver *driver, const IfxEgtm_Tom_P
         IfxSrc_init(src, config->interrupt.isrProvider, config->interrupt.isrPriority, config->interrupt.vmId);
         IfxSrc_enable(src);
     }
-    /* Disable interrupt */
+    /* Disables interrupt */
     else
     {
         Ifx_EGTM_CLS_TOM_CH *channel = &tomSFR->CH[driver->tomChannel];
         channel->IRQ_EN.U = 0u;
     }
 
-    /* Set CM0, CM1, SR0, SR1 registers */
+    /* Sets CM0, CM1, SR0, SR1 registers */
     if (config->synchronousUpdateEnabled == TRUE)
     {
         IfxEgtm_Tom_Ch_setCompareZeroShadow(tomSFR, config->tomChannel, config->period);
@@ -132,7 +133,7 @@ boolean IfxEgtm_Tom_Pwm_init(IfxEgtm_Tom_Pwm_Driver *driver, const IfxEgtm_Tom_P
         IfxEgtm_Tom_Ch_setCompareOne(tomSFR, config->tomChannel, config->dutyCycle);
     }
 
-    /* Connect output pin to Tom channel */
+    /* Connects output pin to Tom channel */
     if (config->pin.outputPin != NULL_PTR)
     {
         IfxEgtm_PinMap_setTomTout(config->pin.outputPin, config->pin.outputMode, config->pin.padDriver);
@@ -147,13 +148,13 @@ boolean IfxEgtm_Tom_Pwm_init(IfxEgtm_Tom_Pwm_Driver *driver, const IfxEgtm_Tom_P
     }
 
 
-    /* Connect Msc to Tom channel */
+    /* Connects Msc to Tom channel */
     if (config->mscOut != NULL_PTR)
     {
         (void)IfxEgtm_ConnectToMsc(config->cluster, IfxEgtm_TrigSource_tom, (IfxEgtm_TrigChannel)config->tomChannel, config->mscOut);
     }
 
-    /* Start channel by giving a trigger */
+    /* Starts channel by giving a trigger */
     if (config->immediateStartEnabled == TRUE)
     {
         IfxEgtm_Tom_Tgc_trigger(driver->tgc[0]);
@@ -203,11 +204,11 @@ void IfxEgtm_Tom_Pwm_initConfig(IfxEgtm_Tom_Pwm_Config *config, Ifx_EGTM *egtm)
 
 void IfxEgtm_Tom_Pwm_start(IfxEgtm_Tom_Pwm_Driver *driver, boolean immediate)
 {
-    /* Enable channel if not enabled already */
+    /* Enables channel if not enabled already */
     IfxEgtm_Tom_Tgc_enableChannel(driver->tgc[0], driver->tomChannel, TRUE, immediate);
     IfxEgtm_Tom_Tgc_enableChannelOutput(driver->tgc[0], driver->tomChannel, TRUE, immediate);
 
-    /* Trigger the start now */
+    /* Triggers the start now */
     IfxEgtm_Tom_Tgc_trigger(driver->tgc[0]);
 }
 

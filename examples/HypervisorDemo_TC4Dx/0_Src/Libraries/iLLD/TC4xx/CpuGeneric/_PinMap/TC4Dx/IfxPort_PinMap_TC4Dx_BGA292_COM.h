@@ -3,9 +3,9 @@
  * \brief PORT  details
  * \ingroup IfxLld_Port
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2024-05-24 07:14:04
  *
  *
  *                                 IMPORTANT NOTICE

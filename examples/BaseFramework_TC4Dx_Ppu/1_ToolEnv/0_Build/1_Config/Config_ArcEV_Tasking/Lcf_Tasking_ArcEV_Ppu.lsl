@@ -111,7 +111,7 @@ derivative PPU_TC4Dx
                     no_inline )
         {
             vector( id = 0,       fill = "_START");
-            vector( id = [1..15], fill = loop);
+            vector( id = [1..15], fill = "IfxPpu_Trap_defaultHandler");
         }
         
     }
@@ -132,34 +132,27 @@ derivative PPU_TC4Dx
         
         group(ordered,  run_addr=mem:vmem[sizeof(mem:vmem)-LCF_PPU_VSTACK_SIZE-8], attributes = s )
         {
-            stack "vstack";
+            stack "vstack" (size = LCF_PPU_VSTACK_SIZE);
         }
         
         "__IF_CONST" := LCF_PPU_IF_POINTER;
 
-
-
         group(ordered,  run_addr=mem:csm[0x00] )
         {
-            section ".hier_macht_der_TC_den_Vector_hin" (size=0x150, attributes=rwx)
+            section ".reserved_for_vector" (size=0x150, attributes=rwx)
             {
             	
             }
         }
 
-        group(ordered,  run_addr=mem:csm )
+        group(ordered,  run_addr=mem:csm[sizeof(mem:csm)-LCF_PPU_STACK_SIZE-8], attributes = s  )
         {
-            stack "stack";
+            stack "stack" (size = LCF_PPU_STACK_SIZE);
         }
         
         group(ordered, run_addr=mem:csm)
         {
             select "(.text.csmtext_ppu|.text.csmtext_ppu.*)";
-        }
-        
-        group(ordered, align = 4, attributes=rwu, run_addr=mem:lmu9/not_cached)
-        {
-            select "(.bss.uncached|.bss.uncached.*)";
         }
         
         group(ordered, run_addr=mem:csm)
@@ -180,13 +173,19 @@ derivative PPU_TC4Dx
             select "(.sbss|.sbss.*)";
         }
         "_SDA_BASE_" := sizeof(group:sda) > 0 ? (addressof(group:sda) + (sizeof(group:sda) / 2)) & 0xFFFFFFFC : 0;
+  
+          
+        group(ordered, align = 4, attributes=rwu, run_addr=mem:lmu9/not_cached)
+        {
+            select "(.bss.uncached|.bss.uncached.*)";
+        }
                 
         group interface_table (ordered, run_addr=mem:pflash5_ppu)
         {
         	struct "my_IfTable"
 			{
 				LCF_PPU_VEC_START 			 : 4;
-				0xB2080000 					 : 4;
+				0xB2080000 			         : 4;
 				LCF_PPU_VEC_SIZE			 : 4;
 				addressof(group:shared_data) : 4;
 			}
@@ -240,8 +239,6 @@ derivative PPU_TC4Dx
             	select "(\[.vdata.*\])";
              }
         }
-
-
 
         group shared_data (ordered, attributes=rwu, run_addr=mem:lmu9/not_cached)
         {

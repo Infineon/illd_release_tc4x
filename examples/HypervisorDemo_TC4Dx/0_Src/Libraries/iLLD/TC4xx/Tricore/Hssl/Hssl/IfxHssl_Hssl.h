@@ -3,9 +3,9 @@
  * \brief HSSL HSSL details
  * \ingroup IfxLld_Hssl
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-03-29 08:59:29
  *
  *
  *                                 IMPORTANT NOTICE
@@ -40,6 +40,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  *
+ * \author Yadunandan Puttaswamy<yadunandan.puttaswamy@infineon.com>
  *
  * \defgroup IfxLld_Hssl_Hssl_Usage How to use the HSSL Interface driver?
  * \ingroup IfxLld_Hssl

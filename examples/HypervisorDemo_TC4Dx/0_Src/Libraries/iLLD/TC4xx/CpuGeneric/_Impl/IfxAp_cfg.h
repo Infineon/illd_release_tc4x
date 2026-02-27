@@ -3,9 +3,9 @@
  * \brief AP on-chip implementation data
  * \ingroup IfxLld_Ap
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2024-11-12 09:11:21
  *
  *
  *                                 IMPORTANT NOTICE
@@ -60,7 +60,7 @@
 #include "Ifx_Cfg.h"
 
 #if defined DEVICE_TC4DX
-#include "IfxAp_cfg_TC4Dx.h"
+#include "TC4Dx/IfxAp_cfg_TC4Dx.h"
 #endif
 
 #endif /* IFXAP_CFG_H */

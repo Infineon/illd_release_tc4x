@@ -2,7 +2,7 @@
  * \file IfxCan.c
  * \brief CAN  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -64,6 +64,7 @@ uint32 IfxCan_Node_getDataLength(IfxCan_DataLengthCode dataLengthCode)
 {
     uint32 numBytes;
 
+    /* Calculate the data length code in bytes */
     if (dataLengthCode <= IfxCan_DataLengthCode_8)
     {
         numBytes = (uint32)dataLengthCode;
@@ -86,6 +87,7 @@ uint32 IfxCan_Node_getDataLengthFromCode(Ifx_CAN_N *node, IfxCan_DataLengthCode 
     uint32 numBytes;
     IFX_UNUSED_PARAMETER(node);
 
+    /* Calculate the data length code in bytes */
     if ((dataLengthCode <= IfxCan_DataLengthCode_64) && (dataLengthCode > IfxCan_DataLengthCode_24))
     {
         numBytes = ((uint32)dataLengthCode - 11) * 16;
@@ -107,21 +109,21 @@ IfxCan_FrameMode IfxCan_Node_getFrameMode(Ifx_CAN_RXMSG *rxBufferElement)
 {
     IfxCan_FrameMode frameMode;
 
-    /* if CAN FD long frame is been selected */
+    /* If CAN FD long frame is been selected */
     if (rxBufferElement->R1A.B.FDF)
     {
-        /* if bitrate switch is been set */
+        /* If bitrate switch is been set */
         if (rxBufferElement->R1A.B.BRS)
         {
             frameMode = IfxCan_FrameMode_fdLongAndFast;
         }
-        /* if bitrate switch is not been set */
+        /* If bitrate switch is not been set */
         else
         {
             frameMode = IfxCan_FrameMode_fdLong;
         }
     }
-    /* if CAN FD long frame is not been selected */
+    /* If CAN FD long frame is not been selected */
     else
     {
         frameMode = IfxCan_FrameMode_standard;
@@ -192,7 +194,8 @@ void IfxCan_Node_setBitTiming(Ifx_CAN_N *node, uint32 moduleFreq, uint32 baudrat
 
         if (tempTBAUD == 0)
         {
-            break; /* to avoid division by 0 */
+        	/* To avoid division by 0 */
+            break;
         }
 
         float32 tempBaudrate = Fquanta / tempTBAUD;
@@ -200,7 +203,8 @@ void IfxCan_Node_setBitTiming(Ifx_CAN_N *node, uint32 moduleFreq, uint32 baudrat
 
         if (tempTBAUD < minTBAUD)
         {
-            break;  /* below the minimum allowed limits, break is required otherwise TSEG1 and TSEG2 may result in negitive values */
+        	/* Below the minimum allowed limits, break is required otherwise TSEG1 and TSEG2 may result in negative values */
+            break;
         }
 
         if ((tempTBAUD <= maxTBAUD) && (bestError >= error))
@@ -211,7 +215,8 @@ void IfxCan_Node_setBitTiming(Ifx_CAN_N *node, uint32 moduleFreq, uint32 baudrat
 
             if ((tempTBAUD <= 20) && (error < 0.1f))
             {
-                break;      /* optimal condition */
+            	/* Optimal condition */
+                break;
             }
         }
     }
@@ -232,7 +237,7 @@ void IfxCan_Node_setBitTiming(Ifx_CAN_N *node, uint32 moduleFreq, uint32 baudrat
         IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, FALSE);
     }
 
-    /* search for best sample point */
+    /* Search for best sample point */
     bestError = samplePoint * 0.25f; /* 25% tolerance in sample point as max error */
 
     if (bestTBAUD < maxTSEG1)
@@ -255,8 +260,8 @@ void IfxCan_Node_setBitTiming(Ifx_CAN_N *node, uint32 moduleFreq, uint32 baudrat
 
         if (tempSamplePoint < samplePoint)
         {
-            /*least possible error */
-            break;  /* least possible error has already occured */
+            /* Least possible error */
+            break;  /* Least possible error has already occurred */
         }
     }
 
@@ -276,7 +281,7 @@ void IfxCan_Node_setBitTiming(Ifx_CAN_N *node, uint32 moduleFreq, uint32 baudrat
         IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, FALSE);
     }
 
-    /* search for best SJW */
+    /* Search for best SJW */
     bestError = 10000;
 
     for (tempSJW = 1; tempSJW <= bestTSEG2; tempSJW++)
@@ -355,7 +360,8 @@ void IfxCan_Node_setFastBitTiming(Ifx_CAN_N *node, uint32 moduleFreq, uint32 bau
 
         if (tempTBAUD == 0)
         {
-            break; /* to avoid division by 0 */
+        	/* To avoid division by 0 */
+            break;
         }
 
         float32 tempBaudrate = Fquanta / tempTBAUD;
@@ -363,7 +369,8 @@ void IfxCan_Node_setFastBitTiming(Ifx_CAN_N *node, uint32 moduleFreq, uint32 bau
 
         if (tempTBAUD < minTBAUD)
         {
-            break;  /* below the minimum allowed limits, break is required otherwise TSEG1 and TSEG2 may result in negitive values */
+        	/* Below the minimum allowed limits, break is required otherwise TSEG1 and TSEG2 may result in negative values */
+            break;
         }
 
         if ((tempTBAUD <= maxTBAUD) && (bestError >= error))
@@ -374,7 +381,8 @@ void IfxCan_Node_setFastBitTiming(Ifx_CAN_N *node, uint32 moduleFreq, uint32 bau
 
             if ((tempTBAUD <= 20) && (error < 0.1f))
             {
-                break;      /* optimal condition */
+            	/* Optimal condition */
+                break;
             }
         }
     }
@@ -395,7 +403,7 @@ void IfxCan_Node_setFastBitTiming(Ifx_CAN_N *node, uint32 moduleFreq, uint32 bau
         IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, FALSE);
     }
 
-    /* search for best sample point */
+    /* Search for best sample point */
     bestError = samplePoint * 0.25f; /* 25% tolerance in sample point as max error */
 
     if (bestTBAUD < maxTSEG1)
@@ -418,7 +426,8 @@ void IfxCan_Node_setFastBitTiming(Ifx_CAN_N *node, uint32 moduleFreq, uint32 bau
 
         if (tempSamplePoint < samplePoint)
         {
-            break;  /* least possible error has already occured */
+        	/* Least possible error has already occurred */
+            break;
         }
     }
 
@@ -438,7 +447,7 @@ void IfxCan_Node_setFastBitTiming(Ifx_CAN_N *node, uint32 moduleFreq, uint32 bau
         IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, FALSE);
     }
 
-    /* search for best SJW */
+    /* Search for best SJW */
     bestError = 10000;
 
     for (tempSJW = 1; tempSJW <= bestTSEG2; tempSJW++)
@@ -479,14 +488,17 @@ void IfxCan_Node_setFrameMode(Ifx_CAN_N *node, IfxCan_FrameMode frameMode)
 {
     switch (frameMode)
     {
+    /* Configure the CAN standard frame mode for transmission */
     case IfxCan_FrameMode_standard:
         node->CCCR.B.FDOE = 0;
         node->CCCR.B.BRSE = 0;
         break;
+    /* Configure the CAN FD long frame mode for transmission */
     case IfxCan_FrameMode_fdLong:
         node->CCCR.B.FDOE = 1;
         node->CCCR.B.BRSE = 0;
         break;
+    /* Configure the  CAN FD long and fast frame mode for transmission */
     case IfxCan_FrameMode_fdLongAndFast:
         node->CCCR.B.FDOE = 1;
         node->CCCR.B.BRSE = 1;
@@ -499,14 +511,17 @@ void IfxCan_Node_setFrameModeReq(Ifx_CAN_TXMSG *txBufferElement, IfxCan_FrameMod
 {
     switch (frameMode)
     {
+    /* Configure CAN frame mode request for Standard frame */
     case IfxCan_FrameMode_standard:
         txBufferElement->T1.B.FDF = 0;
         txBufferElement->T1.B.BRS = 0;
         break;
+    /* Configure CAN frame mode request for FD long frame */
     case IfxCan_FrameMode_fdLong:
         txBufferElement->T1.B.FDF = 1;
         txBufferElement->T1.B.BRS = 0;
         break;
+    /* Configure CAN frame mode request for FD long and fast frame */
     case IfxCan_FrameMode_fdLongAndFast:
         txBufferElement->T1.B.FDF = 1;
         txBufferElement->T1.B.BRS = 1;
@@ -521,14 +536,17 @@ void IfxCan_Node_setFrameModeRequest(Ifx_CAN_N *node, Ifx_CAN_TXMSG *txBufferEle
 
     switch (frameMode)
     {
+    /* Configure CAN frame mode request for Standard frame */
     case IfxCan_FrameMode_standard:
         txBufferElement->T1.B.FDF = 0;
         txBufferElement->T1.B.BRS = 0;
         break;
+    /* Configure CAN frame mode request for FD long frame */
     case IfxCan_FrameMode_fdLong:
         txBufferElement->T1.B.FDF = 1;
         txBufferElement->T1.B.BRS = 0;
         break;
+    /* Configure CAN frame mode request for FD long and fast frame */
     case IfxCan_FrameMode_fdLongAndFast:
         txBufferElement->T1.B.FDF = 1;
         txBufferElement->T1.B.BRS = 1;
@@ -541,6 +559,7 @@ uint32 IfxCan_Node_getDataLengthInBytes(IfxCan_DataLengthCode dataLengthCode)
 {
     uint32 numBytes;
 
+    /* Calculate the data length code in bytes */
     if (dataLengthCode <= IfxCan_DataLengthCode_8)
     {
         numBytes = (uint32)dataLengthCode;
@@ -564,6 +583,7 @@ uint8 IfxCan_Node_getTxBufferDataFieldSize(Ifx_CAN_N *node)
 
     uint8                size;
 
+    /* Calculate the data field size in bytes */
     if (sizeCode < IfxCan_DataFieldSize_32)
     {
         size = ((uint8)sizeCode + 2) * 4;
@@ -594,14 +614,15 @@ void IfxCan_Node_writeTxBufData(Ifx_CAN_TXMSG *txBufferElement, IfxCan_DataLengt
 {
     uint32  i;
 
-    uint32 *destinationAddress = (uint32 *)txBufferElement + 2;
-    /* get number of data bytes from data length code (DLC) */
-    uint32  length             = IfxCan_Node_getDataLength(dataLengthCode);
+    uint8 *destinationAddress = (uint8 *)((uint32 *)txBufferElement + 2);
+    uint8 *sourceAddress = (uint8 *)data;
+    /* Get number of data bytes from data length code (DLC) */
+    uint32  length = IfxCan_Node_getDataLengthInBytes(dataLengthCode);
 
-    /* write data into the data section of Tx Buffer element  */
+    /* Write data into the data section of Tx Buffer element  */
     for (i = 0; i < length; i++)
     {
-        destinationAddress[i] = data[i];
+        destinationAddress[i] = sourceAddress[i];
     }
 }
 
@@ -611,14 +632,15 @@ void IfxCan_Node_writeData(Ifx_CAN_N *node, Ifx_CAN_TXMSG *txBufferElement, IfxC
     IFX_UNUSED_PARAMETER(node);
     uint32  i;
 
-    uint32 *destinationAddress = (uint32 *)txBufferElement + 2;
-    /* get number of data bytes from data length code (DLC) */
-    uint32  length             = IfxCan_Node_getDataLength(dataLengthCode);
+    uint8 *destinationAddress = (uint8 *)((uint32 *)txBufferElement + 2);
+    uint8 *sourceAddress = (uint8 *)data;
+    /* Get number of data bytes from data length code (DLC) */
+    uint32  length = IfxCan_Node_getDataLengthInBytes(dataLengthCode);
 
-    /* write data into the data section of Tx Buffer element  */
+    /* Write data into the data section of Tx Buffer element  */
     for (i = 0; i < length; i++)
     {
-        destinationAddress[i] = data[i];
+        destinationAddress[i] = sourceAddress[i];
     }
 }
 
@@ -629,11 +651,13 @@ void IfxCan_Node_clearRxBufferNewDataFlag(Ifx_CAN_N *node, IfxCan_RxBufferId rxB
 
     if (rxBufferId < IfxCan_RxBufferId_32)
     {
+    	/* Clears new data flag for Rx buffers 0 to 31 */
         value         = (1U << rxBufferId);
         node->NDAT1.U = value;
     }
     else
     {
+    	/* Clears new data flag for Rx buffers 32 to 63 */
         value         = (1U << (rxBufferId - 32));
         node->NDAT2.U = value;
     }
@@ -646,6 +670,7 @@ uint8 IfxCan_Node_getRxBufferDataFieldSize(Ifx_CAN_N *node)
 
     uint8                size;
 
+    /* Calculate the data field size in bytes */
     if (sizeCode < IfxCan_DataFieldSize_32)
     {
         size = ((uint8)sizeCode + 2) * 4;
@@ -678,6 +703,7 @@ uint8 IfxCan_Node_getRxFifo0DataFieldSize(Ifx_CAN_N *node)
 
     uint8                size;
 
+    /* Calculate the data field size in bytes */
     if (sizeCode < IfxCan_DataFieldSize_32)
     {
         size = ((uint8)sizeCode + 2) * 4;
@@ -710,6 +736,7 @@ uint8 IfxCan_Node_getRxFifo1DataFieldSize(Ifx_CAN_N *node)
 
     uint8                size;
 
+    /* Calculate the data field size in bytes */
     if (sizeCode < IfxCan_DataFieldSize_32)
     {
         size = ((uint8)sizeCode + 2) * 4;
@@ -743,12 +770,14 @@ boolean IfxCan_Node_isRxBufferNewDataUpdated(Ifx_CAN_N *node, IfxCan_RxBufferId 
 
     if (rxBufferId < IfxCan_RxBufferId_32)
     {
+    	/* Check for new data updated in Rx buffers 0 to 31 */
         mask    = (1U << rxBufferId);
         tempVar = (boolean)((node->NDAT1.U & mask) != 0 ? 1 : 0);
         return tempVar;
     }
     else
     {
+    	/* Check for new data updated in Rx buffers 32 to 63 */
         mask    = (1U << (rxBufferId - 32));
         tempVar = (boolean)((node->NDAT2.U & mask) != 0 ? 1 : 0);
         return tempVar;
@@ -759,14 +788,15 @@ boolean IfxCan_Node_isRxBufferNewDataUpdated(Ifx_CAN_N *node, IfxCan_RxBufferId 
 void IfxCan_Node_readData(Ifx_CAN_RXMSG *rxBufferElement, IfxCan_DataLengthCode dataLengthCode, uint32 *data)
 {
     uint32  i;
-    uint32 *destinationAddress = (uint32 *)rxBufferElement + 2;
-    /* get number of data bytes from data length code (DLC) */
-    uint32  length             = IfxCan_Node_getDataLength(dataLengthCode);
+    uint8 *sourceAddress = (uint8 *)((uint32 *)rxBufferElement + 2);
+    uint8 *destinationAddress = (uint8 *)data;
+    /* Get number of data bytes from data length code (DLC) */
+    uint32  length = IfxCan_Node_getDataLengthInBytes(dataLengthCode);
 
-    /* read data from the data section of Rx Buffer element  */
+    /* Read data from the data section of Rx Buffer element  */
     for (i = 0; i < length; i++)
     {
-        data[i] = destinationAddress[i];
+        destinationAddress[i] = sourceAddress[i];
     }
 }
 
@@ -904,10 +934,10 @@ void IfxCan_disableModule(Ifx_CAN *can)
     IfxApProt_setState((Ifx_PROT_PROT *)&(can->PROTE), IfxApProt_State_config);
 #endif
 
-    /*Disable module */
+    /* Disable module */
     can->CLC.B.DISR = 1U;
 
-    /*Wait until module is disabled*/
+    /* Wait until module is disabled */
     while (IfxCan_isModuleEnabled(can) == TRUE)
     {}
 
@@ -923,10 +953,10 @@ void IfxCan_enableModule(Ifx_CAN *can)
     IfxApProt_setState((Ifx_PROT_PROT *)&(can->PROTE), IfxApProt_State_config);
 #endif
 
-    /*Enable module, disregard Sleep Mode request */
+    /* Enable module, disregard Sleep Mode request */
     can->CLC.B.DISR = 0U;
 
-    /*Wait until module is enabled*/
+    /* Wait until module is enabled */
     while (IfxCan_isModuleEnabled(can) == FALSE)
     {}
 
@@ -977,6 +1007,7 @@ uint32 IfxCan_getModuleFrequency(void)
 {
     uint32 moduleFreq = 0;
 
+    /* Get MCAN frequency in Hz */
     moduleFreq = IfxClock_getMcanFrequency();
 
     return moduleFreq;
@@ -988,16 +1019,16 @@ void IfxCan_resetModule(Ifx_CAN *can)
 #if (IFX_PROT_ENABLED == 1U)
     IfxApProt_setState((Ifx_PROT_PROT *)&(can->PROTE), IfxApProt_State_config);
 #endif
-
-    can->RST.CTRLA.B.KRST = 1;          /* Only if both Kernel reset bits are set a reset is executed */
+    /* Only if both Kernel reset bits are set a reset is executed */
+    can->RST.CTRLA.B.KRST = 1;
     can->RST.CTRLB.B.KRST = 1;
-
-    while (can->RST.STAT.B.KRST == 0)   /* Wait until reset is executed */
+    /* Wait until reset is executed */
+    while (can->RST.STAT.B.KRST == 0)
     {}
-
-    can->RST.CTRLB.B.STATCLR = 1;       /* Clear Kernel reset status bit */
-
-    while (can->RST.STAT.B.KRST == 1)   /* Wait until KRST is cleared, only after this reset sequence is completed */
+    /* Clear Kernel reset status bit */
+    can->RST.CTRLB.B.STATCLR = 1;
+    /* Wait until KRST is cleared, only after this reset sequence is completed */
+    while (can->RST.STAT.B.KRST == 1)
     {}
 
 #if (IFX_PROT_ENABLED == 1U)
@@ -1010,13 +1041,13 @@ void IfxCan_setClockSource(Ifx_CAN *can, IfxCan_ClockSelect clockSelect, IfxCan_
 {
     Ifx_CAN_MCR mcr;
 
-    /* enable CCCE and CI */
+    /* Enable CCCE and CI */
     mcr.U      = can->MCR.U;
     mcr.B.CCCE = 1;
     mcr.B.CI   = 1;
     can->MCR.U = mcr.U;
 
-    /* select clock */
+    /* Select clock */
     switch (clockSelect)
     {
     case IfxCan_ClockSelect_0:
@@ -1035,7 +1066,7 @@ void IfxCan_setClockSource(Ifx_CAN *can, IfxCan_ClockSelect clockSelect, IfxCan_
 
     can->MCR.U = mcr.U;
 
-    /* disable CCCE and CI */
+    /* Disable CCCE and CI */
     mcr.B.CCCE = 0;
     mcr.B.CI   = 0;
     can->MCR.U = mcr.U;
@@ -1062,7 +1093,7 @@ void IfxCan_ramInit(Ifx_CAN *can)
 {
     Ifx_CAN_MCR mcr;
 
-    /* enable CCCE and CI */
+    /* Enable CCCE and CI */
     mcr.U      = can->MCR.U;
     mcr.B.CCCE = 1;
     mcr.B.CI   = 1;
@@ -1071,9 +1102,9 @@ void IfxCan_ramInit(Ifx_CAN *can)
     while (can->MCR.B.RBUSY)
     {}
 
-    can->MCR.B.RINIT = 0;       /*0 to 1 transition is needed*/
-    can->MCR.B.RINIT = 1;       /*Clear RAM block*/
-    uint32 mcr2 = can->MCR.U;   /*Dummy read required as per programming sequence*/
+    can->MCR.B.RINIT = 0;       /* 0 to 1 transition is needed */
+    can->MCR.B.RINIT = 1;       /* Clear RAM block */
+    uint32 mcr2 = can->MCR.U;   /* Dummy read required as per programming sequence */
 
     IFX_UNUSED_PARAMETER(mcr2); /* Warning fix for LLVM Compiler */
 
@@ -1082,7 +1113,7 @@ void IfxCan_ramInit(Ifx_CAN *can)
 
     can->MCR.B.RINIT = 0;
 
-    /* disable CCCE and CI */
+    /* Disable CCCE and CI */
     mcr.B.CCCE = 0;
     mcr.B.CI   = 0;
     can->MCR.U = mcr.U;
@@ -1093,21 +1124,21 @@ IfxCan_FrameMode IfxCan_Node_getFrameModeFromTxEventFifo(Ifx_CAN_TXEVENT *txEven
 {
     IfxCan_FrameMode frameMode;
 
-    /* if CAN FD long frame is been selected */
+    /* If CAN FD long frame is been selected */
     if (txEventFifoElement->E1A.B.FDF)
     {
-        /* if bitrate switch is been set */
+        /* If bitrate switch is been set */
         if (txEventFifoElement->E1A.B.BRS)
         {
             frameMode = IfxCan_FrameMode_fdLongAndFast;
         }
-        /* if bitrate switch is not been set */
+        /* If bitrate switch is not been set */
         else
         {
             frameMode = IfxCan_FrameMode_fdLong;
         }
     }
-    /* if CAN FD long frame is not been selected */
+    /* If CAN FD long frame is not been selected */
     else
     {
         frameMode = IfxCan_FrameMode_standard;
@@ -1150,50 +1181,55 @@ volatile Ifx_SRC_SRCR *IfxCan_getSrcPointer(Ifx_CAN *can, IfxCan_InterruptLine i
 
 void IfxCan_Node_setInternalTimeStamp(Ifx_CAN_N *node, IfxCan_IntTimerPrescalar prescalar)
 {
-    /* enable configuration change CCCR.CCE = 1, CCCR.INIT = 1 */
+    /* Enable configuration change CCCR.CCE = 1, CCCR.INIT = 1 */
     IfxCan_Node_enableConfigurationChange(node);
 
-    node->TSCC.B.TSS = IfxCan_TSCC_TSS_internal; //MCMCAN Internal 16-bit Time Stamp
-    node->TSCC.B.TCP = prescalar;                //In CAN bit times. Valid values are 0x0 to 0xF
-    node->TSCV.B.TSC = (uint16)0;                //A write will clear the counter, when TSS=0b01.
-    /* disable configuration change CCCR.CCE = 0, CCCR.INIT = 0 */
+    node->TSCC.B.TSS = IfxCan_TSCC_TSS_internal; /* MCMCAN Internal 16-bit Time Stamp */
+    node->TSCC.B.TCP = prescalar;                /* In CAN bit times. Valid values are 0x0 to 0xF */
+    node->TSCV.B.TSC = (uint16)0;                /* A write will clear the counter, when TSS=0b01 */
+    /* Disable configuration change CCCR.CCE = 0, CCCR.INIT = 0 */
     IfxCan_Node_disableConfigurationChange(node);
 }
 
 
 void IfxCan_Node_setTsccPrescalar(Ifx_CAN_N *node, IfxCan_IntTimerPrescalar prescalar)
 {
-    /* enable configuration change CCCR.CCE = 1, CCCR.INIT = 1 */
+    /* Enable configuration change CCCR.CCE = 1, CCCR.INIT = 1 */
     IfxCan_Node_enableConfigurationChange(node);
-    node->TSCC.B.TCP = prescalar; //In CAN bit times. Valid values are 0x0 to 0xF
-    /* disable configuration change CCCR.CCE = 0, CCCR.INIT = 0 */
+    /* In CAN bit times. Valid values are 0x0 to 0xF */
+    node->TSCC.B.TCP = prescalar;
+    /* Disable configuration change CCCR.CCE = 0, CCCR.INIT = 0 */
     IfxCan_Node_disableConfigurationChange(node);
 }
 
 
 void IfxCan_Node_tsuInit(Ifx_CAN_N *node, IfxCan_TsuConfig tsuConfig)
 {
-    node->TSU.TSCFG.B.TSUE = 1;                                 /*Enable TSU*/
+	/* Enable TSU */
+    node->TSU.TSCFG.B.TSUE = 1;
 
 /* Configure TSU Internal Node's Counter or TSU External Node 0 Counter
  * Node 0: Only Internal Counter Exists,
  * Nodes 1,2,3: Each can have Internal Counter or External Couunter.
  * If Configured to external counter they will be connected to Node 0's counter.
  * User must configure Node 0 TSU first before connecting Node 1,2 or 3 to Node 0's counter*/
-    node->TSU.TSCFG.B.TBCS = tsuConfig.tsuCounterType;          /*Configure TSU Internal Node's Counter or TSU External Node 0 Counter*/
 
-    if (tsuConfig.tsuCounterType == IfxCan_TsuCounter_internal) /*No prescalar H/w Support for External(Node 0's TSU) Counter*/
+    /* Configure TSU Internal Node's Counter or TSU External Node 0 Counter */
+    node->TSU.TSCFG.B.TBCS = tsuConfig.tsuCounterType;
+
+    /* No prescalar H/w Support for External(Node 0's TSU) Counter */
+    if (tsuConfig.tsuCounterType == IfxCan_TsuCounter_internal)
     {
         node->TSU.TSCFG.B.TBPRE = tsuConfig.prescalar;
     }
-
-    node->TSU.TSCFG.B.SCP = tsuConfig.position; /*Capture Time Stamp at End of Frame*/
+    /* Capture Time Stamp at End of Frame */
+    node->TSU.TSCFG.B.SCP = tsuConfig.position;
 }
 
 
 void IfxCan_Node_setTsuCounter(Ifx_CAN_N *node, IfxCan_TsuCounter counterType)
 {
-    /* enable configuration change CCCR.CCE = 1, CCCR.INIT = 1 */
+    /* Enable configuration change CCCR.CCE = 1, CCCR.INIT = 1 */
     IfxCan_Node_enableConfigurationChange(node);
 
 /* Node 0: Only Internal Counter Exists,
@@ -1202,7 +1238,7 @@ void IfxCan_Node_setTsuCounter(Ifx_CAN_N *node, IfxCan_TsuCounter counterType)
  * User must configure Node 0 TSU first before connecting Node 1,2 or 3 to Node 0's counter*/
     node->TSU.TSCFG.B.TBCS = counterType;
 
-    /* disable configuration change CCCR.CCE = 0, CCCR.INIT = 0 */
+    /* Disable configuration change CCCR.CCE = 0, CCCR.INIT = 0 */
     IfxCan_Node_disableConfigurationChange(node);
 }
 
@@ -1234,7 +1270,7 @@ uint16 IfxCan_Node_Cre_getStdGroupXFrameRate(Ifx_CAN_N *node, IfxCan_StdFrameGro
 {
     uint32  frameTableAddress = (uint32)IfxCan_Node_Cre_getStdFrameRateAddress(node, ramAddress);
 
-    uint32  wordIndex         = id / 2; /*2 Elements are stored per word*/
+    uint32  wordIndex         = id / 2; /* 2 Elements are stored per word */
     uint32 *frameratepairptr  = (uint32 *)(frameTableAddress + (wordIndex * 4));
 
     uint32  frameratepair     = (uint32)(*frameratepairptr);
@@ -1243,20 +1279,20 @@ uint16 IfxCan_Node_Cre_getStdGroupXFrameRate(Ifx_CAN_N *node, IfxCan_StdFrameGro
 
     if (id % 2)
     {
-        frameRate = (uint16)(frameratepair >> 16); /*Higher Element*/
+        frameRate = (uint16)(frameratepair >> 16); /* Higher Element */
 
         if (clearEnable)
         {
-            *frameratepairptr = (frameratepair & 0x0000FFFF); /*Clear Higher 16 bits*/
+            *frameratepairptr = (frameratepair & 0x0000FFFF); /* Clear Higher 16 bits */
         }
     }
     else
     {
-        frameRate = (uint16)frameratepair; /*Lower Element*/
+        frameRate = (uint16)frameratepair; /* Lower Element */
 
         if (clearEnable)
         {
-            *frameratepairptr = (frameratepair & 0xFFFF0000); /*Clear Lower 16 bits*/
+            *frameratepairptr = (frameratepair & 0xFFFF0000); /* Clear Lower 16 bits */
         }
     }
 
@@ -1268,7 +1304,7 @@ uint16 IfxCan_Node_Cre_getXtdGroupXFrameRate(Ifx_CAN_N *node, IfxCan_XtdFrameGro
 {
     uint32  frameTableAddress = (uint32)IfxCan_Node_Cre_getXtdFrameRateAddress(node, ramAddress);
 
-    uint32  wordIndex         = id / 2; /*2 Elements are stored per word*/
+    uint32  wordIndex         = id / 2; /* 2 Elements are stored per word */
 
     uint32 *frameratepairptr  = (uint32 *)(frameTableAddress + (wordIndex * 4));
 
@@ -1278,20 +1314,20 @@ uint16 IfxCan_Node_Cre_getXtdGroupXFrameRate(Ifx_CAN_N *node, IfxCan_XtdFrameGro
 
     if (id % 2)
     {
-        frameRate = (uint16)(frameratepair >> 16); /*Higher Element*/
+        frameRate = (uint16)(frameratepair >> 16); /* Higher Element */
 
         if (clearEnable)
         {
-            *frameratepairptr = (frameratepair & 0x0000FFFF); /*Clear Higher 16 bits*/
+            *frameratepairptr = (frameratepair & 0x0000FFFF); /* Clear Higher 16 bits */
         }
     }
     else
     {
-        frameRate = (uint16)frameratepair; /*Lower Element*/
+        frameRate = (uint16)frameratepair; /* Lower Element */
 
         if (clearEnable)
         {
-            *frameratepairptr = (frameratepair & 0xFFFF0000); /*Clear Lower 16 bits*/
+            *frameratepairptr = (frameratepair & 0xFFFF0000); /* Clear Lower 16 bits */
         }
     }
 
@@ -1304,50 +1340,54 @@ void IfxCan_Node_setExternalTimeStamp(Ifx_CAN_N *node, IfxCan_ExtTimerPrescalar 
     node->TIMER.CCR.B.TPSC    = prescalar;
     node->TIMER.CCR.B.TRIGSRC = trigger;
 
-    /* enable configuration change CCCR.CCE = 1, CCCR.INIT = 1 */
+    /* Enable configuration change CCCR.CCE = 1, CCCR.INIT = 1 */
     IfxCan_Node_enableConfigurationChange(node);
 
-    /*Configure External Timers before this point*/
-    node->TSCC.B.TSS = IfxCan_TSCC_TSS_external;         //External 16-bit Time Stamp
+    /* Configure External Timers before this point*/
+    node->TSCC.B.TSS = IfxCan_TSCC_TSS_external;         /* External 16-bit Time Stamp */
 
-    /* disable configuration change CCCR.CCE = 0, CCCR.INIT = 0 */
+    /* Disable configuration change CCCR.CCE = 0, CCCR.INIT = 0 */
     IfxCan_Node_disableConfigurationChange(node);
 }
 
 
 void IfxCan_Node_forceStartExternalTimer(Ifx_CAN_N *node)
 {
-    node->TIMER.CCR.B.STRESET = FALSE; /*STSTART cannot be set to 1 if STRESET is set*/
+	/* STSTART cannot be set to 1 if STRESET is set */
+    node->TIMER.CCR.B.STRESET = FALSE;
     node->TIMER.CCR.B.STSTART = TRUE;
 }
 
 
 void IfxCan_Node_setStartExternalTimer(Ifx_CAN_N *node, boolean start)
 {
+	/* Starts the external Timer */
     node->TIMER.CCR.B.STSTART = start;
 }
 
 
 void IfxCan_Node_setResetExternalTimer(Ifx_CAN_N *node, boolean reset)
 {
+	/* Resets the Timestamp for CAN FD messages */
     node->TIMER.CCR.B.STRESET = reset;
 }
 
 
 void IfxCan_Node_tsuInitWithConfigChangeEnable(Ifx_CAN_N *node, IfxCan_TsuConfig tsuConfig)
 {
-    /* enable configuration change CCCR.CCE = 1, CCCR.INIT = 1 */
+    /* Enable configuration change CCCR.CCE = 1, CCCR.INIT = 1 */
     IfxCan_Node_enableConfigurationChange(node);
 
     IfxCan_Node_tsuInit(node, tsuConfig);
 
-    /* disable configuration change CCCR.CCE = 0, CCCR.INIT = 0 */
+    /* Disable configuration change CCCR.CCE = 0, CCCR.INIT = 0 */
     IfxCan_Node_disableConfigurationChange(node);
 }
 
 
 void IfxCan_initApConfig(IfxCan_ApConfig *config)
 {
+	/*Initializes the PROTs and APUs with default configuration */
     IfxApProt_initConfig(&config->proteConfig);
     IfxApProt_initConfig(&config->protseConfig);
     IfxApApu_initConfig(&config->apuCanConfig);
@@ -1378,26 +1418,28 @@ void IfxCan_initAp(Ifx_CAN *can, IfxCan_ApConfig *config)
 
 void IfxCan_Node_clearCreInterrupts(Ifx_CAN_N *node)
 {
-    node->CRE.IR.U = IFXCAN_CRE_IR_CLEAR; /*Interrupt clear on write of 1*/
+	/* Interrupt clear on write of 1 */
+    node->CRE.IR.U = IFXCAN_CRE_IR_CLEAR;
 }
 
 
 void IfxCan_Node_clearCreInterrupt(Ifx_CAN_N *node, IfxCan_CreInterrupt index)
 {
-    node->CRE.IR.U = (1 << index); /*Interrupt clear on write of 1*/
+	/* Interrupt clear on write of 1 */
+    node->CRE.IR.U = (1 << index);
 }
 
 
 void IfxCan_Node_setRamStartAddress(Ifx_CAN_N *node, uint16 address)
 {
-    /*Set PROTE to config before use*/
+    /* Set PROTE to config before use*/
     node->STARTADR.B.PROT_RANGE_START = (address >> 2);
 }
 
 
 void IfxCan_Node_setRamEndAddress(Ifx_CAN_N *node, uint16 address)
 {
-    /*Set PROTE to config before use*/
+    /* Set PROTE to config before use*/
     node->ENDADR.B.PROT_RANGE_END = (address >> 2);
 }
 
@@ -1423,12 +1465,14 @@ void IfxCan_configureAccessToCans(IfxApApu_ApuConfig *apConfig)
 
 void IfxCan_disableModuleCreWatchdog(Ifx_CAN *can)
 {
+	/* Disable CRE Watchdog */
     can->WDT.B.EN = 0;
 }
 
 
 void IfxCan_enableModuleCreWatchdog(Ifx_CAN *can, uint16 fastPrescalar, uint16 slowPrescalar)
 {
+	/* Enable and configure prescalars of CRE Watchdog */
     can->WDT.B.EN   = 1;
     can->WDT.B.FWDP = fastPrescalar;
     can->WDT.B.SWDP = slowPrescalar;
@@ -1437,6 +1481,7 @@ void IfxCan_enableModuleCreWatchdog(Ifx_CAN *can, uint16 fastPrescalar, uint16 s
 
 void IfxCan_enableCreNodeWatchdogGroups(Ifx_CAN *can, IfxCan_NodeId nodeId, IfxCan_CreWatchdogGroups *enableGroups)
 {
+	/*Enable/Disable the Cre Watchdog groups of the selected node */
     Ifx_CAN_N *nodePtr = (Ifx_CAN_N *)&can->N[nodeId];
     nodePtr->ERRCTRL.B.WDG1 = enableGroups->group1;
     nodePtr->ERRCTRL.B.WDG2 = enableGroups->group2;
@@ -1446,6 +1491,7 @@ void IfxCan_enableCreNodeWatchdogGroups(Ifx_CAN *can, IfxCan_NodeId nodeId, IfxC
 
 void IfxCan_enableCreNodeErrorInterrupts(Ifx_CAN *can, IfxCan_NodeId nodeId, IfxCan_CreErrorInterruptEnable *enableInterrupts)
 {
+	/* Enable/Disable the Cre Error Interrupts of the selected nodes */
     Ifx_CAN_N *nodePtr = (Ifx_CAN_N *)&can->N[nodeId];
     nodePtr->ERRCTRL.B.RWD0IE = enableInterrupts->rxWatchdogTimeout0;
     nodePtr->ERRCTRL.B.RWD1IE = enableInterrupts->rxWatchdogTimeout1;
@@ -1503,6 +1549,7 @@ uint32 IfxCan_Node_getFdBaudRate(Ifx_CAN_N *node)
 
     return baudrate;
 }
+
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

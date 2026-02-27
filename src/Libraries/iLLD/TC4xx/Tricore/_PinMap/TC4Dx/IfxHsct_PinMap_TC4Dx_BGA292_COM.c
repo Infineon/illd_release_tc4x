@@ -2,7 +2,7 @@
  * \file IfxHsct_PinMap_TC4Dx_BGA292_COM.c
  * \brief HSCT  details
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *

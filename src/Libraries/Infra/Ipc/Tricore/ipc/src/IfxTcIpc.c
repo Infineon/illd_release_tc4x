@@ -1,6 +1,6 @@
 /**
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2020 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -219,7 +219,7 @@ IfxMailbox_Status IfxTcIpc_Rpc(unsigned int id, unsigned int num_args, int *args
 			   mbx->command = IfxMailbox_Command_none;
 
 			   IfxCpu_releaseMutex(&resourceLock);
-			   return status;
+			   return ((IfxMailbox_Status)status);
 		   }
 		   else
 		   {

@@ -2,7 +2,7 @@
  * \file IfxAdc_Cdsp.c
  * \brief ADC CDSP details
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -60,8 +60,11 @@
 /******************************************************************************/
 
 /** \brief Function to convert buffer size in half word from enum
- * \param value Enum of circular buffer
- * \return Return size of buffer in bytes from enum value
+ *
+ * \param[in] value Enum of circular buffer
+ *            Range: \ref IfxAdc_Cdsp_BufferSize
+ *
+ * \retval Return size of buffer in bytes from enum value
  */
 IFX_INLINE uint16 IfxAdc_Cdsp_getBufferSize(IfxAdc_Cdsp_BufferSize value);
 
@@ -70,54 +73,69 @@ IFX_INLINE uint16 IfxAdc_Cdsp_getBufferSize(IfxAdc_Cdsp_BufferSize value);
 /******************************************************************************/
 
 /** \brief Function to the configure boundary
- * \param dsp Pointer to Dsp core sfr
- * \param config pointer to configuration of boundary
- * \return None
+ *
+ * \param[inout] dsp    Pointer to Dsp core sfr
+ * \param[in]    config pointer to configuration of boundary
+ *
+ * \retval None
  */
 IFX_STATIC void IfxAdc_Cdsp_configureBoundary(Ifx_ADC_CDSP_DSP *dsp, IfxAdc_Cdsp_BoundaryConfig *config);
 
 /** \brief Setup Triggers for DSP core
- * \param dsp Pointer to DSP core sfr
- * \param triggerCfg Pointer to the trigger Configuration
- * \return None
+ *
+ * \param[inout] dsp        Pointer to DSP core sfr
+ * \param[in]    triggerCfg Pointer to the trigger Configuration
+ *
+ * \retval None
  */
 IFX_STATIC void IfxAdc_Cdsp_setupTriggers(Ifx_ADC_CDSP_DSP *dsp, IfxAdc_Cdsp_TriggerConfig *triggerCfg);
 
 /** \brief Function to setup the result buffer.
- * \param queueConfig Pointer to queue configuration
- * \param dsp Pointer to dsp core handle
- * \return Return
- * FALSE --> Setting up of result buffer is successful
- * TRUE --> Issue in setting up of result buffer
+ *
+ * \param[inout] queueConfig Pointer to queue configuration
+ * \param[in]    dsp         Pointer to dsp core handle
+ *
+ * \retval 
+ * Return FALSE --> Setting up of result buffer is successful
+ * Return TRUE  --> Issue in setting up of result buffer
  */
 IFX_STATIC boolean IfxAdc_Cdsp_setupBuffer(IfxAdc_Cdsp_QueueConfig *queueConfig, IfxAdc_Cdsp_Dsp *dsp);
 
 /** \brief Function to the configure DMA
- * \param queue Pointer to queue configuration
- * \param dsp Pointer to handle of Dsp core
- * \return None
+ *
+ * \param[inout] queue Pointer to queue configuration
+ * \param[in]    dsp   Pointer to handle of Dsp core
+ *
+ * \retval None
  */
 IFX_STATIC void IfxAdc_Cdsp_configureDma(IfxAdc_Cdsp_QueueConfig *queue, IfxAdc_Cdsp_Dsp *dsp);
 
 /** \brief Function to update internal handle information from DMA.
- * \param dsp Pointer to dsp core handle
- * \return None
+ *
+ * \param[inout] dsp Pointer to dsp core handle
+ *
+ * \retval None
  */
 IFX_STATIC void IfxAdc_Cdsp_updateHandleInfoFromDma(IfxAdc_Cdsp_Dsp *dsp);
 
 /** \brief Configures the software Integrator of the Cdsp core
- * \param dsp Pointer to DSP core sfr
- * \param integratorCfg Pointer to the software Integrator Configuration
- * \return None
+ *
+ * \param[inout] dsp           Pointer to DSP core sfr
+ * \param[in]    integratorCfg Pointer to the software Integrator Configuration
+ *
+ * \retval None
  */
 IFX_STATIC void IfxAdc_Cdsp_setupIntegrator(Ifx_ADC_CDSP_DSP *dsp, IfxAdc_Cdsp_SwIntegratorConfig *integratorCfg);
 
 /** \brief Updates the input address for the selected filter in the CDSP core
- * \param inputsel CDSP input selection (TMADC, DSADC and GP register)
- * \param dccmInAddress Pointer to the DCCM input address for the selected filter
- * \return None
+ *
+ * \param[in]  inputsel      CDSP input selection (TMADC, DSADC and GP register)
+ *                           Range: \ref IfxAdc_CdspInput
+ * \param[out] dccmAddr      Pointer to the DCCM input address for the selected filter
+ *
+ * \retval None
  */
-IFX_STATIC void IfxAdc_Cdsp_updateInputAddress(IfxAdc_CdspInput inputsel, uint32 *dccmInAddress);
+IFX_STATIC void IfxAdc_Cdsp_updateInputAddress(IfxAdc_CdspInput inputsel, uint32 *dccmAddr);
 
 
 /******************************************************************************/
@@ -145,8 +163,9 @@ IFX_INLINE uint16 IfxAdc_Cdsp_getBufferSize(IfxAdc_Cdsp_BufferSize value)
 /*-------------------------Function Implementations---------------------------*/
 /******************************************************************************/
 
-void IfxAdc_Cdsp_updateInputAddress(IfxAdc_CdspInput inputsel, uint32 *dccmInAddress)
+void IfxAdc_Cdsp_updateInputAddress(IfxAdc_CdspInput inputsel, uint32 *dccmAddr)
 {
+    volatile uint32 *dccmInAddress = dccmAddr;
 
     if(dccmInAddress != NULL_PTR)
     {
@@ -376,8 +395,8 @@ void IfxAdc_Cdsp_initDspCore(IfxAdc_Cdsp_Dsp *dsp, IfxAdc_Cdsp_DspCoreConfig *co
         {}
 
         /* Clear CDSP ICCM and DCCM memory to avoid Ecc errors */
-        uint32 *IccmAddr = (uint32 *)IFXADC_CDSP_GETICCM_ADDRESS(coreId);
-        uint32 *dccmAddr = (uint32 *)IFXADC_CDSP_GETDCCM_ADDRESS(coreId);
+        volatile uint32 *IccmAddr = (volatile uint32 *)IFXADC_CDSP_GETICCM_ADDRESS(coreId);
+        volatile uint32 *dccmAddr = (volatile uint32 *)IFXADC_CDSP_GETDCCM_ADDRESS(coreId);
 
         for (index = 0u; index < (ADC_CDSP_DSP0_ICCM_SIZE / 4U); index++)
         {
@@ -559,7 +578,7 @@ uint16 IfxAdc_Cdsp_readDspCoreResult(IfxAdc_Cdsp_Dsp *dsp)
 {
     Ifx_ADC_CDSP_DSP *dspSfrPtr  = dsp->dspSFR;
     uint16           *resultPtr  = &(dsp->result.result0[0]);
-    uint16            result     = (uint16)dspSfrPtr->RES[IfxAdc_CdspResultReg_0].U;
+    uint16            result     = 0u;
     uint32            tempResVal = 0u;
 
     //RES 0
@@ -623,6 +642,11 @@ uint16 IfxAdc_Cdsp_readDspCoreResult(IfxAdc_Cdsp_Dsp *dsp)
             result = dsp->result.result0[0];
         }
     }
+	else
+	{
+		/* last updated result */
+		result = (uint16)dspSfrPtr->RES[IfxAdc_CdspResultReg_0].U;
+	}
 
     return result;
 }
@@ -1247,7 +1271,7 @@ IfxAdc_Status IfxAdc_Cdsp_readPredictiveMaintenanceResult(IfxAdc_Cdsp_Dsp *dsp, 
     {
         for (index = 0u; index < numOfChannels; index++)
         {
-            uint32 *stat0ResultPtr = (uint32 *)(&dspSfrPtr->DCCM[0] + IFXADC_CDSP_STAT0_DCCM_OFFSET + (index * 2u));
+            volatile uint32 *stat0ResultPtr = (uint32 *)(&dspSfrPtr->DCCM[0] + IFXADC_CDSP_STAT0_DCCM_OFFSET + (index * 2u));
             resultPtr[index].minValue = (sint16)stat0ResultPtr[0];
             resultPtr[index].maxValue = (sint16)(stat0ResultPtr[0] >> 16u);
             resultPtr[index].avgValue = (sint16)stat0ResultPtr[1];

@@ -2,9 +2,9 @@
  * \file IfxHsphy_Mp8g.c
  * \brief HSPHY MP8G details
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-07-30 13:41:15
  *
  *
  *                                 IMPORTANT NOTICE
@@ -109,13 +109,13 @@ boolean IfxHsphy_Mp8g_setPhyRefClockSel(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_PhyInde
 #if IFXHSPHY_IS_TRGTDEVICE_PCIE
         if (device == IfxHsphy_TrgtDevice_pcie)
         {
-            //PCIE
+            /* PCIE */
             hsphyRegPtr->PHY[phyIndex].CTRL1.B.PRS = 1; /* 0b1, IFXHSPHY_PHY0_REFCLKSEL_PAD */
         }
 #endif /* #if IFXHSPHY_IS_TRGTDEVICE_PCIE */
         if (device == IfxHsphy_TrgtDevice_xgmac)
         {
-            //XGMAC
+            /* XGMAC */
             hsphyRegPtr->PHY[phyIndex].CTRL1.B.PRS = 0; /* 0b0, IFXHSPHY_PHY0_REFCLKSEL_ALT */
         }
         else
@@ -133,8 +133,9 @@ boolean IfxHsphy_Mp8g_setPhyRefClockSel(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_PhyInde
         if ((device == IfxHsphy_TrgtDevice_eth) || (device == IfxHsphy_TrgtDevice_trace))
 #endif /* #if IFXHSPHY_IS_TRGTDEVICE_XGMAC */
         {
-            //XGMAC/ETH or TRACE
-            hsphyRegPtr->PHY[phyIndex].CTRL1.B.PRS = 0;     /* 0b0, IFXHSPHY_PHY1_REFCLKSEL_ALT */
+            /* XGMAC/ETH or TRACE */
+            /* 0b0, IFXHSPHY_PHY1_REFCLKSEL_ALT */
+            hsphyRegPtr->PHY[phyIndex].CTRL1.B.PRS = 0;     
         }
         else
         {
@@ -147,13 +148,15 @@ boolean IfxHsphy_Mp8g_setPhyRefClockSel(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_PhyInde
     {
         if (device == IfxHsphy_TrgtDevice_pcie)
         {
-            //PCIE
-            hsphyRegPtr->PHY[phyIndex].CTRL1.B.PRS = 1; /* 0b1, IFXHSPHY_PHY2_REFCLKSEL_PAD */
+            /* PCIE */
+            /* 0b1, IFXHSPHY_PHY2_REFCLKSEL_PAD */
+            hsphyRegPtr->PHY[phyIndex].CTRL1.B.PRS = 1;
         }
         else if (device == IfxHsphy_TrgtDevice_trace)
         {
-            //TPCS
-            hsphyRegPtr->PHY[phyIndex].CTRL1.B.PRS = 0; /* 0b0, IFXHSPHY_PHY2_REFCLKSEL_ALT */
+            /* TPCS */
+            /* 0b0, IFXHSPHY_PHY2_REFCLKSEL_ALT */
+            hsphyRegPtr->PHY[phyIndex].CTRL1.B.PRS = 0; 
         }
         else
         {
@@ -176,13 +179,13 @@ boolean IfxHsphy_Mp8g_selFunction(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_PhyIndex phyI
 #if IFXHSPHY_IS_TRGTDEVICE_PCIE
         if (device == IfxHsphy_TrgtDevice_pcie)
         {
-            //PCIE
+            /* PCIE */
             hsphyRegPtr->PHY[phyIndex].CTRL1.B.FSP = 1;
         }
 #endif /* #if IFXHSPHY_IS_TRGTDEVICE_PCIE */
         if (device == IfxHsphy_TrgtDevice_xgmac)
         {
-            //XGMAC
+            /* XGMAC */
             hsphyRegPtr->PHY[phyIndex].CTRL1.B.FSP = 0;
         }
         else
@@ -200,12 +203,12 @@ boolean IfxHsphy_Mp8g_selFunction(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_PhyIndex phyI
         if (device == IfxHsphy_TrgtDevice_eth)
 #endif /* #if IFXHSPHY_IS_TRGTDEVICE_XGMAC */		
         {
-            // XGMAC/ETH
+            /* XGMAC/ETH */
             hsphyRegPtr->PHY[phyIndex].CTRL1.B.FSP = 0;
         }
         else if (device == IfxHsphy_TrgtDevice_trace)
         {
-            //TPCS
+            /* TPCS */
             hsphyRegPtr->PHY[phyIndex].CTRL1.B.FSP = 1;
         }
         else
@@ -219,12 +222,12 @@ boolean IfxHsphy_Mp8g_selFunction(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_PhyIndex phyI
     {
         if (device == IfxHsphy_TrgtDevice_pcie)
         {
-            //PCIE
+            /* PCIE */
             hsphyRegPtr->PHY[phyIndex].CTRL1.B.FSP = 0;
         }
         else if (device == IfxHsphy_TrgtDevice_trace)
         {
-            //TPCS
+            /* TPCS */
             hsphyRegPtr->PHY[phyIndex].CTRL1.B.FSP = 1;
         }
         else
@@ -252,7 +255,7 @@ boolean IfxHsphy_Mp8g_isPhyReady(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_PhyIndex phyIn
     if (phyIndex == IfxHsphy_PhyIndex_1)
 #endif	/* #if IFXHSPHY_IS_PHY0_AVAILABLE && IFXHSPHY_IS_PHY2_AVAILABLE */
     {
-        //Check if the PHY is ready by checking if SRAM loading start.
+        /* Check if the PHY is ready by checking if SRAM loading start. */
         ret = (hsphyRegPtr->PHY[phyIndex].CTRL1.B.INITDONE == 1);
     }
     else
@@ -278,7 +281,7 @@ boolean IfxHsphy_Mp8g_setExtLdDone(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_PhyIndex phy
     if (phyIndex == IfxHsphy_PhyIndex_1)
 #endif /* #if IFXHSPHY_IS_PHY0_AVAILABLE && IFXHSPHY_IS_PHY2_AVAILABLE */
     {
-        //Check if the PHY is ready by checking if SRAM loading start.
+        /* Check if the PHY is ready by checking if SRAM loading start. */
         if (hsphyRegPtr->PHY[phyIndex].CTRL1.B.EXTLDDONE != 1)
         {
             hsphyRegPtr->PHY[phyIndex].CTRL1.B.EXTLDDONE = 1;

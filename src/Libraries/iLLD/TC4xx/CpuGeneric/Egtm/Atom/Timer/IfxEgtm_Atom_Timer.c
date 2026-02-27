@@ -2,7 +2,7 @@
  * \file IfxEgtm_Atom_Timer.c
  * \brief EGTM TIMER details
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -94,7 +94,7 @@ boolean IfxEgtm_Atom_Timer_init(IfxEgtm_Atom_Timer *driver, const IfxEgtm_Atom_T
     /* Only count direction "up" is supported */
     if (config->countDir == IfxEgtm_Atom_Timer_CountDir_up)
     {
-        /* Initialize handle */
+        /* Initializes handle */
         {
             driver->egtm           = config->egtm;
             driver->clsIndex       = config->cluster;
@@ -111,12 +111,12 @@ boolean IfxEgtm_Atom_Timer_init(IfxEgtm_Atom_Timer *driver, const IfxEgtm_Atom_T
                 else
                 {
                     result = FALSE;
-                    IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, result); /* triggerOut is required */
+                    IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, result); /* TriggerOut is required */
                 }
             }
             else
             {
-                driver->triggerChannel = driver->timerChannel; // Set to timer channel to disable its use
+                driver->triggerChannel = driver->timerChannel; /* Sets to timer channel to disable its use */
             }
 
             driver->agc              = (Ifx_EGTM_CLS_ATOM_AGC *)(volatile void *)&driver->atom->AGC.GLB_CTRL;
@@ -126,14 +126,14 @@ boolean IfxEgtm_Atom_Timer_init(IfxEgtm_Atom_Timer *driver, const IfxEgtm_Atom_T
             driver->agcDisableUpdate = 0;
         }
 
-        /* Initialize the timer part */
+        /* Initializes the timer part */
         {
-            /* Set CTRL register */
+            /* Sets CTRL register */
             IfxEgtm_Atom_Ch_configurePwmMode(driver->atom, driver->timerChannel, config->clock,
                 (Ifx_ActiveState)config->trigger.risingEdgeAtPeriod, IfxEgtm_Atom_Ch_ResetEvent_onCm0,
                 IfxEgtm_Atom_Ch_OutputTrigger_generate);
 
-            /* Store Clock frequency in the driver */
+            /* Stores Clock frequency in the driver */
             IfxEgtm_Atom_Timer_updateInputFrequency(driver);
 
             /* This if block has no effect. TODO: Remove/review */
@@ -143,37 +143,37 @@ boolean IfxEgtm_Atom_Timer_init(IfxEgtm_Atom_Timer *driver, const IfxEgtm_Atom_T
                 IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, FALSE);
             }
 
-            /* Set PWM frequency by setting CM0 register */
+            /* Sets PWM frequency by setting CM0 register */
             (void)IfxEgtm_Atom_Timer_setFrequency(driver, config->frequency);
 
-            /* Initialize CN0 (counter register) with an initial offset configured by user */
+            /* Initializes CN0 (counter register) with an initial offset configured by user */
             driver->offset = IfxEgtm_sToTick(driver->clockFreq, (float32)1.0f / config->frequency * config->startOffset);
             IfxEgtm_Atom_Ch_setCounterValue(driver->atom, driver->timerChannel, driver->offset);
 
-            /* Initialize the trigger part */
+            /* Initializes the trigger part */
             IfxEgtm_Atom_Timer_addToChannelMask(driver, driver->timerChannel);
         }
 
-        /* Initialize the trigger part */
+        /* Initializes the trigger part */
         if (driver->triggerEnabled == TRUE)
         {
             IfxEgtm_Atom_Ch triggerChannel     = driver->triggerChannel;
             uint16          triggerChannelMask = (uint16)((uint16)1u << (uint16)triggerChannel);
 
-            /* Set channel signal level */
+            /* Sets channel signal level */
             IfxEgtm_Atom_Ch_setSignalLevel(driver->atom, triggerChannel, (config->trigger.risingEdgeAtPeriod == TRUE) ? Ifx_ActiveState_high : Ifx_ActiveState_low);
 
             if (triggerChannel != driver->timerChannel)
             {
-                /* Set CTRL register */
+                /* Sets CTRL register */
                 IfxEgtm_Atom_Ch_configurePwmMode(driver->atom, triggerChannel, config->clock,
                     (Ifx_ActiveState)config->trigger.risingEdgeAtPeriod, IfxEgtm_Atom_Ch_ResetEvent_onTrigger,
                     IfxEgtm_Atom_Ch_OutputTrigger_forward);
 
-                /* Initialize CN0 (counter register) with an initial offset configured by user */
+                /* Initializes CN0 (counter register) with an initial offset configured by user */
                 IfxEgtm_Atom_Ch_setCounterValue(driver->atom, triggerChannel, driver->offset);
 
-                /* Set channels to start counter when trigger is received TODO: Remove? */
+                /* Sets channels to start counter when trigger is received TODO: Remove? */
                 IfxEgtm_Atom_Agc_enableChannels(driver->agc, triggerChannelMask, 0, FALSE);
 
                 /* Add trigger channel to channel mask */
@@ -183,13 +183,13 @@ boolean IfxEgtm_Atom_Timer_init(IfxEgtm_Atom_Timer *driver, const IfxEgtm_Atom_T
             /* Signal must go out of the EGTM even if the port outpout is not enabled */
             IfxEgtm_Atom_Agc_enableChannelsOutput(driver->agc, triggerChannelMask, 0, FALSE);
 
-            /* Initialize the port */
+            /* Initializes the port */
             if ((config->trigger.outputEnabled == TRUE) && (config->initPins == TRUE))
             {
                 IfxEgtm_PinMap_setAtomTout(config->triggerOut, config->trigger.outputMode, config->trigger.outputDriver);
             }
 
-            /* Set CM1 register */
+            /* Sets CM1 register */
             IfxEgtm_Atom_Timer_setTrigger(driver, config->trigger.triggerPoint);
         }
 
@@ -228,15 +228,15 @@ boolean IfxEgtm_Atom_Timer_init(IfxEgtm_Atom_Timer *driver, const IfxEgtm_Atom_T
             }
         }
 
-        /* Transfer values from shadow registers */
+        /* Transfers values from shadow registers */
         {
-            /* Enable force update from shadow of timer/trigger channel */
+            /* Enables force update from shadow of timer/trigger channel */
             IfxEgtm_Atom_Agc_setChannelsForceUpdate(driver->agc, driver->channelsMask, 0, 0, 0);
 
-            /* Give host trigger to start channel(s) */
+            /* Gives host trigger to start channel(s) */
             IfxEgtm_Atom_Agc_trigger(driver->agc);
 
-            /* Disable force update from shadow of timer/trigger channel */
+            /* Disables force update from shadow of timer/trigger channel */
             IfxEgtm_Atom_Agc_setChannelsForceUpdate(driver->agc, 0, driver->channelsMask, 0, 0);
         }
     }

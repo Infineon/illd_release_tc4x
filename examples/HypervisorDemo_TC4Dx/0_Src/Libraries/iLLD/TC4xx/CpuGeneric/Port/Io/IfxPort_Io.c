@@ -2,9 +2,9 @@
  * \file IfxPort_Io.c
  * \brief PORT IO details
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-09-05 09:59:59
  *
  *
  *                                 IMPORTANT NOTICE

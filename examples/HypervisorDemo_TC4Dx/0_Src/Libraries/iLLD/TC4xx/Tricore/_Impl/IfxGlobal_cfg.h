@@ -4,7 +4,6 @@
  * \ingroup IfxLld_Global
  *
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -56,7 +55,7 @@
 #include "Ifx_Cfg.h"
 
 #if defined DEVICE_TC4DX
-#include "IfxGlobal_cfg_TC4Dx.h"
+#include "TC4Dx/IfxGlobal_cfg_TC4Dx.h"
 #endif
 
 #endif /* IFXGLOBAL_H */

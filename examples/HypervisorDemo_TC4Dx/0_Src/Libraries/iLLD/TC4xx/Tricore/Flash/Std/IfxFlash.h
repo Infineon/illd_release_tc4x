@@ -3,9 +3,9 @@
  * \brief FLASH  basic functionality
  * \ingroup IfxLld_Flash
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-04-17 09:41:12 
  *
  *
  *                                 IMPORTANT NOTICE
@@ -40,6 +40,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  *
+ * \author Sai Kiran B
  *
  * \defgroup IfxLld_Flash_Std_Enumerations Enumerations
  * \ingroup IfxLld_Flash_Std

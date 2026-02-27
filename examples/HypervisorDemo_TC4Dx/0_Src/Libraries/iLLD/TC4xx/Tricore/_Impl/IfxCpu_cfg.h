@@ -3,9 +3,9 @@
  * \brief CPU on-chip implementation data
  * \ingroup IfxLld_Cpu
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-08-01 14:28:31
  *
  *
  *                                 IMPORTANT NOTICE
@@ -58,7 +58,7 @@
 #include "Ifx_Cfg.h"
 
 #if defined DEVICE_TC4DX
-#include "IfxCpu_cfg_TC4Dx.h"
+#include "TC4Dx/IfxCpu_cfg_TC4Dx.h"
 #endif
 
 #endif /* IFXCPU_CFG_H */

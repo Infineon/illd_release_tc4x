@@ -2,7 +2,7 @@
  * \file IfxHsphy_Dll.c
  * \brief HSPHY DLL details
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -74,20 +74,24 @@ boolean IfxHsphy_Dll_xspiInit(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_Xspi_XspiCfg *con
     {
         hsphyRegPtr->DLL.CFG.B.PMODE = config->dllCfg.dllCfgPmodePads;
     }
+    /* PLL clock frequency */
+    hsphyRegPtr->DLL.CFG.B.REFCLKSE = 1; 
 
-    hsphyRegPtr->DLL.CFG.B.REFCLKSE = 1; // PLL clock frequency
-
-    // Depending on the interface frequency update the FMODE
+    /* Depending on the interface frequency update the FMODE */
     hsphyRegPtr->DLL.CFG.B.FMODE = config->dllCfg.dllFreqMode;
 
     hsphyRegPtr->DLL.CFG.B.TXCFG = config->dllCfg.txClkSkew;
     hsphyRegPtr->DLL.CFG.B.RXCFG = config->dllCfg.rxClkSkew;
-    hsphyRegPtr->DLL.CFG.B.POWER = 1;            //Switch on the DLL power
+    /* Switch on the DLL power    */
+    hsphyRegPtr->DLL.CFG.B.POWER = 1;            
 
-    hsphyRegPtr->DLL.CFG.B.TXEN  = 1;            //enables the TX clock
-    hsphyRegPtr->DLL.CFG.B.RXEN  = 1;            //enables the RX clock
+    /* Enables the TX clock */
+    hsphyRegPtr->DLL.CFG.B.TXEN  = 1;  
+     /* Enables the RX clock */          
+    hsphyRegPtr->DLL.CFG.B.RXEN  = 1;      
 
-    while (hsphyRegPtr->DLL.CFG.B.LOCKSTAT != 1) //poll until the LOCKSTAT is set
+    /* Poll until the LOCKSTAT is set */
+    while (hsphyRegPtr->DLL.CFG.B.LOCKSTAT != 1) 
     {
         IFXHSPHY_LOOP_TIMEOUT_CHECK(timeoutCycleCount, timeOutError);
     }
@@ -98,11 +102,13 @@ boolean IfxHsphy_Dll_xspiInit(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_Xspi_XspiCfg *con
 
 boolean IfxHsphy_Dll_rgmiiInit(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_Geth_RgmiiCfg *config)
 {
-    //Module is enabled in the IfxHsphy_enableModule()
+    /* Module is enabled in the IfxHsphy_enableModule() */
     uint32 timeoutCycleCount = IFXHSPHY_MAX_TIMEOUT;
     uint8  timeOutError      = 0U;
     hsphyRegPtr->CMNCFG.B.FSR     = 1;
-    hsphyRegPtr->DLL.CFG.B.PEN3VX = config->dllCfg.dllOutputVolt; //Depending on the desired voltage of operation set 1 or 0
+
+    /* Depending on the desired voltage of operation set 1 or 0 */
+    hsphyRegPtr->DLL.CFG.B.PEN3VX = config->dllCfg.dllOutputVolt; 
 
     if (config->dllCfg.dllOutputVolt == IfxHsphy_DllOutputVoltage_1P8V)
     {
@@ -113,19 +119,24 @@ boolean IfxHsphy_Dll_rgmiiInit(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_Geth_RgmiiCfg *c
         hsphyRegPtr->DLL.CFG.B.PMODE = config->dllCfg.dllCfgPmodePads;
     }
 
-    //FMODE is set to 0 if output freqmax req is less than 166MHz freq allowed for RGMII is 125MHz
+    /* FMODE is set to 0 if output freqmax req is less than 166MHz freq allowed for RGMII is 125MHz */
     hsphyRegPtr->DLL.CFG.B.FMODE    = 0;
     hsphyRegPtr->DLL.CFG.B.REFCLKSE = config->dllCfg.dllRefClkSel;
 
     hsphyRegPtr->DLL.CFG.B.TXCFG    = config->dllCfg.txClkSkew;
     hsphyRegPtr->DLL.CFG.B.RXCFG    = config->dllCfg.rxClkSkew;
 
-    hsphyRegPtr->DLL.CFG.B.POWER    = 1;         //Switch on the DLL power
+    /* Switch on the DLL power */
+    hsphyRegPtr->DLL.CFG.B.POWER    = 1;         
 
-    hsphyRegPtr->DLL.CFG.B.TXEN     = 1;         // to enable/disable TX clk
-    hsphyRegPtr->DLL.CFG.B.RXEN     = 1;         // to enable/disable RX clk
+    /* To enable/disable TX clk */
+    hsphyRegPtr->DLL.CFG.B.TXEN     = 1;  
 
-    while (hsphyRegPtr->DLL.CFG.B.LOCKSTAT != 1) //polling to check the lock status
+    /* To enable/disable RX clk  */
+    hsphyRegPtr->DLL.CFG.B.RXEN     = 1;         
+
+    /* Poll until the LOCKSTAT is set */
+    while (hsphyRegPtr->DLL.CFG.B.LOCKSTAT != 1) 
     {
         IFXHSPHY_LOOP_TIMEOUT_CHECK(timeoutCycleCount, timeOutError);
     }
@@ -136,9 +147,12 @@ boolean IfxHsphy_Dll_rgmiiInit(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_Geth_RgmiiCfg *c
 
 void IfxHsphy_Dll_xspiDeInit(Ifx_HSPHY *hsphyRegPtr)
 {
-    hsphyRegPtr->DLL.CFG.B.TXEN  = 0;            /* disable the TX clock */
-    hsphyRegPtr->DLL.CFG.B.RXEN  = 0;            /* disable the RX clock */
-    hsphyRegPtr->DLL.CFG.B.POWER = 0;            /* Switch off the DLL power */
+    /* Disable the TX clock */
+    hsphyRegPtr->DLL.CFG.B.TXEN  = 0;  
+    /* Disable the RX clock */          
+    hsphyRegPtr->DLL.CFG.B.RXEN  = 0;         
+    /* Switch off the DLL power */   
+    hsphyRegPtr->DLL.CFG.B.POWER = 0;            
 }
 
 #if defined (_TASKING_) || defined (_ghs_)

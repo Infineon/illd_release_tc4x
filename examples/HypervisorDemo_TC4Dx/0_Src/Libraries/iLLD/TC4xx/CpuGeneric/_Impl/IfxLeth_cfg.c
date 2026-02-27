@@ -2,9 +2,9 @@
  * \file IfxLeth_cfg.c
  * \brief LETH on-chip implementation data
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-10-12 12:00:00
  *
  *
  *                                 IMPORTANT NOTICE
@@ -41,6 +41,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  *
+ * \author Yadunandan Puttaswamy<yadunandan.puttaswamy@infineon.com>
  *
  */
 

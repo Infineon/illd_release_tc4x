@@ -3,7 +3,7 @@
  * \brief SENT on-chip implementation data
  * \ingroup IfxLld_Sent
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -58,7 +58,7 @@
 #include "Ifx_Cfg.h"
 
 #if defined DEVICE_TC4DX
-#include "IfxSent_cfg_TC4Dx.h"
+#include "TC4Dx/IfxSent_cfg_TC4Dx.h"
 #endif
 
 #endif /* IFXSENT_CFG_H */

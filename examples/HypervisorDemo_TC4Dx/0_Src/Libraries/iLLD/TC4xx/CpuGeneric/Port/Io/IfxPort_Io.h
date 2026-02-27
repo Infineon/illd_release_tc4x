@@ -3,9 +3,9 @@
  * \brief PORT IO details
  * \ingroup IfxLld_Port
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-09-05 09:59:59
  *
  *
  *                                 IMPORTANT NOTICE
@@ -208,7 +208,13 @@ typedef struct
 /******************************************************************************/
 
 /**
- * \return None
+ * \brief Initializes the Port I/O module with the provided configuration.
+ *
+ * \param[in] config Pointer to the configuration structure of type IfxPort_Io_Config,
+ *                   which contains the initialization settings for the Port I/O module.
+ *
+ * \retval None
+ *
  */
 IFX_EXTERN void IfxPort_Io_initModule(const IfxPort_Io_Config *config);
 

@@ -2,9 +2,9 @@
  * \file IfxApApu.c
  * \brief AP basic functionality
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-07-30 18:04:56
  *
  *
  *                                 IMPORTANT NOTICE

@@ -3,9 +3,9 @@
  * \brief HSSL  basic functionality
  * \ingroup IfxLld_Hssl
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2024-07-19 12:44:21
  *
  *
  *                                 IMPORTANT NOTICE
@@ -40,6 +40,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  *
+ * \author Yadunandan Puttaswamy<yadunandan.puttaswamy@infineon.com>
  *
  * \defgroup IfxLld_Hssl_Std_Enumerations Enumerations
  * \ingroup IfxLld_Hssl_Std

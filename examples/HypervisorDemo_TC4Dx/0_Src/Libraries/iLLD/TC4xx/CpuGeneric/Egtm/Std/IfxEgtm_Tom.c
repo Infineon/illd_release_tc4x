@@ -2,9 +2,9 @@
  * \file IfxEgtm_Tom.c
  * \brief EGTM  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-12-13 09:40:09
  *
  *
  *                                 IMPORTANT NOTICE
@@ -122,10 +122,10 @@ float32 IfxEgtm_Tom_Ch_getFrequency(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channe
 
     if (counterResetEvent == IfxEgtm_Tom_Ch_ResetEvent_onCm0)
     {
-        /* 1. Get channel input frequency */
+        /* 1. Gets channel input frequency */
         sourceFrequency = IfxEgtm_Tom_Ch_getClockFrequency(&MODULE_EGTM, tom, channel);
 
-        /* 2. Calculate Period Ticks */
+        /* 2. Calculates Period Ticks */
         if (tom->CH[channel].CTRL.B.UDMODE == 0u)  /* Channel counter running in continuous counting up mode */
         {
             periodTicks = tom->CH[channel].CM0.U;
@@ -135,7 +135,7 @@ float32 IfxEgtm_Tom_Ch_getFrequency(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channe
             periodTicks = (tom->CH[channel].CM0.U - 1u) << 1u;
         }
 
-        /* 3. Calculate PWM frequency */
+        /* 3. Calculates PWM frequency */
         frequency = sourceFrequency / (float32)periodTicks;
     }
 
@@ -149,10 +149,10 @@ float32 IfxEgtm_Tom_Ch_getDuty(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel)
     uint32                    cm0Reg, cm1Reg, periodReg;
     IfxEgtm_Tom_Ch_ResetEvent counterResetEvent;
 
-    /* 1. Read counter reset event */
+    /* 1. Reads counter reset event */
     counterResetEvent = (IfxEgtm_Tom_Ch_ResetEvent)tom->CH[channel].CTRL.B.RST_CCU0;
 
-    /* 2. Read register content */
+    /* 2. Reads register content */
     cm0Reg = tom->CH[channel].CM0.U;
     cm1Reg = tom->CH[channel].CM1.U;
 
@@ -174,7 +174,7 @@ float32 IfxEgtm_Tom_Ch_getDuty(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel)
         periodReg = tom->CH[tempChannel].CM0.U;
     }
 
-    /* 4. Calculate Duty percentage */
+    /* 4. Calculates Duty percentage */
     if (tom->CH[channel].CTRL.B.UDMODE == 0u)                     /* Channel counter running in continuous counting up mode */
     {
         if (counterResetEvent == IfxEgtm_Tom_Ch_ResetEvent_onCm0) /* Duty exists during CN0 = [0, CM1] */

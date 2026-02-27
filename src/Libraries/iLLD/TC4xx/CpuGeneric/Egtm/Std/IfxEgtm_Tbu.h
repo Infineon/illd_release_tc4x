@@ -3,7 +3,7 @@
  * \brief EGTM  basic functionality
  * \ingroup IfxLld_Egtm
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -84,30 +84,67 @@ typedef enum
 /******************************************************************************/
 
 /** \brief Enables the channel
- * \param egtm Pointer to EGTM module
- * \param cluster Cluster index
- * \param channel TBU Time stamps
- * \return None
+ *
+ * \param[inout] egtm    Pointer to EGTM module
+ * \param[in]    cluster Cluster index
+ *                       Range: \ref: IfxEgtm_Cluster
+ * \param[in]    channel TBU Time stamps
+ *                       Range: \ref: IfxEgtm_Tbu_Ts
+ *
+ * \retval None
  */
 IFX_INLINE void IfxEgtm_Tbu_enableChannel(Ifx_EGTM *egtm, IfxEgtm_Cluster cluster, IfxEgtm_Tbu_Ts channel);
 
+/** \brief Disables the specified TBU channel.
+ *
+ * \param[inout] egtm    Pointer to EGTM module
+ * \param[in]    cluster Cluster index
+ *                       Range: \ref: IfxEgtm_Cluster
+ * \param[in]    channel TBU Time stamps
+ *                       Range: \ref: IfxEgtm_Tbu_Ts
+ *
+ * \retval None
+ */
+IFX_INLINE void IfxEgtm_Tbu_disableChannel(Ifx_EGTM *egtm, IfxEgtm_Cluster cluster, IfxEgtm_Tbu_Ts channel);
+
 /** \brief Returns the clock frequency
- * \param egtm Pointer to EGTM module
- * \param cluster Cluster index
- * \param channel TBU Time stamps
- * \return frequency
+ *
+ * \param[in] egtm    Pointer to EGTM module
+ * \param[in] cluster Cluster index
+ *                    Range: \ref: IfxEgtm_Cluster
+ * \param[in] channel TBU Time stamps
+ *                    Range: \ref: IfxEgtm_Tbu_Ts
+ *
+ * \retval frequency
  */
 IFX_INLINE float32 IfxEgtm_Tbu_getClockFrequency(Ifx_EGTM *egtm, IfxEgtm_Cluster cluster, IfxEgtm_Tbu_Ts channel);
 
 /** \brief Function to check if a TBU channel is enabled.
  * Returns TRUE if the corresponding channel is enabled
  * Returns FALSE if the corresponding channel is disabled.
- * \param egtm Pointer to EGTM SFR
- * \param cluster Cluster index
- * \param channel Channel of TBU
- * \return TRUE: channel is enabled
+ *
+ * \param[in] egtm    Pointer to EGTM SFR
+ * \param[in] cluster Cluster index
+ *                    Range: \ref: IfxEgtm_Cluster
+ * \param[in] channel Channel of TBU
+ *                    Range: \ref: IfxEgtm_Tbu_Ts
+ *
+ * \retval TRUE: channel is enabled
  */
 IFX_INLINE boolean IfxEgtm_Tbu_isChannelEnabled(Ifx_EGTM *egtm, IfxEgtm_Cluster cluster, IfxEgtm_Tbu_Ts channel);
+
+/**
+ * \brief Configures the TBU time base value for the specified channel.
+ *
+ * \param[inout] gtm	 Pointer to the EGTM module instance.
+ * \param[in]	 channel TBU Time stamps. Range: \ref IfxEgtm_Tbu_Ts
+ * \param[in]	 base 	 Time base value to be set.
+ *                		 Range: - For Channel0 : 0 to 0x7FFFFFF
+ *                        	 	- For Channel 1,2 : 0 to 0xFFFFFF
+ *
+ * \retval None
+ */
+IFX_INLINE void IfxEgtm_Tbu_setChannelBase(Ifx_EGTM *gtm, IfxEgtm_Cluster cluster, IfxEgtm_Tbu_Ts channel, uint32 base);
 
 /** \} */
 
@@ -120,6 +157,14 @@ IFX_INLINE void IfxEgtm_Tbu_enableChannel(Ifx_EGTM *egtm, IfxEgtm_Cluster cluste
     uint32 shift = (uint32)channel << 1u;
 
     Ifx__ldmst(&egtm->CLS[cluster].TBU.CHEN.U, (uint32)((uint32)3u << shift), ((uint32)IfxEgtm_FeatureControl_enable << shift));
+}
+
+
+IFX_INLINE void IfxEgtm_Tbu_disableChannel(Ifx_EGTM *egtm, IfxEgtm_Cluster cluster, IfxEgtm_Tbu_Ts channel)
+{
+    uint32 shift = (uint32)channel << 1u;
+
+    Ifx__ldmst(&egtm->CLS[cluster].TBU.CHEN.U, (uint32)((uint32)3u << shift), ((uint32)IfxEgtm_FeatureControl_disable << shift));
 }
 
 
@@ -154,6 +199,27 @@ IFX_INLINE boolean IfxEgtm_Tbu_isChannelEnabled(Ifx_EGTM *egtm, IfxEgtm_Cluster 
 
     enabled = (enable_status == (uint32)IfxEgtm_FeatureControl_enabled) ? TRUE : FALSE;
     return enabled;
+}
+
+
+IFX_INLINE void IfxEgtm_Tbu_setChannelBase(Ifx_EGTM *egtm, IfxEgtm_Cluster cluster, IfxEgtm_Tbu_Ts channel, uint32 base)
+{
+    if(channel == IfxEgtm_Tbu_Ts_0)
+    {
+        egtm->CLS[cluster].TBU.CH0_BASE.B.BASE = (base & IFX_EGTM_CLS_TBU_CH0_BASE_BASE_MSK);  /**< \brief Masking the time base register value with lower 27bit  */
+    }
+    else if(channel == IfxEgtm_Tbu_Ts_1)
+    {
+        egtm->CLS[cluster].TBU.CH1.BASE.B.BASE = (base & IFX_EGTM_CLS_TBU_CH_BASE_BASE_MSK);  /**< \brief Masking the time base register value with lower 24bit  */
+    }
+    else if(channel == IfxEgtm_Tbu_Ts_2)
+    {
+        egtm->CLS[cluster].TBU.CH2.BASE.B.BASE = (base & IFX_EGTM_CLS_TBU_CH_BASE_BASE_MSK);  /**< \brief Masking the time base register value with lower 24bit  */
+    }
+    else
+    {
+        IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, FALSE);                         /**< \brief Wrong Selection of channel */
+    }
 }
 
 

@@ -2,9 +2,9 @@
  * \file IfxAsclin_cfg.c
  * \brief ASCLIN on-chip implementation data
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2024-02-06 14:37:11
  *
  *
  *                                 IMPORTANT NOTICE

@@ -2,7 +2,7 @@
  * \file IfxDre.c
  * \brief DRE  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -62,25 +62,29 @@
 
 void IfxDre_resetModule(Ifx_DRE *dre)
 {
-    dre->RST.CTRLA.B.KRST = 1;          /* Only if both Kernel reset bits are set a reset is executed */
+	/* Only if both Kernel reset bits are set a reset is executed */
+    dre->RST.CTRLA.B.KRST = 1;
     dre->RST.CTRLB.B.KRST = 1;
 
-    while (0 == dre->RST.STAT.B.KRST)   /* Wait until reset is executed */
+    /* Wait until reset is executed */
+    while (0 == dre->RST.STAT.B.KRST)
     {}
 
-    dre->RST.CTRLB.B.STATCLR = 1;       /* Clear Kernel reset status bit */
+    /* Clear Kernel reset status bit */
+    dre->RST.CTRLB.B.STATCLR = 1;
 
-    while (dre->RST.STAT.B.KRST == 1)   /* Wait until KRST is cleared, only after this reset sequence is completed */
+    /* Wait until KRST is cleared, only after this reset sequence is completed */
+    while (dre->RST.STAT.B.KRST == 1)
     {}
 }
 
 
 void IfxDre_disableModule(Ifx_DRE *dre)
 {
-    /*Disable module */
+    /* Disable module */
     dre->CLC.B.DISR = 1U;
 
-    /*Wait until module is disabled*/
+    /* Wait until module is disabled */
     while (IfxDre_isModuleEnabled(dre) == TRUE)
     {}
 }
@@ -88,10 +92,10 @@ void IfxDre_disableModule(Ifx_DRE *dre)
 
 void IfxDre_enableModule(Ifx_DRE *dre)
 {
-    /*Enable module, disregard Sleep Mode request */
+    /* Enable module, disregard Sleep Mode request */
     dre->CLC.B.DISR = 0U;
 
-    /*Wait until module is enabled*/
+    /* Wait until module is enabled */
     while (IfxDre_isModuleEnabled(dre) == FALSE)
     {}
 }
@@ -129,6 +133,7 @@ void IfxDre_clearBufferPendingRequest(Ifx_DRE *dre, uint8 bufferIndex)
 {
     if (bufferIndex < 6)
     {
+    	/* Write 1 to clear */
         dre->EIBUF[bufferIndex].STATUS.B.BPRC = 1;
     }
 }
@@ -136,20 +141,25 @@ void IfxDre_clearBufferPendingRequest(Ifx_DRE *dre, uint8 bufferIndex)
 
 boolean IfxDre_getEibufPendingRequest(Ifx_DRE *dre, uint8 bufferIndex)
 {
+	/* Gets and returns the status of corresponding Ethernet Input Buffer's Buffer Pending Request */
     return (boolean)(dre->EIBUF[bufferIndex].STATUS.B.BPR);
 }
 
 
 void IfxDre_initApConfig(IfxDre_ApConfig *config)
 {
+	/* Initialize PROTE configuration structure with default configuration */
     IfxApProt_initConfig(&config->proteConfig);
+    /* Initialize PROTSE configuration structure with default configuration */
     IfxApProt_initConfig(&config->protseConfig);
+    /* Initialize APU configuration structure with default configuration */
     IfxApApu_initConfig(&config->apuConfig);
 
     uint8 i = 0;
 
     for (i = 0; i < IFXDRE_NUM_EIBUF_BUFFERS; i++)
     {
+    	/* Initialize ETH APU configuration structure with default configuration */
         IfxApApu_initConfig(&config->ethApuConfig[i]);
     }
 }
@@ -162,14 +172,15 @@ void IfxDre_initAp(Ifx_DRE *dre, IfxDre_ApConfig *config)
     IfxApProt_init((Ifx_PROT_PROT *)&dre->PROTSE, &config->protseConfig);
 
     /* Change the state to CONFIG, Configure APU and set PROT state back to RUN */
-    /* Initialize the APU */
     IfxApProt_setState((Ifx_PROT_PROT *)&dre->PROTSE, IfxApProt_State_config);
+    /* Initialize the APU */
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&dre->ACCEN, &config->apuConfig);
 
     uint8 i = 0;
 
     for (i = 0; i < IFXDRE_NUM_EIBUF_BUFFERS; i++)
     {
+    	/* Initialize the APU */
         IfxApApu_init((Ifx_ACCEN_ACCEN *)&dre->ETH[i].ACCEN, &config->ethApuConfig[i]);
     }
 
@@ -185,7 +196,7 @@ void IfxDre_setInterruptEnable(Ifx_DRE *dre, boolean enable, IfxDre_InterruptLin
     }
     else
     {
-        uint32 fixedMaskUpper16 = 0x0000FFFF; /*Only 16 lines*/
+        uint32 fixedMaskUpper16 = 0x0000FFFF; /* Only 16 lines */
         uint32 maskvalue        = ~(1 << index);
         dre->IE.U = (dre->IE.U & (fixedMaskUpper16 & maskvalue));
     }
@@ -194,6 +205,7 @@ void IfxDre_setInterruptEnable(Ifx_DRE *dre, boolean enable, IfxDre_InterruptLin
 
 boolean IfxDre_getInterruptLineStatusFlag(Ifx_DRE *dre, IfxDre_InterruptLine index)
 {
+	/* Returns the DRE Interrupt Line status */
     if (dre->INTSIG.U & (1 << index))
     {
         return TRUE;
@@ -207,72 +219,84 @@ boolean IfxDre_getInterruptLineStatusFlag(Ifx_DRE *dre, IfxDre_InterruptLine ind
 
 boolean IfxDre_getDMemWaterMarkFlag(Ifx_DRE *dre, uint8 index)
 {
+	/* Gets and returns the DMEM Water Mark Flag Status */
     return dre->DMEM[index].STATUS.B.WMF;
 }
 
 
 boolean IfxDre_getDMemWrapAroundFlag(Ifx_DRE *dre, uint8 index)
 {
+	/* Gets and returns the DMEM Warp Around Flag Status */
     return dre->DMEM[index].STATUS.B.WAF;
 }
 
 
 void IfxDre_clearDMemWaterMarkFlag(Ifx_DRE *dre, uint8 index)
 {
+	/* Write 1 to clear */
     dre->DMEM[index].STATUS.U = 1 << IFX_DRE_DMEM_STATUS_WMF_OFF;
 }
 
 
 void IfxDre_clearDMemWrapAroundFlag(Ifx_DRE *dre, uint8 index)
 {
+	/* Write 1 to clear */
     dre->DMEM[index].STATUS.U = 1 << IFX_DRE_DMEM_STATUS_WAF_OFF;
 }
 
 
 boolean IfxDre_get_CIBL_Status_BufferFullFlag(Ifx_DRE *dre)
 {
+	/* Gets and returns the status of Buffer Full Flag in CAN Input Buffer List Status register */
     return dre->CIBL.STATUS.B.BF;
 }
 
 
 boolean IfxDre_get_COBL_Status_BufferFullFlag(Ifx_DRE *dre)
 {
+	/* Gets and returns the status of Buffer Full Flag in CAN Output Buffer List Status register */
     return dre->COBL.STATUS.B.BF;
 }
 
 
 boolean IfxDre_get_EIBUF_Status_EthernetFrameErrorFlag(Ifx_DRE *dre, uint8 index)
 {
+	/* Gets and returns the status of Ethernet Frame Error Flag in Ethernet Input Buffer Status register */
     return dre->EIBUF[index].STATUS.B.FE;
 }
 
 
 void IfxDre_clear_EIBUF_Status_EthernetFrameErrorFlag(Ifx_DRE *dre, uint8 index)
 {
+	/* Write 1 to clear */
     dre->EIBUF[index].STATUS.B.FE = 1;
 }
 
 
 boolean IfxDre_get_EOBUF_Status_TxRequestFlag(Ifx_DRE *dre, uint8 index)
 {
+	/* Gets and returns the status of Transmit Request Flag in Ethernet Output Buffer Status register */
     return dre->EOBUF[index].STATUS.B.TXREQ;
 }
 
 
 void IfxDre_clear_EOBUF_Status_TxRequestFlag(Ifx_DRE *dre, uint8 index)
 {
+	/* Write 1 to clear */
     dre->EOBUF[index].STATUS.B.TXREQ = 1;
 }
 
 
 boolean IfxDre_get_EIBUF_Status_EthernetFrameCompleteFlag(Ifx_DRE *dre, uint8 index)
 {
+	/* Gets and returns the status of Frame Complete Flag in Ethernet Input Buffer Status register */
     return dre->EIBUF[index].STATUS.B.FC;
 }
 
 
 void IfxDre_clear_EIBUF_Status_EthernetFrameCompleteFlag(Ifx_DRE *dre, uint8 index)
 {
+	/* Write 1 to clear */
     dre->EIBUF[index].STATUS.B.FC = 1;
 }
 
@@ -282,7 +306,8 @@ void IfxDre_getAndClearInterruptLine8Status(Ifx_DRE *dre, IfxDre_Interrupt_Line8
     Ifx_DRE_CIBL_STATUS ciblStatus;
     ciblStatus.U       = dre->CIBL.STATUS.U;
 
-    dre->CIBL.STATUS.U = 0xC0000; /* Write 1 to clear CRCE and WDTE, BF is read only and updated by H/w */
+    /* Write 1 to clear CRCE and WDTE, BF is read only and updated by H/w */
+    dre->CIBL.STATUS.U = 0xC0000;
 
     status->CIBL_BF    = ciblStatus.B.BF;
     status->CIBL_CRCE  = ciblStatus.B.CRCE;
@@ -295,7 +320,8 @@ void IfxDre_getAndClearInterruptLine9Status(Ifx_DRE *dre, IfxDre_Interrupt_Line9
     Ifx_DRE_COBL_STATUS coblStatus;
     coblStatus.U            = dre->COBL.STATUS.U;
 
-    dre->COBL.STATUS.B.WDTE = 1; /* Write 1 to clear WDTE, BF is read only and updated by H/w */
+    /* Write 1 to clear WDTE, BF is read only and updated by H/w */
+    dre->COBL.STATUS.B.WDTE = 1;
 
     status->COBL_BF         = coblStatus.B.BF;
     status->COBL_WDTE       = coblStatus.B.WDTE;
@@ -314,8 +340,10 @@ void IfxDre_getAndClearInterruptLine10Status(Ifx_DRE *dre, IfxDre_Interrupt_Line
         lvStatus[i].U           = dre->EIBUF[i].STATUS.U;
         error[i].U              = dre->EIBUF[i].ERROR.U;
 
-        dre->EIBUF[i].STATUS.U |= 0x6A00; /* Write 1 to clear */
-        dre->EIBUF[i].ERROR.U   = 7;      /*Clear Logic: BF = 1, RDESE = 1, WDTE = 1 */
+        /* Write 1 to clear */
+        dre->EIBUF[i].STATUS.U |= 0x6A00;
+        /* Clear Logic: BF = 1, RDESE = 1, WDTE = 1 */
+        dre->EIBUF[i].ERROR.U   = 7;
     }
 
     status->EIBUF0_CFE     = lvStatus[0].B.CFE;
@@ -383,6 +411,7 @@ void IfxDre_getAndClearInterruptLine11Status(Ifx_DRE *dre, IfxDre_Interrupt_Line
     status->EIBUF4_RXREQ    = dre->EIBUF[4].STATUS.B.RXREQ;
     status->EIBUF5_RXREQ    = dre->EIBUF[5].STATUS.B.RXREQ;
 
+    /* Write 1 to clear */
     dre->EIBUF[0].STATUS.U |= 0x2000;
     dre->EIBUF[1].STATUS.U |= 0x2000;
     dre->EIBUF[2].STATUS.U |= 0x2000;
@@ -400,7 +429,7 @@ void IfxDre_getAndClearInterruptLine12Status(Ifx_DRE *dre, IfxDre_Interrupt_Line
     status->RS_IRT   = lRoutingStatus.B.IRT;
     status->RS_NMFE  = lRoutingStatus.B.NMFE;
 
-    /*Write 1 to clear bits*/
+    /* Write 1 to clear bits */
     dre->RS.U |= 0x00030000;
 }
 
@@ -420,7 +449,7 @@ void IfxDre_getAndClearInterruptLine13Status(Ifx_DRE *dre, IfxDre_Interrupt_Line
     status->FEDID            = lMoveEngineErrorStatus.B.FEDID;
     status->FEDIR            = lMoveEngineErrorStatus.B.FEDIR;
 
-    /*Write 1 to clear bits*/
+    /* Write 1 to clear bits */
     dre->ME.ERR.U = 0x0000001E;
 }
 
@@ -483,6 +512,7 @@ void IfxDre_getAndClearInterruptLine15Status(Ifx_DRE *dre, IfxDre_Interrupt_Line
     status->EOBUF4_TXREQ         = dre->EOBUF[4].STATUS.B.TXREQ;
     status->EOBUF5_TXREQ         = dre->EOBUF[5].STATUS.B.TXREQ;
 
+    /* Write 1 to clear */
     dre->EOBUF[0].STATUS.B.TXREQ = 1;
     dre->EOBUF[1].STATUS.B.TXREQ = 1;
     dre->EOBUF[2].STATUS.B.TXREQ = 1;
@@ -500,13 +530,15 @@ volatile Ifx_SRC_SRCR *IfxDre_getSrcAddress(IfxDre_InterruptLine index)
 
 void IfxDre_resetEthTxCount(Ifx_DRE *dre)
 {
-    dre->EDLSTAT.B.TXCNT = 1;  /*Write of non-zero to clear bit*/
+	/* Write of non-zero to clear bit */
+    dre->EDLSTAT.B.TXCNT = 1;
 }
 
 
 void IfxDre_resetEthRxCount(Ifx_DRE *dre)
 {
-    dre->EDLSTAT.B.RXCNT = 1;  /*Write of non-zero to clear bit*/
+	/* Write of non-zero to clear bit */
+    dre->EDLSTAT.B.RXCNT = 1;
 }
 
 
@@ -522,13 +554,15 @@ void IfxDre_getEthDescListStatus(Ifx_DRE *dre, IfxDre_EdlStatus *status)
 
 void IfxDre_clearEthTxSummary(Ifx_DRE *dre, uint8 value)
 {
-    dre->EREQ.U = (uint32)value;   /*Write of non-zero to clear bit*/
+	/* Write of non-zero to clear bit */
+    dre->EREQ.U = (uint32)value;
 }
 
 
 void IfxDre_clearEthFwdSummary(Ifx_DRE *dre, uint8 value)
 {
-    dre->EREQ.U = (uint32)value << 16;  /*Write of non-zero to clear bit*/
+	/* Write of non-zero to clear bit */
+    dre->EREQ.U = (uint32)value << 16;
 }
 
 
@@ -565,6 +599,7 @@ void IfxDre_configureAccessToDre(IfxApApu_ApuConfig *apConfig)
     /* Loop through all the Resource Partitions */
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_DRE.ACCEN, apConfig);
 }
+
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

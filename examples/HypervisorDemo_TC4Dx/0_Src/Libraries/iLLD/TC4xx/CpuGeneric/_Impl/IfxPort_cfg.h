@@ -3,9 +3,9 @@
  * \brief PORT on-chip implementation data
  * \ingroup IfxLld_Port
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-02-26 06:36:14
  *
  *
  *                                 IMPORTANT NOTICE
@@ -40,6 +40,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  *
+ * \author Dian Tresna Nugraha<Dian.Nugraha@Infineon.com>
  *
  * \defgroup IfxLld_Port PORTS
  * \ingroup IfxLld
@@ -59,7 +60,7 @@
 #include "Ifx_Cfg.h"
 
 #if defined DEVICE_TC4DX
-#include "IfxPort_cfg_TC4Dx.h"
+#include "TC4Dx/IfxPort_cfg_TC4Dx.h"
 #endif
 
 #endif /* IFXPORT_CFG_H */

@@ -3,7 +3,7 @@
  * \brief HSPHY ETHIO details
  * \ingroup IfxLld_Hsphy
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -69,11 +69,11 @@
 /******************************************************************************/
 
 /** \brief Ethernet interface mode selection
- * \param hsphySFR HSPHY pointer
- * \param ethIndex Index references to PHYs
- * \param ethCtrlExtPhySel ETH speed selection
- * \param ethPort16 TRUE: Enables PORT 16 FALSE: Disable PORT 16. Refer CMNCFG.B.FSR
- * \return None
+ * \param[inout] hsphySFR HSPHY pointer
+ * \param[in] ethIndex Index references to PHYs. Range \ref IfxHsphy_EthIndex
+ * \param[in] ethCtrlExtPhySel ETH speed selection. Range \ref IfxHsphy_EthCtrlExtPhySel
+ * \param[in] ethPort16 TRUE Enables PORT 16, FALSE Disable PORT 16. Refer CMNCFG.B.FSR
+ * \retval None
  */
 IFX_EXTERN void IfxHsphy_EthIO_interfaceSelect(Ifx_HSPHY *hsphySFR, IfxHsphy_EthIndex ethIndex, IfxHsphy_EthCtrlExtPhySel ethCtrlExtPhySel, boolean ethPort16);
 

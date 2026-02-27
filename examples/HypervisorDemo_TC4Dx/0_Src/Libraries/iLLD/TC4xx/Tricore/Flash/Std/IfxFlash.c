@@ -2,9 +2,9 @@
  * \file IfxFlash.c
  * \brief FLASH  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-03-29 06:35:43
  *
  *
  *                                 IMPORTANT NOTICE
@@ -39,6 +39,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  *
+ * \author Sai Kiran B
  *
  */ 
 

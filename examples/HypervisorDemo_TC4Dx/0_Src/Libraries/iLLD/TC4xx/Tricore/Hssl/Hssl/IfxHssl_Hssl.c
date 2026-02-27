@@ -2,9 +2,9 @@
  * \file IfxHssl_Hssl.c
  * \brief HSSL HSSL details
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2024-07-19 12:44:22
  *
  *
  *                                 IMPORTANT NOTICE
@@ -39,6 +39,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  *
+ * \author Yadunandan Puttaswamy<yadunandan.puttaswamy@infineon.com>
  *
  */
 

@@ -3,9 +3,9 @@
  * \brief PPUC on-chip implementation data
  * \ingroup IfxLld_Ppuc
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-03-29 06:51:47
  *
  *
  *                                 IMPORTANT NOTICE
@@ -58,7 +58,7 @@
 #include "Ifx_Cfg.h"
 
 #if defined DEVICE_TC4DX
-#include "IfxPpuc_cfg_TC4Dx.h"
+#include "TC4Dx/IfxPpuc_cfg_TC4Dx.h"
 #endif
 
 #endif /* IFXPPUC_CFG_H */

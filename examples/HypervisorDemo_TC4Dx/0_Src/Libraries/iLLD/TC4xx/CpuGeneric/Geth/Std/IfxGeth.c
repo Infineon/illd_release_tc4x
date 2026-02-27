@@ -2,9 +2,9 @@
  * \file IfxGeth.c
  * \brief GETH  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2024-12-02 13:10:34
  *
  *
  *                                 IMPORTANT NOTICE
@@ -82,9 +82,11 @@ void IfxGeth_enableModule(Ifx_GETH *gethSFR)
     IfxApProt_setState((Ifx_PROT_PROT *)&(gethSFR->PROTE), IfxApProt_State_config);
 #endif /* #if (IFX_PROT_ENABLED == 1U) */
 #endif /* #if IFXGETH_IS_PROTE_AVAILABLE */
-    if (IfxGeth_isModuleEnabled(gethSFR) != 1)        /* if module is not enabled already */
+    /* if module is not enabled already */
+    if (IfxGeth_isModuleEnabled(gethSFR) != 1)
     {
-        gethSFR->CLC.B.DISR = 0;                      /* set the enable request */
+    	/* set the enable request */
+        gethSFR->CLC.B.DISR = 0;
     }
 #if IFXGETH_IS_PROTE_AVAILABLE
 #if (IFX_PROT_ENABLED == 1U)
@@ -103,15 +105,19 @@ void IfxGeth_resetModule(Ifx_GETH *gethSFR)
     IfxApProt_setState((Ifx_PROT_PROT *)&(gethSFR->PROTE), IfxApProt_State_config);
 #endif /* #if (IFX_PROT_ENABLED == 1U) */
 #endif /* #if IFXGETH_IS_PROTE_AVAILABLE */
-    gethSFR->RST.CTRLA.B.KRST = 1;          /* Only if both Kernel reset bits are set a reset is executed */
+    /* Only if both Kernel reset bits are set a reset is executed */
+    gethSFR->RST.CTRLA.B.KRST = 1;
     gethSFR->RST.CTRLB.B.KRST = 1;
 
-    while (gethSFR->RST.STAT.B.KRST == 0)   /* Wait until reset is executed */
+    /* Wait until reset is executed */
+    while (gethSFR->RST.STAT.B.KRST == 0)
     {}
 
-    gethSFR->RST.CTRLB.B.STATCLR = 1;       /* Clear Kernel reset status bit */
+    /* Clear Kernel reset status bit */
+    gethSFR->RST.CTRLB.B.STATCLR = 1;
 
-    while (gethSFR->RST.STAT.B.KRST == 1)   /* Wait until KRST is cleared, only after this reset sequence is completed */
+    /* Wait until KRST is cleared, only after this reset sequence is completed */
+    while (gethSFR->RST.STAT.B.KRST == 1)
     {}
 #if IFXGETH_IS_PROTE_AVAILABLE
 #if (IFX_PROT_ENABLED == 1U)
@@ -208,15 +214,20 @@ void IfxGeth_configureAccessToGeth(IfxApApu_ApuConfig *apConfig)
 #if IFXGETH_IS_BRIDGE_AVAILABLE
 void IfxGeth_Bridge_setPortMode(Ifx_GETH *gethSFR, IfxGeth_BridgePortMode mode)
 {
-    if (mode < 2)                                                 /*IfxGeth_BridgePortMode_singlePort0 or IfxGeth_BridgePortMode_singlePort1*/
+	/*IfxGeth_BridgePortMode_singlePort0 or IfxGeth_BridgePortMode_singlePort1*/
+    if (mode < 2)
     {
-        gethSFR->BRIDGE.FORWARD_CONTROL.B.Q_CH_MAPPING_EN = 0;    /*Single Port Mode*/
-        gethSFR->BRIDGE.FORWARD_CONTROL.B.PORT_SEL        = mode; /*Port 0 or Port 1 only to be used*/
+    	/* Single Port Mode */
+        gethSFR->BRIDGE.FORWARD_CONTROL.B.Q_CH_MAPPING_EN = 0;
+        /* Port 0 or Port 1 only to be used */
+        gethSFR->BRIDGE.FORWARD_CONTROL.B.PORT_SEL        = mode;
     }
     else /*IfxGeth_BridgePortMode_multiPort*/
     {
-        gethSFR->BRIDGE.FORWARD_CONTROL.B.Q_CH_MAPPING_EN = 1; /*Multi Port Mode*/
-        gethSFR->BRIDGE.FORWARD_CONTROL.B.PORT_SEL        = 0; /*No specific instructions, keeping default reset value*/
+    	/*Multi Port Mode*/
+        gethSFR->BRIDGE.FORWARD_CONTROL.B.Q_CH_MAPPING_EN = 1;
+        /*No specific instructions, keeping default reset value*/
+        gethSFR->BRIDGE.FORWARD_CONTROL.B.PORT_SEL        = 0;
     }
 }
 
@@ -229,13 +240,16 @@ void IfxGeth_Bridge_setLoopbackMode(Ifx_GETH *gethSFR, IfxGeth_BridgeLoopbackMod
 
 void IfxGeth_Bridge_flushAllPortRxQueues(Ifx_GETH *gethSFR, IfxGeth_Port portNumber)
 {
+	/* Check if the port number is for port 1 */
     if (portNumber == IfxGeth_Port_1)
     {
+    	/* Flush the receive queue for port 1 by setting the RXQ_FLUSH_PORT1 bit to 0 */
         gethSFR->BRIDGE.PORT_FLUSH_AND_LOOPBACK_CONTROL.B.RXQ_FLUSH_PORT1 = 0;
     }
 
     else
     {
+    	/* Flush the receive queue for port 0 by setting the RXQ_FLUSH_PORT0 bit to 0 */
         gethSFR->BRIDGE.PORT_FLUSH_AND_LOOPBACK_CONTROL.B.RXQ_FLUSH_PORT0 = 0;
     }
 }
@@ -243,12 +257,15 @@ void IfxGeth_Bridge_flushAllPortRxQueues(Ifx_GETH *gethSFR, IfxGeth_Port portNum
 
 void IfxGeth_Bridge_flushRxQueue(Ifx_GETH *gethSFR, IfxGeth_Port portNumber, IfxGeth_RxMtlQueue queueNumber)
 {
+	/* Check if the operation is for port 1 */
     if (portNumber == IfxGeth_Port_1)
     {
+    	/* Flush the specified receive queue for port 1 by setting the corresponding bit in RXQ_FLUSH_PORT1 */
         gethSFR->BRIDGE.PORT_FLUSH_AND_LOOPBACK_CONTROL.B.RXQ_FLUSH_PORT1 = (1 << queueNumber);
     }
     else
     {
+    	/* Flush the specified receive queue for port 0 by setting the corresponding bit in RXQ_FLUSH_PORT0 */
         gethSFR->BRIDGE.PORT_FLUSH_AND_LOOPBACK_CONTROL.B.RXQ_FLUSH_PORT0 = (1 << queueNumber);
     }
 }
@@ -273,52 +290,62 @@ void IfxGeth_Bridge_enablePortTxQueuesAndRxChannels(Ifx_GETH *gethSFR, IfxGeth_P
 
 void IfxGeth_Bridge_mapTxQueue(Ifx_GETH *gethSFR, IfxGeth_Port portNumber, IfxGeth_TxMtlQueue queueNumber, IfxGeth_BridgeTxQueueMap mapValue)
 {
+	/* Check if the operation is for port 0 */
     if (portNumber == IfxGeth_Port_0)
     {
         switch (queueNumber)
         {
         case IfxGeth_TxMtlQueue_0:
         {
+        	/* Map transmit queue 0 for port 0 to the specified mapValue */
             gethSFR->BRIDGE.TXQ_MAP_PORT_0.B.TXQ0 = mapValue;
             break;
         }
         case IfxGeth_TxMtlQueue_1:
         {
+        	/* Map transmit queue 1 for port 0 to the specified mapValue */
             gethSFR->BRIDGE.TXQ_MAP_PORT_0.B.TXQ1 = mapValue;
             break;
         }
         case IfxGeth_TxMtlQueue_2:
         {
+        	/* Map transmit queue 2 for port 0 to the specified mapValue */
             gethSFR->BRIDGE.TXQ_MAP_PORT_0.B.TXQ2 = mapValue;
             break;
         }
         case IfxGeth_TxMtlQueue_3:
         {
+        	/* Map transmit queue 3 for port 0 to the specified mapValue */
             gethSFR->BRIDGE.TXQ_MAP_PORT_0.B.TXQ3 = mapValue;
             break;
         }
         case IfxGeth_TxMtlQueue_4:
         {
+        	/* Map transmit queue 4 for port 0 to the specified mapValue */
             gethSFR->BRIDGE.TXQ_MAP_PORT_0.B.TXQ4 = mapValue;
             break;
         }
         case IfxGeth_TxMtlQueue_5:
         {
+        	/* Map transmit queue 5 for port 0 to the specified mapValue */
             gethSFR->BRIDGE.TXQ_MAP_PORT_0.B.TXQ5 = mapValue;
             break;
         }
         case IfxGeth_TxMtlQueue_6:
         {
+        	/* Map transmit queue 6 for port 0 to the specified mapValue */
             gethSFR->BRIDGE.TXQ_MAP_PORT_0.B.TXQ6 = mapValue;
             break;
         }
         case IfxGeth_TxMtlQueue_7:
         {
+        	/* Map transmit queue 7 for port 0 to the specified mapValue */
             gethSFR->BRIDGE.TXQ_MAP_PORT_0.B.TXQ7 = mapValue;
             break;
         }
         default:
         {
+        	/* If queueNumber is not recognized, reset the entire TXQ_MAP_PORT_0 register */
             gethSFR->BRIDGE.TXQ_MAP_PORT_0.U = 0;
         }
         }
@@ -329,46 +356,55 @@ void IfxGeth_Bridge_mapTxQueue(Ifx_GETH *gethSFR, IfxGeth_Port portNumber, IfxGe
         {
         case IfxGeth_TxMtlQueue_0:
         {
+        	/* Map transmit queue 0 for port 1 to the specified mapValue */
             gethSFR->BRIDGE.TXQ_MAP_PORT_1.B.TXQ0 = mapValue;
             break;
         }
         case IfxGeth_TxMtlQueue_1:
         {
+        	/* Map transmit queue 1 for port 1 to the specified mapValue */
             gethSFR->BRIDGE.TXQ_MAP_PORT_1.B.TXQ1 = mapValue;
             break;
         }
         case IfxGeth_TxMtlQueue_2:
         {
+        	/* Map transmit queue 2 for port 1 to the specified mapValue */
             gethSFR->BRIDGE.TXQ_MAP_PORT_1.B.TXQ2 = mapValue;
             break;
         }
         case IfxGeth_TxMtlQueue_3:
         {
+        	/* Map transmit queue 3 for port 1 to the specified mapValue */
             gethSFR->BRIDGE.TXQ_MAP_PORT_1.B.TXQ3 = mapValue;
             break;
         }
         case IfxGeth_TxMtlQueue_4:
         {
+        	/* Map transmit queue 4 for port 1 to the specified mapValue */
             gethSFR->BRIDGE.TXQ_MAP_PORT_1.B.TXQ4 = mapValue;
             break;
         }
         case IfxGeth_TxMtlQueue_5:
         {
+        	/* Map transmit queue 5 for port 1 to the specified mapValue */
             gethSFR->BRIDGE.TXQ_MAP_PORT_1.B.TXQ5 = mapValue;
             break;
         }
         case IfxGeth_TxMtlQueue_6:
         {
+        	/* Map transmit queue 6 for port 1 to the specified mapValue */
             gethSFR->BRIDGE.TXQ_MAP_PORT_1.B.TXQ6 = mapValue;
             break;
         }
         case IfxGeth_TxMtlQueue_7:
         {
+        	/* Map transmit queue 7 for port 1 to the specified mapValue */
             gethSFR->BRIDGE.TXQ_MAP_PORT_1.B.TXQ7 = mapValue;
             break;
         }
         default:
         {
+        	/* If queueNumber is not recognized, reset the entire TXQ_MAP_PORT_1 register */
             gethSFR->BRIDGE.TXQ_MAP_PORT_1.U = 0;
         }
         }
@@ -378,52 +414,61 @@ void IfxGeth_Bridge_mapTxQueue(Ifx_GETH *gethSFR, IfxGeth_Port portNumber, IfxGe
 
 void IfxGeth_Bridge_mapRxChannel(Ifx_GETH *gethSFR, IfxGeth_Port portNumber, IfxGeth_RxMtlQueue queueNumber, IfxGeth_BridgeRxCMap mapValue)
 {
+	/* Check if the operation is for port 0 */
     if (portNumber == IfxGeth_Port_0)
     {
         switch (queueNumber)
         {
         case IfxGeth_RxMtlQueue_0:
         {
+        	/* Map receive channel 0 for port 0 to the specified mapValue */
             gethSFR->BRIDGE.RXC_MAP_PORT_0.B.RXC0 = mapValue;
             break;
         }
         case IfxGeth_RxMtlQueue_1:
         {
+        	/* Map receive channel 1 for port 0 to the specified mapValue */
             gethSFR->BRIDGE.RXC_MAP_PORT_0.B.RXC1 = mapValue;
             break;
         }
         case IfxGeth_RxMtlQueue_2:
         {
+        	/* Map receive channel 2 for port 0 to the specified mapValue */
             gethSFR->BRIDGE.RXC_MAP_PORT_0.B.RXC2 = mapValue;
             break;
         }
         case IfxGeth_RxMtlQueue_3:
         {
+        	/* Map receive channel 3 for port 0 to the specified mapValue */
             gethSFR->BRIDGE.RXC_MAP_PORT_0.B.RXC3 = mapValue;
             break;
         }
         case IfxGeth_RxMtlQueue_4:
         {
+        	/* Map receive channel 4 for port 0 to the specified mapValue */
             gethSFR->BRIDGE.RXC_MAP_PORT_0.B.RXC4 = mapValue;
             break;
         }
         case IfxGeth_RxMtlQueue_5:
         {
+        	/* Map receive channel 5 for port 0 to the specified mapValue */
             gethSFR->BRIDGE.RXC_MAP_PORT_0.B.RXC5 = mapValue;
             break;
         }
         case IfxGeth_RxMtlQueue_6:
         {
+        	/* Map receive channel 6 for port 0 to the specified mapValue */
             gethSFR->BRIDGE.RXC_MAP_PORT_0.B.RXC6 = mapValue;
             break;
         }
         case IfxGeth_RxMtlQueue_7:
         {
+        	/* Map receive channel 7 for port 0 to the specified mapValue */
             gethSFR->BRIDGE.RXC_MAP_PORT_0.B.RXC7 = mapValue;
             break;
         }
         default:
-        {
+        {/* QueueNumber is not recognized, reset the entire RXC_MAP_PORT_0 register */
             gethSFR->BRIDGE.RXC_MAP_PORT_0.U = 0;
         }
         }
@@ -434,46 +479,55 @@ void IfxGeth_Bridge_mapRxChannel(Ifx_GETH *gethSFR, IfxGeth_Port portNumber, Ifx
         {
         case IfxGeth_RxMtlQueue_0:
         {
+        	/* Map receive channel 0 for port 1 to the specified mapValue */
             gethSFR->BRIDGE.RXC_MAP_PORT_1.B.RXC0 = mapValue;
             break;
         }
         case IfxGeth_RxMtlQueue_1:
         {
+        	/* Map receive channel 1 for port 1 to the specified mapValue */
             gethSFR->BRIDGE.RXC_MAP_PORT_1.B.RXC1 = mapValue;
             break;
         }
         case IfxGeth_RxMtlQueue_2:
         {
+        	/* Map receive channel 2 for port 1 to the specified mapValue */
             gethSFR->BRIDGE.RXC_MAP_PORT_1.B.RXC2 = mapValue;
             break;
         }
         case IfxGeth_RxMtlQueue_3:
         {
+        	/* Map receive channel 3 for port 1 to the specified mapValue */
             gethSFR->BRIDGE.RXC_MAP_PORT_1.B.RXC3 = mapValue;
             break;
         }
         case IfxGeth_RxMtlQueue_4:
         {
+        	/* Map receive channel 4 for port 1 to the specified mapValue */
             gethSFR->BRIDGE.RXC_MAP_PORT_1.B.RXC4 = mapValue;
             break;
         }
         case IfxGeth_RxMtlQueue_5:
         {
+        	/* Map receive channel 5 for port 1 to the specified mapValue */
             gethSFR->BRIDGE.RXC_MAP_PORT_1.B.RXC5 = mapValue;
             break;
         }
         case IfxGeth_RxMtlQueue_6:
         {
+        	/* Map receive channel 6 for port 1 to the specified mapValue */
             gethSFR->BRIDGE.RXC_MAP_PORT_1.B.RXC6 = mapValue;
             break;
         }
         case IfxGeth_RxMtlQueue_7:
         {
+        	/* Map receive channel 7 for port 1 to the specified mapValue */
             gethSFR->BRIDGE.RXC_MAP_PORT_1.B.RXC7 = mapValue;
             break;
         }
         default:
         {
+        	/* QueueNumber is not recognized, reset the entire RXC_MAP_PORT_1 register */
             gethSFR->BRIDGE.RXC_MAP_PORT_1.U = 0;
         }
         }
@@ -811,27 +865,35 @@ boolean IfxGeth_getMtlQueueInterruptFlag(Ifx_GETH *gethSFR, IfxGeth_PortIndex po
     switch (queueId)
     {
     case IfxGeth_MtlQueue_0:
+    	/* Check the interrupt status of queue 0 and set status to 1 if the flag is set */
         status = (gethSFR->PORT[portIndex].MTL.TCQ0.Q0_INTERRUPT_STATUS.U & (Ifx_UReg_32Bit)value);
         break;
     case IfxGeth_MtlQueue_1:
+    	/* Check the interrupt status of queue 1 and set status to 1 if the flag is set */
         status = (gethSFR->PORT[portIndex].MTL.TCQ1.Q1_INTERRUPT_STATUS.U & (Ifx_UReg_32Bit)value);
         break;
     case IfxGeth_MtlQueue_2:
+    	/* Check the interrupt status of queue 2 and set status to 1 if the flag is set */
         status = (gethSFR->PORT[portIndex].MTL.TCQ2.Q2_INTERRUPT_STATUS.U & (Ifx_UReg_32Bit)value);
         break;
     case IfxGeth_MtlQueue_3:
+    	/* Check the interrupt status of queue 3 and set status to 1 if the flag is set */
         status = (gethSFR->PORT[portIndex].MTL.TCQ3.Q3_INTERRUPT_STATUS.U & (Ifx_UReg_32Bit)value);
         break;
     case IfxGeth_MtlQueue_4:
+    	/* Check the interrupt status of queue 4 and set status to 1 if the flag is set */
         status = (gethSFR->PORT[portIndex].MTL.TCQ4.Q4_INTERRUPT_STATUS.U & (Ifx_UReg_32Bit)value);
         break;
     case IfxGeth_MtlQueue_5:
+    	/* Check the interrupt status of queue 5 and set status to 1 if the flag is set */
         status = (gethSFR->PORT[portIndex].MTL.TCQ5.Q5_INTERRUPT_STATUS.U & (Ifx_UReg_32Bit)value);
         break;
     case IfxGeth_MtlQueue_6:
+    	/* Check the interrupt status of queue 6 and set status to 1 if the flag is set */
         status = (gethSFR->PORT[portIndex].MTL.TCQ6.Q6_INTERRUPT_STATUS.U & (Ifx_UReg_32Bit)value);
         break;
     case IfxGeth_MtlQueue_7:
+    	/* Check the interrupt status of queue 7 and set status to 1 if the flag is set */
         status = (gethSFR->PORT[portIndex].MTL.TCQ7.Q7_INTERRUPT_STATUS.U & (Ifx_UReg_32Bit)value);
         break;
     }
@@ -847,27 +909,35 @@ uint32 IfxGeth_getMtlQueueInterruptFlags(Ifx_GETH *gethSFR, IfxGeth_PortIndex po
     switch (queueId)
     {
     case IfxGeth_MtlQueue_0:
+    	/* Retrieve the interrupt flags for queue 0 */
         status = (uint32)gethSFR->PORT[portIndex].MTL.TCQ0.Q0_INTERRUPT_STATUS.U;
         break;
     case IfxGeth_MtlQueue_1:
+    	/* Retrieve the interrupt flags for queue 1 */
         status = (uint32)gethSFR->PORT[portIndex].MTL.TCQ1.Q1_INTERRUPT_STATUS.U;
         break;
     case IfxGeth_MtlQueue_2:
+    	/* Retrieve the interrupt flags for queue 2 */
         status = (uint32)gethSFR->PORT[portIndex].MTL.TCQ2.Q2_INTERRUPT_STATUS.U;
         break;
     case IfxGeth_MtlQueue_3:
+    	/* Retrieve the interrupt flags for queue 3 */
         status = (uint32)gethSFR->PORT[portIndex].MTL.TCQ3.Q3_INTERRUPT_STATUS.U;
         break;
     case IfxGeth_MtlQueue_4:
+    	/* Retrieve the interrupt flags for queue 4 */
         status = (uint32)gethSFR->PORT[portIndex].MTL.TCQ4.Q4_INTERRUPT_STATUS.U;
         break;
     case IfxGeth_MtlQueue_5:
+    	/* Retrieve the interrupt flags for queue 5 */
         status = (uint32)gethSFR->PORT[portIndex].MTL.TCQ5.Q5_INTERRUPT_STATUS.U;
         break;
     case IfxGeth_MtlQueue_6:
+    	/* Retrieve the interrupt flags for queue 6 */
         status = (uint32)gethSFR->PORT[portIndex].MTL.TCQ6.Q6_INTERRUPT_STATUS.U;
         break;
     case IfxGeth_MtlQueue_7:
+    	/* Retrieve the interrupt flags for queue 7 */
         status = (uint32)gethSFR->PORT[portIndex].MTL.TCQ7.Q7_INTERRUPT_STATUS.U;
         break;
     }

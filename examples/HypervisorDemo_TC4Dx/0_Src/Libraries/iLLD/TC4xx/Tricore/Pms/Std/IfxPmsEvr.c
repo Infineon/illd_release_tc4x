@@ -2,9 +2,9 @@
  * \file IfxPmsEvr.c
  * \brief PMS  basic functionality
  *
- * \version iLLD-TC4-v2.4.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2025-11-01 10:23:10
  *
  *
  *                                 IMPORTANT NOTICE
@@ -760,19 +760,29 @@ void IfxPmsEvr_configureTristate(Ifx_PMS *pms, IfxPmsEvr_TristateConfig *config)
     Ifx_PMS_PAD_CON padCon;
     padCon.U              = pms->PAD.CON.U;
 
+    /* Configure tri-state settings for all pads and standby pads */
     padCon.B.ALLTRIST_P   = 1;
+    /* Set/Unset all pads to tri-state */
     padCon.B.ALLTRIST     = config->tristateEnable_All;
+    /* Unlock SBTRIST bit for standby pads */
     padCon.B.SBTRIST_P    = 1;
+    /* Set/Unset standby pads to tri-state */
     padCon.B.SBTRIST      = config->tristateEnable_Standby;
 
+    /* Configure ESR pins pull-down behavior */
+
+    /* Enable/Disable ESR0 pull-down resistor in standby */
     padCon.B.ESR0PD       = config->esr0PullDown;
+    /* Pull ESR2 low during STBY-to-RUN transition */
     padCon.B.ESR2WKPRUNPD = config->esr2PullDown;
+    /* Enable/Disable digital filter for PORST pin */
     padCon.B.PORSTDFEN    = config->digitalFilterEnable;
 
 #if (IFX_PROT_ENABLED == 1U)
     IfxApProt_setState((Ifx_PROT_PROT *)&(pms->PROTE), IfxApProt_State_config);
 #endif
 
+    /* Write back the updated PAD.CON register */
     pms->PAD.CON.U = padCon.U;
 
 #if (IFX_PROT_ENABLED == 1U)
@@ -824,36 +834,53 @@ boolean IfxPmsEvr_dcdcConfiguration(Ifx_PMS *pms, IfxPmsEvr_DcdcConfig *dcdcConf
     Ifx_PMS_EVRC_CON3 evrcCon3;
     boolean           evrcstatus = 1;
 
+    /* Check if the EVRC is enabled by reading the EVRC status */
     if (pms->EVRC.STAT0.B.EVRC)
     {
+    	/* Configure current configuration of EVRC.CON1 register into evrcCon1 */
         evrcCon1.U = pms->EVRC.CON1.U;
+
+        /* Configure current configuration of EVRC.CON3 register into evrcCon3 */
         evrcCon3.U = pms->EVRC.CON3.U;
 
+        /* Check if the sampling factor is between 50 and 250 inclusive */
         if ((dcdcConfig->samplingFactor >= 50) && (dcdcConfig->samplingFactor <= 250))
         {
+        	/* Set the SDFREQ with the provided samplingFactor value if within range */
             evrcCon1.B.SDFREQ = dcdcConfig->samplingFactor;
         }
         else if (dcdcConfig->samplingFactor < 50)
         {
+        	/* If the sampling factor is less than 50, set the SDFREQ to 0x32 */
             evrcCon1.B.SDFREQ = 0x32;
         }
         else
         {
+        	/* If the sampling factor is greater than 250, set the SDFREQ to 0xFA */
             evrcCon1.B.SDFREQ = 0xFA;
         }
 
+        /* Sets the SDFREQSPRD with frequency spreading configuration value */
         evrcCon1.B.SDFREQSPRD = dcdcConfig->freqSprdValue;
+        /* Sets the SYNCHYST with Hysteresis Window configuration */
         evrcCon1.B.SYNCHYST   = dcdcConfig->hystWindow;
+        /* Sets the SYNCMAXDEV with Maximum Deviation of the Synchronization Input Frequency configuration */
         evrcCon1.B.SYNCMAXDEV = dcdcConfig->maxDeviation;
 
+        /* Sets the SYNCDIVFAC with Switching frequency division factor for external synchronisation configuration */
         evrcCon3.B.SYNCDIVFAC = dcdcConfig->divider;
+        /* Sets the SYNCMUXSEL with Synchronisation Input Multiplexer configuration */
         evrcCon3.B.SYNCMUXSEL = dcdcConfig->syncInput;
+        /* Sets the SYNCIN with EVRC Input Synchronization configuration */
         evrcCon3.B.SYNCIN     = dcdcConfig->dcdcSyncInput;
 #if (IFX_PROT_ENABLED == 1U)
         IfxApProt_setState((Ifx_PROT_PROT *)&(pms->PROTE), IfxApProt_State_config);
 #endif
+        /* Writes updated CON3 settings back to EVRC.CON3 register */
         pms->EVRC.CON3.U    = evrcCon3.U;
+        /* Write updated CON1 settings back to EVRC.CON1 register */
         pms->EVRC.CON1.U    = evrcCon1.U;
+        /* Update the settings in CON0 register by setting the UP bit to 1 */
         pms->EVRC.CON0.B.UP = 1u;
 #if (IFX_PROT_ENABLED == 1U)
         IfxApProt_setState((Ifx_PROT_PROT *)&(pms->PROTE), IfxApProt_State_run);
@@ -877,12 +904,14 @@ uint32 IfxPmsEvr_scaleExtVoltageSetup(Ifx_PMS *pms, IfxPmsEvr_ExternalVoltScalin
     /* Disable Primary UV RESET */
     pms->VMONP.VDDRST.U |= ((1u << IFX_PMS_VMONPRST_RESETOFF_OFF) | (1u << IFX_PMS_VMONPRST_RESETOFF_P_OFF));
 
-    /* Disable Primary OV/UV alarms */
+    /* Disable Primary Over Voltage alarms */
     IfxPmsEvr_enablePrimaryOverVoltageAlarm(pms, IfxPmsEvr_PrimaryMonitorVoltageSource_vdd, FALSE);
+    /* Disable Primary Under Voltage alarms */
     IfxPmsEvr_enablePrimaryUnderVoltageAlarm(pms, IfxPmsEvr_PrimaryMonitorVoltageSource_vdd, FALSE);
 
-    /* Disable Secondary OV/UV alarms*/
+    /* Disable Secondary Over Voltage alarms */
     IfxPmsEvr_setOverVoltageMonitoringMode(pms, IfxPmsEvr_OverVoltageMonitoring_inactive, IfxPmsEvr_SecondaryMonitorVoltageSource_vdd);
+    /* Disable Secondary Under Voltage alarms */
     IfxPmsEvr_setUnderVoltageMonitoringMode(pms, IfxPmsEvr_UnderVoltageMonitoring_inactive, IfxPmsEvr_SecondaryMonitorVoltageSource_vdd);
 
     /* Adapting new UV reset trim value*/
@@ -891,12 +920,14 @@ uint32 IfxPmsEvr_scaleExtVoltageSetup(Ifx_PMS *pms, IfxPmsEvr_ExternalVoltScalin
 #else
     pms->VMONP.VDDRST.B.RESETTRIM = (uint16)(config->resetTrimValue / IFXPMSEVR_SARHVLSB_MV);
 #endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */
-    /* Adapt secondary under/over voltage threshold */
+    /* Adapt secondary over voltage threshold */
     IfxPmsEvr_setSecondaryOverVoltageThresholdMv(pms, config->secondaryOverVoltage, IfxPmsEvr_SecondaryMonitorVoltageSource_vdd);
+    /* Adapt secondary under voltage threshold */
     IfxPmsEvr_setSecondaryUnderVoltageThresholdMv(pms, config->secondaryUnderVoltage, IfxPmsEvr_SecondaryMonitorVoltageSource_vdd);
 
-    /* Adapt primary under/over voltage threshold */
+    /* Adapt primary over voltage threshold */
     IfxPmsEvr_setPrimaryOverVoltageThresholdMv(pms, config->primaryOverVoltage, IfxPmsEvr_PrimaryMonitorVoltageSource_vdd);
+    /* Adapt primary under voltage threshold */
     IfxPmsEvr_setPrimaryUnderVoltageThresholdMv(pms, config->primaryUnderVoltage, IfxPmsEvr_PrimaryMonitorVoltageSource_vdd);
 
 #if (IFX_PROT_ENABLED == 1U)
@@ -924,12 +955,14 @@ boolean IfxPmsEvr_scaleEvrVoltage(Ifx_PMS *pms, IfxPmsEvr_EvrcVoltScalingConfig 
         /* Disable Primary UV RESET */
         pms->VMONP.VDDRST.U |= ((1u << IFX_PMS_VMONPRST_RESETOFF_OFF) | (1u << IFX_PMS_VMONPRST_RESETOFF_P_OFF));
 
-        /* Disable Primary OV/UV alarms and adapt new OV/UV alarm threshold*/
+        /* Disable Primary Over Voltage alarms and adapt new Over Voltage alarm threshold */
         IfxPmsEvr_enablePrimaryOverVoltageAlarm(pms, IfxPmsEvr_PrimaryMonitorVoltageSource_vdd, FALSE);
+        /* Disable Primary Under Voltage alarms and adapt new Under Voltage alarm threshold */
         IfxPmsEvr_enablePrimaryUnderVoltageAlarm(pms, IfxPmsEvr_PrimaryMonitorVoltageSource_vdd, FALSE);
 
-        /* Disable Seconadary OV/UV alarms and adapt new OV/UV alarm threshold*/
+        /* Disable Seconadary Over Voltage alarms and adapt new Over Voltage alarm threshold */
         IfxPmsEvr_setOverVoltageMonitoringMode(pms, IfxPmsEvr_OverVoltageMonitoring_inactive, IfxPmsEvr_SecondaryMonitorVoltageSource_vdd);
+        /* Disable Seconadary Under Voltage alarms and adapt new Under Voltage alarm threshold */
         IfxPmsEvr_setUnderVoltageMonitoringMode(pms, IfxPmsEvr_UnderVoltageMonitoring_inactive, IfxPmsEvr_SecondaryMonitorVoltageSource_vdd);
 
         /* Adapting new UV reset trim value*/
@@ -939,12 +972,14 @@ boolean IfxPmsEvr_scaleEvrVoltage(Ifx_PMS *pms, IfxPmsEvr_EvrcVoltScalingConfig 
         pms->VMONP.VDDRST.B.RESETTRIM = (uint16)(config->resetTrimValue / IFXPMSEVR_SARHVLSB_MV);
 #endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */	
 
-        /* Adapt secondary under/over voltage threshold */
+        /* Adapt secondary over voltage threshold */
         IfxPmsEvr_setSecondaryOverVoltageThresholdMv(pms, config->secondaryOverVoltage, IfxPmsEvr_SecondaryMonitorVoltageSource_vdd);
+        /* Adapt secondary under voltage threshold */
         IfxPmsEvr_setSecondaryUnderVoltageThresholdMv(pms, config->secondaryUnderVoltage, IfxPmsEvr_SecondaryMonitorVoltageSource_vdd);
 
-        /* Adapt primary under/over voltage threshold */
+        /* Adapt primary over voltage threshold */
         IfxPmsEvr_setPrimaryOverVoltageThresholdMv(pms, config->primaryOverVoltage, IfxPmsEvr_PrimaryMonitorVoltageSource_vdd);
+        /* Adapt primary under voltage threshold */
         IfxPmsEvr_setPrimaryUnderVoltageThresholdMv(pms, config->primaryUnderVoltage, IfxPmsEvr_PrimaryMonitorVoltageSource_vdd);
 
         /* Set target output voltage*/
@@ -954,12 +989,16 @@ boolean IfxPmsEvr_scaleEvrVoltage(Ifx_PMS *pms, IfxPmsEvr_EvrcVoltScalingConfig 
 
         uint32 stmFreq, waitTicks;
         uint8  vokStatus;
+
+        /* Gets STM divider frequency */
         stmFreq   = IfxClock_getStmFrequency();
         waitTicks = (stmFreq / 1000000) * IFXPMSEVR_SDVOK_TIMEOUT;
+
+        /* Gets current STM tick */
         uint64 stmCountBegin = IfxStm_get(&MODULE_CPU0);
         uint64 currentCount  = stmCountBegin;
 
-        /* Wait for 20us for the SDVOK bit to set.*/
+        /* Wait for 20us for the SDVOK bit to set */
         do
         {
             vokStatus = pms->EVRC.STAT0.B.SDVOK;
@@ -970,7 +1009,7 @@ boolean IfxPmsEvr_scaleEvrVoltage(Ifx_PMS *pms, IfxPmsEvr_EvrcVoltScalingConfig 
                 timeExpire = TRUE;
             }
 
-            /* Get current STM tick */
+            /* Gets current STM tick */
             currentCount = IfxStm_get(&MODULE_CPU0);
         } while ((vokStatus != 1) && (timeExpire == FALSE));
 
@@ -981,9 +1020,9 @@ boolean IfxPmsEvr_scaleEvrVoltage(Ifx_PMS *pms, IfxPmsEvr_EvrcVoltScalingConfig 
                 (*config->errorHandler)();
             }
         }
-        else  //Re-enable UV reset and voltage monitor alarms
+        else  /* Re-enable UV reset and voltage monitor alarms */
         {
-            /* Voltage scaling successful. Re-enable UV Reset and monitor alarms*/
+            /* Voltage scaling successful. Re-enable UV Reset and monitor alarms */
             pms->VMONP.VDDRST.U       = (((pms->VMONP.VDDRST.U) & ~(1u << IFX_PMS_VMONPRST_RESETOFF_OFF)) | (1u << IFX_PMS_VMONPRST_RESETOFF_P_OFF));
             pms->VMONP.VDDCON.U      |= ((1u << IFX_PMS_VMONPCON_UVENABLE_OFF) | (1u << IFX_PMS_VMONPCON_OVENABLE_OFF));
             pms->VMONS.VDDCON.B.UVMOD = config->underVoltageMode;
@@ -1186,6 +1225,7 @@ boolean IfxPmsEvr_enableVoltageRail(Ifx_PMS *pms, IfxPmsEvr_PrimaryMonitorVoltag
 
 void IfxPmsEvr_configureAccessToPms(IfxApApu_ApuConfig *apConfig)
 {
+	/* Initialize the APU */
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_PMS.ACCEN, apConfig);
 }
 

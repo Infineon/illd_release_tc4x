@@ -2,7 +2,7 @@
  * \file Ifx_Ssw_Tc2.c
  * \brief Startup Software for Core2
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -266,6 +266,7 @@ IFX_SSW_USED void _START2(void)
 #elif defined(__ghs__)
 #pragma ghs section text=default
 #endif
+
 
 
 #if defined (_TASKING_) || defined (_ghs_)

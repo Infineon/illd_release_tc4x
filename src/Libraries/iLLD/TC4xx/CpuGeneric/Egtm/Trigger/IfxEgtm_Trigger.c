@@ -2,7 +2,7 @@
  * \file IfxEgtm_Trigger.c
  * \brief EGTM TRIGGER details
  *
- * \version iLLD-TC4-v2.4.1
+ * \version iLLD-TC4-v2.5.0
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -63,30 +63,41 @@ boolean IfxEgtm_Trigger_trigToAdc(IfxEgtm_Cluster egtmCluster, IfxEgtm_TrigSourc
 {
     boolean                   result   = FALSE;
     uint32                    idx      = 0U;
+    /* Gets a pointer to the ADC trigger table entry for the specified signal */
     IfxEgtm_Cfg_TriggerEntry *tablesel = (IfxEgtm_Cfg_TriggerEntry *)(void *)IfxEgtm_Cfg_AdcTriggerTable[adcTrigSignal];
 
+    /* Checks if the ADC trigger table entry is valid and if the cluster is compatible */
     if ((IfxEgtm_Cfg_AdcTriggerTable[adcTrigSignal] != NULL_PTR) &&
-        (tablesel[1].B.cluster == (uint32)egtmCluster))                                                                        /* check if ADC Trigger signal is compatible with cluster */
+        (tablesel[1].B.cluster == (uint32)egtmCluster))                                                                        /* Check if ADC Trigger signal is compatible with cluster */
     {
-        for (idx = 1u; idx <= IfxEgtm_Cfg_AdcTriggerTable[adcTrigSignal][0]; idx++)                                            /* loop through all SEL values */
+    	/* Loop through all SEL values in the table */
+        for (idx = 1u; idx <= IfxEgtm_Cfg_AdcTriggerTable[adcTrigSignal][0]; idx++)
         {
-            if (IfxEgtm_Cfg_AdcTriggerTable[adcTrigSignal][idx] == IFXEGTM_CFG_GETTRIGENTRY(egtmCluster, egtmSource, Channel)) /* check for valid combination */
+        	/* Checks for valid combination */
+            if (IfxEgtm_Cfg_AdcTriggerTable[adcTrigSignal][idx] == IFXEGTM_CFG_GETTRIGENTRY(egtmCluster, egtmSource, Channel))
             {
+            	/* If a match is found, set the result to TRUE and break out of the loop */
                 result = TRUE;
                 break;
             }
         }
 
+        /* If a valid combination was found, configure the trigger signal */
         if (result == TRUE)
         {
+        	/* Calculates the shift value based on the ADC trigger signal */
             uint32 shift   = ((uint32)adcTrigSignal & 0x3U) * 8u;
+            /* Calculates the trigger selection value based on the index */
             uint32 trigsel = idx << shift;
+            /* Calculates the mask value based on the shift */
             uint32 mask    = (uint32)0x1FU << shift;
 
+            /* Configures the trigger signal using the calculated values */
             Ifx__ldmst(&(MODULE_EGTM.ADC.OUT[egtmCluster].U), mask, trigsel);
         }
     }
 
+    /* Returns the result */
     return result;
 }
 
@@ -97,23 +108,32 @@ boolean IfxEgtm_Trigger_trigToSent(IfxEgtm_Cluster egtmCluster, IfxEgtm_TrigSour
     uint32                    idx      = 0U;
     IfxEgtm_Cfg_TriggerEntry *tablesel = (IfxEgtm_Cfg_TriggerEntry *)(void *)IfxEgtm_Cfg_SentTriggerTable[sentTrigSignal];
 
+    /* Checks if sent Trigger signal is compatible with cluster */
     if ((IfxEgtm_Cfg_SentTriggerTable[sentTrigSignal] != NULL_PTR) &&
-        (tablesel[1].B.cluster == (uint32)egtmCluster))                                                                          /* check if sent Trigger signal is compatible with cluster */
+        (tablesel[1].B.cluster == (uint32)egtmCluster))
     {
-        for (idx = 1u; idx <= IfxEgtm_Cfg_SentTriggerTable[sentTrigSignal][0]; idx++)                                            /* loop through all SEL values */
+    	/* Loop through all SEL values */
+        for (idx = 1u; idx <= IfxEgtm_Cfg_SentTriggerTable[sentTrigSignal][0]; idx++)
         {
-            if (IfxEgtm_Cfg_SentTriggerTable[sentTrigSignal][idx] == IFXEGTM_CFG_GETTRIGENTRY(egtmCluster, egtmSource, Channel)) /* check for valid combination */
+        	/* Checks for valid combination */
+            if (IfxEgtm_Cfg_SentTriggerTable[sentTrigSignal][idx] == IFXEGTM_CFG_GETTRIGENTRY(egtmCluster, egtmSource, Channel))
             {
+            	/* If a match is found, set the result to TRUE and break out of the loop */
                 result = TRUE;
                 break;
             }
         }
 
+        /* If a valid combination was found, configure the trigger signal */
         if (result == TRUE)
         {
+        	/* Calculates the shift value based on the SENT trigger signal */
             uint32 shift   = (uint32)sentTrigSignal * 5;
+            /* Calculates the trigger selection value based on the index */
             uint32 trigsel = idx << shift;
+            /* Calculates the mask value based on the shift */
             uint32 mask    = (uint32)0x1FU << shift;
+            /* Configures the trigger signal using the calculated values */
             Ifx__ldmst(&(MODULE_EGTM.SENT[sentModule].OUTA.U), mask, trigsel);
         }
     }
@@ -129,9 +149,11 @@ boolean IfxEgtm_Trigger_trigToPsi5(IfxEgtm_Cluster egtmCluster, IfxEgtm_TrigSour
 
     if (IfxEgtm_Cfg_Psi5TriggerTable[psi5TrigSignal] != NULL_PTR)
     {
-        for (idx = 1u; idx <= IfxEgtm_Cfg_Psi5TriggerTable[psi5TrigSignal][0]; idx++)                                            /* loop through all SEL values */
+    	/* Loop through all SEL values */
+        for (idx = 1u; idx <= IfxEgtm_Cfg_Psi5TriggerTable[psi5TrigSignal][0]; idx++)
         {
-            if (IfxEgtm_Cfg_Psi5TriggerTable[psi5TrigSignal][idx] == IFXEGTM_CFG_GETTRIGENTRY(egtmCluster, egtmSource, Channel)) /* check for valid combination */
+        	/* Checks for valid combination */
+            if (IfxEgtm_Cfg_Psi5TriggerTable[psi5TrigSignal][idx] == IFXEGTM_CFG_GETTRIGENTRY(egtmCluster, egtmSource, Channel))
             {
                 result = TRUE;
                 break;
