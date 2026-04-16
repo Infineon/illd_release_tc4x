@@ -3,7 +3,7 @@
  * \brief QSPI SPISLAVE details
  * \ingroup IfxLld_Qspi
  *
- * \version iLLD-TC4-v2.5.0
+ * \version iLLD-TC4-v2.5.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -50,6 +50,8 @@
  *
  * Clock polarity, Clock Phase for slave mode are fixed. Overriding them will cause unexpected behaviour
  * Baudrate on slave is adopted from the master clock. User configuration will not take effect.
+ * The enum IfxQspi_ShiftClock_shiftTransmitDataOnLeadingEdge corresponds to a CPH value of 1 and IfxQspi_ShiftClock_shiftTransmitDataOnTrailingEdge
+ * corresponds to a CPH value of 0, while setting the clock phase in the ECON register.
  *
  * In the following sections it will be described, how to integrate the driver into the application framework.
  *

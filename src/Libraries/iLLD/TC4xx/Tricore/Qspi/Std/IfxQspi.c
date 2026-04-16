@@ -2,7 +2,7 @@
  * \file IfxQspi.c
  * \brief QSPI  basic functionality
  *
- * \version iLLD-TC4-v2.5.0
+ * \version iLLD-TC4-v2.5.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -209,7 +209,7 @@ uint32 IfxQspi_calculateExtendedConfigurationValue(Ifx_QSPI *qspi, const uint8 c
     econ.B.C     = (diffB > 0) ? diffB : 0;
     econ.B.B     = (diffB > 0) ? maxB : halfBaud;
 
-    econ.B.CPH   = (chConfig->mode.shiftClock == IfxQspi_ShiftClock_shiftTransmitDataOnLeadingEdge) ? 0 : 1;
+    econ.B.CPH   = (chConfig->mode.shiftClock == IfxQspi_ShiftClock_shiftTransmitDataOnLeadingEdge) ? 1 : 0;
     econ.B.CPOL  = (chConfig->mode.clockPolarity == IfxQspi_ClockPolarity_idleLow) ? 0 : 1;
     econ.B.PAREN = chConfig->mode.parityCheck;
 

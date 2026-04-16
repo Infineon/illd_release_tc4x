@@ -50,6 +50,8 @@
  *
  * Clock polarity, Clock Phase for slave mode are fixed. Overriding them will cause unexpected behaviour
  * Baudrate on slave is adopted from the master clock. User configuration will not take effect.
+ * The enum IfxQspi_ShiftClock_shiftTransmitDataOnLeadingEdge corresponds to a CPH value of 1 and IfxQspi_ShiftClock_shiftTransmitDataOnTrailingEdge
+ * corresponds to a CPH value of 0, while setting the clock phase in the ECON register.
  *
  * In the following sections it will be described, how to integrate the driver into the application framework.
  *

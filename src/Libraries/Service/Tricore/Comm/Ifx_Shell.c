@@ -2,7 +2,7 @@
  * \file Ifx_Shell.c
  * \brief shell functions.
  *
- * \version iLLD-TC4-v2.5.0
+ * \version iLLD-TC4-v2.5.1
  * \copyright Copyright (c) 2019 Infineon Technologies AG. All rights reserved.
  *
  *

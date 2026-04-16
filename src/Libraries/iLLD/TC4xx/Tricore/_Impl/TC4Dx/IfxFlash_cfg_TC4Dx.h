@@ -3,7 +3,7 @@
  * \brief FLASH on-chip implementation data
  * \ingroup IfxLld_Flash
  *
- * \version iLLD-TC4-v2.5.0
+ * \version iLLD-TC4-v2.5.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
