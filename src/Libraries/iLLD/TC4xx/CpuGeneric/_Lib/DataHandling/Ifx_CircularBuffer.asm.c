@@ -2,7 +2,7 @@
  * \file Ifx_CircularBuffer.asm.c
  * \brief Circular buffer functions (assembler implementation).
  *
- * \version iLLD-TC4-v2.5.0
+ * \version iLLD-TC4-v2.5.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *

@@ -3,7 +3,7 @@
  * \brief ATAN2 lookup functions with fixed-point angle data type
  *
  *
- * \version iLLD-TC4-v2.5.0
+ * \version iLLD-TC4-v2.5.1
  * \copyright Copyright (c) 2019 Infineon Technologies AG. All rights reserved.
  *
  *

@@ -2,7 +2,7 @@
  * \file IfxQspi_SpiSlave.c
  * \brief QSPI SPISLAVE details
  *
- * \version iLLD-TC4-v2.5.0
+ * \version iLLD-TC4-v2.5.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -334,7 +334,7 @@ void IfxQspi_SpiSlave_initModuleConfig(IfxQspi_SpiSlave_Config *config, Ifx_QSPI
 {
     const IfxQspi_SpiSlave_Protocol defaultProtocol = {
         .clockPolarity = IfxQspi_ClockPolarity_idleLow,
-        .shiftClock    = IfxQspi_ShiftClock_shiftTransmitDataOnTrailingEdge,
+        .shiftClock    = IfxQspi_ShiftClock_shiftTransmitDataOnLeadingEdge,
         .dataHeading   = IfxQspi_DataHeading_msbFirst,
         .dataWidth     = 8,
         .parityMode    = Ifx_ParityMode_even

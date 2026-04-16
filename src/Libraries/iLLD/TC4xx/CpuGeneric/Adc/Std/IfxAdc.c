@@ -2,7 +2,7 @@
  * \file IfxAdc.c
  * \brief ADC  basic functionality
  *
- * \version iLLD-TC4-v2.5.0
+ * \version iLLD-TC4-v2.5.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *

@@ -2,7 +2,7 @@
  * \file IfxPsi5_PinMap_TC4Dx_BGA436_COM.c
  * \brief PSI5  details
  *
- * \version iLLD-TC4-v2.5.0
+ * \version iLLD-TC4-v2.5.1
  * \copyright Copyright (c) 2025 Infineon Technologies AG. All rights reserved.
  *
  *
