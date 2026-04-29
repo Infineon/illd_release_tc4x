@@ -5,6 +5,7 @@ illd_release_tc4x contains the following folders and file
 * `doc`      : contains the TC4xx UM and iLLD Release note
 * `examples` : contains the BaseFramework projects for the TC4xx devices 
 * `src`      : contains the source code for TC4xx
+* `IFASLL202501`      : contains the click license for TC4xx
 * `Readme.md`: Contains information about the folder structure, package usage and iLLD software
 			   release version.
 
@@ -14,11 +15,10 @@ The TC4xx BaseFramework project contains only the AppSw, the libraries are not i
 
 								  
 ## iLLD version info
-iLLD Release version	V2.5.1
+iLLD Release version	V2.6.0
 
 								   
 ## Revision History
-### V1.0
-Initial release
+For a summary of changes, please refer to Section 3.1 of the release notes in the doc folder.
 
 

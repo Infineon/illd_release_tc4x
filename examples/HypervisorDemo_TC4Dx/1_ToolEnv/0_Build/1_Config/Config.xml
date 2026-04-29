@@ -270,7 +270,7 @@
 					template="{kw:options} -m6 {kw:linkerfile} -@O={kw:mapfile} -o $@ @{kw:objfiles_listfile} {kw:custobjfiles} $(B_WINDRIVER_TRICORE_LIBS) $(B_WINDRIVER_TRICORE_LIB_INC)" />
 			</tool>
 			<tool name="Hex" type="OTHER" command="ddump">
-				<argument template="-R -o $@ ${kw:lt}" />
+				<argument template="-X -o $@ ${kw:lt}" />
 			</tool>
 			<tool name="Srec" type="OTHER" command="ddump">
 				<argument template="-R -o $@ ${kw:lt}" />
@@ -328,7 +328,7 @@
 	<specificInclude
 		internalPaths="*/Sfr/*, */Libraries/*/Tricore, */Libraries/*/Platform, */Libraries/*/CpuGeneric, */Libraries/Infra/Ipc" />
     <selection>
-	<discard files="*/Sfr/TC4Ex/*,*/Sfr/TC4Zx/*,*/Sfr/TC44x/*,*/Sfr/TC45x/*,*/Sfr/TC46x/*,*/Sfr/TC48x/*,*/Sfr/TC49x/*,*/Sfr/TC49xN/*,*/Ssw/TC4Ex/*,*/Ssw/TC4Zx/*,*/Ssw/TC44x/*,*/Ssw/TC45x/*,*/Ssw/TC46x/*,*/Ssw/TC48x/*,*/Ssw/TC49x/*,*/Ssw/TC49xN/*,*/Scr/*" />
+	<discard files="*/Sfr/TC4Ex/*,*/Sfr/TC4Zx/*,*/Sfr/TC44x/*,*/Sfr/TC45x/*,*/Sfr/TC46x/*,*/Sfr/TC48x/*,*/Sfr/TC49x/*,*/Sfr/TC49xN/*,*/Sfr/TC48xAA/*,*/Ssw/TC4Ex/*,*/Ssw/TC4Zx/*,*/Ssw/TC44x/*,*/Ssw/TC45x/*,*/Ssw/TC46x/*,*/Ssw/TC48x/*,*/Ssw/TC49x/*,*/Ssw/TC49xN/*,*/Ssw/TC48xAA/*,*/Scr/*" />
 	<selection>
 		<use files="*.cpp" ></use>
 		<assign optionSets="Tricore/Gnuc/Cc/Cpp" /></selection></selection>
