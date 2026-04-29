@@ -2,12 +2,12 @@
 
 ## Folder structure
 illd_release_tc4x contains the following folders and file
-* `doc`      : contains the TC4xx UM and iLLD Release note
-* `examples` : contains the BaseFramework projects for the TC4xx devices 
-* `src`      : contains the source code for TC4xx
-* `IFASLL202501`      : contains the click license for TC4xx
-* `Readme.md`: Contains information about the folder structure, package usage and iLLD software
-			   release version.
+* `doc`          : contains the TC4xx UM and iLLD Release note
+* `examples`     : contains the BaseFramework projects for the TC4xx devices 
+* `src`          : contains the source code for TC4xx
+* `IFASLL202501` : contains the click license for TC4xx
+* `Readme.md`    : Contains information about the folder structure, package usage and iLLD software
+			       release version.
 
 
 ## Build Instructions & Usage
