@@ -236,8 +236,9 @@ if ($Clean -and (Test-Path -LiteralPath $OutputDirectory)) {
 New-Item -ItemType Directory -Force -Path $OutputDirectory | Out-Null
 
 $lldPaths     = @($lldPath)
-$infraPaths   = if (Test-Path -LiteralPath $infraPath)   { @($infraPath) }   else { @() }
-$servicePaths = if (Test-Path -LiteralPath $servicePath) { @($servicePath) } else { @() }
+# @(if ...) ensures an empty array rather than $null when the path is absent
+$infraPaths   = @(if (Test-Path -LiteralPath $infraPath)   { $infraPath })
+$servicePaths = @(if (Test-Path -LiteralPath $servicePath) { $servicePath })
 
 $env:CFG_PATH              = ConvertTo-DoxygenPath $toolsDoxygenPath
 $env:ILLD_COMMON_FILES     = ConvertTo-DoxygenPath ([System.IO.Path]::Combine($toolsDoxygenPath, "common"))
@@ -247,9 +248,9 @@ $env:ILLD_DUT_SRC_FILES    = Join-DoxygenPathList $lldPaths
 $env:ILLD_EXCLUDE_DIR      = ""
 $env:ILLD_EXCLUDE_PATTERN  = "*/.git/* */build/* */_Reg/* */_RegInternal/*"
 $env:ILLD_HAVE_DOT         = if (Get-Command dot -ErrorAction SilentlyContinue) { "YES" } else { "NO" }
-$env:ILLD_INFRA            = if ($infraPaths.Count -gt 0) { Join-DoxygenPathList $infraPaths } else { "" }
+$env:ILLD_INFRA            = if ($infraPaths)   { Join-DoxygenPathList $infraPaths }   else { "" }
 $env:ILLD_LOGO             = ConvertTo-DoxygenPath ([System.IO.Path]::Combine($toolsDoxygenPath, "common", "images", "infineon_logo.png"))
-$env:ILLD_SRVSW            = if ($servicePaths.Count -gt 0) { Join-DoxygenPathList $servicePaths } else { "" }
+$env:ILLD_SRVSW            = if ($servicePaths) { Join-DoxygenPathList $servicePaths } else { "" }
 $env:ILLD_SSW              = ""
 $env:ILLD_STRIP_PATH       = ConvertTo-DoxygenPath $librariesPath
 $env:ILLD_VERSION          = $version
