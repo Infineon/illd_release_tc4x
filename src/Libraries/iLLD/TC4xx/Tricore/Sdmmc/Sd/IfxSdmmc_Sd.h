@@ -3,7 +3,7 @@
  * \brief SDMMC SD details
  * \ingroup IfxLld_Sdmmc
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -276,7 +276,8 @@ typedef struct
     IfxSdmmc_Dat3_InOut *dat3;            /**< \brief Dat 3 */
     IfxPort_InputMode    inputMode;       /**< \brief Input Mod efor the IN pins */
     IfxPort_PadDriver    pinDriver;       /**< \brief Speed grade of the pins */
-} IfxSdmmc_Sd_Pins;
+    IfxPort_PadDriver    pinDriverCmd;    /**< \brief Speed grade of the CMD pins */
+} IfxSdmmc_Sd_Pins; 
 
 /** \} */
 

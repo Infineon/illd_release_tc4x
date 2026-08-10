@@ -2,7 +2,7 @@
  * \file Ifx_Ssw.h
  * \brief Startup Software configuration. Can configure which core to be enabled.
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -21,7 +21,7 @@
  * defects in the licensed items, or non-infringement of third parties'
  * intellectual property rights. See the full license text for the specific
  * language governing permissions and limitations under IFASLL.
- *
+ * 
  */
 
 #ifndef IFX_SSW_H
@@ -109,7 +109,11 @@ typedef struct
     unsigned short bmhdid;              /**< \brief 0x006: Boot Mode Header ID (CODE) = B359H*/
     unsigned int   stad;                /**< \brief 0x008: User Code start address*/
     unsigned int   crc;                 /**< \brief 0x00C: Check Result for the BMI Header (offset 000H - 007H)*/
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC45X)
     unsigned int   reserved0[496];      /**< \brief 0x010: Reserved area */
+#else
+    unsigned int   reserved0[48];      /**< \brief 0x010: Reserved area */
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC45X) */
     unsigned int   pw[8];               /**< \brief 0xFD0: Password protection (8 words)*/
     unsigned int   confirmation;        /**< \brief 0xFF0: 32-bit CODE, (always same)*/
     unsigned int   reserved1;           /**< \brief 0xFF4: Reserved area */
@@ -129,10 +133,20 @@ typedef struct
     unsigned int ramInit;               /**< \brief 0x014: User selection for RTC SRAMs initialization*/
     unsigned int lbistExe;              /**< \brief 0x018: User selection for LBIST execution*/
     unsigned int hostRamInit;           /**< \brief 0x01C: User slection for HOST RAM AUTO Init */
+#ifndef DEVICE_TC45X
     unsigned int swapEna;               /**< \brief 0x020: User selection for SWAP activation*/
     unsigned int addrrEna;              /**< \brief 0x024: User selection for ADDRESS ROUTING*/
+#else
+    unsigned int reserved1[2];          /**< \brief 0x020: Reserved 1 */
+#endif /* #ifndef DEVICE_TC45X */
     unsigned int crcRtcUserCfg;         /**< \brief 0x028: Check Result for this table*/
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN)
     unsigned int reserved1[489];        /**< \brief 0x02C: Reserved area */
+#elif defined(DEVICE_TC4ZX) || defined(DEVICE_TC48X) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC44X) || defined(DEVICE_TC4PX) || defined(DEVICE_TC4EX)
+    unsigned int reserved2[41];        /**< \brief 0x02C: Reserved area */
+#elif defined(DEVICE_TC45X)
+    unsigned int reserved2[489];        /**< \brief 0x02C: Reserved area */
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) */
     unsigned int pw[8];                 /**< \brief 0xFD0: Password protection (8 words)*/
     unsigned int confirmation;          /**< \brief 0xFF0: 32-bit CODE, (always same)*/
 } Ifx_Ssw_UserCfg;
@@ -144,12 +158,33 @@ typedef struct
 {
     unsigned int csUserCfg;             /**< \brief 0x000: System address of Cs UserCfg */
     unsigned int bml;                   /**< \brief 0x004: Boot Mode Lock */
+#if defined(DEVICE_TC45X)
+    unsigned int reserved0[1];          /**< \brief 0x008: Reserved */
+#else
     unsigned int swapCsEna;             /**< \brief 0x008: User selection for SWAP activation */
+#endif /* #if defined(DEVICE_TC45X) */
     unsigned int csrmCfg;               /**< \brief 0x00C: CSRM boot selection */
     unsigned int cssRamInit;            /**< \brief 0x010: User selection for CS SRAMs initialization */
+#if !defined(DEVICE_TC4DX) && !defined(DEVICE_TC49XN)
+    unsigned int apuBypass;             /**< \brief 0x014: User selection for APU bypassing */
+#endif /* #if !defined(DEVICE_TC4DX) && !defined(DEVICE_TC49XN) */
+#if defined(DEVICE_TC45X)
+    unsigned int reserved1[1];          /**< \brief 0x018: Reserved */
+#endif /* #if defined(DEVICE_TC45X) */
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN)
     unsigned int reserved0[2];          /**< \brief 0x014: Reserved */
+#elif defined(DEVICE_TC4ZX) || defined(DEVICE_TC48X) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC44X) || defined(DEVICE_TC4PX) || defined(DEVICE_TC4EX)
+    unsigned int reserved0[1];          /**< \brief 0x014: Reserved */
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) */
     unsigned int crcCsUserCfg;          /**< \brief 0x01C: CRC Result for this table */
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN)
     unsigned int reserved1[492];        /**< \brief 0x02C: Reserved area */
+#elif defined(DEVICE_TC4ZX) || defined(DEVICE_TC48X) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC44X) || defined(DEVICE_TC4PX) || defined(DEVICE_TC4EX)
+    unsigned int reserved1[44];        /**< \brief 0x02C: Reserved area */
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) */
+#if defined(DEVICE_TC45X)
+    unsigned int reserved2[492];        /**< \brief 0x02C: Reserved area */
+#endif /* #if defined(DEVICE_TC45X) */
     unsigned int pw[8];                 /**< \brief 0xFD0: Password protection (8 words)*/
     unsigned int confirmation;          /**< \brief 0xFF0: 32-bit CODE, (always same)*/
 } Ifx_Ssw_CsUserCfg;

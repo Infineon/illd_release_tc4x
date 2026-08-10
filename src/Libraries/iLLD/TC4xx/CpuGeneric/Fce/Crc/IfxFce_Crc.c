@@ -2,7 +2,7 @@
  * \file IfxFce_Crc.c
  * \brief FCE CRC details
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -38,6 +38,7 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC48XAA) && !defined(DEVICE_TC48X)
 #include "IfxFce_Crc.h"
 
 /******************************************************************************/
@@ -248,6 +249,8 @@ void IfxFce_Crc_initModuleConfig(IfxFce_Crc_Config *config, Ifx_FCE *fce)
     config->isrTypeOfService = IfxSrc_Tos_cpu0;
     config->vmId             = IfxSrc_VmId_0;
 }
+
+#endif /* #if !defined(DEVICE_TC48XAA) && !defined(DEVICE_TC48X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

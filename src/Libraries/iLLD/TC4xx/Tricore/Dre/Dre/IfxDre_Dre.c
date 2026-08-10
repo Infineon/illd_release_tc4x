@@ -2,7 +2,7 @@
  * \file IfxDre_Dre.c
  * \brief DRE DRE details
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -39,6 +39,7 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X)
 #include "IfxDre_Dre.h"
 
 /******************************************************************************/
@@ -1157,8 +1158,13 @@ void IfxDre_Dre_initEthAddressDatabase(IfxDre_Dre *dre, IfxDre_Dre_EADConfig *co
 
     uint32   *databasePtr = (uint32 *)address;
 
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX)
     Ifx_GETH *gethSFR     = (Ifx_GETH *)&MODULE_GETH0;
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) */
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
     Ifx_LETH *lethSFR     = (Ifx_LETH *)&MODULE_LETH0;
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC4EX) */
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX)
     *databasePtr++ = (uint32)(&lethSFR->DMA.CH[config->lethMac0TxChannelNumber].TXDESC_TAIL_POINTER.U);
     *databasePtr++ = (uint32)(&lethSFR->DMA.CH[config->lethMac0RxChannelNumber].RXDESC_TAIL_POINTER.U);
 
@@ -1176,6 +1182,59 @@ void IfxDre_Dre_initEthAddressDatabase(IfxDre_Dre *dre, IfxDre_Dre_EADConfig *co
 
     *databasePtr++ = (uint32)(&gethSFR->DMA.CH[config->gethMac1TxChannelNumber].TXDESC_TAIL_LPOINTER.U);
     *databasePtr   = (uint32)(&gethSFR->DMA.CH[config->gethMac1RxChannelNumber].RXDESC_TAIL_LPOINTER.U);
+#elif defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA)
+    /* Module Address for Leth0 */
+    Ifx_LETH *lethSFR0     = (Ifx_LETH *)&MODULE_LETH0;
+    /* Module Address for Leth1 */
+    Ifx_LETH *lethSFR1     = (Ifx_LETH *)&MODULE_LETH1;
+
+    Ifx_LETH *lethSFR     = NULL_PTR;
+
+    /* For each Dma channel, we also need to know the module address */
+    lethSFR = (config->lethTxChannelNumber0Index == IfxLeth_Index_0) ? (lethSFR0) : (lethSFR1);
+
+    *databasePtr++ = (uint32)(&lethSFR->DMA.CH[config->lethTxChannelNumber0].TXDESC_TAIL_POINTER.U);
+
+    lethSFR = (config->lethRxChannelNumber0Index == IfxLeth_Index_0) ? (lethSFR0) : (lethSFR1);
+
+    *databasePtr++ = (uint32)(&lethSFR->DMA.CH[config->lethRxChannelNumber0].RXDESC_TAIL_POINTER.U);
+
+    lethSFR = (config->lethTxChannelNumber1Index == IfxLeth_Index_0) ? (lethSFR0) : (lethSFR1);
+
+    *databasePtr++ = (uint32)(&lethSFR->DMA.CH[config->lethTxChannelNumber1].TXDESC_TAIL_POINTER.U);
+
+    lethSFR = (config->lethRxChannelNumber1Index == IfxLeth_Index_0) ? (lethSFR0) : (lethSFR1);
+
+    *databasePtr++ = (uint32)(&lethSFR->DMA.CH[config->lethRxChannelNumber1].RXDESC_TAIL_POINTER.U);
+
+    lethSFR = (config->lethTxChannelNumber2Index == IfxLeth_Index_0) ? (lethSFR0) : (lethSFR1);
+
+    *databasePtr++ = (uint32)(&lethSFR->DMA.CH[config->lethTxChannelNumber2].TXDESC_TAIL_POINTER.U);
+
+    lethSFR = (config->lethRxChannelNumber2Index == IfxLeth_Index_0) ? (lethSFR0) : (lethSFR1);
+
+    *databasePtr++ = (uint32)(&lethSFR->DMA.CH[config->lethRxChannelNumber2].RXDESC_TAIL_POINTER.U);
+
+    lethSFR = (config->lethTxChannelNumber3Index == IfxLeth_Index_0) ? (lethSFR0) : (lethSFR1);
+
+    *databasePtr++ = (uint32)(&lethSFR->DMA.CH[config->lethTxChannelNumber3].TXDESC_TAIL_POINTER.U);
+
+    lethSFR = (config->lethRxChannelNumber3Index == IfxLeth_Index_0) ? (lethSFR0) : (lethSFR1);
+
+    *databasePtr = (uint32)(&lethSFR->DMA.CH[config->lethRxChannelNumber3].RXDESC_TAIL_POINTER.U);
+#else
+    *databasePtr++ = (uint32)(&lethSFR->DMA.CH[config->lethTxChannelNumber0].TXDESC_TAIL_POINTER.U);
+    *databasePtr++ = (uint32)(&lethSFR->DMA.CH[config->lethRxChannelNumber0].RXDESC_TAIL_POINTER.U);
+
+    *databasePtr++ = (uint32)(&lethSFR->DMA.CH[config->lethTxChannelNumber1].TXDESC_TAIL_POINTER.U);
+    *databasePtr++ = (uint32)(&lethSFR->DMA.CH[config->lethRxChannelNumber1].RXDESC_TAIL_POINTER.U);
+
+    *databasePtr++ = (uint32)(&lethSFR->DMA.CH[config->lethTxChannelNumber2].TXDESC_TAIL_POINTER.U);
+    *databasePtr++ = (uint32)(&lethSFR->DMA.CH[config->lethRxChannelNumber2].RXDESC_TAIL_POINTER.U);
+
+    *databasePtr++ = (uint32)(&lethSFR->DMA.CH[config->lethTxChannelNumber3].TXDESC_TAIL_POINTER.U);
+    *databasePtr   = (uint32)(&lethSFR->DMA.CH[config->lethRxChannelNumber3].RXDESC_TAIL_POINTER.U);
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) */	
 }
 
 
@@ -1224,6 +1283,9 @@ void IfxDre_Dre_setWatchdog(IfxDre_Dre *dre, IfxDre_Dre_WdgConfig *config)
     dre->dre->EWDCFG.B.EN   = 0; /* Must be disabled before re-configuration */
     dre->dre->EWDCFG.B.ETO  = config->eth.timeoutValue;
     dre->dre->EWDCFG.B.WTOE = config->eth.interruptEnable;
+#if defined(DEVICE_TC4ZX) || defined(DEVICE_TC4PX) || defined(DEVICE_TC4EX) || defined(DEVICE_TC48X)  || defined(DEVICE_TC46X)
+    dre->dre->EWDCFG.B.MWW  = config->eth.multicastWaitWriteback;
+#endif /* #if defined(DEVICE_TC4ZX)  */
     dre->dre->EWDCFG.B.EN   = config->eth.enable;
 }
 
@@ -1290,6 +1352,9 @@ void IfxDre_Dre_initTxEthDescListControlConfig(IfxDre_Dre *dre, uint8 index, Ifx
     ctrl.B.SLOTNUM               = config->slotNumber;
     ctrl.B.SAIC                  = config->sourceAddressInsertionControl;
     ctrl.B.IOC                   = config->interruptOnCompletion;
+#if defined(DEVICE_TC4EX) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC4PX) || defined(DEVICE_TC48X) || defined(DEVICE_TC46X)
+    ctrl.B.SDM                   = config->singleDescriptorModeEnable;
+#endif /* #if defined(DEVICE_TC4EX) || defined(DEVICE_TC4ZX)  */
 
     dreSFR->TETHDL[index].CTRL.U = ctrl.U;
 
@@ -1336,6 +1401,7 @@ void IfxDre_Dre_setEthForwardingElement(IfxDre_Dre *dre, uint8 index, IfxDre_Dre
     *database64Ptr      = lvalue;
 }
 
+#endif /* #if !defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

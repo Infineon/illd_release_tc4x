@@ -3,7 +3,7 @@
  * \brief DRE  basic functionality
  * \ingroup IfxLld_Dre
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -50,7 +50,9 @@
 #include "Src/Std/IfxSrc.h"
 #include "Clock/Std/IfxClock.h"
 #include "Can/Std/IfxCan.h"
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX)
 #include "Geth/Std/IfxGeth.h"
+#endif
 #include "Leth/Std/IfxLeth.h"
 
 /******************************************************************************/
@@ -306,6 +308,20 @@ typedef enum
     IfxDre_TriggerMode_timeTriggered   = 3   /**< \brief Time Triggered Transmit Mode */
 } IfxDre_TriggerMode;
 
+#if defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
+/** \brief 3 bit Option for Source Address Insertion Control in Transmit Packets.
+ * Definition in Tx Normal Descriptor TDES3.R.SAIC. Bit 25 of TDES3 (SAIC[2]) specifies the MAC Address Register (1 or 0) value that is used for Source Address insertion or replacement.
+ */
+typedef enum
+{
+    IfxDre_Eth_SourceAddressControl_notIncluded            = 0,  /**< \brief Do not include the source address. */
+    IfxDre_Eth_SourceAddressControl_insertMacAddress0      = 1,  /**< \brief Insert source address as specified in MAC Address Register 0. For reliable transmission, the application must provide frames without source address. */
+    IfxDre_Eth_SourceAddressControl_replaceWithMacAddress0 = 2,  /**< \brief Replace source address with the one specified in MAC Address Register 0. For reliable transmission, the application must provide frames with source addresses. */
+    IfxDre_Eth_SourceAddressControl_insertMacAddress1      = 5,  /**< \brief Insert source address as specified in MAC Address Register 1. For reliable transmission, the application must provide frames without source address. */
+    IfxDre_Eth_SourceAddressControl_replaceWithMacAddress1 = 6   /**< \brief Replace source address with the one specified in MAC Address Register 1. For reliable transmission, the application must provide frames with source addresses. */
+} IfxDre_Eth_SourceAddressControl;
+#endif /* #if defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC4EX) */
+
 /** \} */
 
 /******************************************************************************/
@@ -387,7 +403,7 @@ typedef struct
     boolean bufferPendingRequest;          /**< \brief Status flag for BPR. Range: 1 indicates a new input Ethernet frame in EIBUF, 0 otherwise */
     boolean ethernetFrameError;            /**< \brief Status flag for FE. Range: 1 if Ethernet frame error, 0 otherwise */
     boolean invalidFrameType;              /**< \brief Status flag for IFT. Range: 1 if the "Subtype" field of NTSCF header has a value other than 0x82, 0 otherwise  */
-    boolean invalidDestinationId;          /**< \brief Status flag for IDID. Range: 1 if no matching Stream ID Filter element and also no matching FWDID Filter element , 0 otherwise */
+    boolean invalidDestinationId;          /**< \brief Status flag for IDID. Range: 1 if no matching Stream ID Filter element and also no matching FWDID Filter element, 0 otherwise */
     boolean avtpLengthMismatchError;       /**< \brief Status flag for LME. Range: 1 if the calculated ACF_PAYLOAD_LENGTH is greater than the "Ntscf_data_length" value of the NTSCF header of input Ethernet frame, 0 otherwise  */
     boolean canFormatError;                /**< \brief Status flag for CFE. Range: 1 if the "ACF_MSG_TYPE" of the CAN frame contained in the input Ethernet frame has a value other than 0x2, 0 otherwise */
     boolean remoteFrameError;              /**< \brief Status flag for RFE. Range: 1 if EIBUF_CONFIG.RRF = 1 and a CAN frame has RTR = 1, 0 otherwise */
@@ -638,6 +654,9 @@ typedef struct
     boolean enable;                /**< \brief 1:Enables / 0:Disables watchdog */
     boolean interruptEnable;       /**< \brief 1:Enables / 0:Disables the generation of interrupt when there is a timeout */
     uint16  timeoutValue;          /**< \brief Timeout prescaler of the fSRI clock. Range: 0 to 0xFFFF */
+#if defined(DEVICE_TC4EX) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC4PX) || defined(DEVICE_TC48X) || defined(DEVICE_TC46X)
+    boolean multicastWaitWriteback; /**< \brief When this bitfield is set, DRE disables the preemptive acknowledge of receive descriptor for multi-casted ethernet to ethernet forward frames based on read by destination Ethernet port from EIBUF. This means, DRE will wait for Descriptor write back closure from the corresponding multi-casted Ethernet destination ports before releasing the EIBUF. When TETHDLi_CTRL.SDM = 1 (where 'i' is the TX Descriptor list belonging to one of the multi-cast destinations), then DRE always considers this bit-field as "1" irrespective of the configured value.*/
+#endif /* #if defined(DEVICE_TC4EX) || defined(DEVICE_TC4ZX)*/
 } IfxDre_WatchDogConfig;
 
 /** \} */

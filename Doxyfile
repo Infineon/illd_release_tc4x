@@ -1,0 +1,31 @@
+# Doxygen wrapper for the iLLD Release TC4x GitHub Pages site.
+# Run this through scripts/build-doxygen.ps1 so the variables used by the
+# shared Infineon Doxygen configuration are populated before Doxygen starts.
+
+@INCLUDE               = doc/doxygen/iLLD_Aurix.cfg
+
+PROJECT_NAME           = "iLLD_TC4x"
+PROJECT_BRIEF          = "Infineon Low Level Drivers for AURIX TC4xx devices"
+PROJECT_NUMBER         = $(ILLD_VERSION)
+OUTPUT_DIRECTORY       = $(ILLD_DOXYGEN_DST)
+STRIP_FROM_PATH        = $(ILLD_STRIP_PATH)
+STRIP_FROM_INC_PATH    = $(ILLD_STRIP_PATH)
+
+HTML_TIMESTAMP         = NO
+HTML_EXTRA_STYLESHEET  = $(CFG_PATH)/IfxAtv_DoxygenDoc.css \
+						 $(CFG_PATH)/infineon-modern.css
+HTML_EXTRA_FILES       = $(CFG_PATH)/common/images/infineon_logo.png \
+						 $(CFG_PATH)/versions.json \
+						 $(CFG_PATH)/version-selector.js \
+						 $(CFG_PATH)/page-toc.js
+HTML_DYNAMIC_SECTIONS  = YES
+DISABLE_INDEX          = NO
+GENERATE_TREEVIEW      = YES
+FULL_SIDEBAR           = YES
+TREEVIEW_WIDTH         = 320
+SEARCHENGINE           = YES
+SERVER_BASED_SEARCH    = NO
+HAVE_DOT               = $(ILLD_HAVE_DOT)
+DOT_PATH               =
+WARN_LOGFILE           = $(ILLD_DOXYGEN_WARN_LOG)
+WARN_AS_ERROR          = NO

@@ -156,7 +156,7 @@ IfxAsclin_Status IfxAsclin_Spi_initModule(IfxAsclin_Spi *asclin, const IfxAsclin
     IfxAsclin_setShiftDirection(asclinSFR, config->frame.shiftDir);             /* setting the shift direction */
 
     /* data control initialisation */
-    IfxAsclin_setDataLength(asclinSFR, config->dataLength);                     /* setting the number of bytes to be transfered */
+    IfxAsclin_setDataLength(asclinSFR, config->dataLength);                     /* setting the number of bytes to be transferred */
 
     /* fifo control initialisation */
     /* set the FIFO widths based on the supplied datalength */

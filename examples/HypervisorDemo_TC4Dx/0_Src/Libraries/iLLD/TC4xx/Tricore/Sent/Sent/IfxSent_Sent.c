@@ -38,6 +38,7 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X)
 #include "IfxSent_Sent.h"
 
 /******************************************************************************/
@@ -381,3 +382,4 @@ void IfxSent_Sent_spcPulseTrigger(IfxSent_Sent_Channel *channel)
     channel->channel->SCR.B.TRIG = IfxSent_TriggerSource_immediate;
 }
 
+#endif /* #if !defined(DEVICE_TC45X) */

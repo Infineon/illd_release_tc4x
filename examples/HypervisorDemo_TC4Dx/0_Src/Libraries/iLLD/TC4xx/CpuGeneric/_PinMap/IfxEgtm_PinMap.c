@@ -39,6 +39,7 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X)
 #include "IfxEgtm_PinMap.h"
 
 /******************************************************************************/
@@ -116,6 +117,7 @@ void IfxEgtm_PinMap_setHrpwmOut(IfxEgtm_Hrpwm_Out *config, IfxPort_OutputMode ou
     IfxPort_setPinControllerSelection(config->pin.port, config->pin.pinIndex);
 }
 
+#endif /* #if !defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

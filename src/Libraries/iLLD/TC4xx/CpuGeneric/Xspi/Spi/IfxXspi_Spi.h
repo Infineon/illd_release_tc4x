@@ -3,7 +3,7 @@
  * \brief XSPI SPI details
  * \ingroup IfxLld_Xspi
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -182,6 +182,9 @@ typedef struct
     boolean                           spiDdrEnable;                 /**< \brief SPI DDR Enable bit. This will enable Dual-data rate transfers in Dual/Quad/Octal frame formats of SPI */
     uint8                             waitCycles;                   /**< \brief Wait cycles in Dual/Quad/Octal mode between control frames transmit and data reception Number of SPI clock cycles */
     uint8                             ddrTxDriveEdge;               /**< \brief DDR Transmit Drive Edge */
+#if !defined(DEVICE_TC4DX)
+    uint8                             csMinHighTime;                 /**< \brief Minimum Chip Select High Time */
+#endif
     IfxXspi_InstructionLength         instLength;                   /**< \brief defines Length of Instruction */
     IfxXspi_AddressLength             addressLength;                /**< \brief defines Length of Address to be transmitted */
     IfxXspi_TransferFormat            transferFormat;               /**< \brief Address and instruction transfer format */
@@ -253,7 +256,7 @@ typedef struct
     IfxXspi_Spi_Timing          timing;
     IfxXspi_Spi_FifoControl     fifoControl;
     IfxXspi_Spi_InterruptConfig interruptConfig;
-    IfxXspi_Spi_DmaConfig      *dmaConfig;
+    IfxXspi_Spi_DmaConfig       dmaConfig;
     IfxXspi_SelectPort          portSelect;
 } IfxXspi_Spi_Config;
 
@@ -268,7 +271,7 @@ typedef struct
     uint32                    waitCycles;              /**< \brief reqd only for enhanced spi modes */
     uint32                    addressLength;           /**< \brief reqd only for enhanced spi modes */
     IfxXspi_TransferMode      transferMode;            /**< \brief Transfer Mode */
-    IfxXspi_InstructionLength instructionLength;       /**< \brief Length of instruction to be transfered */
+    IfxXspi_InstructionLength instructionLength;       /**< \brief Length of instruction to be transferred */
     IfxXspi_ClockPhase        clockPhase;              /**< \brief clock phase configuration */
     IfxXspi_ClockPolarity     clockPolarity;           /**< \brief clock polarity configuration */
     IfxXspi_SlaveSelectEnable slaveSelectEnable;       /**< \brief xspi transfer Slave select enable */
@@ -333,10 +336,15 @@ typedef struct
     uint32                    dataCount;                 /**< \brief no of data frames to transmit/receive */
     uint8                    *txData;                    /**< \brief Pointer to transmit data */
     uint8                    *rxData;                    /**< \brief Pointer to received data */
+#if defined(DEVICE_TC49X) || defined(DEVICE_TC4DX)    
     boolean                   enableAsymBaudrate;        /**< \brief Enable asymetetric baudrate */
+#endif
     float32                   buadrate;                  /**< \brief baudrate */
     boolean                   spiRxdsSignalEnable;       /**< \brief Enable rxds signaling during address and command phase of Hypebus transfer */
     IfxXspi_SlaveSelectEnable slaveSelectEnable;         /**< \brief xspi transfer Slave select enable */
+#if !defined(DEVICE_TC4DX)    
+    boolean                   rxdsVlEnable;                /**< \brief RXDS signal configuration */
+#endif
 } IfxXspi_Spi_EnhancedModeConfig;
 
 /** \brief xSPI GPIO pins
@@ -350,11 +358,13 @@ typedef struct
     IfxXspi_Txd1_InOut *txd1;          /**< \brief txd1 pin sel for xspi */
     IfxXspi_Txd2_InOut *txd2;          /**< \brief txd2 pin sel for xspi */
     IfxXspi_Txd3_InOut *txd3;          /**< \brief txd3 pin sel for xspi */
+#if !defined(DEVICE_TC49XN) && !defined(DEVICE_TC46X) && !defined(DEVICE_TC46XAA) && !defined(DEVICE_TC4EX) && !defined(DEVICE_TC4PX)
     IfxXspi_Txd4_InOut *txd4;          /**< \brief txd4 pin sel for xspi */
     IfxXspi_Txd5_InOut *txd5;          /**< \brief txd5 pin sel for xspi */
     IfxXspi_Txd6_InOut *txd6;          /**< \brief txd6 pin sel for xspi */
     IfxXspi_Txd7_InOut *txd7;          /**< \brief txd7 pin sel for xspi */
     IfxXspi_Dm_InOut   *txdm;          /**< \brief rwds pin sel for xspi */
+#endif /* #if !defined(DEVICE_TC49XN) && !defined(DEVICE_TC46X) && !defined(DEVICE_TC46XAA) && !defined(DEVICE_TC4EX) !defined(DEVICE_TC4PX) */
     IfxXspi_SelectPort  selPort;       /**< \brief Configure the PORT Selection */
 } IfxXspi_Spi_GpioPins;
 
@@ -398,7 +408,9 @@ typedef struct
     uint8                waitCycle;                /**< \brief Wait cycles in Dual/Quad/Octal mode between control frames transmit and data reception Number of SPI clock cycles */
     uint16               numOfDataFrames;          /**< \brief Number of Data Frames */
     boolean              rxdsEnable;               /**< \brief TRUE : RXDS signal is valid/enable FALSE : RXDS signal is invalid/disable */
+#if defined(DEVICE_TC49X) || defined(DEVICE_TC4DX)
     boolean              enableAsymBaudrate;       /**< \brief Enable asymetetric baudrate */
+#endif    
     float32              buadrate;                 /**< \brief baudrate */
 } IfxXspi_Spi_ReadWriteConfig;
 
@@ -439,8 +451,8 @@ typedef struct
     boolean                           xipModeBitEnable;             /**< \brief XIP mode bit enable */
     boolean                           xipFixDfs;                    /**< \brief XIP continuous mode DFS fix */
     uint8                             counterTimeOut;               /**< \brief XIP time out value in terms of hclk */
-    uint16                            incrInstruction;              /**< \brief Opcodes to be transfered in instruction phase of XIP transfer */
-    uint16                            wrapInstruction;              /**< \brief Opcodes to be transfered in instruction phase of XIP transfer */
+    uint16                            incrInstruction;              /**< \brief Opcodes to be transferred in instruction phase of XIP transfer */
+    uint16                            wrapInstruction;              /**< \brief Opcodes to be transferred in instruction phase of XIP transfer */
     uint16                            xipModeBitsValue;             /**< \brief XIP mode bit value to be Transmit */
     IfxXspi_InstructionLength         instLength;                   /**< \brief Instruction Length for XIP transfer */
     IfxXspi_DataframeSize             dataFrameSize;                /**< \brief Data frame size for XIP transfer */
@@ -448,6 +460,9 @@ typedef struct
     IfxXspi_XipInstructionPhaseEnable instructionPhaseEnable;       /**< \brief Enable for XIP instruction Phase */
     IfxXspi_XipSlaveSelectEnable      slaveSelectEnable;            /**< \brief XIP transfer slave select enable */
     IfxXspi_XipBitLength              xipModeBitLen;                /**< \brief XIP mode bit enable */
+#if !defined(DEVICE_TC4DX)    
+    boolean                           rxdsVlEnable;                /**< \brief RXDS signal configuration */
+#endif    
 } IfxXspi_Spi_XipConfig;
 
 /** \brief Structure for Enhanced mode config
@@ -475,7 +490,7 @@ typedef struct
     boolean                   xipContinuousTransfer;         /**< \brief Enable if the continuous XIP transfers needs to be triggered */
     boolean                   xipDataFrameSizeEnable;        /**< \brief TRUE: DFS from CTRL0.DFS will be considered FALSE: DFS will be derived from BURST/SIZE AXI Signals */
     boolean                   xipInstFrameEnable;            /**< \brief Enables instruction fram during XIP cmd+data phase */
-    IfxXspi_XipBitLength      xipBitLen;                     /**< \brief Specify the lenght of mode bits to be send if mode bits are enabled */
+    IfxXspi_XipBitLength      xipBitLen;                     /**< \brief Specify the length of mode bits to be send if mode bits are enabled */
     uint8                     xipTimeoutValue;               /**< \brief Specify the timeout value for XIP continuous mode if enabled Note: 0x00 means counter is disabled */
     uint16                    xipIncrInstruction;            /**< \brief Specify INCR type instruction value to send out in XIP transfer to flash side */
     uint16                    xipWrapInstruction;            /**< \brief Specify WRAP type instruction value to send out in XIP transfer to flash side */
@@ -484,6 +499,9 @@ typedef struct
     volatile uint32          *rxData;                        /**< \brief Pointer to receive the XIP read data from cached/Non cached XIP memory */
     boolean                   spiDataMaskEnable;             /**< \brief Enable/Disable SPI data masking */
     boolean                   spiClockStretchEnable;         /**< \brief Enable/Disable SPI clock stretching */
+#if !defined(DEVICE_TC4DX)
+    uint8                     csMinHighTime;                 /**< \brief Minimum Chip Select High Time */
+#endif    
 } IfxXspi_Spi_XipModeConfig;
 
 /** \brief Configuration structure of the module

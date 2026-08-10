@@ -81,7 +81,7 @@
  *         IfxClock_init(&IfxClock_testClockConfig);
  * \endcode
  *
- *    The SYS PLL, PER PLL1 , PLL2, PLL3 and clocks are now initialised based on the XTAL and PLL values configured in Ifx_Cfg.h and are ready for use now!
+ *    The SYS PLL, PER PLL1, PLL2, PLL3 and clocks are now initialised based on the XTAL and PLL values configured in Ifx_Cfg.h and are ready for use now!
  *
  * Alternately the PLL and clocks can be initialised using below method which provides greater control on the configuration.
  *
@@ -206,7 +206,7 @@
  *  // put this as part of the CCU configuration:
  *  IfxClock_sampleClockConfig.modulationConfig = &IfxClock_SampleModConfig;
  *
- *  // now initalize the CCU PLL and clock with the init function
+ *  // now initialize the CCU PLL and clock with the init function
  *  IfxClock_init(&IfxClock_sampleClockConfig)
  * \endcode
  *
@@ -404,6 +404,40 @@
 #define IFXCLOCK_MODULATION_CAL_EN_TOGGLE_WAIT_TIME  (0.0000001f)
 #endif
 
+#if defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)	
+/** \brief 100 micro seconds wait time after LCK lock bit set
+ */
+#ifndef IFXCLOCK_CCUSTAT_LCKLOCK_WAITTIME
+#define IFXCLOCK_CCUSTAT_LCKLOCK_WAITTIME            (0.0001f)
+#endif
+#endif /* #if defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC4EX) */
+
+#if defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X)  || defined(DEVICE_TC4ZX) 
+/** \brief NDIV_FRAC register must be limited to one half of the integer division bit fields value
+ */
+#ifndef IFXCLOCK_APLLCON2_NDIVINT_DIVIDED_BY_TWO
+#define IFXCLOCK_APLLCON2_NDIVINT_DIVIDED_BY_TWO     (0x800)
+#endif
+
+/** \brief 40 micro second wait time for consecutive CPU write updates to the APLLCON2.NDIV_FRAC register
+ */
+#ifndef IFXCLOCK_APLL_WAITTIME_FOR_NDIV_FRAC
+#define IFXCLOCK_APLL_WAITTIME_FOR_NDIV_FRAC         (0.00004f)
+#endif
+
+/** \brief 1ms wait time after powering up APLL
+ */
+#ifndef IFXCLOCK_APLL_POWERUP_WAITTIME
+#define IFXCLOCK_APLL_POWERUP_WAITTIME               (0.001f)
+#endif
+
+/** \brief macro to get the value pow(2, 12)
+ */
+#ifndef IFXCLOCK_TWO_POWER_TWELVE_CONSTANT
+#define IFXCLOCK_TWO_POWER_TWELVE_CONSTANT           (0x1000U)
+#endif
+#endif /* #if defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X)  || defined(DEVICE_TC4ZX) */
+
 /** \brief Peripheral PLL KxPREDIV initial value
  */
 #ifndef IFXCLOCK_PERPLL_KXPREDIV_INITIAL_VALUE
@@ -415,6 +449,14 @@
 #ifndef IFXCLOCK_PERPLL_KXDIV_INITIAL_VALUE
 #define IFXCLOCK_PERPLL_KXDIV_INITIAL_VALUE          (0x00010101)
 #endif
+
+#if defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)	
+/** \brief Peripheral PLL KxPREDIV and KxDIV initial value
+ */
+#ifndef IFXCLOCK_PERPLL_KXDIV_KXPREDIV_INITIAL_VALUE
+#define IFXCLOCK_PERPLL_KXDIV_KXPREDIV_INITIAL_VALUE (0x0011A111)
+#endif
+#endif /* #if defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC4EX) */
 
 /******************************************************************************/
 /*------------------------------Type Definitions------------------------------*/
@@ -467,7 +509,9 @@ typedef enum
     IfxClock_ClkSel0_fPLL0   = 3,  /**< \brief Select fPLL0 as EXTCLK0 */
     IfxClock_ClkSel0_fPLL1   = 4,  /**< \brief Select fPLL1 as EXTCLK0 */
     IfxClock_ClkSel0_fPLL2   = 5,  /**< \brief Select fPLL2 as EXTCLK0 */
+#if defined(DEVICE_TC4DX)	
     IfxClock_ClkSel0_fPLL3   = 6,  /**< \brief Select fPLL3 as EXTCLK0 */
+#endif
     IfxClock_ClkSel0_fFRAC   = 7,  /**< \brief Select fFRAC as EXTCLK0 */
     IfxClock_ClkSel0_fSPB    = 8,  /**< \brief Select fSPB as EXTCLK0 */
 #if IFXCLOCK_IS_EXTCLK_CPB_AVAILABLE
@@ -493,9 +537,9 @@ typedef enum
 	IfxClock_ClkSel0_fRCB    = 21,   /**< \brief Select fRCB as EXTCLK0 */
 #endif /* #if IFXCLOCK_IS_EXTCLK_RCB_AVAILABLE */
     IfxClock_ClkSel0_fLETH   = 22, /**< \brief Select fLETH as EXTCLK0 */
-#if defined(IFX_CFG_CLOCK_PPUPLL_FREQUENCY)
+#if defined(IFX_CFG_CLOCK_PPUPLL_FREQUENCY)	|| defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
     IfxClock_ClkSel0_fPPU    = 23, /**< \brief Select fPPU as EXTCLK0 */
-#endif /* #if defined(IFX_CFG_CLOCK_PPUPLL_FREQUENCY) */
+#endif /* #if defined(IFX_CFG_CLOCK_PPUPLL_FREQUENCY)	|| defined(DEVICE_TC4EX) */
     IfxClock_ClkSel0_fCANXLH = 24,  /**< \brief Select fCANXLH as EXTCLK0 */
 #if IFXCLOCK_IS_EXTCLK_AUDIO_AVAILABLE
 	IfxClock_ClkSel0_fPLLAUDIO = 25  /**< \brief Select fPLLAUDIO as EXTCLK0 */
@@ -513,7 +557,9 @@ typedef enum
     IfxClock_ClkSel1_fPLL0    = 3,   /**< \brief Select fPLL0 as EXTCLK1 */
     IfxClock_ClkSel1_fPLL1    = 4,   /**< \brief Select fPLL1 as EXTCLK1 */
     IfxClock_ClkSel1_fPLL2    = 5,   /**< \brief Select fPLL2 as EXTCLK1 */
+#if defined(DEVICE_TC4DX)	
     IfxClock_ClkSel1_fPLL3    = 6,   /**< \brief Select fPLL3 as EXTCLK1 */
+#endif
     IfxClock_ClkSel1_fDIV1    = 7,   /**< \brief Select fDIV1 as EXTCLK1 */
 #if IFXCLOCK_IS_EXTCLK_MT0_AVAILABLE
     IfxClock_ClkSel1_fMT0     = 9,   /**< \brief Select fMT0 as EXTCLK1 */
@@ -538,9 +584,9 @@ typedef enum
 #if IFXCLOCK_IS_EXTCLK_SDMMC_AVAILABLE
     IfxClock_ClkSel1_fSDMMC   = 20,  /**< \brief Select fSDMMC as EXTCLK1 */
 #endif /* #if IFXCLOCK_IS_EXTCLK_SDMMC_AVAILABLE */
-#if defined(IFX_CFG_CLOCK_PPUPLL_FREQUENCY)
+#if defined(IFX_CFG_CLOCK_PPUPLL_FREQUENCY)	|| defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
     IfxClock_ClkSel1_fPPU     = 21,  /**< \brief Select fPPU as EXTCLK1 */
-#endif /* #if defined(IFX_CFG_CLOCK_PPUPLL_FREQUENCY) */
+#endif /* #if defined(IFX_CFG_CLOCK_PPUPLL_FREQUENCY)	|| defined(DEVICE_TC4EX) */
     IfxClock_ClkSel1_fCANXL   = 22,  /**< \brief Select fCANXL as EXTCLK1 */
     IfxClock_ClkSel1_fLETH100 = 23,  /**< \brief Select fLETH100 as EXTCLK1 */
 #if IFXCLOCK_IS_EXTCLK_XSPISL_AVAILABLE		
@@ -549,6 +595,10 @@ typedef enum
 #if IFXCLOCK_IS_EXTCLK_AUDIO_AVAILABLE
 	IfxClock_ClkSel1_fAUDIO   = 25,   /**< \brief Select fAUDIO as EXTCLK1 */
 #endif /* #if IFXCLOCK_IS_EXTCLK_AUDIO_AVAILABLE */
+#if defined(DEVICE_TC49XN) || defined(DEVICE_TC45X) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
+    IfxClock_ClkSel1_fPLL3    = 30,  /**< \brief Select fPLL3 as EXTCLK1 */
+    IfxClock_ClkSel1_fPLLPPU  = 31   /**< \brief Select fPLLPPU as EXTCLK1 */
+#endif	/* #if defined(DEVICE_TC49XN) || defined(DEVICE_TC45X) || defined(DEVICE_TC4EX) */
 } IfxClock_ClkSel1;
 
 /** \brief Selects if in case of emergency the clock select is switches to fBACK or fRAMP
@@ -572,10 +622,10 @@ typedef enum
 
 /** \brief PLL0 Divider Select: defines the pre-dividing factor in front of the K2-Divider
  *  Register : SYSPLLCON0.B.K2PREDIV ;
- *  00B DIVBY1_0 / The 1.0 pre-divider between DCO and K2-Divider is selected for PLL0 . Hence, the resulting divider factor in front of the K2-Divider is fDCO / 1.0.
- *  01B DIVBY2_0 / The 2.0 pre-divider between DCO and K2-Divider is selected for PLL0 . Hence, the resulting divider factor in front of the K2-Divider is fDCO / 2.0.
- *  10B DIVBY1_2 / The 1.2 pre-divider between DCO and K2-Divider is selected for PLL0 . Hence, the resulting divider factor in front of the K2-Divider is fDCO / 1.2.
- *  11B DIVBY1_6 / The 1.6 pre-divider between DCO and K2-Divider is selected for PLL0 . Hence, the resulting divider factor in front of the K2-Divider is fDCO / 1.6.
+ *  00B DIVBY1_0 / The 1.0 pre-divider between DCO and K2-Divider is selected for PLL0. Hence, the resulting divider factor in front of the K2-Divider is fDCO / 1.0.
+ *  01B DIVBY2_0 / The 2.0 pre-divider between DCO and K2-Divider is selected for PLL0. Hence, the resulting divider factor in front of the K2-Divider is fDCO / 2.0.
+ *  10B DIVBY1_2 / The 1.2 pre-divider between DCO and K2-Divider is selected for PLL0. Hence, the resulting divider factor in front of the K2-Divider is fDCO / 1.2.
+ *  11B DIVBY1_6 / The 1.6 pre-divider between DCO and K2-Divider is selected for PLL0. Hence, the resulting divider factor in front of the K2-Divider is fDCO / 1.6.
  */
 typedef enum
 {
@@ -651,10 +701,10 @@ typedef enum
 
 /** \brief PLL3 Divider Select: defines the pre-dividing factor in front of the K4-Divider
  *  Register : PERPLLCON0.B.K4PREDIV ;
- *  00B DIVBY1_0 / The 1.0 pre-divider between DCO and K3-Divider is selected for PLL2 . Hence, the resulting divider factor in front of the K3-Divider is fDCO / 1.0.
- *  01B DIVBY2_0 / The 2.0 pre-divider between DCO and K4-Divider is selected for PLL3 . Hence, the resulting divider factor in front of the K4-Divider is fDCO / 2.0.
- *  10B DIVBY1_2 / The 1.2 pre-divider between DCO and K4-Divider is selected for PLL3 . Hence, the resulting divider factor in front of the K4-Divider is fDCO / 1.2.
- *  11B DIVBY1_6 / The 1.6 pre-divider between DCO and K4-Divider is selected for PLL3 . Hence, the resulting divider factor in front of the K4-Divider is fDCO / 1.6
+ *  00B DIVBY1_0 / The 1.0 pre-divider between DCO and K3-Divider is selected for PLL2. Hence, the resulting divider factor in front of the K3-Divider is fDCO / 1.0.
+ *  01B DIVBY2_0 / The 2.0 pre-divider between DCO and K4-Divider is selected for PLL3. Hence, the resulting divider factor in front of the K4-Divider is fDCO / 2.0.
+ *  10B DIVBY1_2 / The 1.2 pre-divider between DCO and K4-Divider is selected for PLL3. Hence, the resulting divider factor in front of the K4-Divider is fDCO / 1.2.
+ *  11B DIVBY1_6 / The 1.6 pre-divider between DCO and K4-Divider is selected for PLL3. Hence, the resulting divider factor in front of the K4-Divider is fDCO / 1.6
  */
 typedef enum
 {
@@ -1114,7 +1164,7 @@ typedef struct
 } IfxClock_OscconRegConfig;
 
 /** \brief Configuration structure type for the Per Pll config
- *   This structure must be used to configure the P, N , K2, K3,K4 divider dividers.
+ *   This structure must be used to configure the P, N, K2, K3, K4 divider dividers.
  *   fPLL1 = N * fIN / P * K2 * 1. 0 -> K2PREDIV = 0
  *   fPLL1 = N * fIN / P * K2 * 2. 0 -> K2PREDIV = 1
  *   fPLL1 = N * fIN / P * K2 * 1. 2 -> K2PREDIV = 2
@@ -1237,6 +1287,7 @@ typedef struct
     IfxClock_SysClockSourceSelect            SysClockSourceSelect;
     IfxClock_PerClockSourceSelect            PerClockSourceSelect;
     IfxClock_OscconRegConfig                 osccon;                         /**< \brief OSCCON Configurations */
+    uint32                                   oscConModeVal;                  /**< \brief OSCCON.MODE value applied when IFX_CFG_CLOCK_EXT_CLOCK is 0. Allows the oscillator mode to be selected via the configuration structure instead of the IFX_CFG_CLOCK_EXT_CLOCK compile switch. */
 } IfxClock_Config;
 
 /** \brief structure holding the RGain parameters for modulation
@@ -1575,9 +1626,10 @@ IFX_INLINE uint32 IfxClock_checkPerPllLock(IfxClock_Fsource fsource);
 
 /** \brief API to enable/power-on the Crystal oscillator.
  *
+ * \param oscConMode OSCCON.MODE value to be programmed
  * \retval None
  */
-IFX_INLINE void IfxClock_powerOnCrystalOsc(void);
+IFX_INLINE void IfxClock_powerOnCrystalOsc(uint32 oscConMode);
 
 /** \brief API to enable/power-on the Ramp oscillator.
  *
@@ -2186,11 +2238,21 @@ IFX_EXTERN uint32 IfxClock_getExtClock0Frequency(void);
  */
 IFX_EXTERN uint32 IfxClock_getExtClock1Frequency(void);
 
-/** \brief Configure the Ramp oscillator (RAMPCON UFL) for the desired Sys PLL frequency and enable CMD to ramp up/down
- * NOTE: It is user responsibility to provide valid rampFreq based on rampSeqCmd
- * \param rampFreq Configure the ramp frequency
- * \param rampSeqCmd Ramp sequence command
- * \return ramp configuration status
+#if defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC45X) || defined(DEVICE_TC4EX)
+/** \brief This API returns the Ppu frequency.
+ *
+ * \retval uint32 PPU frequency in Hz. Range: 10000000 Hz to 500000000 Hz.
+ */
+IFX_EXTERN uint32 IfxClock_getPpuFrequency(void);
+#endif /* #if defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC45X) || defined(DEVICE_TC4EX) */
+
+/** \brief Configure the Ramp oscillator (RAMPCON UFL) for the desired Sys PLL frequency and enable CMD to ramp up/down.
+ * NOTE: It is user responsibility to provide valid rampFreq based on rampSeqCmd.
+ *
+ * \param[in] rampFreq   Configure the ramp frequency. Range: 0 to 0x3FF.
+ * \param[in] rampSeqCmd Ramp sequence command. Range: \ref IfxClock_RampSeqCmd.
+ *
+ * \retval Ramp configuration status.
  */
 IFX_EXTERN boolean IfxClock_configureRampOscillator(uint32 rampFreq, IfxClock_RampSeqCmd rampSeqCmd);
 
@@ -2240,7 +2302,7 @@ IFX_EXTERN uint8 IfxClock_audioFreqTuning(uint32 nDiv);
 IFX_EXTERN float32 IfxClock_computeApllFreqFromNDivRegVal(uint32 nDivRegValue);
 
 /** \brief API to disable the APLL.
- * This API will power off the Audio PLL .
+ * This API will power off the Audio PLL.
  *
  * \retval TRUE: Operation successful, FALSE: Operation Failure.
  */
@@ -2496,7 +2558,11 @@ IFX_INLINE uint32 IfxClock_getMcanhFrequency(void)
 
 IFX_INLINE uint32 IfxClock_getOsc0Frequency(void)
 {
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) 
     return IFX_CFG_CLOCK_XTAL_FREQUENCY;
+#else
+    return (uint32)IfxClock_xtalFrequency;
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) */
 }
 
 
@@ -2839,7 +2905,7 @@ IFX_INLINE uint32 IfxClock_checkPerPllLock(IfxClock_Fsource fsource)
 }
 
 
-IFX_INLINE void IfxClock_powerOnCrystalOsc(void)
+IFX_INLINE void IfxClock_powerOnCrystalOsc(uint32 oscConMode)
 {
     Ifx_CLOCK_OSCCON scuOsccon;
     uint8            initError         = 0;
@@ -2847,11 +2913,7 @@ IFX_INLINE void IfxClock_powerOnCrystalOsc(void)
 
     scuOsccon.U = CLOCK_OSCCON.U;
 
-#if (IFX_CFG_CLOCK_EXT_CLOCK == 1)
-    scuOsccon.B.MODE = 2U;         /* external clock selected */
-#else
-    scuOsccon.B.MODE = 0U;         /*oscillator enabled */
-#endif
+    scuOsccon.B.MODE = oscConMode;         /* oscillator mode selected from configuration */
 
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {
@@ -2997,7 +3059,7 @@ IFX_INLINE uint32 IfxClock_getMt0Frequency(void)
 {
     uint32 fmt0 = 0U;
 
-    if (ERAY0_CLC.B.DISS == 0u) // Check if module clock is enable
+    if (ERAY0_CLC.B.DISS == 0u) // Check if module clock is enabled
     {
         uint32         fmicrotick = 0U;
         Ifx_ERAY_PRTC1 prtc1;

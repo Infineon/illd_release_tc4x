@@ -40,6 +40,7 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC45X)
 #include "IfxPcieLib_Cap.h"
 
 /******************************************************************************/
@@ -249,6 +250,8 @@ IfxPcie_Status IfxPcieLib_Cap_configureAerCap(IfxPcieLib_Cap_Aer *aerCap, IfxPci
 
     return status;
 }
+
+#endif /* defined(DEVICE_TC4DX) || defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

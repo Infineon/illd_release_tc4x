@@ -3,7 +3,7 @@
  * \brief ASCLIN SPI details
  * \ingroup IfxLld_Asclin
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -30,7 +30,7 @@
  *
  *   The SPI interface driver provides a default ASCLIN configuration for synchronous serial communication in 8 and 16 bit mode, and a set of data transfer routines.
  *
- *   Data transfers are buffered by the hardware based FIFOs. Incoming and outgoing data is transfered in background from/to the ASCLIN peripheral by interrupt service handlers, which are part of this driver as well. This allows a nonblocking communication without stalling the thread(s) from where data is sent and received.
+ *   Data transfers are buffered by the hardware based FIFOs. Incoming and outgoing data is transferred in background from/to the ASCLIN peripheral by interrupt service handlers, which are part of this driver as well. This allows a nonblocking communication without stalling the thread(s) from where data is sent and received.
  *
  *   The SPI interface driver works only as Master
  *

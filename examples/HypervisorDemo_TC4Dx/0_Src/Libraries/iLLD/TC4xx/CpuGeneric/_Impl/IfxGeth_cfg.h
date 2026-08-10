@@ -46,6 +46,14 @@
 
 #if defined DEVICE_TC4DX
 #include "TC4Dx/IfxGeth_cfg_TC4Dx.h"
+#elif defined DEVICE_TC44X
+#include "TC44x/IfxGeth_cfg_TC44x.h"
+#elif defined DEVICE_TC48XAA
+#include "TC48xAA/IfxGeth_cfg_TC48xAA.h"
+#elif defined DEVICE_TC48X
+#include "TC48x/IfxGeth_cfg_TC48x.h"
+#elif defined DEVICE_TC4ZX
+#include "TC4Zx/IfxGeth_cfg_TC4Zx.h"
 #endif
 
 #endif /* IFXGETH_CFG_H */

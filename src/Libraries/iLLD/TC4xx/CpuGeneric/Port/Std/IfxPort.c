@@ -2,7 +2,7 @@
  * \file IfxPort.c
  * \brief PORT  basic functionality
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -205,11 +205,16 @@ void IfxPort_setPinMode(Ifx_P *port, uint8 pinIndex, IfxPort_Mode mode)
 {
     uint32 mask = ((IFX_P_PADCFG_DRVCFG_MODE_MSK << IFX_P_PADCFG_DRVCFG_MODE_OFF) | (IFX_P_PADCFG_DRVCFG_OD_MSK << IFX_P_PADCFG_DRVCFG_OD_OFF) | (IFX_P_PADCFG_DRVCFG_DIR_MSK << IFX_P_PADCFG_DRVCFG_DIR_OFF));
 
+#if !defined(DEVICE_TC45X)
 #if (IFX_PROT_ENABLED == 1U)
     IfxApProt_setState((Ifx_PROT_PROT *)&port->PROTSE, IfxApProt_State_config);
 #endif
 
+#if defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC49XN)
+    if ((port == &MODULE_P40) || (port == &MODULE_P41))
+#else
    	if (port == &MODULE_P40)
+#endif /* #if defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC49XN)) */
     {
         port->PDISC.U &= ~(1 << pinIndex);
     }
@@ -217,6 +222,7 @@ void IfxPort_setPinMode(Ifx_P *port, uint8 pinIndex, IfxPort_Mode mode)
 #if (IFX_PROT_ENABLED == 1U)
     IfxApProt_setState((Ifx_PROT_PROT *)&port->PROTSE, IfxApProt_State_run);
 #endif
+#endif /* #if !defined(DEVICE_TC45X) */
     /* PADCFGp_DRVCFG is protected by ACCGRPy */
 #if (IFX_PROT_ENABLED == 1U)
     uint8 grpIdx = port->PADCFG[pinIndex].ACCEN.B.GRP;
@@ -243,14 +249,18 @@ void IfxPort_setPinModeLVDS(Ifx_P *port, uint8 pinIndex, IfxPort_Mode pinMode, I
 #if (IFX_PROT_ENABLED == 1U)
     IfxApProt_setState((Ifx_PROT_PROT *)&port->PROTSE, IfxApProt_State_config);
 #endif
+#if !defined(DEVICE_TC4PX) && !defined(DEVICE_TC4EX)  && !defined(DEVICE_TC46X)
     lpcr[lpcrOffset].LPCR.B.LVDSM = lvds->lvdsMode;
+#endif /* #if !defined(DEVICE_TC4PX) && !defined(DEVICE_TC4EX) && !defined(DEVICE_TC46X) */
     lpcr[lpcrOffset].LPCR.B.PS    = lvds->padSupply;
 
     if (pinMode < IfxPort_Mode_outputPushPullGeneral)
     {
         lpcr[lpcrOffset].LPCR.B.REN_CTRL = lvds->enablePortControlled;
         lpcr[lpcrOffset].LPCR.B.RX_EN    = 1;
+#if !defined(DEVICE_TC4PX) && !defined(DEVICE_TC4EX) && !defined(DEVICE_TC46X)
         lpcr[lpcrOffset].LPCR.B.TERM     = lvds->lvdsTerm;
+#endif /* #if !defined(DEVICE_TC4PX) && !defined(DEVICE_TC4EX)  && !defined(DEVICE_TC46X) */
     }
     else
     {
@@ -387,25 +397,56 @@ void IfxPort_configureAccessToPorts(IfxApApu_ApuConfig *apConfig)
 {
     /* By default the access protection group selected is 0 (PADCFG.ACCEN.B.GRP= 0) for all ports*/
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P00.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC44X) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
 	IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P01.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
+#endif
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P02.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC44X) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC4ZX)	
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P03.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
+#endif
+#if defined(DEVICE_TC4ZX)
+    IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P04.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
+#endif	
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P10.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
+#if defined(DEVICE_TC49XN) || defined(DEVICE_TC44X) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
+    IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P11.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
+    IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P12.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
+#endif	
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P13.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P14.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P15.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC44X) || defined(DEVICE_TC45X) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC4ZX)	
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P16.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
+#endif	
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P20.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P21.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P22.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P23.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
+#if defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA)	
+    IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P24.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
+#endif
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC4ZX)	
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P25.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
+#endif
+#if defined(DEVICE_TC49XN)	
+    IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P26.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
+#endif
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC4ZX)		
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P30.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P31.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
+#endif
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P32.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P33.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P34.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
+#if defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC4ZX)
+   IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P35.ACCGRP[0], apConfig);   /*Configure the APU group 0 */
+#endif
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC44X) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC4EX)  || defined(DEVICE_TC4PX)
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P40.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
+#endif
+#if defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA)	
+    IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_P41.ACCGRP[0], apConfig);  /*Configure the APU group 0 */
+#endif	
 }
 
 
@@ -455,3 +496,41 @@ void IfxPort_configureAccessToPort(Ifx_P *port, IfxPort_PadAccessGroup group, vo
 {
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&port->ACCGRP[group], apConfig);  /* Configure the APU group */
 }
+
+
+#if defined(DEVICE_TC45X)
+void IfxPort_configureLDO(Ifx_P *port, IfxPort_BlankingTimerConfig timerConfig)
+{
+    /* Enables the PORT 16 LDO for the complete IP */
+    port->LDOCTRL[0].ENCONF_RDDIAG.B.ENABLE = 1U;
+
+    /* Enables Timer configuration for Short Detection */
+
+    port->LDOCTRL[0].ENCONF_RDDIAG.B.SHORT_TIMER = timerConfig;
+
+    /* In order to switch off the LDO when a short is detected enable SH_LDO_OFF_EN = 1 */
+    port->LDOCTRL[0].ENCONF_RDDIAG.B.SH_LDO_OFF_EN = 1U;
+
+    /* Now enable the short detection */
+    port->LDOCTRL[0].ENCONF_RDDIAG.B.SHHEN = 1U;
+}
+#endif /* #if defined(DEVICE_TC45X) */
+
+
+#if defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC44X) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
+void IfxPort_configureLDO(Ifx_P *port, IfxPort_BlankingTimerConfig timerConfig)
+{
+    /* Enables the PORT n LDO for the complete IP */
+    port->ENCONF_RDDIAG.B.ENABLE = 1;
+
+    /* Enables Timer configuration for Short Detection */
+
+    port->ENCONF_RDDIAG.B.SHORT_TIMER = timerConfig;
+
+    /* In order to switch off the LDO when a short is detected enable SH_LDO_OFF_EN = 1*/
+    port->ENCONF_RDDIAG.B.SH_LDO_OFF_EN = 1U;
+
+    /* Now enable the short detection */
+    port->ENCONF_RDDIAG.B.SHHEN = 1U;
+}
+#endif /* #if defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC44X) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX) */

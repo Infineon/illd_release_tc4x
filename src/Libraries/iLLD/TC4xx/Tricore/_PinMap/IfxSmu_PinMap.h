@@ -3,7 +3,7 @@
  * \brief SMU  details
  * \ingroup IfxLld_Smu
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -44,6 +44,17 @@
 /*-----------------------------Data Structures--------------------------------*/
 /******************************************************************************/
 
+#if defined(DEVICE_TC4ZX) || defined(DEVICE_TC44X) || defined(DEVICE_TC4EX)|| defined(DEVICE_TC4PX) || defined(DEVICE_TC48X)
+/** \brief   
+*/
+typedef const struct
+{
+    Ifx_SMU*        module;   /**< \brief Base address */
+    IfxPort_Pin     pin;      /**< \brief Port pin */
+    Ifx_RxSel       select;   /**< \brief Input multiplexer value */
+} IfxSmu_Ext_In;
+#endif /* #if defined(DEVICE_TC4ZX) || defined(DEVICE_TC44X) || defined(DEVICE_TC4EX) || defined(DEVICE_TC48X)*/
+
 /** \brief
  */
 typedef const struct
@@ -80,6 +91,92 @@ typedef const struct
 #include "TC4Dx/IfxSmu_PinMap_TC4Dx_BGA436_COM.h"
 #elif defined(IFX_PIN_PACKAGE_BGA292_COM)
 #include "TC4Dx/IfxSmu_PinMap_TC4Dx_BGA292_COM.h"
+#endif
+
+#elif defined(DEVICE_TC49XN)
+#if defined(IFX_PIN_PACKAGE_BGA436_STD)
+#include "TC49xN/IfxSmu_PinMap_TC49xN_BGA436_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA292_STD)
+#include "TC49xN/IfxSmu_PinMap_TC49xN_BGA292_STD.h"
+#endif
+
+#elif defined(DEVICE_TC48XAA)
+#if defined(IFX_PIN_PACKAGE_BGA436_COM)
+#include "TC48xAA/IfxSmu_PinMap_TC48xAA_BGA436_COM.h"
+#elif defined(IFX_PIN_PACKAGE_BGA292_COM)
+#include "TC48xAA/IfxSmu_PinMap_TC48xAA_BGA292_COM.h"
+#elif defined(IFX_PIN_PACKAGE_BGA292_STD)
+#include "TC48xAA/IfxSmu_PinMap_TC48xAA_BGA292_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA224_STD)
+#include "TC48xAA/IfxSmu_PinMap_TC48xAA_BGA224_STD.h"
+#endif
+
+#elif defined(DEVICE_TC48X)
+#if defined(IFX_PIN_PACKAGE_BGA436_COM)
+#include "TC48x/IfxSmu_PinMap_TC48x_BGA436_COM.h"
+#elif defined(IFX_PIN_PACKAGE_BGA292_COM)
+#include "TC48x/IfxSmu_PinMap_TC48x_BGA292_COM.h"
+#elif defined(IFX_PIN_PACKAGE_BGA292_STD)
+#include "TC48x/IfxSmu_PinMap_TC48x_BGA292_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA224_STD)
+#include "TC48x/IfxSmu_PinMap_TC48x_BGA224_STD.h"
+#endif
+
+#elif defined(DEVICE_TC46XAA)
+#if defined(IFX_PIN_PACKAGE_BGA436_STD)
+#include "TC46xAA/IfxSmu_PinMap_TC46xAA_BGA436_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA292_STD)
+#include "TC46xAA/IfxSmu_PinMap_TC46xAA_BGA292_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA224_STD)
+#include "TC46xAA/IfxSmu_PinMap_TC46xAA_BGA224_STD.h"
+#endif
+
+#elif defined(DEVICE_TC46X)
+#if defined(IFX_PIN_PACKAGE_BGA436_STD)
+#include "TC46x/IfxSmu_PinMap_TC46x_BGA436_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA292_STD)
+#include "TC46x/IfxSmu_PinMap_TC46x_BGA292_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA224_STD)
+#include "TC46x/IfxSmu_PinMap_TC46x_BGA224_STD.h"
+#endif
+
+#elif defined(DEVICE_TC45X)
+#if defined(IFX_PIN_PACKAGE_BGA292_RDR)
+#include "TC45x/IfxSmu_PinMap_TC45x_BGA292_RDR.h"
+#endif
+
+#elif defined(DEVICE_TC44X)
+#if defined(IFX_PIN_PACKAGE_BGA292_STD)
+#include "TC44x/IfxSmu_PinMap_TC44x_BGA292_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA292_COM)
+#include "TC44x/IfxSmu_PinMap_TC44x_BGA292_COM.h"
+#elif defined(IFX_PIN_PACKAGE_BGA224_STD)
+#include "TC44x/IfxSmu_PinMap_TC44x_BGA224_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA188_STD)
+#include "TC44x/IfxSmu_PinMap_TC44x_BGA188_STD.h"
+#endif
+
+#elif defined(DEVICE_TC4ZX)
+#if defined(IFX_PIN_PACKAGE_BGA436_COM)
+#include "TC4Zx/IfxSmu_PinMap_TC4Zx_BGA436_COM.h"
+#elif defined(IFX_PIN_PACKAGE_BGA292_COM)
+#include "TC4Zx/IfxSmu_PinMap_TC4Zx_BGA292_COM.h"
+#endif
+
+#elif defined(DEVICE_TC4EX)
+#if defined(IFX_PIN_PACKAGE_BGA292_STD)
+#include "TC4Ex/IfxSmu_PinMap_TC4Ex_BGA292_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA224_STD)
+#include "TC4Ex/IfxSmu_PinMap_TC4Ex_BGA224_STD.h"
+#endif
+
+#elif defined(DEVICE_TC4PX)
+#if defined(IFX_PIN_PACKAGE_BGA292_STD)
+#include "TC4Px/IfxSmu_PinMap_TC4Px_BGA292_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA224_STD)
+#include "TC4Px/IfxSmu_PinMap_TC4Px_BGA224_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA188_STD)
+#include "TC4Px/IfxSmu_PinMap_TC4Px_BGA188_STD.h"
 #endif
 
 #endif /* #if defined(DEVICE_TC4DX) */

@@ -38,6 +38,8 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X)
+
 #include "IfxEgtm_cfg.h"
 
 /******************************************************************************/
@@ -1586,6 +1588,8 @@ uint32 IfxEgtm_Cfg_AdcDtmAuxInputSel[IFXEGTM_CFG_NUM_ADC_DTMAUX_INPUT_SIGNALS + 
     IFXEGTM_CFG_GETINPUTENTRY(IfxEgtm_Cdtm_2, IfxEgtm_Dtm_4, IfxEgtm_AdcDtmAuxInput_GTBF2OUT2_4, 4), /* CDTM 2, DTM 4; SELx = 4 */
     IFXEGTM_CFG_GETINPUTENTRY(IfxEgtm_Cdtm_2, IfxEgtm_Dtm_5, IfxEgtm_AdcDtmAuxInput_GTBF2OUT3_5, 4)  /* CDTM 2, DTM 5; SELx = 4 */
 };
+
+#endif /* #if !defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

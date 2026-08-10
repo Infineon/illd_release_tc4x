@@ -38,6 +38,7 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX)
 #include "IfxGeth_Eth.h"
 
 /******************************************************************************/
@@ -4079,6 +4080,137 @@ boolean IfxGeth_Eth_mdio_read_clause45(IfxGeth_Eth *geth, IfxGeth_PortIndex port
 
 #endif
 
+
+#if defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC48X)
+uint64 IfxGeth_Eth_getCrossTimestampSyncPtp(IfxGeth_Eth *geth)
+{
+    uint64 localVariable64 = 0;
+    localVariable64 = (uint64) geth->gethSFR->XTIMESTAMP.SYNC_PTP_LOW.U; /*Read Low register first*/
+    localVariable64 |= ((uint64)geth->gethSFR->XTIMESTAMP.SYNC_PTP_HIGH.U << 32);
+
+    return localVariable64;
+}
+
+
+uint64 IfxGeth_Eth_getCrossTimestampLocalPtp(IfxGeth_Eth *geth)
+{
+    uint64 localVariable64 = 0;
+    localVariable64 = (uint64) geth->gethSFR->XTIMESTAMP.LOCAL_PTP_LOW.U; /*Read Low register first*/
+    localVariable64 |= ((uint64)geth->gethSFR->XTIMESTAMP.LOCAL_PTP_HIGH.U << 32);
+
+    return localVariable64;
+}
+
+
+void IfxGeth_Eth_initCrossTimeStamp(IfxGeth_Eth *geth, IfxGeth_Eth_CrossTimeStampConfig *config)
+{
+    Ifx_GETH_XTIMESTAMP_CTRL ctrl;
+    ctrl.U = 0;
+
+    ctrl.B.TRIGEN0 = config->triggerEnable0;
+    ctrl.B.TRIGEN1 = config->triggerEnable1;
+    ctrl.B.TRIGEN2 = config->triggerEnable2;
+    ctrl.B.TRIGEN3 = config->triggerEnable3;
+
+    ctrl.B.IE = config->interruptEnable;
+
+    geth->gethSFR->XTIMESTAMP.CTRL.U = ctrl.U;
+
+    if(config->interruptEnable)
+    {
+        if (config->interrupt.priority > 0)
+        {
+            IfxGeth_ServiceRequest xTimeStampServiceRequestIndex = IfxGeth_ServiceRequest_XTIMESTAMP;
+
+            volatile Ifx_SRC_SRCR *srcSFR;
+            srcSFR = IfxGeth_getSrcPointer(xTimeStampServiceRequestIndex);
+            IfxSrc_init(srcSFR, config->interrupt.provider, config->interrupt.priority, config->interrupt.vmId);
+            IfxSrc_enable(srcSFR);
+        }
+    }
+}
+
+
+void IfxGeth_Eth_flushCrossTimeStamp(IfxGeth_Eth *geth)
+{
+    geth->gethSFR->XTIMESTAMP.CTRL.B.FLUSH = 1;
+}
+
+
+void IfxGeth_Eth_triggerCrossTimeStamp(IfxGeth_Eth *geth, uint16 identifier)
+{
+    geth->gethSFR->XTIMESTAMP.CTRL.B.SW_TRIGID = identifier; /*S/w defined ID used to identify the corresponding cross timestamp snapshot using the XTIMESTAMP_STATUS.SW_TRIGID bit-field. Valid values are 1 to 15.*/
+    geth->gethSFR->XTIMESTAMP.CTRL.B.SW_TRIG = 1; /*Ifx_GETH_XTIMESTAMP_CTRL.B.TRIGEN0 must be set*/
+}
+
+
+uint8 IfxGeth_Eth_getCrossTimeStampFillLevelStatus(IfxGeth_Eth *geth)
+{
+    return (uint8) (geth->gethSFR->XTIMESTAMP.STATUS.B.FILL);
+}
+
+
+uint8 IfxGeth_Eth_getCrossTimeStampTriggerIdStatus(IfxGeth_Eth *geth)
+{
+    return (uint8) (geth->gethSFR->XTIMESTAMP.STATUS.B.TRIG_ID);
+}
+
+
+uint8 IfxGeth_Eth_getCrossTimeStampSwTriggerIdStatus(IfxGeth_Eth *geth)
+{
+    return (uint8) (geth->gethSFR->XTIMESTAMP.STATUS.B.SW_TRIGID);
+}
+
+
+boolean IfxGeth_Eth_getCrossTimeStampTriggerLost0Status(IfxGeth_Eth *geth)
+{
+    return (boolean) (geth->gethSFR->XTIMESTAMP.STATUS.B.TL0);
+}
+
+
+boolean IfxGeth_Eth_getCrossTimeStampTriggerLost1Status(IfxGeth_Eth *geth)
+{
+    return (boolean) (geth->gethSFR->XTIMESTAMP.STATUS.B.TL1);
+}
+
+
+boolean IfxGeth_Eth_getCrossTimeStampTriggerLost2Status(IfxGeth_Eth *geth)
+{
+    return (boolean) (geth->gethSFR->XTIMESTAMP.STATUS.B.TL2);
+}
+
+
+boolean IfxGeth_Eth_getCrossTimeStampTriggerLost3Status(IfxGeth_Eth *geth)
+{
+    return (boolean) (geth->gethSFR->XTIMESTAMP.STATUS.B.TL3);
+}
+
+
+void IfxGeth_Eth_clearCrossTimeStampTriggerLost0Status(IfxGeth_Eth *geth)
+{
+    geth->gethSFR->XTIMESTAMP.STATUS.U = 1 << IFX_GETH_XTIMESTAMP_STATUS_TL0_OFF;
+}
+
+
+void IfxGeth_Eth_clearCrossTimeStampTriggerLost1Status(IfxGeth_Eth *geth)
+{
+    geth->gethSFR->XTIMESTAMP.STATUS.U = 1 << IFX_GETH_XTIMESTAMP_STATUS_TL1_OFF;
+}
+
+
+void IfxGeth_Eth_clearCrossTimeStampTriggerLost2Status(IfxGeth_Eth *geth)
+{
+    geth->gethSFR->XTIMESTAMP.STATUS.U = 1 << IFX_GETH_XTIMESTAMP_STATUS_TL2_OFF;
+}
+
+
+void IfxGeth_Eth_clearCrossTimeStampTriggerLost3Status(IfxGeth_Eth *geth)
+{
+    geth->gethSFR->XTIMESTAMP.STATUS.U = 1 << IFX_GETH_XTIMESTAMP_STATUS_TL3_OFF;
+}
+#endif /* #if defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) */
+
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

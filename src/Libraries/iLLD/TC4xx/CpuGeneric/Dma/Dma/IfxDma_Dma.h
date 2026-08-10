@@ -3,7 +3,7 @@
  * \brief DMA DMA details
  * \ingroup IfxLld_Dma
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -118,7 +118,7 @@
  *
  * \subsection IfxLld_Dma_Dma_Peripheral Peripheral-to-Memory Transfers
  *
- * The content of 8 ADC result registers should be transfered to a memory location in DSPR whenever
+ * The content of 8 ADC result registers should be transferred to a memory location in DSPR whenever
  * an VADC autoscan has been finished. After the DMA transaction, an interrupt should be triggered
  * so that the CPU can process the conversion results.
  *
@@ -243,7 +243,7 @@
  *              chnCfg.hardwareRequestEnabled  = TRUE; // will be triggered from VADC service request
  *
  *              // interrupt configuration
- *              chnCfg.channelInterruptEnabled       = TRUE; // service request from DMA after all words have been transfered
+ *              chnCfg.channelInterruptEnabled       = TRUE; // service request from DMA after all words have been transferred
  *              chnCfg.channelInterruptPriority      = IFX_INTPRIO_DMA_CH0;
  *              chnCfg.channelInterruptTypeOfService = IfxCpu_Irq_getTos(IfxCpu_getCoreIndex());
  *
@@ -266,7 +266,7 @@
  *              // IfxDma_Dma_Channel dmaChn; // declared globally
  *              IfxDma_Dma_initChannel(&dmaChn, &chnCfg);
  *
- *              // configure IRQ handler which will be called after all result registers have been transfered
+ *              // configure IRQ handler which will be called after all result registers have been transferred
  *              IfxCpu_Irq_installInterruptHandler(&dmaCh0ISR, IFX_INTPRIO_DMA_CH0);
  *
  *              // enable CPU interrupts
@@ -409,7 +409,7 @@
  *      while( !(IfxDma_Dma_getSrcPointer(&chn))->B.SRR );
  * \endcode
  *
- * In order to synchronize with the end of linked list operations, it's recommended to poll the service request flag (triggered via linkedList[NUM_LINKED_LIST_ITEMS-1].CHCSR.B.SIT after the last word has been transfered), and not the transaction count as shown before, because a linked list will initiate multiple transactions.
+ * In order to synchronize with the end of linked list operations, it's recommended to poll the service request flag (triggered via linkedList[NUM_LINKED_LIST_ITEMS-1].CHCSR.B.SIT after the last word has been transferred), and not the transaction count as shown before, because a linked list will initiate multiple transactions.
  *
  * \defgroup IfxLld_Dma_Dma DMA
  * \ingroup IfxLld_Dma

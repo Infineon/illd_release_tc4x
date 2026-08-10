@@ -3,7 +3,7 @@
  * \brief PORT  basic functionality
  * \ingroup IfxLld_Port
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -112,6 +112,7 @@ typedef enum
     IfxPort_InputMode_pullUp       = ((2U << 4U) | (0U << 1U) | 0U)
 } IfxPort_InputMode;
 
+#if !defined(DEVICE_TC4PX) && !defined(DEVICE_TC4EX) && !defined(DEVICE_TC46X)
 /** \brief specifies LVDS-M or LVDS-H mode as declare in Register MODULE_PORT.LPCRx.LVDSM
  */
 typedef enum
@@ -120,13 +121,14 @@ typedef enum
     IfxPort_LvdsMode_medium = 1  /**< \brief LVDS-M Mode */
 } IfxPort_LvdsMode;
 
-/** \brief specifies external or internal LVDS reciever Termination Mode
+/** \brief specifies external or internal LVDS receiver Termination Mode
  */
 typedef enum
 {
     IfxPort_LvdsTerm_external = 0,  /**< \brief external termination */
     IfxPort_LvdsTerm_internal = 1   /**< \brief 100 Ohm internal termination */
 } IfxPort_LvdsTerm;
+#endif /* #if !defined(DEVICE_TC4PX) && !defined(DEVICE_TC4EX)  && !defined(DEVICE_TC46X) */
 
 /** \brief Ifx_P input / output mode definition.
  *
@@ -279,6 +281,18 @@ typedef enum
     IfxPort_BandgapTrimConfig_1P215V = 15   /**< \brief The trimming value is fifteen. */
 } IfxPort_BandgapTrimConfig;
 
+#if defined(DEVICE_TC45X) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC44X) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
+/** \brief configure the timer
+ */
+typedef enum
+{
+    IfxPort_BlankingTimerConfig_0ms = 0,  /**< \brief Corresponds to blanking time of 0 ms */
+    IfxPort_BlankingTimerConfig_2ms = 1,  /**< \brief Corresponds to blanking time of 2 ms */
+    IfxPort_BlankingTimerConfig_4ms = 2,  /**< \brief Corresponds to blanking time of 4 ms */
+    IfxPort_BlankingTimerConfig_7ms = 3   /**< \brief Corresponds to blanking time of 7 ms */
+} IfxPort_BlankingTimerConfig;
+#endif /* #if defined(DEVICE_TC45X) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC44X) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX) */
+
 /** \brief Emergency status Push-Pull level
  */
 typedef enum
@@ -320,6 +334,7 @@ typedef enum
     IfxPort_LvdsPullDown_enable  = 1   /**< \brief Enable Pull Down resistor */
 } IfxPort_LvdsPullDown;
 
+#if !defined(DEVICE_TC4PX) && !defined(DEVICE_TC4EX) && !defined(DEVICE_TC46X)
 /** \brief Specifies LVDS-Termination mode as declare in Register MODULE_PORT.LPCRx.TERM
  */
 typedef enum
@@ -327,6 +342,7 @@ typedef enum
     IfxPort_LvdsTerminationMode_external = 0,  /**< \brief Termination Mode External */
     IfxPort_LvdsTerminationMode_internal = 1   /**< \brief Termination Mode Internal */
 } IfxPort_LvdsTerminationMode;
+#endif /* #if !defined(DEVICE_TC4PX) && !defined(DEVICE_TC4EX) && !defined(DEVICE_TC46X) */
 
 /** \brief Port Pad Access Groups
  */
@@ -378,10 +394,14 @@ typedef struct
  */
 typedef struct
 {
+#if !defined(DEVICE_TC4PX) && !defined(DEVICE_TC4EX)  && !defined(DEVICE_TC46X)
     IfxPort_LvdsMode     lvdsMode;                   /**< \brief specifies LVDS-M or LVDS-H mode */
+#endif /* #if !defined(DEVICE_TC4PX) && !defined(DEVICE_TC4EX) */
     IfxPort_ControlledBy enablePortControlled;       /**< \brief specifies whether LVDS is controlled by PORT or HSCT */
     IfxPort_PadSupply    padSupply;                  /**< \brief specify supply voltage */
-    IfxPort_LvdsTerm     lvdsTerm;                   /**< \brief specifies external or internal LVDS reciever Termination Mode */
+#if !defined(DEVICE_TC4PX) && !defined(DEVICE_TC4EX)  && !defined(DEVICE_TC46X)
+    IfxPort_LvdsTerm     lvdsTerm;                   /**< \brief specifies external or internal LVDS receiver Termination Mode */
+#endif /* #if !defined(DEVICE_TC4PX) && !defined(DEVICE_TC4EX)  && !defined(DEVICE_TC46X)*/
 } IfxPort_LvdsConfig;
 
 /** \brief Defines a pin
@@ -565,6 +585,7 @@ IFX_INLINE void IfxPort_setPinState(Ifx_P *port, uint8 pinIndex, IfxPort_State a
  */
 IFX_INLINE void IfxPort_togglePin(Ifx_P *port, uint8 pinIndex);
 
+#if !defined(DEVICE_TC4PX) && !defined(DEVICE_TC4EX) && !defined(DEVICE_TC46X)
 /** \brief Select the reduced frequency mode LVDS-M/LVDS-H.
  *
  * \param[inout] port     Pointer to Port Register space.
@@ -583,6 +604,7 @@ IFX_INLINE void IfxPort_setPinLVDS(Ifx_P *port, uint8 pinIndex, IfxPort_LvdsMode
  * \retval IfxPort_LvdsMode Specifies the lvds mode. Range: \ref IfxPort_LvdsMode.
  */
 IFX_INLINE IfxPort_LvdsMode IfxPort_getPinLVDS(Ifx_P *port, uint8 pinIndex);
+#endif /* #if !defined(DEVICE_TC4PX) && !defined(DEVICE_TC4EX)  && !defined(DEVICE_TC46X) */
 
 /******************************************************************************/
 /*-------------------------Global Function Prototypes-------------------------*/
@@ -1023,6 +1045,16 @@ IFX_EXTERN void IfxPort_setPinModex(Ifx_P *port, uint8 pinIndex, IfxPort_Modex m
  */
 IFX_EXTERN void IfxPort_configureAccessToPort(Ifx_P *port, IfxPort_PadAccessGroup group, void *apConfig);
 
+#if defined(DEVICE_TC45X) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC44X) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
+/** \brief Configures LDO.
+ *
+ * \param[inout] port       Pointer to the port which should be accessed.
+ * \param[in]   timerConfig Configure the timer. Range: \ref IfxPort_BlankingTimerConfig.
+ *
+ * \retval None
+ */
+IFX_EXTERN void IfxPort_configureLDO(Ifx_P *port, IfxPort_BlankingTimerConfig timerConfig);
+#endif /* #if defined(DEVICE_TC45X) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC44X) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX) */
 
 /******************************************************************************/
 /*---------------------Inline Function Implementations------------------------*/
@@ -1099,6 +1131,7 @@ IFX_INLINE void IfxPort_togglePin(Ifx_P *port, uint8 pinIndex)
 }
 
 
+#if !defined(DEVICE_TC4PX) && !defined(DEVICE_TC4EX)  && !defined(DEVICE_TC46X)
 IFX_INLINE void IfxPort_setPinLVDS(Ifx_P *port, uint8 pinIndex, IfxPort_LvdsMode lvdsMode)
 {
     uint32               lpcrOffset = (pinIndex / 2);
@@ -1123,6 +1156,7 @@ IFX_INLINE IfxPort_LvdsMode IfxPort_getPinLVDS(Ifx_P *port, uint8 pinIndex)
 
     return (IfxPort_LvdsMode)(lpcr[lpcrOffset].LPCR.B.LVDSM);
 }
+#endif /* #if !defined(DEVICE_TC4PX) && !defined(DEVICE_TC4EX)  && !defined(DEVICE_TC46X) */
 
 
 IFX_INLINE void IfxPort_initProtConfig(IfxPort_ProtConfig *config)

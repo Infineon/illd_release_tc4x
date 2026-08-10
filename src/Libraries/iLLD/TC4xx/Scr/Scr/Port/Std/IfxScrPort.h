@@ -3,7 +3,7 @@
  * \brief SCR PORT  basic functionality
  * \ingroup IfxLld_Scr
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -92,6 +92,33 @@
 #if defined(DEVICE_TC4DX)
 #include "_Reg/TC4Dx/IfxScr_bf.h"
 #include "_Reg/TC4Dx/IfxScr_reg.h"
+#elif defined(DEVICE_TC49XN)
+#include "_Reg/TC49xN/IfxScr_bf.h"
+#include "_Reg/TC49xN/IfxScr_reg.h"
+#elif defined(DEVICE_TC48X)
+#include "_Reg/TC48x/IfxScr_bf.h"
+#include "_Reg/TC48x/IfxScr_reg.h"
+#elif defined(DEVICE_TC48XAA)
+#include "_Reg/TC48xAA/IfxScr_bf.h"
+#include "_Reg/TC48xAA/IfxScr_reg.h"
+#elif defined(DEVICE_TC46XAA)
+#include "_Reg/TC46xAA/IfxScr_bf.h"
+#include "_Reg/TC46xAA/IfxScr_reg.h"
+#elif defined(DEVICE_TC46X)
+#include "_Reg/TC46x/IfxScr_bf.h"
+#include "_Reg/TC46x/IfxScr_reg.h"
+#elif defined(DEVICE_TC44X)
+#include "_Reg/TC44x/IfxScr_bf.h"
+#include "_Reg/TC44x/IfxScr_reg.h"
+#elif defined(DEVICE_TC4ZX)
+#include "_Reg/TC4Zx/IfxScr_bf.h"
+#include "_Reg/TC4Zx/IfxScr_reg.h"
+#elif defined(DEVICE_TC4EX)
+#include "_Reg/TC4Ex/IfxScr_bf.h"
+#include "_Reg/TC4Ex/IfxScr_reg.h"
+#elif defined(DEVICE_TC4PX)
+#include "_Reg/TC4Px/IfxScr_bf.h"
+#include "_Reg/TC4Px/IfxScr_reg.h"
 #endif /* #if defined(DEVICE_TC4DX) */
 
 /******************************************************************************/
@@ -338,14 +365,22 @@ IFX_INLINE void IfxScrPort_setPinHigh(IfxScrPort_Index portIndex, IfxScrPort_Pin
     }
     else if (portIndex == IfxScrPort_Index_02)
     {
+#if defined(DEVICE_TC49XN)	
+        IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, (pinIndex < IfxScrPort_PinIndex_5));
 
+        if (pinIndex < IfxScrPort_PinIndex_5)
+#endif /* #if defined(DEVICE_TC49XN) */		
         {
             SCR_P2_OMSR.U = (SCR_P2_OMSR.U | (1 << pinIndex));
         }
     }
     else
     {
+#if defined(DEVICE_TC49XN)	
+        IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, (pinIndex < IfxScrPort_PinIndex_5));
 
+        if (pinIndex < IfxScrPort_PinIndex_5)
+#endif /* #if defined(DEVICE_TC49XN) */		
         {
             SCR_P3_OMSR.U = (SCR_P3_OMSR.U | (1 << pinIndex));
         }
@@ -367,14 +402,22 @@ IFX_INLINE void IfxScrPort_setPinLow(IfxScrPort_Index portIndex, IfxScrPort_PinI
     }
     else if (portIndex == IfxScrPort_Index_02)
     {
+#if defined(DEVICE_TC49XN)	
+        IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, (pinIndex < IfxScrPort_PinIndex_5));
 
+        if (pinIndex < IfxScrPort_PinIndex_5)
+#endif /* #if defined(DEVICE_TC49XN) */		
         {
             SCR_P2_OMCR.U = (SCR_P2_OMCR.U | (1 << pinIndex));
         }
     }
     else
     {
+#if defined(DEVICE_TC49XN)	
+        IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, (pinIndex < IfxScrPort_PinIndex_5));
 
+        if (pinIndex < IfxScrPort_PinIndex_5)
+#endif /* #if defined(DEVICE_TC49XN) */		
         {
             SCR_P3_OMCR.U = (SCR_P3_OMCR.U | (1 << pinIndex));
         }
@@ -396,14 +439,22 @@ IFX_INLINE void IfxScrPort_togglePinState(IfxScrPort_Index portIndex, IfxScrPort
     }
     else if (portIndex == IfxScrPort_Index_02)
     {
+#if defined(DEVICE_TC49XN)	
+        IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, (pinIndex < IfxScrPort_PinIndex_5));
 
+        if (pinIndex < IfxScrPort_PinIndex_5)
+#endif /* #if defined(DEVICE_TC49XN) */		
         {
             SCR_P2_OMTR.U = (SCR_P2_OMTR.U | (1 << pinIndex));
         }
     }
     else
     {
+#if defined(DEVICE_TC49XN)	
+        IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, (pinIndex < IfxScrPort_PinIndex_5));
 
+        if (pinIndex < IfxScrPort_PinIndex_5)
+#endif /* #if defined(DEVICE_TC49XN) */		
         {
             SCR_P3_OMTR.U = (SCR_P3_OMTR.U | (1 << pinIndex));
         }
@@ -426,14 +477,22 @@ IFX_INLINE IfxScrPort_PinState IfxScrPort_getPinState(IfxScrPort_Index portIndex
     }
     else if (portIndex == IfxScrPort_Index_02)
     {
+#if defined(DEVICE_TC49XN)	
+        IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, (pinIndex > IfxScrPort_PinIndex_4));
 
+        if (pinIndex < IfxScrPort_PinIndex_5)
+#endif /* #if defined(DEVICE_TC49XN) */		
         {
             pinState = (IfxScrPort_PinState)((SCR_P2_IN.U & (1 << pinIndex)) >> pinIndex);
         }
     }
     else
     {
+#if defined(DEVICE_TC49XN)	
+        IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, (pinIndex < IfxScrPort_PinIndex_5));
 
+        if (pinIndex < IfxScrPort_PinIndex_5)
+#endif		
         {
             pinState = (IfxScrPort_PinState)((SCR_P3_IN.U & (1 << pinIndex)) >> pinIndex);
         }
@@ -580,6 +639,9 @@ IFX_INLINE void IfxScrPort_configurePortControl(IfxScrPort_Index port, IfxScrPor
     }
     else if (port == IfxScrPort_Index_02)
     {
+#if defined(DEVICE_TC49XN)	
+    	IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, (pinIndex < IfxScrPort_PinIndex_5));
+#endif		
         switch (pinIndex)
         {
         case IfxScrPort_PinIndex_0:
@@ -597,6 +659,7 @@ IFX_INLINE void IfxScrPort_configurePortControl(IfxScrPort_Index port, IfxScrPor
         case IfxScrPort_PinIndex_4:
         	SCR_P2_IOCR4.B.PC = controlValue;
             break;
+#if !defined(DEVICE_TC49XN)			
         case IfxScrPort_PinIndex_5:
 			SCR_P2_IOCR5.B.PC = controlValue;
 			break;
@@ -606,6 +669,7 @@ IFX_INLINE void IfxScrPort_configurePortControl(IfxScrPort_Index port, IfxScrPor
 		case IfxScrPort_PinIndex_7:
 			SCR_P2_IOCR7.B.PC = controlValue;
 			break;
+#endif /* #if !defined(DEVICE_TC49XN) */			
         default:
             /* Invalid Pin selected */
             break;
@@ -613,6 +677,9 @@ IFX_INLINE void IfxScrPort_configurePortControl(IfxScrPort_Index port, IfxScrPor
     }
     else if (port == IfxScrPort_Index_03)
     {
+#if defined(DEVICE_TC49XN)	
+    	IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, (pinIndex < IfxScrPort_PinIndex_5));
+#endif		
         switch (pinIndex)
         {
         case IfxScrPort_PinIndex_0:
@@ -630,6 +697,7 @@ IFX_INLINE void IfxScrPort_configurePortControl(IfxScrPort_Index port, IfxScrPor
         case IfxScrPort_PinIndex_4:
         	SCR_P3_IOCR4.B.PC = controlValue;
             break;
+#if !defined(DEVICE_TC49XN)			
         case IfxScrPort_PinIndex_5:
         	SCR_P3_IOCR5.B.PC = controlValue;
             break;
@@ -639,6 +707,7 @@ IFX_INLINE void IfxScrPort_configurePortControl(IfxScrPort_Index port, IfxScrPor
         case IfxScrPort_PinIndex_7:
         	SCR_P3_IOCR7.B.PC = controlValue;
             break;
+#endif /* #if !defined(DEVICE_TC49XN) */			
         default:
             /* Invalid Pin selected */
             break;
@@ -724,6 +793,9 @@ IFX_INLINE void IfxScrPort_setPadDriverMode(IfxScrPort_Index port, IfxScrPort_Pi
     }
     else if (port == IfxScrPort_Index_02)
     {
+#if defined(DEVICE_TC49XN)	
+        IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, (pinIndex < IfxScrPort_PinIndex_5));
+#endif
         switch (pinIndex)
         {
         case IfxScrPort_PinIndex_0:
@@ -741,6 +813,7 @@ IFX_INLINE void IfxScrPort_setPadDriverMode(IfxScrPort_Index port, IfxScrPort_Pi
         case IfxScrPort_PinIndex_4:
         	SCR_P2_PDR4.U = ((SCR_P2_PDR4.U & 0xF0) | (mode));
             break;
+#if !defined(DEVICE_TC49XN)			
         case IfxScrPort_PinIndex_5:
         	SCR_P2_PDR4.U = ((SCR_P2_PDR4.U & 0x0F) | (mode << shift));
             break;
@@ -750,6 +823,7 @@ IFX_INLINE void IfxScrPort_setPadDriverMode(IfxScrPort_Index port, IfxScrPort_Pi
         case IfxScrPort_PinIndex_7:
         	SCR_P2_PDR6.U = ((SCR_P2_PDR6.U & 0x0F) | (mode << shift));
             break;
+#endif /* #if !defined(DEVICE_TC49XN) */			
         default:
             /* Invalid Pin selected */
             break;
@@ -757,6 +831,9 @@ IFX_INLINE void IfxScrPort_setPadDriverMode(IfxScrPort_Index port, IfxScrPort_Pi
     }
     else
     {
+#if defined(DEVICE_TC49XN)	
+        IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, (pinIndex < IfxScrPort_PinIndex_5));
+#endif
         switch (pinIndex)
         {
         case IfxScrPort_PinIndex_0:
@@ -774,6 +851,7 @@ IFX_INLINE void IfxScrPort_setPadDriverMode(IfxScrPort_Index port, IfxScrPort_Pi
         case IfxScrPort_PinIndex_4:
         	SCR_P3_PDR4.U = ((SCR_P3_PDR4.U & 0xF0) | (mode));
             break;
+#if !defined(DEVICE_TC49XN)			
         case IfxScrPort_PinIndex_5:
         	SCR_P3_PDR4.U = ((SCR_P3_PDR4.U & 0x0F) | (mode << shift));
             break;
@@ -783,6 +861,7 @@ IFX_INLINE void IfxScrPort_setPadDriverMode(IfxScrPort_Index port, IfxScrPort_Pi
         case IfxScrPort_PinIndex_7:
         	SCR_P3_PDR6.U = ((SCR_P3_PDR6.U & 0x0F) | (mode << shift));
             break;
+#endif /* #if !defined(DEVICE_TC49XN) */			
         default:
             /* Invalid Pin selected */
             break;

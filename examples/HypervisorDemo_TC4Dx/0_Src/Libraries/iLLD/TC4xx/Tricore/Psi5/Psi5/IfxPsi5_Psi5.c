@@ -38,6 +38,7 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X) && !defined(DEVICE_TC4EX) && !defined(DEVICE_TC4PX)
 #include "IfxPsi5_Psi5.h"
 
 /******************************************************************************/
@@ -584,6 +585,7 @@ boolean IfxPsi5_Psi5_sendChannelData(IfxPsi5_Psi5_Channel *channel, uint64 data)
         return TRUE;
     }
 }
+#endif /* #if !defined(DEVICE_TC45X) && !defined(DEVICE_TC4EX) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

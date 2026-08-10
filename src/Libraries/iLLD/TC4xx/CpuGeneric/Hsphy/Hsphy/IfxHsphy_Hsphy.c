@@ -2,7 +2,7 @@
  * \file IfxHsphy_Hsphy.c
  * \brief HSPHY HSPHY details
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -38,6 +38,7 @@
 #pragma diag_suppress 96	/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC4EX)  && !defined(DEVICE_TC4PX)
 #include "IfxHsphy_Hsphy.h"
 
 /******************************************************************************/
@@ -95,7 +96,15 @@ IfxHsphy_status IfxHsphy_Hsphy_initModule(IfxHsphy_Hsphy *hsphy, IfxHsphy_Hsphy_
     boolean                    retvalCheck       = FALSE;
 
     /* Check the validity of connection for module. Lookup if it is a valid config for chipset */
+#if defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC45X)
+    for (index = IFXHSPHY_START_INDEX; index <= IFXHSPHY_END_INDEX; index++)
+#elif defined(DEVICE_TC4DX)
     for (index = 0; index < IFXHSPHY_NUM_OF_PHY; index++)
+#elif defined(DEVICE_TC4ZX)
+    for (index = 0; index < IFXHSPHY_ACTUAL_NUM_OF_PHY; index++)
+#else	
+    for (index = IFXHSPHY_START_INDEX; index < IFXHSPHY_END_INDEX; index++)
+#endif /* #if defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC45X) */
 	{
     	retval &= IfxHsphy_Hsphy_phyInit(hsphy->hsphyData[index], &config->phyConfig[index]);
 
@@ -120,7 +129,14 @@ IfxHsphy_status IfxHsphy_Hsphy_initModule(IfxHsphy_Hsphy *hsphy, IfxHsphy_Hsphy_
         return IfxHsphy_status_timeOutError;
     }
 
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX)
+#if defined(DEVICE_TC4DX)
     for (index = 0; index < IFXHSPHY_NUM_OF_PHY; index++)
+#elif defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X)
+    for (index = IFXHSPHY_START_INDEX; index < IFXHSPHY_END_INDEX; index++)
+#elif defined(DEVICE_TC4ZX)
+    for (index = 0; index < IFXHSPHY_ACTUAL_NUM_OF_PHY; index++)
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) */
     {
         if ((hsphy->hsphyData[index]->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_xspiPads) && (hsphy->hsphyData[index]->hsphyCfg.cfgData != NULL_PTR))
         {
@@ -141,8 +157,17 @@ IfxHsphy_status IfxHsphy_Hsphy_initModule(IfxHsphy_Hsphy *hsphy, IfxHsphy_Hsphy_
             return IfxHsphy_status_success;
         }
     }
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) */
 
+#if defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC45X)
+    for (index = IFXHSPHY_START_INDEX; index <= IFXHSPHY_END_INDEX; index++)
+#elif defined(DEVICE_TC4DX)
     for (index = 0; index < IFXHSPHY_NUM_OF_PHY; index++)
+#elif defined(DEVICE_TC4ZX)
+    for (index = 0; index < IFXHSPHY_ACTUAL_NUM_OF_PHY; index++)
+#else
+    for (index = IFXHSPHY_START_INDEX; index < IFXHSPHY_END_INDEX; index++)
+#endif /* #if defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC45X) */
     {
         hsphySFR->PHY[hsphy->hsphyData[index]->hsphyCfg.phyIdx].CTRL1.B.PWRDWN = 0;
         hsphySFR->PHY[hsphy->hsphyData[index]->hsphyCfg.phyIdx].CTRL1.B.RST    = 0;
@@ -358,7 +383,11 @@ IfxHsphy_status IfxHsphy_Hsphy_initModule(IfxHsphy_Hsphy *hsphy, IfxHsphy_Hsphy_
 void IfxHsphy_Hsphy_initModuleConfig(Ifx_HSPHY *hsphy, IfxHsphy_Hsphy_Cfg *config)
 {
     IfxHsphy_Hsphy_Cfg defaultConfig = {
+#if defined(DEVICE_TC45X)
+    	.hsphySFR     = &MODULE_HSPHY,
+#else
         .hsphySFR     = NULL_PTR,
+#endif /* #if defined(DEVICE_TC45X) */
 		
 #if IFXHSPHY_IS_PHY0_AVAILABLE
         /* Config the PHY[0] to use the xspi */
@@ -542,6 +571,8 @@ boolean IfxHsphy_Hsphy_phyInit(IfxHsphy_Hsphy_phyData *hsphyData, IfxHsphy_Hsphy
 
     return retval;
 }
+
+#endif /* #if !defined(DEVICE_TC4EX) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

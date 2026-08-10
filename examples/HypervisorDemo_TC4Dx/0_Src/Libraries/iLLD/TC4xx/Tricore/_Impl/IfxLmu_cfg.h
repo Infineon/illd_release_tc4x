@@ -41,6 +41,10 @@
 
 #if defined DEVICE_TC4DX
 #include "TC4Dx/IfxLmu_cfg_TC4Dx.h"
+#elif defined DEVICE_TC49XN
+#include "TC49xN/IfxLmu_cfg_TC49xN.h"
+#elif defined DEVICE_TC45X
+#include "TC45x/IfxLmu_cfg_TC45x.h"
 #endif
 
 #endif /* IFXLMU_CFG_H */

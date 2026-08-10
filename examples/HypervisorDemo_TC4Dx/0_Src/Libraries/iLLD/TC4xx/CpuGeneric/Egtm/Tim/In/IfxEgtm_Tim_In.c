@@ -38,6 +38,7 @@
 #pragma diag_suppress 96 /* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X)
 #include "IfxEgtm_Tim_In.h"
 #include "IfxEgtm_bf.h"
 #include "string.h"
@@ -443,6 +444,8 @@ void IfxEgtm_Tim_In_update(IfxEgtm_Tim_In *driver)
         IfxEgtm_Tim_Ch_clearNewValueEvent(driver->channel);
     }
 }
+
+#endif /* !defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

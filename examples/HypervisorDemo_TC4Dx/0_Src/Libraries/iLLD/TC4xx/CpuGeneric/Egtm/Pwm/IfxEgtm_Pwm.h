@@ -184,7 +184,7 @@
  * Before proceeding please ensure:
  *     -# Atom/Tom is present in cluster specified
  *     -# Atom/Tom and Dtm (if enabled) clock are properly configured (clock frequency > 0) and enabled
- *     -# Channel number specifed in channel configuration is present in submodule (Atom contains only 8 channels)
+ *     -# Channel number specified in channel configuration is present in submodule (Atom contains only 8 channels)
  *     -# Synchronous channel must always be next to last configured base or sync channel (last channel number + 1) E.g. If base channel is channel 5 then next channel numbers must be 6, 7, ... and so on.
  *     -# If DTM config is attached, then DTM is present for that channel
  *     -# Pin
@@ -347,6 +347,12 @@
     ((uint32)((subModule == IfxEgtm_Pwm_SubModule_tom) ||   \
               ((subModule == IfxEgtm_Pwm_SubModule_atom) && \
                ((uint8)channel < IFXEGTM_NUM_ATOM_CHANNELS))))
+
+#if defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
+/** \brief Mask for range of channel bitfields in Global control
+ */
+#define IFXEGTM_PWM_CHANNELS_MASK(firstChannel, lastChannel) ((uint32)(((uint32)1u << ((uint32)((uint32)lastChannel - (uint32)firstChannel + 1u) << 1u)) - 1u) << (((uint32)firstChannel & 0x7u) << 1u))
+#endif /* #if defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX) */
 
 /** \brief Value to enable UPEN of all channels in global control register
  */

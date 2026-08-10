@@ -2,7 +2,7 @@
  * \file IfxPpu_Intrinsics.h
  * \ingroup IfxLld_Ppu_Intrinsics Intrinsics
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -54,7 +54,10 @@
 #elif defined(__ghs__)
 #include "IfxCpu_IntrinsicsGhs.h"
 
-#elif defined(__CCAC__)
+#elif defined(__CCAC__) && defined(__IFX_LLVM__)
+#include "IfxPpu_IntrinsicsLlvm.h"
+
+#elif defined(__CCAC__) && !defined(__IFX_LLVM__)
 #include "IfxPpu_IntrinsicsMw.h"
 #else
 #error Compiler unsupported

@@ -3,7 +3,7 @@
  * \brief PSI5 on-chip implementation data
  * \ingroup IfxLld_Psi5
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -46,6 +46,20 @@
 
 #if defined DEVICE_TC4DX
 #include "TC4Dx/IfxPsi5_cfg_TC4Dx.h"
+#elif defined DEVICE_TC49XN
+#include "TC49xN/IfxPsi5_cfg_TC49xN.h"
+#elif defined DEVICE_TC44X
+#include "TC44x/IfxPsi5_cfg_TC44x.h"
+#elif defined DEVICE_TC46XAA
+#include "TC46xAA/IfxPsi5_cfg_TC46xAA.h"
+#elif defined DEVICE_TC46X
+#include "TC46x/IfxPsi5_cfg_TC46x.h"
+#elif defined DEVICE_TC48XAA
+#include "TC48xAA/IfxPsi5_cfg_TC48xAA.h"
+#elif defined DEVICE_TC48X
+#include "TC48x/IfxPsi5_cfg_TC48x.h"
+#elif defined DEVICE_TC4ZX
+#include "TC4Zx/IfxPsi5_cfg_TC4Zx.h"
 #endif
 
 #endif /* IFXPSI5_CFG_H */

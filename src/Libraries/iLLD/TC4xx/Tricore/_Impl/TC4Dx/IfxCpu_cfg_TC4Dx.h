@@ -3,7 +3,7 @@
  * \brief CPU on-chip implementation data
  * \ingroup IfxLld_Cpu
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *

@@ -3,7 +3,7 @@
  * \brief SCR Clock and interrupt functionality
  * \ingroup IfxLld_Scr
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -56,6 +56,33 @@
 #if defined(DEVICE_TC4DX)
 #include "_Reg/TC4Dx/IfxScr_bf.h"
 #include "_Reg/TC4Dx/IfxScr_reg.h"
+#elif defined(DEVICE_TC49XN)
+#include "_Reg/TC49xN/IfxScr_bf.h"
+#include "_Reg/TC49xN/IfxScr_reg.h"
+#elif defined(DEVICE_TC48X)
+#include "_Reg/TC48x/IfxScr_bf.h"
+#include "_Reg/TC48x/IfxScr_reg.h"
+#elif defined(DEVICE_TC48XAA)
+#include "_Reg/TC48xAA/IfxScr_bf.h"
+#include "_Reg/TC48xAA/IfxScr_reg.h"
+#elif defined(DEVICE_TC46XAA)
+#include "_Reg/TC46xAA/IfxScr_bf.h"
+#include "_Reg/TC46xAA/IfxScr_reg.h"
+#elif defined(DEVICE_TC46X)
+#include "_Reg/TC46x/IfxScr_bf.h"
+#include "_Reg/TC46x/IfxScr_reg.h"
+#elif defined(DEVICE_TC44X)
+#include "_Reg/TC44x/IfxScr_bf.h"
+#include "_Reg/TC44x/IfxScr_reg.h"
+#elif defined(DEVICE_TC4ZX)
+#include "_Reg/TC4Zx/IfxScr_bf.h"
+#include "_Reg/TC4Zx/IfxScr_reg.h"
+#elif defined(DEVICE_TC4EX)
+#include "_Reg/TC4Ex/IfxScr_bf.h"
+#include "_Reg/TC4Ex/IfxScr_reg.h"
+#elif defined(DEVICE_TC4PX)
+#include "_Reg/TC4Px/IfxScr_bf.h"
+#include "_Reg/TC4Px/IfxScr_reg.h"
 #endif /* #if defined(DEVICE_TC4DX) */
 
 /******************************************************************************/
@@ -318,9 +345,9 @@ IFX_INLINE void IfxScrScu_disableAllGeneratedReset(void);
  */
 IFX_INLINE void IfxScrScu_generateSoftwareReset(void);
 
-/** \brief Queries the status of occurence of SCR reset due to particular generated reset source
+/** \brief Queries the status of occurrence of SCR reset due to particular generated reset source
  * \param generatedReset Generated Reset source
- * \return Returns whether reset has occured or not
+ * \return Returns whether reset has occurred or not
  */
 IFX_INLINE boolean IfxScrScu_hasGeneratedResetOccured(IfxScrScu_GeneratedReset generatedReset);
 
@@ -335,13 +362,13 @@ IFX_INLINE void IfxScrScu_clearGeneratedResetFlag(IfxScrScu_GeneratedReset gener
  */
 IFX_INLINE void IfxScrScu_clearAllGeneratedResetFlags(void);
 
-/** \brief Queries the status of occurence of SCR reset triggered by Tricore(PMS or SMU)(aka Main Reset).
+/** \brief Queries the status of occurrence of SCR reset triggered by Tricore(PMS or SMU)(aka Main Reset).
  * \param mainReset Main Reset source. Options are IfxScrScu_MainReset_smu and IfxScrScu_MainReset_application(PMS)
- * \return Returns whether main reset has occured or not
+ * \return Returns whether main reset has occurred or not
  */
 IFX_INLINE boolean IfxScrScu_hasMainResetOccured(IfxScrScu_MainReset mainReset);
 
-/** \brief Clears the status flags associated with occurence of SCR reset triggered by Tricore(PMS or SMU)(aka Main Reset).
+/** \brief Clears the status flags associated with occurrence of SCR reset triggered by Tricore(PMS or SMU)(aka Main Reset).
  * \param mainReset Main Reset source. Options are IfxScrScu_MainReset_smu and IfxScrScu_MainReset_application(PMS)
  * \return None
  */
@@ -396,7 +423,7 @@ IFX_INLINE void IfxScrScu_enableModule(IfxScrScu_Module module);
  */
 IFX_INLINE void IfxScrScu_enableAllModules(void);
 
-/** \brief Enable Tricore wakeup on the occurence of specified event
+/** \brief Enable Tricore wakeup on the occurrence of specified event
  * \param event Event Name.Options are:
  *              IfxScrScu_WakeupEvent_rtcCompareMatch
  *              IfxScrScu_WakeupEvent_wcanWuf /
@@ -406,7 +433,7 @@ IFX_INLINE void IfxScrScu_enableAllModules(void);
  */
 IFX_INLINE void IfxScrScu_enableTricoreWakeupEvent(IfxScrScu_WakeupEvent event);
 
-/** \brief Disable Tricore wakeup on the occurence of specified event
+/** \brief Disable Tricore wakeup on the occurrence of specified event
  * \param event Event Name.Options are:
  *              IfxScrScu_WakeupEvent_rtcCompareMatch
  *              IfxScrScu_WakeupEvent_wcanWuf /
@@ -502,7 +529,7 @@ IFX_INLINE void IfxScrScu_enableWatchdog(void);
 IFX_INLINE void IfxScrScu_disableWatchdog(void);
 
 /** \brief Function to check for watchdog overflow
- * \return True --> Watchdog overflow occured
+ * \return True --> Watchdog overflow occurred
  *         False --> Normal mode. No overflow
  */
 IFX_INLINE boolean IfxScrScu_hasWatchdogOverflowOccured(void);
@@ -667,7 +694,7 @@ IfxScrScu_StandbyClockSource IfxScrScu_getStandbyClockSource(void)
     boolean source = 0;
     SCR_SCUSCR_PAGE.U = (SCR_SCUSCR_PAGE.U & (0xF8U));
     /* TOCHECK : Waiting for the page bit to update is really needed.
-     * In RTL the page value was not updated and and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
+     * In RTL the page value was not updated and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
      */
     while(!(SCR_SCUSCR_PAGE.B.PAGE == 0x0))
     {}
@@ -689,7 +716,7 @@ IFX_INLINE IfxScrScu_DivideFactor IfxScrScu_getClockDivider(void)
 {
     SCR_SCUSCR_PAGE.U = (SCR_SCUSCR_PAGE.U & (0xF8U));
     /* TOCHECK : Waiting for the page bit to update is really needed.
-     * In RTL the page value was not updated and and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
+     * In RTL the page value was not updated and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
      */
     while(!(SCR_SCUSCR_PAGE.B.PAGE == 0x0))
     {}
@@ -701,7 +728,7 @@ IFX_INLINE void IfxScrScu_setClockDivider(IfxScrScu_DivideFactor divider)
 {
     SCR_SCUSCR_PAGE.U = (SCR_SCUSCR_PAGE.U & (0xF8U));
     /* TOCHECK : Waiting for the page bit to update is really needed.
-     * In RTL the page value was not updated and and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
+     * In RTL the page value was not updated and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
      */
     while(!(SCR_SCUSCR_PAGE.B.PAGE == 0x0))
     {}
@@ -736,7 +763,7 @@ IFX_INLINE void IfxScrScu_enableDisableGeneratedInterrupt(IfxScrScu_GeneratedRes
 {
     SCR_SCUSCR_PAGE.U = (SCR_SCUSCR_PAGE.U & (0xF8U));
     /* TOCHECK : Waiting for the page bit to update is really needed.
-     * In RTL the page value was not updated and and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
+     * In RTL the page value was not updated and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
      */
     while(!(SCR_SCUSCR_PAGE.B.PAGE == 0x0))
     {}
@@ -759,7 +786,7 @@ IFX_INLINE void IfxScrScu_enableGeneratedReset(IfxScrScu_GeneratedReset generate
 {
     SCR_SCUSCR_PAGE.U = (SCR_SCUSCR_PAGE.U & (uint8)0xF8U);
     /* TOCHECK : Waiting for the page bit to update is really needed.
-     * In RTL the page value was not updated and and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
+     * In RTL the page value was not updated and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
      */
     while(!(SCR_SCUSCR_PAGE.B.PAGE == 0x0))
     {}
@@ -782,7 +809,7 @@ IFX_INLINE void IfxScrScu_disableGeneratedReset(IfxScrScu_GeneratedReset generat
 {
     SCR_SCUSCR_PAGE.U = (SCR_SCUSCR_PAGE.U & (uint8)0xF8U);
     /* TOCHECK : Waiting for the page bit to update is really needed.
-     * In RTL the page value was not updated and and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
+     * In RTL the page value was not updated and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
      */
     while(!(SCR_SCUSCR_PAGE.B.PAGE == 0x0))
     {}
@@ -890,7 +917,7 @@ IFX_INLINE void IfxScrScu_disableModule(IfxScrScu_Module module)
 {
     SCR_SCUSCR_PAGE.U = ((SCR_SCUSCR_PAGE.U & (0xF8U)) | (uint8)1U);
     /* TOCHECK : Waiting for the page bit to update is really needed.
-     * In RTL the page value was not updated and and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
+     * In RTL the page value was not updated and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
      */
     while(!(SCR_SCUSCR_PAGE.B.PAGE == 0x1))
     {}
@@ -909,7 +936,7 @@ IFX_INLINE void IfxScrScu_disableAllModules(void)
 {
     SCR_SCUSCR_PAGE.U   = ((SCR_SCUSCR_PAGE.U & (0xF8U)) | (uint8)1U);
     /* TOCHECK : Waiting for the page bit to update is really needed.
-     * In RTL the page value was not updated and and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
+     * In RTL the page value was not updated and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
      */
     while(!(SCR_SCUSCR_PAGE.B.PAGE == 0x1))
     {}
@@ -922,7 +949,7 @@ IFX_INLINE void IfxScrScu_enableModule(IfxScrScu_Module module)
 {
     SCR_SCUSCR_PAGE.U = ((SCR_SCUSCR_PAGE.U & (0xF8U)) | (uint8)1U);
     /* TOCHECK : Waiting for the page bit to update is really needed.
-     * In RTL the page value was not updated and and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
+     * In RTL the page value was not updated and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
      */
     while(!(SCR_SCUSCR_PAGE.B.PAGE == 0x1))
     {}
@@ -941,7 +968,7 @@ IFX_INLINE void IfxScrScu_enableAllModules(void)
 {
     SCR_SCUSCR_PAGE.U   = ((SCR_SCUSCR_PAGE.U & (0xF8U)) | (uint8)1U);
     /* TOCHECK : Waiting for the page bit to update is really needed.
-     * In RTL the page value was not updated and and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
+     * In RTL the page value was not updated and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
      */
     while(!(SCR_SCUSCR_PAGE.B.PAGE == 0x1))
     {}
@@ -954,7 +981,7 @@ IFX_INLINE void IfxScrScu_enableTricoreWakeupEvent(IfxScrScu_WakeupEvent event)
 {
     SCR_SCUSCR_PAGE.U   = (SCR_SCUSCR_PAGE.U & (0xF8U));
     /* TOCHECK : Waiting for the page bit to update is really needed.
-     * In RTL the page value was not updated and and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
+     * In RTL the page value was not updated and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
      */
     while(!(SCR_SCUSCR_PAGE.B.PAGE == 0x0))
     {}

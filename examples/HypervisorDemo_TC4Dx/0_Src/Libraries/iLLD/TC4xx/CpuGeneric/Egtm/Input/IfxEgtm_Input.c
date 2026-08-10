@@ -40,6 +40,7 @@
 #pragma diag_suppress 96 /* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X)
 #include "IfxEgtm_Input.h"
 
 /******************************************************************************/
@@ -258,6 +259,7 @@ IFX_STATIC boolean IfxEgtm_Input_selectPeripheralDtmAuxInput(uint32 inputEntry, 
     return result;
 }
 
+#endif /* !defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

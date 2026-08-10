@@ -56,6 +56,24 @@
 
 #if defined DEVICE_TC4DX
 #include "TC4Dx/IfxEgtm_cfg_TC4Dx.h"
+#elif defined DEVICE_TC49XN
+#include "TC49xN/IfxEgtm_cfg_TC49xN.h"
+#elif defined DEVICE_TC44X
+#include "TC44x/IfxEgtm_cfg_TC44x.h"
+#elif defined DEVICE_TC46XAA
+#include "TC46xAA/IfxEgtm_cfg_TC46xAA.h"
+#elif defined DEVICE_TC46X
+#include "TC46x/IfxEgtm_cfg_TC46x.h"
+#elif defined DEVICE_TC48XAA
+#include "TC48xAA/IfxEgtm_cfg_TC48xAA.h"
+#elif defined DEVICE_TC48X
+#include "TC48x/IfxEgtm_cfg_TC48x.h"
+#elif defined DEVICE_TC4ZX
+#include "TC4Zx/IfxEgtm_cfg_TC4Zx.h"
+#elif defined DEVICE_TC4EX
+#include "TC4Ex/IfxEgtm_cfg_TC4Ex.h"
+#elif defined DEVICE_TC4PX
+#include "TC4Px/IfxEgtm_cfg_TC4Px.h"
 #endif
 
 #endif /* IFXEGTM_CFG_H */

@@ -334,7 +334,7 @@
  *     // allow node to cold-start and wait until cold-start is successful
  *     while( !IfxEray_Eray_allowColdStart(&eray) );
  *
- *     // start the communication in cluster and wait until communication is successfull
+ *     // start the communication in cluster and wait until communication is successful
  *     while( !IfxEray_Eray_startCommunication(&eray) );
  *
  *     // wait until communication Controller enters NORMAL_ACTIVE or NORMAL_PASSIVE state, exit if communication Controller enters HALT state.
@@ -849,9 +849,9 @@ typedef struct
  */
 typedef struct
 {
-    boolean headerTransfered;        /**< \brief whether header section of frame is transfered or not. */
-    boolean dataTransfered;          /**< \brief whether data section of message buffer is transfered or not. */
-    boolean transferRequested;       /**< \brief whether frame in a slot is transfered or not. */
+    boolean headerTransfered;        /**< \brief whether header section of frame is transferred or not. */
+    boolean dataTransfered;          /**< \brief whether data section of message buffer is transferred or not. */
+    boolean transferRequested;       /**< \brief whether frame in a slot is transferred or not. */
     uint8   bufferIndex;             /**< \brief buffer index which gives slot for transfers. */
 } IfxEray_Eray_TransmitControl;
 

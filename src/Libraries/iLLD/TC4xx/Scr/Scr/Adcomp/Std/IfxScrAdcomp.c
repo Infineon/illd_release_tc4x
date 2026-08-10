@@ -2,7 +2,7 @@
  * \file IfxScrAdcomp.c
  * \brief SCR ADCOMP  basic functionality
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -37,9 +37,11 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X)
 
 #include "IfxScrAdcomp.h"
 
+#endif /* #if !defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

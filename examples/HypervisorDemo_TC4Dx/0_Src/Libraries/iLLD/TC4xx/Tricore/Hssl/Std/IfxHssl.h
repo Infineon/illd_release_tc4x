@@ -351,7 +351,9 @@ typedef struct
     IfxHssl_InterfaceMode     interfaceMode;           /**< \brief interface mode (master IF /slave IF) */
     boolean                   highSpeedMode;           /**< \brief high speed mode selection */
     boolean                   loopBack;                /**< \brief loopc back selection */
+#if !defined(DEVICE_TC4PX) && !defined(DEVICE_TC4EX) && !defined(DEVICE_TC46X)
     IfxPort_LvdsTerm          lvdsTerm;                /**< \brief specifies external or internal LVDS receiver Termination Mode */
+#endif
     IfxHssl_RefClockFrequency refClockFrequency;       /**< \brief specifies physical layer reference frequency and respective input frequency divider */
     IfxHssl_SysClockDivider   sysClockDivider;         /**< \brief specifies divider for system clock pad output frequency */
 } IfxHssl_Hsct_Config;
@@ -783,7 +785,7 @@ IFX_INLINE void IfxHssl_lockAddressWindows(Ifx_HSSL *hssl, IfxHssl_Hssl_Security
  */
 IFX_INLINE void IfxHssl_enableOcsTriggerWriteProtection(Ifx_HSSL *hssl);
 
-/** \brief Configure the Trigger Set and Otgb bus line. TGB and TGS can be configured only if TG_P is enabled , otherwise the write is ignored. Call API IfxHssl_enableOcsTriggerWriteProtection before calling this API.
+/** \brief Configure the Trigger Set and Otgb bus line. TGB and TGS can be configured only if TG_P is enabled, otherwise the write is ignored. Call API IfxHssl_enableOcsTriggerWriteProtection before calling this API.
  * \param hssl pointer to HSSL registers
  * \param triggerSet Trigger Set Configuration.
  * \param busNumber Otgb bus number.

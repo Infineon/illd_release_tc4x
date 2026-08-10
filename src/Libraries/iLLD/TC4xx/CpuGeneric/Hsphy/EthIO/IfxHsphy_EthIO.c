@@ -2,7 +2,7 @@
  * \file IfxHsphy_EthIO.c
  * \brief HSPHY ETHIO details
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -38,12 +38,14 @@
 #pragma diag_suppress 96	/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC4EX)  && !defined(DEVICE_TC4PX)
 #include "IfxHsphy_EthIO.h"
  
 /******************************************************************************/
 /*-------------------------Function Implementations---------------------------*/
 /******************************************************************************/
 
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX)
 void IfxHsphy_EthIO_interfaceSelect(Ifx_HSPHY *hsphySFR, IfxHsphy_EthIndex ethIndex, IfxHsphy_EthCtrlExtPhySel ethCtrlExtPhySel, boolean ethPort16)
 {
     hsphySFR->ETH[ethIndex].B.EPR = ethCtrlExtPhySel;
@@ -57,6 +59,56 @@ void IfxHsphy_EthIO_interfaceSelect(Ifx_HSPHY *hsphySFR, IfxHsphy_EthIndex ethIn
         hsphySFR->CMNCFG.B.FSR = 0;
     }
 }
+
+#else
+
+boolean IfxHsphy_EthIO_interfaceSelect(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_PhyIndex phyIndex, IfxHsphy_TrgtDevice device)
+{
+    boolean ret = TRUE;
+
+    if (phyIndex == IfxHsphy_PhyIndex_1)
+    {
+        if (device == IfxHsphy_TrgtDevice_eth)
+        {
+            /* ETH */
+            hsphyRegPtr->PHY[phyIndex].CTRL1.B.FSP = 0;
+        }
+        else if (device == IfxHsphy_TrgtDevice_trace)
+        {
+            /* TPCS */
+            hsphyRegPtr->PHY[phyIndex].CTRL1.B.FSP = 1;
+        }
+        else
+        {
+            ret = FALSE;
+        }
+    }
+
+#if IFXHSPHY_IS_PHY2_AVAILABLE
+    if (phyIndex == IfxHsphy_PhyIndex_2)
+	{
+		if (device == IfxHsphy_TrgtDevice_pcie)
+		{
+			/* PCIE */
+			hsphyRegPtr->PHY[phyIndex].CTRL1.B.FSP = 0;
+		}
+		else if (device == IfxHsphy_TrgtDevice_trace)
+		{
+			/* TPCS */
+			hsphyRegPtr->PHY[phyIndex].CTRL1.B.FSP = 1;
+		}
+		else
+		{
+			ret = FALSE;
+		}
+	}
+#endif /* #if IFXHSPHY_IS_PHY2_AVAILABLE */
+
+    return ret;
+}
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) */
+
+#endif /* #if !defined(DEVICE_TC4EX) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

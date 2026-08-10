@@ -23,7 +23,7 @@
  * intellectual property rights. See the full license text for the specific
  * language governing permissions and limitations under IFASLL.
  *
- *
+ * 
  */
 
 /******************************************************************************/
@@ -38,6 +38,7 @@
 #pragma diag_suppress 96 /* To suppress empty file warning */
 #endif
 
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX)  || defined(DEVICE_TC48X)
 #include "IfxSdmmc_Sd.h"
 #include "Stm/Std/IfxStm.h"
 
@@ -658,8 +659,9 @@ IFX_STATIC IfxSdmmc_Status IfxSdmmc_Sd_setVoltageWindow(IfxSdmmc_Sd *sd)
 void IfxSdmmc_Sd_setupPins(IfxSdmmc_Sd *sd, IfxSdmmc_Sd_Pins *pins)
 {
     IFX_UNUSED_PARAMETER(sd)
-    IfxPort_InputMode inMode = pins->inputMode;
-    IfxPort_PadDriver    speedGrade = pins->pinDriver;
+    IfxPort_InputMode inMode        = pins->inputMode;
+    IfxPort_PadDriver speedGrade    = pins->pinDriver;
+    IfxPort_PadDriver speedGradeCmd = pins->pinDriverCmd;
 
     IfxSdmmc_Clk_Out    *clk        = pins->clk;
     IfxSdmmc_Cmd_InOut  *cmd        = pins->cmd;
@@ -677,7 +679,7 @@ void IfxSdmmc_Sd_setupPins(IfxSdmmc_Sd *sd, IfxSdmmc_Sd_Pins *pins)
     if (cmd != NULL_PTR)
     {
         IfxPort_setPinModeInput(cmd->pin.port, cmd->pin.pinIndex, inMode);
-        IfxPort_setPinPadDriver(cmd->pin.port, cmd->pin.pinIndex, speedGrade);
+        IfxPort_setPinPadDriver(cmd->pin.port, cmd->pin.pinIndex, speedGradeCmd);
     }
 
     if (dat0 != NULL_PTR)
@@ -2333,6 +2335,7 @@ IfxSdmmc_Status IfxSdmmc_Sd_writeMultiBlock(IfxSdmmc_Sd *sd, uint32 address, uin
     return status;
 }
 
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX)  || defined(DEVICE_TC48X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

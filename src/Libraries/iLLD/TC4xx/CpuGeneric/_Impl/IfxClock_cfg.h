@@ -3,7 +3,7 @@
  * \brief CLOCK on-chip implementation data 
  * \ingroup IfxLld_Clock 
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -45,6 +45,32 @@
 
 #if defined DEVICE_TC4DX
 #include "TC4Dx/IfxClock_cfg_TC4Dx.h"
+#elif defined DEVICE_TC49XN
+#include "TC49xN/IfxClock_cfg_TC49xN.h"
+#elif defined DEVICE_TC44X
+#include "TC44x/IfxClock_cfg_TC44x.h"
+#elif defined DEVICE_TC45X
+#include "TC45x/IfxClock_cfg_TC45x.h"
+#elif defined DEVICE_TC46XAA
+#include "TC46xAA/IfxClock_cfg_TC46xAA.h"
+#elif defined DEVICE_TC46X
+#include "TC46x/IfxClock_cfg_TC46x.h"
+#elif defined DEVICE_TC48XAA
+#include "TC48xAA/IfxClock_cfg_TC48xAA.h"
+#elif defined DEVICE_TC48X
+#include "TC48x/IfxClock_cfg_TC48x.h"
+#elif defined DEVICE_TC4ZX
+#include "TC4Zx/IfxClock_cfg_TC4Zx.h"
+#elif defined DEVICE_TC4EX
+#include "TC4Ex/IfxClock_cfg_TC4Ex.h"
+#elif defined DEVICE_TC4PX
+#include "TC4Px/IfxClock_cfg_TC4Px.h"
 #endif
 
+/* Default OSCCON.MODE value used when IFX_CFG_CLOCK_EXT_CLOCK is 0. */
+/* This allows the oscillator mode to be selected via configuration (IfxClock_Config.oscConModeVal) */
+/* without relying on the IFX_CFG_CLOCK_EXT_CLOCK compile switch. */
+#ifndef IFX_CFG_CLOCK_OSCCON_MODE
+#    define IFX_CFG_CLOCK_OSCCON_MODE 0U /**< \brief Default OSCCON.MODE (0: oscillator enabled) */
+#endif
 #endif /* IFXCLOCK_CFG_H */

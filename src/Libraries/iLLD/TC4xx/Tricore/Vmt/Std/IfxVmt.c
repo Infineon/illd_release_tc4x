@@ -2,7 +2,7 @@
  * \file IfxVmt.c
  * \brief VMT  basic functionality
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -395,11 +395,25 @@ void IfxVmt_configureAccessToVmts(IfxApApu_ApuConfig *apConfig)
 {
     uint8 index;
 
+#if defined(DEVICE_TC45X)
+    for (index = 0; index <= IFXVMT_NUM_DMTU; index++)
+#else	
     for (index = 0; index < IFXVMT_NUM_DMTU; index++)
+#endif /* #if defined(DEVICE_TC45X) */	
     {
         /* Loop through all the instance */
-		{
+		#if defined(DEVICE_TC45X)
+        if (index != 2)
+		#endif /* #if defined(DEVICE_TC45X) */	
+		#if defined(DEVICE_TC4PX)
+        if (index != 1)
+		#endif /* #if defined(DEVICE_TC4PX) */
+        {
+#if defined(DEVICE_TC4PX)
+        Ifx_VMT *vmt = (Ifx_VMT *)(((uint32)&MODULE_VMT0) + index * ((uint32)&MODULE_VMT3 - (uint32)&MODULE_VMT2));
+#else
         Ifx_VMT *vmt = (Ifx_VMT *)(((uint32)&MODULE_VMT0) + index * ((uint32)&MODULE_VMT1 - (uint32)&MODULE_VMT0));
+#endif /* #if defined(DEVICE_TC4PX) */
         IfxApApu_init((Ifx_ACCEN_ACCEN *)&vmt->ACCENNOM, apConfig);
         }
     }

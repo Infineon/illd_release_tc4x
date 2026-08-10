@@ -1,6 +1,6 @@
 /**
  * \file Ifx_Lut.h
- * \brief Lookup defintion with fixed-point angle data type
+ * \brief Lookup definition with fixed-point angle data type
  *
  *
  *

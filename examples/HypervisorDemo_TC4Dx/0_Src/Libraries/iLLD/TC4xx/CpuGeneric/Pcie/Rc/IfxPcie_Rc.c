@@ -40,6 +40,7 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC45X)
 #include "IfxPcie_Rc.h"
 #if (IFX_PROT_ENABLED == 1U)
 #include "Ap/Std/IfxApProt.h"
@@ -198,7 +199,7 @@ IfxPcie_Status IfxPcie_Rc_init(IfxPcie_Rc *rcHandle, IfxPcie_Rc_Config *config)
         IfxPcie_Rc_enableEndPoints(rcHandle);                          /* Enable all End Points memories, bus masters */
         rcHandle->state = IfxPcie_Rc_State_enumerated;
 
-        status          = IfxPcie_Rc_initInterrupts(rcHandle, config); /* Now, Initialize the Interrupts from EP , RC */
+        status          = IfxPcie_Rc_initInterrupts(rcHandle, config); /* Now, Initialize the Interrupts from EP, RC */
     }
 
     IfxPcieLib_Device_freeAtuRegion((IfxPcie *)(rcHandle->pcieSFR), &(rcHandle->atu.outboundRegion[IFXPCIE_CFG_ECAM_ATU_INDEX]));
@@ -2135,6 +2136,8 @@ IfxPcie_Status IfxPcie_Rc_setDevicePowerState(IfxPcie_Rc *rcHandle, uint8 devInd
 
     return status;
 }
+
+#endif /* defined(DEVICE_TC4DX) || defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

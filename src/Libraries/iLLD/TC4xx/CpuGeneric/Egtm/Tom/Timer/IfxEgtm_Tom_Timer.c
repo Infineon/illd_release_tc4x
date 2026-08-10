@@ -2,7 +2,7 @@
  * \file IfxEgtm_Tom_Timer.c
  * \brief EGTM TIMER details
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -38,6 +38,7 @@
 #pragma diag_suppress 96 /* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X)
 #include "IfxEgtm_Tom_Timer.h"
 
 /******************************************************************************/
@@ -325,6 +326,8 @@ void IfxEgtm_Tom_Timer_stop(IfxEgtm_Tom_Timer *driver)
         IfxEgtm_Tom_Tgc_enableChannels(driver->tgc[1], 0, driver->channelsMask[1], TRUE); /* Note: Write of 0 value has no effect */
     }
 }
+
+#endif /* !defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

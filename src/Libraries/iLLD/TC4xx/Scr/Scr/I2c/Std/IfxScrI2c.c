@@ -3,7 +3,7 @@
  * \brief SCR I2c basic functionality
  * 
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -38,6 +38,7 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X) && !defined(DEVICE_TC49XN)
 
 #include "IfxScrI2c.h"
 
@@ -161,7 +162,7 @@ IfxScrI2c_Status IfxScrI2c_masterReceiveData(uint8 *rxBuffer, uint16 len, uint16
     /* 3. Load slave address(7/10 bit) in data register with read bit to specify receive mode */
     IfxScrI2c_sendAddress(slaveAddress, TRUE);
 
-    /* 4. Wait untill address phase is completed */
+    /* 4. Wait until address phase is completed */
     while (IfxScrI2c_Status_addrAndReadBitTxAckRx != IfxScrI2c_getStatusCode())
     {}
 
@@ -301,6 +302,7 @@ IfxScrI2c_Status IfxScrI2c_slaveReceiveData(uint8 *rxBuffer, uint16 len)
     return status;
 }
 
+#endif /* #if !defined(DEVICE_TC45X) && !defined(DEVICE_TC49XN) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

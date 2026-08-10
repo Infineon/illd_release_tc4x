@@ -3,7 +3,7 @@
  * \brief STM TIMER details
  * \ingroup IfxLld_Stm
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -25,7 +25,7 @@
  * language governing permissions and limitations under IFASLL.
  *
  *
- * The timer driver enabled the generation of periodical interrupt based on the STM module.
+ * The timer driver enables the generation of a periodical interrupt based on the STM module.
  *
  *    The driver is initialized with \ref IfxStm_Timer_init(). After initialization, the
  *    timer is started with \ref IfxStm_Timer_run() and stopped with \ref IfxStm_Timer_stop().
@@ -40,9 +40,9 @@
  *
  *
  *    This driver implements a subset of the functionalities defined by \ref library_srvsw_stdif_timer.
- *    If does supports the timer with interrupt but not the trigger signal.
+ *    It supports the timer with interrupt but not the trigger signal.
  *
- *    The user is free to use either the driver specific APIs below or to used the \ref library_srvsw_stdif_timer "standard interface APIs".
+ *    The user is free to use either the driver specific APIs below or to use the \ref library_srvsw_stdif_timer "standard interface APIs".
  *
  *  \section Specific Specific implementation
  *   For a detailed configuration of the microcontroller, see \ref IfxStm_Timer_init().
@@ -131,7 +131,7 @@ typedef struct
 {
     boolean            enabled;             /**< \brief If true, the trigger functionality is Initialised, else ignored */
     Ifx_TimerValue     triggerPoint;        /**< \brief Trigger point in timer ticks */
-    Ifx_Priority       isrPriority;         /**< \brief Interrupt isrPriority of the trigger interrupt, if 0 the interrupt is disable */
+    Ifx_Priority       isrPriority;         /**< \brief Interrupt isrPriority of the trigger interrupt, if 0 the interrupt is disabled */
     IfxSrc_Tos         isrProvider;         /**< \brief Interrupt service provider for the trigger interrupt */
     IfxPort_OutputMode outputMode;          /**< \brief Output mode */
     IfxPort_PadDriver  outputDriver;        /**< \brief Output pad driver */
@@ -143,7 +143,7 @@ typedef struct
 typedef struct
 {
     float32                 frequency;     /**< \brief PWM frequency in Hz */
-    Ifx_Priority            isrPriority;   /**< \brief Interrupt isrPriority of the timer interrupt, if 0 the interrupt is disable */
+    Ifx_Priority            isrPriority;   /**< \brief Interrupt isrPriority of the timer interrupt, if 0 the interrupt is disabled */
     IfxSrc_Tos              isrProvider;   /**< \brief Interrupt service provider for the timer interrupt */
     float32                 minResolution; /**< \brief Minimum resolution of the timer in seconds. if 0, this parameter is ignored */
     IfxStm_Timer_TrigConfig trigger;       /**< \brief Trigger configuration */

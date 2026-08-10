@@ -37,6 +37,7 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC44X) && !defined(DEVICE_TC45X) && !defined(DEVICE_TC4EX) && !defined(DEVICE_TC4PX)
 #include "IfxPsi5s.h"
 
 /******************************************************************************/
@@ -204,6 +205,8 @@ void IfxPsi5s_configureAccessToAllPsi5s(IfxApApu_ApuConfig *apConfig)
     }
 #endif	
 }
+
+#endif /* #if !defined(DEVICE_TC44X) && !defined(DEVICE_TC45X) && !defined(DEVICE_TC4EX) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

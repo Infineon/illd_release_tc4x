@@ -3,7 +3,7 @@
  * \brief PCIE  basic functionality
  * \ingroup IfxLld_Pcie
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -95,7 +95,7 @@ typedef enum
     IfxPcieDma_Channel_count   /**< \brief MAX number of DMA Channels */
 } IfxPcieDma_Channel;
 
-/** \brief DMA channel arbitration weight . This is used for MultiChannel arbitration
+/** \brief DMA channel arbitration weight. This is used for MultiChannel arbitration
  */
 typedef enum
 {
@@ -165,7 +165,7 @@ typedef enum
 {
     IfxPcieDma_Error_none = 0,        /**< \brief No DMA error */
     IfxPcieDma_Error_busError,        /**< \brief The DMA channel has received an error response from the AHB/AXI bus (or RTRGT1 interface when the AHB/AXI Bridge is not used) while reading data from it. It's fatal error. */
-    IfxPcieDma_Error_llFetch,         /**< \brief DMA Write/Read Channel has recieved error reponse while reading a Linked list element from local memory. Its a fatal Error. */
+    IfxPcieDma_Error_llFetch,         /**< \brief DMA Write/Read Channel has received error response while reading a Linked list element from local memory. Its a fatal Error. */
     IfxPcieDma_Error_unsupportedReq,  /**< \brief Dma read channel has received a PCIe Unsupported Request CPL status from remote device in response to MRd request. */
     IfxPcieDma_Error_cplAbort,        /**< \brief Dma read channel has received a PCIe Completer abort CPL status from remote device in response to MRd request. */
     IfxPcieDma_Error_cplTimeout,      /**< \brief The DMA Read Channel has timed-out while waiting for the remote device to respond to the MRd Request,or a malformed CplD has been received. Non-fatal error */

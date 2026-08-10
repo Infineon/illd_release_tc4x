@@ -3,7 +3,7 @@
  * \brief PMS on-chip implementation data
  * \ingroup IfxLld_Pms
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -44,6 +44,26 @@
 
 #if defined DEVICE_TC4DX
 #include "TC4Dx/IfxPms_cfg_TC4Dx.h"
+#elif defined DEVICE_TC49XN
+#include "TC49xN/IfxPms_cfg_TC49xN.h"
+#elif defined DEVICE_TC44X
+#include "TC44x/IfxPms_cfg_TC44x.h"
+#elif defined DEVICE_TC45X
+#include "TC45x/IfxPms_cfg_TC45x.h"
+#elif defined DEVICE_TC46XAA
+#include "TC46xAA/IfxPms_cfg_TC46xAA.h"
+#elif defined DEVICE_TC46X
+#include "TC46x/IfxPms_cfg_TC46x.h"
+#elif defined DEVICE_TC48XAA
+#include "TC48xAA/IfxPms_cfg_TC48xAA.h"
+#elif defined DEVICE_TC48X
+#include "TC48x/IfxPms_cfg_TC48x.h"
+#elif defined DEVICE_TC4ZX
+#include "TC4Zx/IfxPms_cfg_TC4Zx.h"
+#elif defined DEVICE_TC4EX
+#include "TC4Ex/IfxPms_cfg_TC4Ex.h"
+#elif defined DEVICE_TC4PX
+#include "TC4Px/IfxPms_cfg_TC4Px.h"
 #endif
 
 #endif /* IFXPMS_CFG_H */

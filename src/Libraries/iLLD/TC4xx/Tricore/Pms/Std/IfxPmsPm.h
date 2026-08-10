@@ -3,7 +3,7 @@
  * \brief PMS  basic functionality
  * \ingroup IfxLld_Pms
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -588,6 +588,40 @@ typedef enum
 
 /** \} */
 
+#if defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC44X) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
+/** \brief The RAM being used in Standby mode
+ * As defined in STANDBY_CON0.B.SBRAMSEL
+ */
+typedef enum
+{
+    IfxPmsPm_StandbyRamSupply_never                 = 0,   /**< \brief Standby RAM is not supplied */
+    IfxPmsPm_StandbyRamSupply_cpu0_16Kb             = 1,   /**< \brief Standby RAM (CPU0 dLMU 16kB are supplied.) is supplied */
+    IfxPmsPm_StandbyRamSupply_cpu0_32Kb             = 3,   /**< \brief Standby RAM CPU0 dLMU 32kB is supplied */
+    IfxPmsPm_StandbyRamSupply_cpu0_64Kb             = 7,   /**< \brief Standby RAM CPU0 dLMU 64kB is supplied */
+    IfxPmsPm_StandbyRamSupply_cpu0_128Kb            = 15,  /**< \brief Standby RAM CPU0 dLMU 128kB is supplied */
+    IfxPmsPm_StandbyRamSupply_cpu1_16Kb             = 16,  /**< \brief Standby RAM (CPU1 dLMU 16kB are supplied) is supplied */
+    IfxPmsPm_StandbyRamSupply_cpu0_16Kb_cpu1_16Kb   = 17,  /**< \brief Standby RAM (CPU0 dLMU 16kB and CPU1 dLMU 16kB are supplied) is supplied */
+    IfxPmsPm_StandbyRamSupply_cpu0_32Kb_cpu1_16Kb   = 19,  /**< \brief Standby RAM (CPU0 dLMU 32kB and CPU1 dLMU 16kB are supplied) is supplied */
+    IfxPmsPm_StandbyRamSupply_cpu0_64Kb_cpu1_16Kb   = 23,  /**< \brief Standby RAM (CPU0 dLMU 64kB and CPU1 dLMU 16kB are supplied) is supplied */
+    IfxPmsPm_StandbyRamSupply_cpu0_128Kb_cpu1_16Kb  = 31,  /**< \brief Standby RAM (CPU0 dLMU 128kB and CPU1 dLMU 16kB are supplied) is supplied */
+    IfxPmsPm_StandbyRamSupply_cpu1_32Kb             = 48,  /**< \brief Standby RAM (CPU1 dLMU 32kB are supplied) is supplied */
+    IfxPmsPm_StandbyRamSupply_cpu0_16Kb_cpu1_32Kb   = 49,  /**< \brief Standby RAM (CPU0 dLMU 16kB and CPU1 dLMU 32kB are supplied) is supplied */
+    IfxPmsPm_StandbyRamSupply_cpu0_32Kb_cpu1_32Kb   = 51,  /**< \brief Standby RAM (CPU0 dLMU 32kB and CPU1 dLMU 32kB are supplied) is supplied */
+    IfxPmsPm_StandbyRamSupply_cpu0_64Kb_cpu1_32Kb   = 55,  /**< \brief Standby RAM (CPU0 dLMU 64kB and CPU1 dLMU 32kB are supplied) is supplied */
+    IfxPmsPm_StandbyRamSupply_cpu0_128Kb_cpu1_32Kb  = 63,  /**< \brief Standby RAM (CPU0 dLMU 128kB and CPU1 dLMU 32kB are supplied) is supplied */
+    IfxPmsPm_StandbyRamSupply_cpu1_64Kb             = 112, /**< \brief Standby RAM (CPU1 dLMU 64kB are supplied) is supplied */
+    IfxPmsPm_StandbyRamSupply_cpu0_16Kb_cpu1_64Kb   = 113, /**< \brief Standby RAM (CPU0 dLMU 16kB and CPU1 dLMU 64kB are supplied) is supplied */
+    IfxPmsPm_StandbyRamSupply_cpu0_32Kb_cpu1_64Kb   = 115, /**< \brief Standby RAM (CPU0 dLMU 32kB and CPU1 dLMU 64kB are supplied) is supplied */
+    IfxPmsPm_StandbyRamSupply_cpu0_64Kb_cpu1_64Kb   = 119, /**< \brief Standby RAM (CPU0 dLMU 64kB and CPU1 dLMU 64kB are supplied) is supplied */
+    IfxPmsPm_StandbyRamSupply_cpu0_128Kb_cpu1_64Kb  = 127, /**< \brief Standby RAM (CPU0 dLMU 128kB and CPU1 dLMU 64kB are supplied) is supplied */
+    IfxPmsPm_StandbyRamSupply_cpu1_128Kb            = 240, /**< \brief Standby RAM (CPU1 dLMU 128kB are supplied) is supplied */
+    IfxPmsPm_StandbyRamSupply_cpu0_16Kb_cpu1_128Kb  = 241, /**< \brief Standby RAM (CPU0 dLMU 16kB and CPU1 dLMU 128kB are supplied) is supplied */
+    IfxPmsPm_StandbyRamSupply_cpu0_32Kb_cpu1_128Kb  = 243, /**< \brief Standby RAM (CPU0 dLMU 32kB and CPU1 dLMU 128kB are supplied) is supplied */
+    IfxPmsPm_StandbyRamSupply_cpu0_64Kb_cpu1_128Kb  = 247, /**< \brief Standby RAM (CPU0 dLMU 64kB and CPU1 dLMU 128kB are supplied) is supplied */
+    IfxPmsPm_StandbyRamSupply_cpu0_128Kb_cpu1_128Kb = 255  /**< \brief Standby RAM (CPU0 dLMU 128kB and CPU1 dLMU 128kB are supplied) is supplied */
+} IfxPmsPm_StandbyRamSupply;
+
+#elif defined(DEVICE_TC4DX) || defined(DEVICE_TC4ZX)
 typedef enum
 {
     IfxPmsPm_StandbyRamSupply_never                 = 0,  /**< \brief Standby RAM is not supplied */
@@ -600,6 +634,7 @@ typedef enum
     IfxPmsPm_StandbyRamSupply_cpu0_64Kb_cpu1_128Kb  = 49, /**< \brief Standby RAM (CPU0 dLMU 64kB and CPU1 dLMU 128kB are supplied) is supplied */
     IfxPmsPm_StandbyRamSupply_cpu0_128Kb_cpu1_128Kb = 51  /**< \brief Standby RAM (CPU0 dLMU 128kB and CPU1 dLMU 128kB are supplied) is supplied */
 } IfxPmsPm_StandbyRamSupply;
+#endif /* #if defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC44X) || defined(DEVICE_TC4EX) */
 
 /******************************************************************************/
 /*-----------------------------Data Structures--------------------------------*/

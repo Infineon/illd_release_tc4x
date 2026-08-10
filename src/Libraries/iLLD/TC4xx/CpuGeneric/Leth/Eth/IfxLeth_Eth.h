@@ -3,7 +3,7 @@
  * \brief LETH ETH details
  * \ingroup IfxLld_Leth
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -234,8 +234,8 @@ typedef struct
     uint8   forwardPortMapForTxQueue2[IFXLETH_NUM_PORTS];         /**< \brief Indicates the port number of the RxC to which TxQ2 connection is mapped as forwarding path. Valid range: 0 to (Max number of Ports - 1). Range: 0 to 0x3 */
     uint8   forwardPortMapForTxQueue3[IFXLETH_NUM_PORTS];         /**< \brief Indicates the port number of the RxC to which TxQ3 connection is mapped as forwarding path. Valid range: 0 to (Max number of Ports - 1). Range: 0 to 0x3 */
     uint8   forwardPortMapForTxQueue4[IFXLETH_NUM_PORTS];         /**< \brief Indicates the port number of the RxC to which TxQ4 connection is mapped as forwarding path. Valid range: 0 to (Max number of Ports - 1). Range: 0 to 0x3 */
-    uint8   portTxWrrWeight[IFXLETH_NUM_PORTS];                   /**< \brief Indicates the weight and used as the number of data transfer cycles allocated to Port i in one arbitration cycle of the Tx WRR Arbiter in the forwarding path. Default vaule 0x40. Range: 0  to 0x7F7F7F7F */
-    uint8   portRxWrrWeight[IFXLETH_NUM_PORTS];                   /**< \brief Indicates the weight and used as the number of interleaved PBL burst allocated to Port i in one arbitration cycle of the Rx WRR Arbiter in the forwarding path. Default vaule 0x40. Range: 0  to 0x7F7F7F7F */
+    uint8   portTxWrrWeight[IFXLETH_NUM_PORTS];                   /**< \brief Indicates the weight and used as the number of data transfer cycles allocated to Port i in one arbitration cycle of the Tx WRR Arbiter in the forwarding path. Default value 0x40. Range: 0  to 0x7F7F7F7F */
+    uint8   portRxWrrWeight[IFXLETH_NUM_PORTS];                   /**< \brief Indicates the weight and used as the number of interleaved PBL burst allocated to Port i in one arbitration cycle of the Rx WRR Arbiter in the forwarding path. Default value 0x40. Range: 0  to 0x7F7F7F7F */
 } IfxLeth_Eth_BridgeForwardingConfig;
 
 /** \brief Port Specific Configuration Structure as part of Bridge initialization
@@ -358,7 +358,7 @@ typedef struct
 {
     boolean               enable;                 /**< \brief Range: TRUE:Enable the port, FALSE: Disable the port */
     IfxLeth_PhyInterface  phyInterfaceMode;       /**< \brief External Phy Interface Mode */
-    IfxLeth_Eth_MacConfig mac;                    /**< \brief Configuration Structure for the the MAC initialization */
+    IfxLeth_Eth_MacConfig mac;                    /**< \brief Configuration Structure for the MAC initialization */
     IfxLeth_Eth_MtlConfig mtl;                    /**< \brief Configuration Structure for the MTL initialization */
 } IfxLeth_Eth_PortConfig;
 

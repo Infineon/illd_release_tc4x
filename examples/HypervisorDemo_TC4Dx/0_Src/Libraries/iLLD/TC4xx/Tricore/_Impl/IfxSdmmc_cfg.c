@@ -38,6 +38,8 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC48XAA) && !defined(DEVICE_TC45X) && !defined(DEVICE_TC4EX) && !defined(DEVICE_TC4PX)
+
 #include "IfxSdmmc_cfg.h"
 
 /******************************************************************************/
@@ -47,6 +49,8 @@
 IFX_CONST IfxModule_IndexMap IfxSdmmc_cfg_indexMap[IFXSDMMC_NUM_MODULES] = {
     {&MODULE_SDMMC0, (uint32)IfxSdmmc_Index_0},
 };
+
+#endif /* #if !defined(DEVICE_TC48XAA) && !defined(DEVICE_TC45X) && !defined(DEVICE_TC4EX) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

@@ -2,7 +2,7 @@
  * \file IfxEgtm_Pwm.c
  * \brief EGTM PWM details
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -39,6 +39,7 @@
 #pragma diag_suppress 96 /* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X)
 #include "IfxEgtm_Pwm.h"
 
 /******************************************************************************/
@@ -1063,10 +1064,14 @@ IFX_STATIC void IfxEgtm_Pwm_initInterrupts(IfxEgtm_Pwm *pwm, IfxEgtm_Pwm_Interru
 IFX_STATIC void IfxEgtm_Pwm_updateGlobalControlUnitData(IfxEgtm_Pwm *pwm)
 {
     IfxEgtm_Pwm_SubModule_Ch firstChannel = pwm->channels[0].timerCh;
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) 
     IfxEgtm_Pwm_SubModule_Ch lastChannel  = pwm->channels[pwm->numChannels - 1u].timerCh;
     uint32                   mask         = 0;
     uint8                    idx          = 0;
     uint8                    index        = 0;
+#else
+	uint8                    lastChannel  = ((uint8)firstChannel + pwm->numChannels - 1u);
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) */
     /* Initialize */
     pwm->globalControl.upenMask0     = 0u;
     pwm->globalControl.upenMask1     = 0u;
@@ -1075,6 +1080,7 @@ IFX_STATIC void IfxEgtm_Pwm_updateGlobalControlUnitData(IfxEgtm_Pwm *pwm)
     pwm->globalControl.endisCtrlReg0 = NULL_PTR;
     pwm->globalControl.endisCtrlReg1 = NULL_PTR;
 
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN)  || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA)
     /* Calculates Update enable mask for channels being used. Channels may not be consecutive. */
     for (idx = 0; idx < pwm->numChannels; idx++)
     {
@@ -1087,11 +1093,16 @@ IFX_STATIC void IfxEgtm_Pwm_updateGlobalControlUnitData(IfxEgtm_Pwm *pwm)
 
         mask |= 3u << (index << 1u);
     }
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) */
 
     if (pwm->subModule == IfxEgtm_Pwm_SubModule_atom)
     {
         /* Gets mask for channel range from first to last */
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) 
         pwm->globalControl.upenMask0     = (mask & 0xFFFFu) << (uint32)IFX_EGTM_CLS_ATOM_AGC_GLB_CTRL_UPEN_CTRL0_OFF;
+#else
+		pwm->globalControl.upenMask0     = (uint32)((uint32)IFXEGTM_PWM_CHANNELS_MASK(firstChannel, lastChannel) << (uint32)IFX_EGTM_CLS_ATOM_AGC_GLB_CTRL_UPEN_CTRL0_OFF);
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) */
         pwm->globalControl.reg0          = (volatile Ifx_UReg_32Bit *)&pwm->clusterSFR->ATOM.AGC.GLB_CTRL.U;
         pwm->globalControl.endisCtrlReg0 = (volatile Ifx_UReg_32Bit *)&pwm->clusterSFR->ATOM.AGC.ENDIS_CTRL.U;
     }
@@ -1101,8 +1112,13 @@ IFX_STATIC void IfxEgtm_Pwm_updateGlobalControlUnitData(IfxEgtm_Pwm *pwm)
         if (IFXEGTM_PWM_GET_TGC_INDEX(firstChannel) != IFXEGTM_PWM_GET_TGC_INDEX(lastChannel))
         {
             /* Get masks and values for both control units */
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA)
             pwm->globalControl.upenMask0     = (mask & 0xFFFFu) << (uint32)IFX_EGTM_CLS_TOM_TGC_GLB_CTRL_UPEN_CTRL0_OFF;
             pwm->globalControl.upenMask1     = mask & 0xFFFF0000u;
+#else
+		    pwm->globalControl.upenMask0     = (uint32)(IFXEGTM_PWM_CHANNELS_MASK(firstChannel, (uint32)IfxEgtm_Pwm_SubModule_Ch_7) << (uint32)IFX_EGTM_CLS_TOM_TGC_GLB_CTRL_UPEN_CTRL0_OFF);
+            pwm->globalControl.upenMask1     = (uint32)(IFXEGTM_PWM_CHANNELS_MASK(IfxEgtm_Pwm_SubModule_Ch_8, lastChannel) << (uint32)IFX_EGTM_CLS_TOM_TGC_GLB_CTRL_UPEN_CTRL0_OFF);
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) */
             pwm->globalControl.reg0          = (volatile Ifx_UReg_32Bit *)&pwm->clusterSFR->TOM.TGC[0].GLB_CTRL.U;
             pwm->globalControl.reg1          = (volatile Ifx_UReg_32Bit *)&pwm->clusterSFR->TOM.TGC[1].GLB_CTRL.U;
             pwm->globalControl.endisCtrlReg0 = (volatile Ifx_UReg_32Bit *)&pwm->clusterSFR->TOM.TGC[0].ENDIS_CTRL.U;
@@ -1110,7 +1126,11 @@ IFX_STATIC void IfxEgtm_Pwm_updateGlobalControlUnitData(IfxEgtm_Pwm *pwm)
         }
         else
         {
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA)
             pwm->globalControl.upenMask0     = (mask & 0xFFFFu) << (uint32)IFX_EGTM_CLS_TOM_TGC_GLB_CTRL_UPEN_CTRL0_OFF;
+#else
+		    pwm->globalControl.upenMask0     = (uint32)(IFXEGTM_PWM_CHANNELS_MASK(firstChannel, lastChannel) << (uint32)IFX_EGTM_CLS_TOM_TGC_GLB_CTRL_UPEN_CTRL0_OFF);
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) */
             pwm->globalControl.reg0          = (volatile Ifx_UReg_32Bit *)&pwm->clusterSFR->TOM.TGC[IFXEGTM_PWM_GET_TGC_INDEX(lastChannel)].GLB_CTRL.U;
             pwm->globalControl.endisCtrlReg0 = (volatile Ifx_UReg_32Bit *)&pwm->clusterSFR->TOM.TGC[IFXEGTM_PWM_GET_TGC_INDEX(lastChannel)].ENDIS_CTRL.U;
         }
@@ -1916,6 +1936,7 @@ void IfxEgtm_Pwm_startChannelOutputs(IfxEgtm_Pwm *pwm)
 #endif /* #if IFXEGTM_PWM_START_STOP_CHANNEL_OUTPUT_ENABLE */
 
 
+#endif /* !defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

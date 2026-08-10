@@ -54,6 +54,17 @@ typedef const struct
     IfxPort_OutputIdx outSelect;       /**< \brief Port control code */
 } IfxI2c_Scl_InOut;
 
+#if defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC44X) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
+/** \brief
+ */
+typedef const struct
+{
+    Ifx_I2C    *module;       /**< \brief Base address */
+    IfxPort_Pin pin;          /**< \brief Port pin */
+    Ifx_RxSel   select;       /**< \brief Input multiplexer value */
+} IfxI2c_Sda_In;
+#endif /* #if defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC44X) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX) */
+
 /** \brief
  */
 typedef const struct
@@ -73,6 +84,92 @@ typedef const struct
 #include "TC4Dx/IfxI2c_PinMap_TC4Dx_BGA436_COM.h"
 #elif defined(IFX_PIN_PACKAGE_BGA292_COM)
 #include "TC4Dx/IfxI2c_PinMap_TC4Dx_BGA292_COM.h"
+#endif
+
+#elif defined(DEVICE_TC49XN)
+#if defined(IFX_PIN_PACKAGE_BGA436_STD)
+#include "TC49xN/IfxI2c_PinMap_TC49xN_BGA436_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA292_STD)
+#include "TC49xN/IfxI2c_PinMap_TC49xN_BGA292_STD.h"
+#endif
+
+#elif defined(DEVICE_TC48XAA)
+#if defined(IFX_PIN_PACKAGE_BGA436_COM)
+#include "TC48xAA/IfxI2c_PinMap_TC48xAA_BGA436_COM.h"
+#elif defined(IFX_PIN_PACKAGE_BGA292_COM)
+#include "TC48xAA/IfxI2c_PinMap_TC48xAA_BGA292_COM.h"
+#elif defined(IFX_PIN_PACKAGE_BGA292_STD)
+#include "TC48xAA/IfxI2c_PinMap_TC48xAA_BGA292_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA224_STD)
+#include "TC48xAA/IfxI2c_PinMap_TC48xAA_BGA224_STD.h"
+#endif
+
+#elif defined(DEVICE_TC48X)
+#if defined(IFX_PIN_PACKAGE_BGA436_COM)
+#include "TC48x/IfxI2c_PinMap_TC48x_BGA436_COM.h"
+#elif defined(IFX_PIN_PACKAGE_BGA292_COM)
+#include "TC48x/IfxI2c_PinMap_TC48x_BGA292_COM.h"
+#elif defined(IFX_PIN_PACKAGE_BGA292_STD)
+#include "TC48x/IfxI2c_PinMap_TC48x_BGA292_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA224_STD)
+#include "TC48x/IfxI2c_PinMap_TC48x_BGA224_STD.h"
+#endif
+
+#elif defined(DEVICE_TC46XAA)
+#if defined(IFX_PIN_PACKAGE_BGA436_STD)
+#include "TC46xAA/IfxI2c_PinMap_TC46xAA_BGA436_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA292_STD)
+#include "TC46xAA/IfxI2c_PinMap_TC46xAA_BGA292_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA224_STD)
+#include "TC46xAA/IfxI2c_PinMap_TC46xAA_BGA224_STD.h"
+#endif
+
+#elif defined(DEVICE_TC46X)
+#if defined(IFX_PIN_PACKAGE_BGA436_STD)
+#include "TC46x/IfxI2c_PinMap_TC46x_BGA436_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA292_STD)
+#include "TC46x/IfxI2c_PinMap_TC46x_BGA292_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA224_STD)
+#include "TC46x/IfxI2c_PinMap_TC46x_BGA224_STD.h"
+#endif
+
+#elif defined(DEVICE_TC45X)
+#if defined(IFX_PIN_PACKAGE_BGA292_RDR)
+#include "TC45x/IfxI2c_PinMap_TC45x_BGA292_RDR.h"
+#endif
+
+#elif defined(DEVICE_TC44X)
+#if defined(IFX_PIN_PACKAGE_BGA292_STD)
+#include "TC44x/IfxI2c_PinMap_TC44x_BGA292_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA292_COM)
+#include "TC44x/IfxI2c_PinMap_TC44x_BGA292_COM.h"
+#elif defined(IFX_PIN_PACKAGE_BGA224_STD)
+#include "TC44x/IfxI2c_PinMap_TC44x_BGA224_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA188_STD)
+#include "TC44x/IfxI2c_PinMap_TC44x_BGA188_STD.h"
+#endif
+
+#elif defined(DEVICE_TC4ZX)
+#if defined(IFX_PIN_PACKAGE_BGA436_COM)
+#include "TC4Zx/IfxI2c_PinMap_TC4Zx_BGA436_COM.h"
+#elif defined(IFX_PIN_PACKAGE_BGA292_COM)
+#include "TC4Zx/IfxI2c_PinMap_TC4Zx_BGA292_COM.h"
+#endif
+
+#elif defined(DEVICE_TC4EX)
+#if defined(IFX_PIN_PACKAGE_BGA292_STD)
+#include "TC4Ex/IfxI2c_PinMap_TC4Ex_BGA292_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA224_STD)
+#include "TC4Ex/IfxI2c_PinMap_TC4Ex_BGA224_STD.h"
+#endif
+
+#elif defined(DEVICE_TC4PX)
+#if defined(IFX_PIN_PACKAGE_BGA292_STD)
+#include "TC4Px/IfxI2c_PinMap_TC4Px_BGA292_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA224_STD)
+#include "TC4Px/IfxI2c_PinMap_TC4Px_BGA224_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA188_STD)
+#include "TC4Px/IfxI2c_PinMap_TC4Px_BGA188_STD.h"
 #endif
 
 #endif /* #if defined(DEVICE_TC4DX) */

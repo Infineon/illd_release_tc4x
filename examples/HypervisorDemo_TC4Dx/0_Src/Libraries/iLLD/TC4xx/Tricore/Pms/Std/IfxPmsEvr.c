@@ -663,13 +663,13 @@ void IfxPmsEvr_configurePrimaryMonitor(Ifx_PMS *pms, IfxPmsEvr_PrimaryMonitorVol
 #endif /* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDP3NVM	*/
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDD3PMS
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vdd3pms:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         temp.VDD3PMSCON.B.UVVAL    = (uint16)(config->underVoltage / IFXPMSEVR_SARMVLSB_MV);
 #else
         temp.VDD3PMSCON.B.UVVAL    = (uint16)(config->underVoltage / IFXPMSEVR_SARHVLSB_MV);
 #endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */
         temp.VDD3PMSCON.B.UVENABLE = config->underVoltageEnable;
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         temp.VDD3PMSCON.B.OVVAL    = (uint16)(config->overVoltage / IFXPMSEVR_SARMVLSB_MV);
 #else
         temp.VDD3PMSCON.B.OVVAL    = (uint16)(config->overVoltage / IFXPMSEVR_SARHVLSB_MV);
@@ -1023,6 +1023,7 @@ boolean IfxPmsEvr_scaleEvrVoltage(Ifx_PMS *pms, IfxPmsEvr_EvrcVoltScalingConfig 
 }
 
 
+#if !defined(DEVICE_TC4EX) && !defined(DEVICE_TC4PX)
 boolean IfxPmsEvr_enableVoltageRail(Ifx_PMS *pms, IfxPmsEvr_PrimaryMonitorVoltageSource supply)
 {
     boolean           status = TRUE;
@@ -1207,6 +1208,7 @@ boolean IfxPmsEvr_enableVoltageRail(Ifx_PMS *pms, IfxPmsEvr_PrimaryMonitorVoltag
 #endif
     return status;
 }
+#endif /* #if !defined(DEVICE_TC4EX) */
 
 void IfxPmsEvr_configureAccessToPms(IfxApApu_ApuConfig *apConfig)
 {

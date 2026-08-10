@@ -135,7 +135,7 @@ typedef struct
  * Note: LBIST trigger normally resets the controller to have warm power on reset.
  * \param signature result signature to be evaulated
  * \return False :If the previous LBIST is not done or if the previous LBIST signature did not match with configured value.
- * 0 : LBIST Successful , Non-Zero : LBIST failure/Not executed.
+ * 0 : LBIST Successful, Non-Zero : LBIST failure/Not executed.
  */
 IFX_INLINE uint16 IfxTriLbist_evaluateResult(const uint32 *signature);
 

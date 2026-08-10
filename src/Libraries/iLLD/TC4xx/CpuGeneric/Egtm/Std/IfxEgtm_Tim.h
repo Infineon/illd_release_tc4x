@@ -3,7 +3,7 @@
  * \brief EGTM  basic functionality
  * \ingroup IfxLld_Egtm
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -170,6 +170,17 @@ typedef enum
     IfxEgtm_Tim_Timeout_bothEdge      /**< \brief Timeout feature enabled for both edges */
 } IfxEgtm_Tim_Timeout;
 
+/** \brief Enum for Filter input by lookup table.
+ * Definition in Ifx_EGTM_CLS_TIM_CH_ECTRL.B.USE_LUT
+ */
+typedef enum
+{
+    IfxEgtm_Tim_UseLut_none       = 0,  /**< \brief LUT not in use; LUT_IN0 used directly as filter input */
+    IfxEgtm_Tim_UseLut_extCapture = 1,  /**< \brief Use 3-bit LUT index = TIM_EXT_CAPTURE & LUT_IN1 & LUT_IN0; filter input defined by TO_CNT2 */
+    IfxEgtm_Tim_UseLut_foutPrev   = 2,  /**< \brief Use 3-bit LUT index = FOUT_PREV & LUT_IN1 & LUT_IN0; filter input defined by TO_CNT2 */
+    IfxEgtm_Tim_UseLut_tssmOut    = 3   /**< \brief Use 3-bit LUT index = TSSM_OUT & LUT_IN1 & LUT_IN0; filter input defined by TO_CNT2 */
+} IfxEgtm_Tim_UseLut;
+
 /** \} */
 
 /******************************************************************************/
@@ -185,7 +196,7 @@ typedef struct
     boolean             enable;                                          /**< \brief TIM channel enable */
     IfxEgtm_Tim_Mode    mode;                                            /**< \brief TIM channel Mode */
     boolean             enableOneShotMode;                               /**< \brief enable OneShot Mode (disable - continuous operation mode) */
-    boolean             channelInputControl;                             /**< \brief 0- use signal TIM_IN(x) as input for channel .
+    boolean             channelInputControl;                             /**< \brief 0- use signal TIM_IN(x) as input for channel.
                                                                           * 1- use signal TIM_IN(x-1) as input for channel x (or TIM_IN(m-1) if x is 0) */
     IfxEgtm_Tim_GprSel  gpr0Sel;                                         /**< \brief Selection for GPR0 register */
     IfxEgtm_Tim_GprSel  gpr1Sel;                                         /**< \brief Selection for GPR1 register */
@@ -497,6 +508,120 @@ IFX_INLINE void IfxEgtm_Tim_Ch_setNotificationMode(Ifx_EGTM_CLS_TIM_CH *channel,
  * \retval None
  */
 IFX_INLINE void IfxEgtm_Tim_Ch_setNotification(Ifx_EGTM_CLS_TIM_CH *channel, IfxEgtm_Tim_IrqType irqType);
+
+/** \brief Sets the swap point of time of capturing CNTS and GPR1.
+ *
+ * \param[inout] tim             Pointer to EGTM TIM instance.
+ * \param[in]    channel         Channel index.
+ *                               Range: \ref IfxEgtm_Tim_Ch.
+ * \param[in]    swapTimeCapture Selection for swap point of time of capturing CNTS and GPR1.
+ *                               Range:
+ *                               - FALSE: Inactive edge captures data into CNTS; TIM_NEWVAL_IRQ event captures data into GPR1.
+ *                               - TRUE:  Inactive edge captures data into GPR1; TIM_NEWVAL_IRQ event captures data into CNTS.
+ *
+ * \retval None
+ */
+IFX_INLINE void IfxEgtm_Tim_Ch_setSwapCapture(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_Tim_Ch channel, boolean swapTimeCapture);
+
+/** \brief Sets immediate start of the measurement.
+ *
+ * \param[inout] tim            Pointer to EGTM TIM instance.
+ * \param[in]    channel        Channel index.
+ *                              Range: \ref IfxEgtm_Tim_Ch.
+ * \param[in]    startImmediate Start immediate selection. 
+ *                              Range:
+ *                              - TRUE: Start immediately after enabling (TIM_EN = 1).
+ *                              - FALSE: Start with the first active edge of the measurement.
+ *
+ * \retval None
+ */
+IFX_INLINE void IfxEgtm_Tim_Ch_setImmediateStart(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_Tim_Ch channel, boolean startImmediate);
+
+/** \brief Selects the input data source for EGTM TIM channel.
+ *
+ * \param[inout] tim             Pointer to EGTM TIM instance.
+ * \param[in]    channel         Channel index.
+ *                               Range: \ref IfxEgtm_Tim_Ch.
+ * \param[in]    inputDataSource Selection for input data source. 
+ *                               Range:
+ *                               - TRUE: Use input data of previous channel (after filter unit).
+ *                               - FALSE: Use input data of local filter unit.
+ *
+ * \retval None
+ */
+IFX_INLINE void IfxEgtm_Tim_Ch_setUsePrevChInput(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_Tim_Ch channel, boolean inputDataSource);
+
+/** \brief Sets the extended filter counter mode for the rising edge.
+ *
+ * \param[inout] tim                         Pointer to EGTM TIM instance.
+ * \param[in]    channel                     Channel index.
+ *                                           Range: \ref IfxEgtm_Tim_Ch.
+ * \param[in]    filterCounterModeRisingEdge Extended filter counter mode for rising edge.
+ *                                           Range: \ref IfxEgtm_Tim_FilterCounter.
+ *
+ * \retval None
+ */
+IFX_INLINE void IfxEgtm_Tim_Ch_setExtendFilterCounterModeRisingEdge(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_Tim_Ch channel, IfxEgtm_Tim_FilterCounter filterCounterModeRisingEdge);
+
+/** \brief Sets the extended filter counter mode for the falling edge.
+ *
+ * \param[inout] tim                          Pointer to EGTM TIM instance.
+ * \param[in]    channel                      Channel index.
+ *                                            Range: \ref IfxEgtm_Tim_Ch.
+ * \param[in]    filterCounterModeFallingEdge Extended filter counter mode for falling edge.
+ *                                            Range: \ref IfxEgtm_Tim_FilterCounter.
+ *
+ * \retval None
+ */
+IFX_INLINE void IfxEgtm_Tim_Ch_setExtendFilterCounterModeFallingEdge(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_Tim_Ch channel, IfxEgtm_Tim_FilterCounter filterCounterModeFallingEdge);
+
+/** \brief Configures the filter input by lookup table.
+ *
+ * \param[inout] tim         Pointer to EGTM TIM instance.
+ * \param[in]    channel     Channel index.
+ *                           Range: \ref IfxEgtm_Tim_Ch.
+ * \param[in]    lookUpTable Selection for filter input by lookup table.
+ *                           Range: \ref IfxEgtm_Tim_UseLut.
+ *
+ * \retval None
+ */
+IFX_INLINE void IfxEgtm_Tim_Ch_setUseLookUpTable(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_Tim_Ch channel, IfxEgtm_Tim_UseLut lookUpTable);
+
+/** \brief Configures the current timeout value slice 2 for channel.
+ *
+ * \param[inout] tim     Pointer to EGTM TIM instance.
+ * \param[in]    channel Channel index.
+ *                       Range: \ref IfxEgtm_Tim_Ch.
+ * \param[in]    timeout Timeout value for slice 2.
+ *                       Range: 0 to 0xFF.
+ *
+ * \retval None
+ */
+IFX_INLINE void IfxEgtm_Tim_Ch_setToCnt2(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_Tim_Ch channel, uint8 timeout);
+
+/** \brief Configures the auxiliary input source selection SRC_CHz of a particular channel.
+ *
+ * \param[inout] egtm     Pointer to EGTM module.
+ * \param[in]    clsIndex Cluster index.
+ *                        Range: \ref IfxEgtm_Cluster.
+ * \param[in]    channel  Channel index.
+ *                        Range: \ref IfxEgtm_Tim_Ch.
+ *
+ * \retval None
+ */
+IFX_INLINE void IfxEgtm_Ccm_Tim_setAuxInSourceSelectionSrcChz(Ifx_EGTM *egtm, IfxEgtm_Cluster clsIndex, IfxEgtm_Tim_Ch channel);
+
+/** \brief Configures the auxiliary input source selection SEL_OUT_N_CHz of a particular channel.
+ *
+ * \param[inout] egtm     Pointer to EGTM module.
+ * \param[in]    clsIndex Cluster index.
+ *                        Range: \ref IfxEgtm_Cluster.
+ * \param[in]    channel  Channel index.
+ *                        Range: \ref IfxEgtm_Tim_Ch.
+ *
+ * \retval None
+ */
+IFX_INLINE void IfxEgtm_Ccm_Tim_setAuxInSourceSelectionSelOutChz(Ifx_EGTM *egtm, IfxEgtm_Cluster clsIndex, IfxEgtm_Tim_Ch channel);
 
 /** \brief Set the timeout notification
  *
@@ -956,6 +1081,67 @@ IFX_INLINE boolean IfxEgtm_Tim_isInputSignalHigh(IfxEgtm_Cluster cluster, IfxEgt
 	uint32 inBitPos = (uint32)(1u << (timChannel + IFX_EGTM_CLS_TIM_INP_VAL_TIM_IN0_OFF));
 
 	return ((MODULE_EGTM.CLS[cluster].TIM.INP_VAL.U & inBitPos) != 0u) ? TRUE : FALSE;
+}
+
+
+IFX_INLINE void IfxEgtm_Tim_Ch_setSwapCapture(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_Tim_Ch channel, boolean swapTimeCapture)
+{
+    volatile Ifx_EGTM_CLS_TIM_CH *timCh = IfxEgtm_Tim_getChannel(tim, channel);
+    timCh->ECTRL.B.SWAP_CAPTURE = (swapTimeCapture == TRUE) ? (uint8)1u : (uint8)0u;
+}
+
+
+IFX_INLINE void IfxEgtm_Tim_Ch_setImmediateStart(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_Tim_Ch channel, boolean startImmediate)
+{
+    volatile Ifx_EGTM_CLS_TIM_CH *timCh = IfxEgtm_Tim_getChannel(tim, channel);
+    timCh->ECTRL.B.IMM_START = (startImmediate == TRUE) ? (uint8)1u : (uint8)0u;
+}
+
+
+IFX_INLINE void IfxEgtm_Tim_Ch_setUsePrevChInput(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_Tim_Ch channel, boolean inputDataSource)
+{
+    volatile Ifx_EGTM_CLS_TIM_CH *timCh = IfxEgtm_Tim_getChannel(tim, channel);
+    timCh->ECTRL.B.USE_PREV_CH_IN = (inputDataSource == TRUE) ? (uint8)1u : (uint8)0u;
+}
+
+
+IFX_INLINE void IfxEgtm_Tim_Ch_setExtendFilterCounterModeRisingEdge(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_Tim_Ch channel, IfxEgtm_Tim_FilterCounter filterCounterModeRisingEdge)
+{
+    volatile Ifx_EGTM_CLS_TIM_CH *timCh = IfxEgtm_Tim_getChannel(tim, channel);
+    timCh->ECTRL.B.EFLT_CTR_RE = (uint8)filterCounterModeRisingEdge;
+}
+
+
+IFX_INLINE void IfxEgtm_Tim_Ch_setExtendFilterCounterModeFallingEdge(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_Tim_Ch channel, IfxEgtm_Tim_FilterCounter filterCounterModeFallingEdge)
+{
+    volatile Ifx_EGTM_CLS_TIM_CH *timCh = IfxEgtm_Tim_getChannel(tim, channel);
+    timCh->ECTRL.B.EFLT_CTR_FE = (uint8)filterCounterModeFallingEdge;
+}
+
+
+IFX_INLINE void IfxEgtm_Tim_Ch_setUseLookUpTable(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_Tim_Ch channel, IfxEgtm_Tim_UseLut lookUpTable)
+{
+    volatile Ifx_EGTM_CLS_TIM_CH *timCh = IfxEgtm_Tim_getChannel(tim, channel);
+    timCh->ECTRL.B.USE_LUT = (uint8)lookUpTable;
+}
+
+
+IFX_INLINE void IfxEgtm_Tim_Ch_setToCnt2(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_Tim_Ch channel, uint8 timeout)
+{
+    volatile Ifx_EGTM_CLS_TIM_CH *timCh = IfxEgtm_Tim_getChannel(tim, channel);
+    timCh->TDUC.B.TO_CNT2 = timeout;
+}
+
+
+IFX_INLINE void IfxEgtm_Ccm_Tim_setAuxInSourceSelectionSrcChz(Ifx_EGTM *egtm, IfxEgtm_Cluster clsIndex, IfxEgtm_Tim_Ch channel)
+{
+    egtm->CLS[clsIndex].CCM.TIM_AUX_IN_SRC.U |= (uint32)((uint32)1u << (uint8)channel);
+}
+
+
+IFX_INLINE void IfxEgtm_Ccm_Tim_setAuxInSourceSelectionSelOutChz(Ifx_EGTM *egtm, IfxEgtm_Cluster clsIndex, IfxEgtm_Tim_Ch channel)
+{
+    egtm->CLS[clsIndex].CCM.TIM_AUX_IN_SRC.U |= (uint32)((uint32)1u << ((uint8)channel + IFX_EGTM_CLS_CCM_TIM_AUX_IN_SRC_SEL_OUT_N_CH0_OFF));
 }
 
 

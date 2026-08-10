@@ -2,7 +2,7 @@
  * \file IfxFlash_cfg.c
  * \brief FLASH on-chip implementation data
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -37,6 +37,8 @@
 #if defined (__ghs__)
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
+
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN)
 
 #include "IfxFlash_cfg.h"
 
@@ -1999,6 +2001,8 @@ IFX_CONST IfxFlash_flashSector IfxFlash_pFlashTablePhys[IFXFLASH_PFLASH_NUM_PHYS
     {0xA1300000, 0xA137FFFF},
     {0xA1380000, 0xA13FFFFF},
 };
+
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

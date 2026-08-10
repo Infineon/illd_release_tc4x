@@ -640,7 +640,7 @@ typedef enum
     IfxSdmmc_Command_mmcSendOpCond,          /**< \brief MMC Send Op Cond, MMC_CMD1 */
     IfxSdmmc_Command_mmcSetRelativeAddress,  /**< \brief MMC Set Relative Address, MMC_CMD3 */
     IfxSdmmc_Command_mmcSleepAwake,          /**< \brief MMC Sleep Awake, MMC_CMD5 */
-    IfxSdmmc_Command_mmcSwitchFunction,      /**< \brief MMC Switch Funtion, MMC_CMD6 */
+    IfxSdmmc_Command_mmcSwitchFunction,      /**< \brief MMC Switch Function, MMC_CMD6 */
     IfxSdmmc_Command_mmcSendExtCSD,          /**< \brief MMC Send Ext CSD, MMC_CMD8 */
     IfxSdmmc_Command_mmcEraseGroupStart,     /**< \brief MMC Erase Group Start, MMC_CMD35 */
     IfxSdmmc_Command_mmcEraseGroupEnd,       /**< \brief MMC Erase Group End, MMC_CMD36 */
@@ -788,7 +788,7 @@ typedef enum
 {
     IfxSdmmc_FunctionIO_disabled,  /**< \brief IO disabled */
     IfxSdmmc_FunctionIO_enabled,   /**< \brief IO enabled */
-    IfxSdmmc_FunctionIO_unknown    /**< \brief IO status unkown */
+    IfxSdmmc_FunctionIO_unknown    /**< \brief IO status unknown */
 } IfxSdmmc_FunctionIO;
 
 /** \brief Interrupt Type
@@ -912,7 +912,7 @@ typedef enum
 {
     IfxSdmmc_SdIoInterruptStatus_disabled,  /**< \brief Interrupt disabled */
     IfxSdmmc_SdIoInterruptStatus_enabled,   /**< \brief Interrupt enabled */
-    IfxSdmmc_SdIoInterruptStatus_unknown    /**< \brief Interrupt status unkown */
+    IfxSdmmc_SdIoInterruptStatus_unknown    /**< \brief Interrupt status unknown */
 } IfxSdmmc_SdIoInterruptStatus;
 
 /** \brief SDIO bus width for transfer
@@ -1018,7 +1018,7 @@ typedef struct
     uint32 res0 : 32;            /**< \brief Reserved (32), [31:0] Range: 0 to 0xFFFFFFFF */
 } IfxSdmmc_CardReg_SCRBits;
 
-/** \brief Card status recieved in response
+/** \brief Card status received in response
  */
 typedef struct
 {
@@ -1188,7 +1188,7 @@ typedef struct
     uint32 valid : 1;                /**< \brief Indicates validity of a descriptor line */
     uint32 end : 1;                  /**< \brief End of Descriptor */
     uint32 res0 : 1;                 /**< \brief reserved, int is not valid in command descriptor */
-    uint32 act : 3;                  /**< \brief Action Symbols combination , (IfxSdmmc_AdmaActionSymbol_integrated) */
+    uint32 act : 3;                  /**< \brief Action Symbols combination, (IfxSdmmc_AdmaActionSymbol_integrated) */
     uint32 res1 : 10;                /**< \brief Reserved, should be written with zeros */
     uint32 res2 : 16;                /**< \brief reserved should be written with zeros. */
     uint32 cmdDescrAddress : 32;     /**< \brief Address of Command Descriptor */
@@ -1212,7 +1212,7 @@ typedef struct
  */
 typedef struct
 {
-    IfxSdmmc_CardStatus cardStatus;       /**< \brief Card status recieved in response */
+    IfxSdmmc_CardStatus cardStatus;       /**< \brief Card status received in response */
     uint32              resp01;           /**< \brief Response Register 01 value. Range: 0 to 0xFFFFFFFF */
     uint32              resp23;           /**< \brief Response register 23 value. Range: 0 to 0xFFFFFFFF */
     uint32              resp45;           /**< \brief Response register 45 value. Range: 0 to 0xFFFFFFFF */
@@ -1280,7 +1280,7 @@ typedef struct
 IFX_INLINE void IfxSdmmc_applySoftwareReset(Ifx_SDMMC *sdmmcSFR);
 
 /**
- * \brief Checks if there is any error in the response recieved.
+ * \brief Checks if there is any error in the response received.
  *
  * \param[in] cardStatus Card Status.
  * 						 Range: 0 to 0xFFFFFFFF
@@ -1528,7 +1528,7 @@ IFX_INLINE boolean IfxSdmmc_isHostControllerVersion4Enable(Ifx_SDMMC *sdmmcSFR);
 IFX_INLINE boolean IfxSdmmc_isInternalClockStable(Ifx_SDMMC *sdmmcSFR);
 
 /**
- * \brief Returns the status of whether clock for SDMMC module is enabled or diabled
+ * \brief Returns the status of whether clock for SDMMC module is enabled or disabled
  *
  * \param[in] sdmmcSFR pointer to base address of SDMMC register space
  *
@@ -1730,7 +1730,7 @@ IFX_INLINE void IfxSdmmc_setEmmcSpeedMode(Ifx_SDMMC *sdmmcSFR, IfxSdmmc_EmmcSpee
 IFX_INLINE void IfxSdmmc_setIntegratedDescriptorAddressForAdma3(Ifx_SDMMC *sdmmcSFR, uint32 address);
 
 /**
- * \brief Sets the multiblock block select , single block or multi block.
+ * \brief Sets the multiblock block select, single block or multi block.
  *
  * \param[inout] sdmmcSFR Pointer to base address of SDMMC register space.
  * \param[in] 	 select   Multi block select.
@@ -1775,7 +1775,7 @@ IFX_INLINE void IfxSdmmc_setSdSpeedMode(Ifx_SDMMC *sdmmcSFR, IfxSdmmc_SdSpeedMod
 IFX_INLINE void IfxSdmmc_setSystemAddressForDma(Ifx_SDMMC *sdmmcSFR, uint32 address);
 
 /**
- * \brief Sets the Data transfer direcyion , write/read.
+ * \brief Sets the Data transfer direcyion, write/read.
  *
  * \param[inout] sdmmcSFR  Pointer to base address of SDMMC register space.
  * \param[in]    direction Data transfer Direction.
@@ -1837,7 +1837,7 @@ IFX_EXTERN void IfxSdmmc_enableModule(Ifx_SDMMC *sdmmcSFR);
  * 						      Range: \ref IfxSdmmc_Command
  * \param[in]    responseType Response type (R1, R1b, R2, R3, R6, R7).
  * 						      Range: \ref IfxSdmmc_ResponseType
- * \param[inout] response     Value of the response recieved, fo rthe commands which recieves response.
+ * \param[inout] response     Value of the response received, for the commands which receives response.
  *
  * \retval IfxSdmmc_Status Status. Range: \ref IfxSdmmc_Status
  */
@@ -1873,7 +1873,7 @@ IFX_EXTERN IfxSdmmc_Status IfxSdmmc_sendApplicationCommand(Ifx_SDMMC *sdmmcSFR, 
  * 							  Range: 0 to 0xFFFFFFFF
  * \param[in]    responseType Response type (R1, R1b, R2, R3, R6, R7).
  * 							  Range: \ref IfxSdmmc_ResponseType
- * \param[inout] response 	  Value of the response recieved, for the commands which recieves response.
+ * \param[inout] response 	  Value of the response received, for the commands which receives response.
  *
  * \retval IfxSdmmc_Status Status. Range: \ref IfxSdmmc_Status
  */
@@ -1964,7 +1964,7 @@ IFX_INLINE void IfxSdmmc_setAutoCmdEnable(Ifx_SDMMC *sdmmcSFR, IfxSdmmc_AutoCmdS
 IFX_EXTERN void IfxSdmmc_switchClockFrequency(Ifx_SDMMC *sdmmcSFR, uint32 frequency);
 
 /**
- * \brief Check any error in reponse type R5.
+ * \brief Check any error in response type R5.
  *
  * \param[in] resp01 response data.
  * 			         Range: 0 to 0xFFFFFFFF

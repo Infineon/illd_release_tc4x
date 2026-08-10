@@ -307,6 +307,10 @@ void IfxLeth_setupRmiiInputPins(Ifx_LETH *lethSFR, IfxLeth_PortIndex portIndex, 
             IfxPort_setPinPadDriver(refClk->pin.port, refClk->pin.pinIndex, speedGrade);
         }
 
+#if !defined(DEVICE_TC4Dx) || !defined(DEVICE_TC45x)
+        lethSFR->P[portIndex].PORTCTRL0.B.RXDEN = 0;
+#endif
+
         if (rmiiPins->rxd0 != NULL_PTR)
         {
             lethSFR->P[portIndex].PORTCTRL0.B.RXD0 = rxd0->select;
@@ -404,10 +408,17 @@ void IfxLeth_setupMiiInputPins(Ifx_LETH *lethSFR, IfxLeth_PortIndex portIndex, c
         {
             IfxLeth_P_In *rxEr = miiPins->rxEr;
             lethSFR->P[portIndex].PORTCTRL0.B.RXER    = rxEr->select;
+#if !defined(DEVICE_TC4DX) && !defined(DEVICE_TC45X)	
+            lethSFR->P[portIndex].PORTCTRL0.B.RXERDIS = miiPins->disableRxEr;
+#endif	/* #if !defined(DEVICE_TC4DX) && !defined(DEVICE_TC45X) */		
             IfxPort_resetPinControllerSelection(rxEr->pin.port, rxEr->pin.pinIndex);
             IfxPort_setPinModeInput(rxEr->pin.port, rxEr->pin.pinIndex, mode);
             IfxPort_setPinPadDriver(rxEr->pin.port, rxEr->pin.pinIndex, speedGrade);
         }
+
+#if !defined(DEVICE_TC4DX) && !defined(DEVICE_TC45X)
+        lethSFR->P[portIndex].PORTCTRL0.B.RXDEN = 0;
+#endif /* #if !defined(DEVICE_TC4DX) && !defined(DEVICE_TC45X) */
 
         if (miiPins->rxd0 != NULL_PTR)
         {
@@ -787,11 +798,60 @@ void IfxLeth_enablePortClock(Ifx_LETH *lethSFR, IfxLeth_PortIndex portIndex)
 }
 
 
+#if defined(DEVICE_TC4DX)
 volatile Ifx_SRC_SRCR *IfxLeth_getSrcPointer(IfxLeth_ServiceRequest serviceRequest)
 {
     Ifx_SRC_SRCR *src = (Ifx_SRC_SRCR *)(&MODULE_SRC.LETH[0]);
     return &src[serviceRequest];
 }
+
+
+#elif defined(DEVICE_TC4ZX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
+volatile Ifx_SRC_SRCR *IfxLeth_getSrcPointer(Ifx_LETH *lethSFR, IfxLeth_ServiceRequest serviceRequest)
+{
+    Ifx_SRC_SRCR *src = NULL_PTR;
+
+    if (lethSFR == &MODULE_LETH0)
+    {
+        src = (Ifx_SRC_SRCR *)(&MODULE_SRC.LETH0);
+    }
+
+    return &src[serviceRequest];
+}
+
+
+#elif defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA)
+volatile Ifx_SRC_SRCR *IfxLeth_getSrcPointer(Ifx_LETH *lethSFR, IfxLeth_ServiceRequest serviceRequest)
+{
+    Ifx_SRC_SRCR *src = NULL_PTR;
+
+    if (lethSFR == &MODULE_LETH0)
+    {
+        src = (Ifx_SRC_SRCR *)(&MODULE_SRC.LETH0);
+    }
+
+    if (lethSFR == &MODULE_LETH1)
+    {
+        src = (Ifx_SRC_SRCR *)(&MODULE_SRC.LETH1);
+    }
+
+    return &src[serviceRequest];
+}
+
+
+#elif defined(DEVICE_TC45X)
+volatile Ifx_SRC_SRCR *IfxLeth_getSrcPointer(Ifx_LETH *lethSFR, IfxLeth_ServiceRequest serviceRequest)
+{
+    Ifx_SRC_SRCR *src = NULL_PTR;
+
+    if (lethSFR == &MODULE_LETH1)
+    {
+        src = (Ifx_SRC_SRCR *)(&MODULE_SRC.LETH1);
+    }
+
+    return &src[serviceRequest];
+}
+#endif /* #if defined(DEVICE_TC4DX) */
 
 
 #if IFXLETH_IS_BRIDGE_AVAILABLE
@@ -941,9 +1001,14 @@ void IfxLeth_setMdioOnlyPins(Ifx_LETH *lethSFR, const IfxLeth_MdioPins *mdioPins
 
     if (mdioPins->mdc != NULL_PTR)
     {
+#if defined(DEVICE_TC4DX)
         /* Disabled for non TC14 interfaces. For TC14 use IfxLeth_setTC14Pins API */
         lethSFR->P[mdioPins->portIndex].PORTCTRL0.B.RXD   = 0;
         lethSFR->P[mdioPins->portIndex].PORTCTRL0.B.RXDEN = 0;
+#else        
+		lethSFR->P[mdioPins->portIndex].PORTCTRL0.B.RXD   = mdc->select;
+        lethSFR->P[mdioPins->portIndex].PORTCTRL0.B.RXDEN = 1;
+#endif /* #if defined(DEVICE_TC4DX) */
 
         IfxPort_setPinModeOutput(mdc->pin.port, mdc->pin.pinIndex, outputMode, mdc->select);
         IfxPort_setPinPadDriver(mdc->pin.port, mdc->pin.pinIndex, speedGrade);

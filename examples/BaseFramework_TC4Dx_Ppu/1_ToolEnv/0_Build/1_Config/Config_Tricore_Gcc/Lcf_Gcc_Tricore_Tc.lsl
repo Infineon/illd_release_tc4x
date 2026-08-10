@@ -197,7 +197,7 @@ MEMORY
     
     pfls5_ppu(rx!p)      : org = 0x81300000, len = 1024K   #Reserved for Metaware PPU
     
-    ppu_vccm(rx!p) : org = 0xC0000000, len = 128K   #Reserved for Metaware PPU
+    ppu_vccm_nc(rx!p) : org = 0xb2040000, len = 128K   #Reserved for Metaware PPU
 
     lmu_not_allocated1(rx!p) : org = 0xB0400000, len = 2048K   #Reserved for Metaware PPU
     lmu_not_allocated2(rx!p) : org = 0xB0780000, len = 1024K   #Reserved for Metaware PPU
@@ -2556,13 +2556,15 @@ SECTIONS
         _eshared_pfls5_ppu = .;
     } > pfls5_ppu
 
-    .shared_mem_ppu_ppu_vccm : FLAGS(aw)
+    .shared_mem_ppu_ppu_vccm_nc : FLAGS(aw)
     {
         . = ALIGN(64);
         _fshared_ppu_vccm = .;
-        . += LENGTH(ppu_vccm);
+     __PPU_VCCM_START = .;
+        . += LENGTH(ppu_vccm_nc);
+     __PPU_VCCM_END = .;
         _eshared_ppu_vccm = .;
-    } > ppu_vccm
+    } > ppu_vccm_nc
 
     .shared_mem_ppu_lmu_not_allocated1 : FLAGS(aw)
     {

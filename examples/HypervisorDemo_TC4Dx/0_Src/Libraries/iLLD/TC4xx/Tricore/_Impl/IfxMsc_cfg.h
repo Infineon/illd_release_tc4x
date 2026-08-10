@@ -46,6 +46,18 @@
 
 #if defined DEVICE_TC4DX
 #include "TC4Dx/IfxMsc_cfg_TC4Dx.h"
+#elif defined DEVICE_TC49XN
+#include "TC49xN/IfxMsc_cfg_TC49xN.h"
+#elif defined DEVICE_TC46XAA
+#include "TC46xAA/IfxMsc_cfg_TC46xAA.h"
+#elif defined DEVICE_TC46X
+#include "TC46x/IfxMsc_cfg_TC46x.h"
+#elif defined DEVICE_TC4ZX
+#include "TC4Zx/IfxMsc_cfg_TC4Zx.h"
+#elif defined DEVICE_TC4EX
+#include "TC4Ex/IfxMsc_cfg_TC4Ex.h"
+#elif defined DEVICE_TC4PX
+#include "TC4Px/IfxMsc_cfg_TC4Px.h"
 #endif
 
 #endif /* IFXMSC_CFG_H */

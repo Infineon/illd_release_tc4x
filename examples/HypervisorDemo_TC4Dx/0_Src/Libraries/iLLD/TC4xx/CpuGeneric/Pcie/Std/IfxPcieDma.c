@@ -38,6 +38,7 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC45X)
 #include "IfxPcieDma.h"
 
 /******************************************************************************/
@@ -631,6 +632,8 @@ void IfxPcieDma_initAp(Ifx_PCIE_DSP *pcieSFR, IfxPcieDma_ApConfig *config)
 
     IfxApProt_setState((Ifx_PROT_PROT *)&pcieSFR->PROTSE, IfxApProt_State_run);
 }
+
+#endif /* defined(DEVICE_TC4DX) || defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

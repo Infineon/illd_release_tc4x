@@ -3,7 +3,7 @@
  * \brief I2C  basic functionality
  * \ingroup IfxLld_I2c
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -471,7 +471,7 @@ IFX_INLINE void IfxI2c_disableProtocolInterruptFlag(Ifx_I2C *i2c);
 IFX_INLINE void IfxI2c_disableProtocolInterruptSource(Ifx_I2C *i2c, IfxI2c_ProtocolInterruptSource source);
 
 /**
- * \brief Enables the specified source of DTR interupt
+ * \brief Enables the specified source of DTR interrupt
  *
  * \param[inout] i2c 	Pointer to the i2c registers.
  * \param[in]    source DTR Interrupt source.
@@ -526,7 +526,7 @@ IFX_INLINE void IfxI2c_enableProtocolInterruptSource(Ifx_I2C *i2c, IfxI2c_Protoc
  *
  * \param[in] i2c Pointer to the i2c registers.
  *
- * \retval BusStatus The current status of the I2C Bus. Possible Bus staus:
+ * \retval BusStatus The current status of the I2C Bus. Possible Bus status:
  * 					 (\ref IfxI2c_BusStatus)
  * 					- IfxI2c_BusStatus_idle  	   I2C-bus is free (no start condition detected).
  * 					- IfxI2c_BusStatus_started     A start condition has been detected on the bus (bus busy).

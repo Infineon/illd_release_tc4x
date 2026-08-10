@@ -2,7 +2,7 @@
  * \file IfxPsi5s_Psi5s.c
  * \brief PSI5S PSI5S details
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -37,6 +37,7 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC44X) && !defined(DEVICE_TC45X)  && !defined(DEVICE_TC4EX) && !defined(DEVICE_TC4PX)
 #include "IfxPsi5s_Psi5s.h"
 
 /** \addtogroup IfxLld_Psi5s_Psi5s_Utility
@@ -669,6 +670,8 @@ IFX_STATIC uint32 IfxPsi5s_Psi5s_setBaudrate(Ifx_PSI5S *psi5s, uint32 baudrate, 
 
     return result;
 }
+
+#endif /* #if !defined(DEVICE_TC44X) && !defined(DEVICE_TC45X) && !defined(DEVICE_TC4EX) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

@@ -3,7 +3,7 @@
  * \brief SCRADCOMP  basic functionality
  * \ingroup IfxLld_Scr
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -44,6 +44,33 @@
 #if defined(DEVICE_TC4DX)
 #include "_Reg/TC4Dx/IfxScr_bf.h"
 #include "_Reg/TC4Dx/IfxScr_reg.h"
+#elif defined(DEVICE_TC49XN)
+#include "_Reg/TC49xN/IfxScr_bf.h"
+#include "_Reg/TC49xN/IfxScr_reg.h"
+#elif defined(DEVICE_TC48X)
+#include "_Reg/TC48x/IfxScr_bf.h"
+#include "_Reg/TC48x/IfxScr_reg.h"
+#elif defined(DEVICE_TC48XAA)
+#include "_Reg/TC48xAA/IfxScr_bf.h"
+#include "_Reg/TC48xAA/IfxScr_reg.h"
+#elif defined(DEVICE_TC46XAA)
+#include "_Reg/TC46xAA/IfxScr_bf.h"
+#include "_Reg/TC46xAA/IfxScr_reg.h"
+#elif defined(DEVICE_TC46X)
+#include "_Reg/TC46x/IfxScr_bf.h"
+#include "_Reg/TC46x/IfxScr_reg.h"
+#elif defined(DEVICE_TC44X)
+#include "_Reg/TC44x/IfxScr_bf.h"
+#include "_Reg/TC44x/IfxScr_reg.h"
+#elif defined(DEVICE_TC4ZX)
+#include "_Reg/TC4Zx/IfxScr_bf.h"
+#include "_Reg/TC4Zx/IfxScr_reg.h"
+#elif defined(DEVICE_TC4EX)
+#include "_Reg/TC4Ex/IfxScr_bf.h"
+#include "_Reg/TC4Ex/IfxScr_reg.h"
+#elif defined(DEVICE_TC4PX)
+#include "_Reg/TC4Px/IfxScr_bf.h"
+#include "_Reg/TC4Px/IfxScr_reg.h"
 #endif /* #if defined(DEVICE_TC4DX) */
 
 /******************************************************************************/

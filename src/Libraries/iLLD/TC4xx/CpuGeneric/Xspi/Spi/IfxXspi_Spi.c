@@ -2,7 +2,7 @@
  * \file IfxXspi_Spi.c
  * \brief XSPI SPI details
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -38,6 +38,7 @@
 #pragma diag_suppress 96 /* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X)
 #include "IfxXspi_Spi.h"
 
 /** \addtogroup IfxLld_Xspi_Spi_CommunicationFunctions
@@ -129,6 +130,9 @@ IfxXspi_Status IfxXspi_Spi_initModule(IfxXspi_Spi *xspi, const IfxXspi_Spi_Confi
         spi_ctrlr0.B.INST_L           = config->enhancedControl.instLength;                 /* Length of Instruction */
         spi_ctrlr0.B.ADDR_L           = config->enhancedControl.addressLength;              /* Length of Address */
         spi_ctrlr0.B.TRANS_TYPE       = config->enhancedControl.transferFormat;             /* Address and instruction transfer format */
+#if !defined(DEVICE_TC4DX)        
+        xspiSFR->SPI_CTRLR1.B.CS_MIN_HIGH       = config->enhancedControl.csMinHighTime;  
+#endif
         xspiSFR->SPI_CTRLR0.U         = spi_ctrlr0.U;
 
         xspiSFR->DDR_DRIVE_EDGE.B.TDE = config->enhancedControl.ddrTxDriveEdge;     /* DDR Transmit Drive Edge */
@@ -188,11 +192,11 @@ IfxXspi_Status IfxXspi_Spi_initModule(IfxXspi_Spi *xspi, const IfxXspi_Spi_Confi
         Ifx_XSPI_DMACR dmacr;
         dmacr.U       = xspiSFR->DMACR.U;
 
-        dmacr.B.IDMAE = config->dmaConfig->internalDmaEnable;       /**<\ DMA Enable*/
-        dmacr.B.AINC  = config->dmaConfig->addressIncrement;        /**<\ Address Increment (increment the AXI address on every transfer)*/
-        //dmacr.B.TDMAE     = config->dmaConfig->txFifoDmaEnable;		/**<\ Transmit Fifo DMA Enable*/
-        //dmacr.B.RDMAE     = config->dmaConfig->rxFifoDmaEnable;		/**<\ Receive Fifo DMA Enable*/
-        dmacr.B.ATW   = config->dmaConfig->transferwidth;           /**<\ AXI transfer width for DMA transfers*/
+        dmacr.B.IDMAE = config->dmaConfig.internalDmaEnable;       /**<\ DMA Enable*/
+        dmacr.B.AINC  = config->dmaConfig.addressIncrement;        /**<\ Address Increment (increment the AXI address on every transfer)*/
+        //dmacr.B.TDMAE     = config->dmaConfig.txFifoDmaEnable;		/**<\ Transmit Fifo DMA Enable*/
+        //dmacr.B.RDMAE     = config->dmaConfig.rxFifoDmaEnable;		/**<\ Receive Fifo DMA Enable*/
+        dmacr.B.ATW   = config->dmaConfig.transferwidth;           /**<\ AXI transfer width for DMA transfers*/
         //dmacr.B.ACACHE = 0;
         dmacr.B.APROT = 0;
         //dmacr.B.AID = 0;
@@ -200,8 +204,8 @@ IfxXspi_Status IfxXspi_Spi_initModule(IfxXspi_Spi *xspi, const IfxXspi_Spi_Confi
         xspiSFR->DMACR.U = dmacr.U;
 
         /* Configuring Source and Destination Burst Length */
-        xspiSFR->AXIAWLEN.B.AWLEN = config->dmaConfig->destinationBurstLength;
-        xspiSFR->AXIARLEN.B.ARLEN = config->dmaConfig->sourceBurstLength;
+        xspiSFR->AXIAWLEN.B.AWLEN = config->dmaConfig.destinationBurstLength;
+        xspiSFR->AXIARLEN.B.ARLEN = config->dmaConfig.sourceBurstLength;
     }
 
     /* initialising the interrupts */
@@ -232,18 +236,7 @@ IfxXspi_Status IfxXspi_Spi_initModule(IfxXspi_Spi *xspi, const IfxXspi_Spi_Confi
 
 void IfxXspi_Spi_initModuleConfig(IfxXspi_Spi_Config *config, Ifx_XSPI *xspi)
 {
-    IfxXspi_Spi_DmaConfig    dmaDefaultConfig = {
-        .txFifoDmaEnable        = 0,
-        .rxFifoDmaEnable        = 0,
-        .internalDmaEnable      = 0,
-        .addressIncrement       = 0,
-        .destinationBurstLength = 0,
-        .sourceBurstLength      = 0,
-        .dmaTxDataLevel         = 0,
-        .dmaRxDataLevel         = 0,
-        .transferwidth          = IfxXspi_TransferWidth_1,
-    };
-    const IfxXspi_Spi_Config defaultConfig = {
+    *config = (IfxXspi_Spi_Config){
         .xspi    = NULL_PTR,
 
         .control = {
@@ -295,8 +288,17 @@ void IfxXspi_Spi_initModuleConfig(IfxXspi_Spi_Config *config, Ifx_XSPI *xspi)
             .interruptMask.txFifoOverFlowInterruptMask    = IfxXspi_InterruptMask_Mask,
             .interruptMask.txFifoEmptyInterruptMask       = IfxXspi_InterruptMask_Mask,
         },
-
-        .dmaConfig       = &dmaDefaultConfig,
+        .dmaConfig       = {
+			.txFifoDmaEnable        = 0,
+			.rxFifoDmaEnable        = 0,
+			.internalDmaEnable      = 0,
+			.addressIncrement       = 0,
+			.destinationBurstLength = 0,
+			.sourceBurstLength      = 0,
+			.dmaTxDataLevel         = 0,
+			.dmaRxDataLevel         = 0,
+			.transferwidth          = IfxXspi_TransferWidth_1,
+		},
         .portSelect      = IfxXspi_SelectPort_16,                /* Port 16 Select by default */
         .enhancedControl = {
             .clockStretchEnable  = 1,                            /*No Clock Stretch Enable */
@@ -310,10 +312,12 @@ void IfxXspi_Spi_initModuleConfig(IfxXspi_Spi_Config *config, Ifx_XSPI *xspi)
             .instLength          = IfxXspi_InstructionLength_L4, /*Length of Instruction*/
             .addressLength       = IfxXspi_AddressLength_L4,     /*Length of Address*/
             .transferFormat      = IfxXspi_TransferFormat_TT0,   /*Address and instruction transfer format*/
+#if !defined(DEVICE_TC4DX)            
+            .csMinHighTime       = 0,                            /*Minimum Chip Select High Time*/
+#endif
         }
     };
 
-    *config      = defaultConfig; /*Default Config*/
     config->xspi = xspi;          /*Module Pointer*/
 }
 
@@ -343,7 +347,7 @@ IfxXspi_Spi_Status IfxXspi_Spi_dmaExchange(IfxXspi_Spi *xspi, IfxXspi_Spi_DmaJob
         case IfxXspi_TransferMode_Rx:
         case IfxXspi_TransferMode_EepromRead:
 
-            // for Rx only , should we send a dummy byte i.e write dummy byte to DR?
+            // for Rx only, should we send a dummy byte i.e write dummy byte to DR?
             xspi->xspi->CTRLR1.B.NDF             = dmaJob->numberOfDataFrames;
             xspi->xspi->DMACR.B.AINC             = dmaJob->addressIncrement;
             xspi->xspi->AXIAR0.U                 = (uint32)dmaJob->data;
@@ -541,7 +545,7 @@ boolean IfxXspi_Spi_exchange(IfxXspi_Spi *xspi, IfxXspi_Spi_CpuJobConfig *jobCon
             break;
 
         case IfxXspi_TransferMode_EepromRead:
-            //send op code and address (as tx data) + dummy bytes to be added to tx buffer.. TBD
+            //send op code and address (as tx data) + dummy bytes to be added to tx buffer. TBD
             // First Tx opcode, address and dummy bytes. so enable corresponding intr
             xspi->xspi->IMR.B.TXOIM = IfxXspi_InterruptMask_UnMask;
             xspi->xspi->IMR.B.TXEIM = IfxXspi_InterruptMask_UnMask;
@@ -780,6 +784,9 @@ boolean IfxXspi_Spi_triggerXipTransfer(IfxXspi_Spi *xspi, IfxXspi_Spi_XipConfig 
         xspiSFR->XIP.CNT_TIME_OUT.U                 = xip_cnt_time_out.U;
 
         xspiSFR->SPI_CTRLR0.B.XIP_DFS_HC            = config->xipFixDfs;
+#if !defined(DEVICE_TC4DX)     
+        xspiSFR->SPI_CTRLR0.B.RXDS_VL_EN               = config->rxdsVlEnable;
+#endif         
         xspiSFR->SPI_CTRLR0.B.SSIC_XIP_CONT_XFER_EN = IfxXspi_XipContTransfer_Enable;
     }
 
@@ -835,7 +842,9 @@ boolean IfxXspi_Spi_hyperbus_write_address_data(IfxXspi_Spi_ReadWriteConfig *con
     Ifx_XSPI *xspiSFR = &MODULE_XSPI0;                              /* pointer to XSPI Registers*/
     uint32    Temp_proov;
     uint8     waitCycle_Temp;
+#if defined(DEVICE_TC49X) || defined(DEVICE_TC4DX)
     uint8     sckdv_temp = 0;
+#endif
 
     xspiSFR->SSIENR.B.SSIC_EN             = IfxXspi_Dwc_Mode_Disable; /* Disable DWC_SSI*/
 
@@ -849,11 +858,13 @@ boolean IfxXspi_Spi_hyperbus_write_address_data(IfxXspi_Spi_ReadWriteConfig *con
 
     waitCycle_Temp                        = xspiSFR->SPI_CTRLR0.B.WAIT_CYCLES;
     xspiSFR->SPI_CTRLR0.B.WAIT_CYCLES     = config->waitCycle;      /* Wait cycles depending on memory requirement */
+#if defined(DEVICE_TC49X) || defined(DEVICE_TC4DX)
     if (config->enableAsymBaudrate == IfxXspi_Dwc_Mode_Enable)
     {
         sckdv_temp             = xspiSFR->BAUDR.B.SCKDV;
         xspiSFR->BAUDR.B.SCKDV = (IfxClock_getXspiFrequency() / config->buadrate);
     }
+#endif
     xspiSFR->SSIENR.B.SSIC_EN = IfxXspi_Dwc_Mode_Enable;            /* Enable DWC_SSI*/
     /* Load FIFO */
 
@@ -869,10 +880,12 @@ boolean IfxXspi_Spi_hyperbus_write_address_data(IfxXspi_Spi_ReadWriteConfig *con
 /* restore wait cycle & SCKDV*/
     xspiSFR->SSIENR.B.SSIC_EN         = IfxXspi_Dwc_Mode_Disable;     /* Disable DWC_SSI*/
     xspiSFR->SPI_CTRLR0.B.WAIT_CYCLES = waitCycle_Temp;
+#if defined(DEVICE_TC49X) || defined(DEVICE_TC4DX)
     if (config->enableAsymBaudrate == IfxXspi_Dwc_Mode_Enable)
     {
         xspiSFR->BAUDR.B.SCKDV = sckdv_temp;
     }
+#endif
     xspiSFR->SSIENR.B.SSIC_EN = IfxXspi_Dwc_Mode_Enable;             /* Enable DWC_SSI*/
 
     return TRUE;
@@ -994,8 +1007,9 @@ IfxXspi_Status IfxXspi_Spi_enhancedDataTransmit(Ifx_XSPI *xspi, IfxXspi_Spi_Enha
     IfxXspi_Status             status = IfxXspi_Status_success;
     IfxXspi_Spi_bufferPointers txData;
     uint32                     txCount;
-
+#if defined(DEVICE_TC49X) || defined(DEVICE_TC4DX)
     uint8                      sckdv_temp = 0;
+#endif
 
 #if (IFXXSPI_UM_RECOMMENDATION >= 1)
     uint8                      dfs_temp    = 0;
@@ -1043,17 +1057,22 @@ IfxXspi_Status IfxXspi_Spi_enhancedDataTransmit(Ifx_XSPI *xspi, IfxXspi_Spi_Enha
     xspi->TXFTLR.B.TXFTHR = IfxXspi_Spi_computeTXStartFIFOLevel(config->instructionLength, config->addrLength, txCount);
 #endif
 
+#if defined(DEVICE_TC49X) || defined(DEVICE_TC4DX)
     /* Switch to different baudrate for write */
     if (config->enableAsymBaudrate == IfxXspi_Dwc_Mode_Enable)
     {
         sckdv_temp          = xspi->BAUDR.B.SCKDV;
         xspi->BAUDR.B.SCKDV = (IfxClock_getXspiFrequency() / config->buadrate);
     }
-    xspi->CTRLR1.B.NDF                 = (txCount == 0) ? 0 : (txCount - 1);     /* XSPI_ILLD_PATCH */
+#endif
+    xspi->CTRLR1.B.NDF                 = (txCount == 0) ? 0 : (txCount - 1);
     xspi->SPI_CTRLR0.B.INST_L          = config->instructionLength;
     xspi->SPI_CTRLR0.B.ADDR_L          = config->addrLength;
     xspi->SPI_CTRLR0.B.WAIT_CYCLES     = config->waitCycles;
     xspi->SPI_CTRLR0.B.SPI_RXDS_SIG_EN = config->spiRxdsSignalEnable;
+#if !defined(DEVICE_TC4DX)     
+    xspi->SPI_CTRLR0.B.RXDS_VL_EN      = config->rxdsVlEnable;
+#endif    
     xspi->SER.B.SER                    = config->slaveSelectEnable;
     xspi->SSIENR.B.SSIC_EN             = IfxXspi_Dwc_Mode_Enable;  /* Enable DWC_SSI*/
 
@@ -1105,11 +1124,13 @@ IfxXspi_Status IfxXspi_Spi_enhancedDataTransmit(Ifx_XSPI *xspi, IfxXspi_Spi_Enha
 
 #endif
 
+#if defined(DEVICE_TC49X) || defined(DEVICE_TC4DX)
     /* restore original baudrate */
     if (config->enableAsymBaudrate == IfxXspi_Dwc_Mode_Enable)
     {
         xspi->BAUDR.B.SCKDV = sckdv_temp;
     }
+#endif
     xspi->SSIENR.B.SSIC_EN = IfxXspi_Dwc_Mode_Enable;            /* Enable DWC_SSI*/
 
     return status;
@@ -1138,6 +1159,9 @@ IfxXspi_Status IfxXspi_Spi_enhancedDataReceive(Ifx_XSPI *xspi, IfxXspi_Spi_Enhan
     xspi->SPI_CTRLR0.B.WAIT_CYCLES     = config->waitCycles;
     xspi->CTRLR1.B.NDF                 = config->dataCount - 1;
     xspi->SPI_CTRLR0.B.SPI_RXDS_SIG_EN = config->spiRxdsSignalEnable;
+#if !defined(DEVICE_TC4DX)     
+    xspi->SPI_CTRLR0.B.RXDS_VL_EN      = config->rxdsVlEnable;
+#endif 
 
     xspi->SER.B.SER                    = config->slaveSelectEnable;
     xspi->SSIENR.B.SSIC_EN             = IfxXspi_Dwc_Mode_Enable;  /* Enable DWC_SSI*/
@@ -1247,6 +1271,9 @@ void IfxXspi_Spi_xipDataRead(Ifx_XSPI *xspi, IfxXspi_Spi_XipModeConfig *config)
     xspi->SPI_CTRLR0.B.SPI_RXDS_EN = config->spiReadDataStrobeEnable;              //capture using data strobe
     xspi->SPI_CTRLR0.B.SPI_DM_EN   = config->spiDataMaskEnable;
     xspi->SPI_CTRLR0.B.CLK_STRETCH_EN = config->spiClockStretchEnable;
+#if !defined(DEVICE_TC4DX)        
+        xspi->SPI_CTRLR1.B.CS_MIN_HIGH       = config->csMinHighTime;  
+#endif
     xspi->DMACR.B.IDMAE            = 0;
     xspi->BAUDR.B.SCKDV            = config->xspiClkDivder;
     xspi->SER.B.SER                = config->slaveSelectEnable;
@@ -1348,6 +1375,7 @@ void IfxXspi_Spi_setXspiGpioPins(Ifx_XSPI *xspi, IfxXspi_Spi_GpioPins *pins)
         pins->txd3->pin.port->PADCFG[pins->txd3->pin.pinIndex].DRVCFG.B.DIR   = 0;
     }
 
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) 
     if (pins->txd4 != NULL_PTR)
     {
         pins->txd4->pin.port->PADCFG[pins->txd4->pin.pinIndex].DRVCFG.B.MODE  = 0;      //xSPI txd4 pin
@@ -1387,6 +1415,7 @@ void IfxXspi_Spi_setXspiGpioPins(Ifx_XSPI *xspi, IfxXspi_Spi_GpioPins *pins)
         pins->txd7->pin.port->PADCFG[pins->txd7->pin.pinIndex].DRVCFG.B.OD    = 0;
         pins->txd7->pin.port->PADCFG[pins->txd7->pin.pinIndex].DRVCFG.B.DIR   = 0;
     }
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) */	
 }
 
 
@@ -1497,6 +1526,9 @@ void IfxXspi_Spi_XipDataWrite(Ifx_XSPI *xspi, IfxXspi_Spi_XipModeConfig *config)
     xspi->SPI_CTRLR0.B.SPI_DDR_EN  = config->spiDdrEnable;
     xspi->SPI_CTRLR0.B.INST_DDR_EN = config->spiInstDdrEnable;
     xspi->SPI_CTRLR0.B.SPI_RXDS_EN = config->spiReadDataStrobeEnable;            //capture using data strobe
+#if !defined(DEVICE_TC4DX)        
+    xspi->SPI_CTRLR1.B.CS_MIN_HIGH   = config->csMinHighTime;  
+#endif    
     xspi->DMACR.B.IDMAE            = 0;
     xspi->BAUDR.B.SCKDV            = config->xspiClkDivder;
     xspi->SER.B.SER                = config->slaveSelectEnable;
@@ -1675,6 +1707,7 @@ void IfxXspi_Spi_clearInterrupt(Ifx_XSPI *xspi)
 {
     xspi->ICR.B.ICR = 1; /* Clear all interrupts */
 }
+#endif /* !defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

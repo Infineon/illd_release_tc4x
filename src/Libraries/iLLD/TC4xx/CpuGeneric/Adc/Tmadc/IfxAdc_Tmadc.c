@@ -2,7 +2,7 @@
  * \file IfxAdc_Tmadc.c
  * \brief ADC TMADC details
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -277,6 +277,12 @@ void IfxAdc_Tmadc_initChannel(IfxAdc_Tmadc_Ch *channel, IfxAdc_Tmadc_ChConfig *c
     channel->chSFR            = chptr;
     channel->rsltSFR          = (Ifx_ADC_RES *)&(MODULE_ADC.TMADC[modId].AW1.RES0.U) + (rsltReg * IFXADC_TMADC_AW1_RES_TS_OFFSET);
     channel->tmstmpSFR        = (Ifx_ADC_TS *)(&(MODULE_ADC.TMADC[modId].AW1.TS0.U) + (rsltReg * IFXADC_TMADC_AW1_RES_TS_OFFSET));
+#if defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
+#if defined(IFX_ILLD_PPU_USAGE)
+    channel->rsltAXI          = &(MODULE_ADC_AXI.TMADCRES[modId].RESAXI[rsltReg]);
+    channel->tmstmpAXI        = &(MODULE_ADC_AXI.TMADCRES[modId].TSAXI[rsltReg]);
+#endif /* #if defined(IFX_ILLD_PPU_USAGE) */
+#endif /* #if defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC4EX) */
     channel->state            = IfxAdc_Tmadc_channelState_uninitialized;
     channel->moduleId         = (IfxAdc_TmadcModule)modId;
     channel->resultRegNum     = rsltReg;
@@ -549,7 +555,15 @@ void IfxAdc_Tmadc_triggerChannel(IfxAdc_Tmadc_Ch *channel)
 
 uint16 IfxAdc_Tmadc_readChannelResult(IfxAdc_Tmadc_Ch *channel)
 {
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC45X) || defined(DEVICE_TC4ZX) 
 	return channel->rsltSFR->B.RESULT;     /* read result */
+#else
+#if defined(IFX_ILLD_PPU_USAGE)
+    return channel->rsltAXI->B.RESULT;     /* read result LLI*/
+#else
+    return channel->rsltSFR->B.RESULT;     /* read result */
+#endif /* #if defined(IFX_ILLD_PPU_USAGE) */
+#endif /* #if defined(DEVICE_TC49XN) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC45X) || defined(DEVICE_TC4ZX) */
 }
 
 
@@ -686,7 +700,15 @@ void IfxAdc_Tmadc_initGroup(IfxAdc_Tmadc_Group *grp, IfxAdc_Tmadc_GroupConfig *c
 uint16 IfxAdc_Tmadc_readTimestamp(IfxAdc_Tmadc_Ch *channel)
 {
     uint16 timeStamp = 0;
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC45X) || defined(DEVICE_TC4ZX)
 	timeStamp = channel->tmstmpSFR->B.TIMESTAMP;
+#else
+#if defined(IFX_ILLD_PPU_USAGE)
+    timeStamp = channel->tmstmpAXI->B.TIMESTAMP; /* read timestamp LLI */
+#else
+    timeStamp = channel->tmstmpSFR->B.TIMESTAMP;
+#endif /* #if defined(IFX_ILLD_PPU_USAGE) */
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC45X) || defined(DEVICE_TC4ZX) */
     return timeStamp;
 }
 
@@ -694,8 +716,18 @@ uint16 IfxAdc_Tmadc_readTimestamp(IfxAdc_Tmadc_Ch *channel)
 IfxAdc_Tmadc_Result IfxAdc_Tmadc_readRawResult(IfxAdc_Tmadc_Ch *channel)
 {
     IfxAdc_Tmadc_Result result = {0};
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC45X) || defined(DEVICE_TC4ZX)
 	result.result    = channel->rsltSFR->B.RESULT;
     result.timeStamp = channel->tmstmpSFR->B.TIMESTAMP;
+#else
+#if defined(IFX_ILLD_PPU_USAGE)
+    result.result    = channel->rsltAXI->B.RESULT;          /* read result LLI*/
+    result.timeStamp = channel->tmstmpAXI->B.TIMESTAMP;     /* read timestamp LLI */
+#else
+    result.result    = channel->rsltSFR->B.RESULT;
+    result.timeStamp = channel->tmstmpSFR->B.TIMESTAMP;
+#endif /* #if defined(IFX_ILLD_PPU_USAGE) */
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC45X) || defined(DEVICE_TC4ZX) */
     return result;
 }
 
@@ -1352,6 +1384,11 @@ void IfxAdc_Tmadc_initMonitorChannel(IfxAdc_Tmadc_MonitorCh *channel, IfxAdc_Tma
     channel->modSFR   = modptr;
     channel->chSFR    = chptr;
     channel->rsltSFR  = &(modptr->MRES[chId]);
+#if defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
+#if defined(IFX_ILLD_PPU_USAGE)
+    channel->rsltAXI  = &(MODULE_ADC_AXI.TMADCRES[modId].MRESAXI[chId]);
+#endif /* #if defined(IFX_ILLD_PPU_USAGE) */
+#endif /* #if defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC4EX) */
     channel->moduleId = (IfxAdc_TmadcModule)modId;
 
     /* Channel configuration*/
@@ -1422,5 +1459,13 @@ void IfxAdc_Tmadc_triggerMonitorChannel(IfxAdc_Tmadc_MonitorCh *channel)
 
 uint16 IfxAdc_Tmadc_readMonitorChannelResult(IfxAdc_Tmadc_MonitorCh *channel)
 {
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC45X) || defined(DEVICE_TC4ZX)
 	return channel->rsltSFR->B.RESULT;     /* read result */
+#else
+#if defined(IFX_ILLD_PPU_USAGE)
+    return channel->rsltAXI->B.RESULT;     /* read result LLI*/
+#else
+    return channel->rsltSFR->B.RESULT;     /* read result */
+#endif /* #if defined(IFX_ILLD_PPU_USAGE) */
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC45X) || defined(DEVICE_TC4ZX) */
 }

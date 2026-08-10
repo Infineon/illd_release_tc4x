@@ -38,6 +38,8 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X) && !defined(DEVICE_TC4EX) && !defined(DEVICE_TC4PX)
+
 #include "IfxPsi5_cfg.h"
 
 /******************************************************************************/
@@ -45,6 +47,8 @@
 /******************************************************************************/
 
 IFX_CONST IfxModule_IndexMap IfxPsi5_cfg_indexMap[IFXPSI5_NUM_MODULES] = {{&MODULE_PSI5, (uint32)IfxPsi5_Index_0}, };
+
+#endif /* #if !defined(DEVICE_TC45X) && !defined(DEVICE_TC4EX) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

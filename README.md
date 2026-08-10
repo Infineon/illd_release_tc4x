@@ -15,9 +15,13 @@ The TC4xx BaseFramework project contains only the AppSw, the libraries are not i
 
 								  
 ## iLLD version info
-iLLD Release version	V2.6.0
+iLLD Release version	V2.7.0
 
 								   
+## API Documentation
+The iLLD API reference is published as GitHub Pages: https://infineon.github.io/illd_release_tc4x/
+
+
 ## Revision History
 For a summary of changes, please refer to Section 3.1 of the release notes in the doc folder.
 

@@ -2,7 +2,7 @@
  * \file IfxAdc.c
  * \brief ADC  basic functionality
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -230,54 +230,54 @@ void IfxAdc_configureAccessToAdcModule(Ifx_ADC *adc, IfxApApu_ApuConfig *apuConf
 
 
 #if IFXADC_IS_GTM_AVAILABLE
-void IfxAdc_routeBoundaryFlagOutputToGtm(Ifx_ADC *adc, IfxAdc_BoundaryFlagOutput output, IfxAdc_Select_BoundaryFlag moduleBoundaryFlag, uint8 gtmCluster)
+void IfxAdc_routeBoundaryFlagOutputToGtm(Ifx_ADC *adc, IfxAdc_BoundaryFlagOutput output, IfxAdc_SelectBoundaryFlag moduleBoundaryFlag, uint8 gtmCluster)
 {
-	volatile Ifx_ADC_GTBFSEL *regPtr_GTBFSEL= &adc->GTBFSEL[gtmCluster];
+    volatile Ifx_ADC_GTBFSEL *regPtr_GTBFSEL = &adc->GTBFSEL[gtmCluster];
 
-	switch (output)
-	{
-	case IfxAdc_BoundaryFlagOutput_0:
-		regPtr_GTBFSEL->B.OUT0SEL = (uint32)moduleBoundaryFlag;
-	break;
-	case IfxAdc_BoundaryFlagOutput_1:
-		regPtr_GTBFSEL->B.OUT1SEL = (uint32)moduleBoundaryFlag;
-	break;
-	case IfxAdc_BoundaryFlagOutput_2:
-		regPtr_GTBFSEL->B.OUT2SEL = (uint32)moduleBoundaryFlag;
-	break;
-	case IfxAdc_BoundaryFlagOutput_3:
-		regPtr_GTBFSEL->B.OUT3SEL = (uint32)moduleBoundaryFlag;
-	break;
-	default:
-	/* Wrong value! do nothing*/
-	break;
-	}
+    switch (output)
+    {
+    case IfxAdc_BoundaryFlagOutput_0:
+        regPtr_GTBFSEL->B.OUT0SEL = (uint32)moduleBoundaryFlag;
+        break;
+    case IfxAdc_BoundaryFlagOutput_1:
+        regPtr_GTBFSEL->B.OUT1SEL = (uint32)moduleBoundaryFlag;
+        break;
+    case IfxAdc_BoundaryFlagOutput_2:
+        regPtr_GTBFSEL->B.OUT2SEL = (uint32)moduleBoundaryFlag;
+        break;
+    case IfxAdc_BoundaryFlagOutput_3:
+        regPtr_GTBFSEL->B.OUT3SEL = (uint32)moduleBoundaryFlag;
+        break;
+    default:
+        /* Wrong value! do nothing*/
+        break;
+    }
 }
 #endif /* #if IFXADC_IS_GTM_AVAILABLE */
 
 
 #if IFXADC_IS_EGTM_AVAILABLE
-void IfxAdc_routeBoundaryFlagOutputToEgtm(Ifx_ADC *adc, IfxAdc_BoundaryFlagOutput output, IfxAdc_Select_BoundaryFlag moduleBoundaryFlag, uint8 egtmCluster)
+void IfxAdc_routeBoundaryFlagOutputToEgtm(Ifx_ADC *adc, IfxAdc_BoundaryFlagOutput output, IfxAdc_SelectBoundaryFlag moduleBoundaryFlag, uint8 egtmCluster)
 {
-	volatile Ifx_ADC_ETBFSEL *regPtr_ETBFSEL= &adc->ETBFSEL[egtmCluster];
+    volatile Ifx_ADC_ETBFSEL *regPtr_ETBFSEL = &adc->ETBFSEL[egtmCluster];
 
-	switch (output)
-	{
-	case IfxAdc_BoundaryFlagOutput_0:
-		regPtr_ETBFSEL->B.OUT0SEL = (uint32)moduleBoundaryFlag;
-	break;
-	case IfxAdc_BoundaryFlagOutput_1:
-		regPtr_ETBFSEL->B.OUT1SEL = (uint32)moduleBoundaryFlag;
-	break;
-	case IfxAdc_BoundaryFlagOutput_2:
-		regPtr_ETBFSEL->B.OUT2SEL = (uint32)moduleBoundaryFlag;
-	break;
-	case IfxAdc_BoundaryFlagOutput_3:
-		regPtr_ETBFSEL->B.OUT3SEL = (uint32)moduleBoundaryFlag;
-	break;
-	default:
-	/* Wrong value! do nothing*/
-	break;
-	}
+    switch (output)
+    {
+    case IfxAdc_BoundaryFlagOutput_0:
+        regPtr_ETBFSEL->B.OUT0SEL = (uint32)moduleBoundaryFlag;
+        break;
+    case IfxAdc_BoundaryFlagOutput_1:
+        regPtr_ETBFSEL->B.OUT1SEL = (uint32)moduleBoundaryFlag;
+        break;
+    case IfxAdc_BoundaryFlagOutput_2:
+        regPtr_ETBFSEL->B.OUT2SEL = (uint32)moduleBoundaryFlag;
+        break;
+    case IfxAdc_BoundaryFlagOutput_3:
+        regPtr_ETBFSEL->B.OUT3SEL = (uint32)moduleBoundaryFlag;
+        break;
+    default:
+        /* Wrong value! do nothing*/
+        break;
+    }
 }
 #endif /* #if IFXADC_IS_EGTM_AVAILABLE */

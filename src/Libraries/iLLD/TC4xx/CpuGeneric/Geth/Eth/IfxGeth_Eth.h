@@ -3,7 +3,7 @@
  * \brief GETH ETH details
  * \ingroup IfxLld_Geth
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -264,7 +264,7 @@ typedef struct
 typedef struct
 {
     IfxGeth_PhyInterfaceMode phyInterfaceMode;       /**< \brief External Phy Interface Mode */
-    IfxGeth_Eth_MacConfig    mac;                    /**< \brief Configuration Structure for the the MAC initialization */
+    IfxGeth_Eth_MacConfig    mac;                    /**< \brief Configuration Structure for the MAC initialization */
     IfxGeth_Eth_MtlConfig    mtl;                    /**< \brief Configuration Structure for the MTL initialization */
 } IfxGeth_Eth_PortConfig;
 
@@ -276,6 +276,17 @@ typedef struct
     IfxSrc_Tos   provider;       /**< \brief Interrupt service provider */
     IfxSrc_VmId  vmId;           /**< \brief Virtual Machine Number */
 } IfxGeth_Eth_PpsInterruptConfig;
+
+#if defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC48X)
+/** \brief Interrupt configuration structure for Cross Timestamp block
+ */
+typedef struct
+{
+    Ifx_Priority priority;       /**< \brief Interrupt service priority */
+    IfxSrc_Tos   provider;       /**< \brief Interrupt service provider */
+    IfxSrc_VmId  vmId;           /**< \brief Virtual Machine Number */
+} IfxGeth_Eth_CrossTimeStampInterruptConfig;
+#endif /* #if defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) */
 
 /** \brief Configuration for Remote wake-up filter's
  *  Definition in MAC_RWK_PACKET_FILTER Register
@@ -913,6 +924,20 @@ typedef struct
     boolean                  doubleVLanTagPosition;          /**< \brief Selection of the Tag for VLAN hash filtering. TRUE: Inner VLAN Tag is selected (if present), FALSE: Outer VLAN Tag is selected (if present). */
 } IfxGeth_Eth_VlanTagCtrlConfig;
 
+#if defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC48X)
+/** \brief Configuration Structure for cross time stamp.
+ * Refer to Ifx_GETH_XTIMESTAMP_CTRL for more info.
+ */
+typedef struct
+{
+    boolean triggerEnable0;                              /**< \brief Enables (1b) or disables (0b) the corresponding trigger inputs to capture the cross-timestamp values. This bit is for Software trigger via SW_TRIG bit-field. */
+    boolean triggerEnable1;                              /**< \brief Enables (1b) or disables (0b) the corresponding trigger inputs to capture the cross-timestamp values. This bit is for GETH0_P1_PPS0. */
+    boolean triggerEnable2;                              /**< \brief Enables (1b) or disables (0b) the corresponding trigger inputs to capture the cross-timestamp values. This bit is for PORTS_GETH0_P1_AUX[0]. */
+    boolean triggerEnable3;                              /**< \brief Enables (1b) or disables (0b) the corresponding trigger inputs to capture the cross-timestamp values. This bit is for SCU_GETH0_P1_AUX[1]. */
+    boolean interruptEnable;                             /**< \brief Enables (1b) or disables (0b) the interrupt node XTIMESTAMP */
+    IfxGeth_Eth_CrossTimeStampInterruptConfig interrupt; /**< \brief Interrupt configuration structure for XTIMESTAMP block */
+} IfxGeth_Eth_CrossTimeStampConfig;
+#endif /* #if defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) */
 
 /** \} */
 
@@ -1653,7 +1678,7 @@ IFX_EXTERN boolean IfxGeth_Eth_getRxDescriptorStatus(IfxGeth_Eth *geth, IfxGeth_
  * \param[inout] geth                   GETH driver Handle
  * \param[in]    channelId              Tx DMA Channel number
  * \param[in]    enable                 TRUE: Enable slot comparison, FALSE: Disable.
- * \param[in]    advanceSlotCheckEnable TRUE: TX DMA fetches data from the buffer when the RSN value is equal to or less than the SLOTNUM value programmed in that descriptor by up to 2 slots, FALSE: DMA will start fetching the the data when the RSN value is equal to or less than the SLOTNUM value by one slot.
+ * \param[in]    advanceSlotCheckEnable TRUE: TX DMA fetches data from the buffer when the RSN value is equal to or less than the SLOTNUM value programmed in that descriptor by up to 2 slots, FALSE: DMA will start fetching the data when the RSN value is equal to or less than the SLOTNUM value by one slot.
  *
  * \retval None
  */
@@ -1761,7 +1786,140 @@ IFX_EXTERN boolean IfxGeth_Eth_mdio_write_clause45(IfxGeth_Eth *geth, IfxGeth_Po
 IFX_EXTERN boolean IfxGeth_Eth_mdio_read_clause45(IfxGeth_Eth *geth, IfxGeth_PortIndex portIndex, uint8 phyAddress, uint8 devAddress, uint16 regAddress, uint16 *data);
 #endif
 
+#if defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX)  || defined(DEVICE_TC48X)
+/** \brief API returns 64 bit cross time stamp Sync Ptp value
+ *
+ * \param[in] geth GETH driver Handle
+ *
+ * \retval 64 bit cross time stamp Sync Ptp value
+ * Range: 0 to 0xFFFFFFFF FFFFFFFF
+ */
+IFX_EXTERN uint64 IfxGeth_Eth_getCrossTimestampSyncPtp(IfxGeth_Eth *geth);
 
+/** \brief API returns 64 bit cross time stamp Local Ptp value
+ *
+ * \param[in] geth GETH driver Handle
+ *
+ * \retval 64 bit cross time stamp Local Ptp value
+ * Range: 0 to 0xFFFFFFFF FFFFFFFF
+ */
+IFX_EXTERN uint64 IfxGeth_Eth_getCrossTimestampLocalPtp(IfxGeth_Eth *geth);
+
+/** \brief Wrapper API for MDIO Clause45 single read
+ *
+ * \param[inout] geth   GETH driver Handle
+ * \param[in]    config Structure for initializing Cross Time Stamp
+ *
+ * \retval none
+ */
+IFX_EXTERN void IfxGeth_Eth_initCrossTimeStamp(IfxGeth_Eth *geth, IfxGeth_Eth_CrossTimeStampConfig *config);
+
+/** \brief Flush Cross Time Stamp
+ *
+ * \param[inout] geth GETH driver Handle
+ *
+ * \retval none
+ */
+IFX_EXTERN void IfxGeth_Eth_flushCrossTimeStamp(IfxGeth_Eth *geth);
+
+/** \brief S/w based Trigger for Cross Time Stamp
+ *
+ * \param[inout] geth       GETH driver Handle
+ * \param[in]    identifier S/w defined ID used to identify the corresponding cross timestamp snapshot using the XTIMESTAMP_STATUS.SW_TRIGID bit-field.
+ *                          Range: 1 to 15
+ *
+ * \retval none
+ */
+IFX_EXTERN void IfxGeth_Eth_triggerCrossTimeStamp(IfxGeth_Eth *geth, uint16 identifier);
+
+/** \brief Returns Cross TimeStamp Fill Level Status
+ *
+ * \param[in] geth GETH driver Handle
+ *
+ * \retval 4 bit fill level (Range: 0 - Empty, 0xF - Full)
+ */
+IFX_EXTERN uint8 IfxGeth_Eth_getCrossTimeStampFillLevelStatus(IfxGeth_Eth *geth);
+
+/** \brief[in] Returns Cross TimeStamp Trigger Id Status
+ *
+ * \param[in] geth GETH driver Handle
+ *
+ * \retval 2 bit Trigger ID (0 : Software trigger via SW_TRIG bit-field, 1 : GETH0_P1_PPS0, 2 : PORTS_GETH0_P1_AUX[0], 3 : SCU_GETH0_P1_AUX[1])
+ */
+IFX_EXTERN uint8 IfxGeth_Eth_getCrossTimeStampTriggerIdStatus(IfxGeth_Eth *geth);
+
+/** \brief Returns Cross TimeStamp Software Trigger Id Status
+ *
+ * \param[in] geth GETH driver Handle
+ *
+ * \retval When XTIMESTAMP_STATUS.TRIG_ID = 0, this bit-field shows the user-defined identifier of the corresponding snapshot due to Software trigger as defined by XTIMESTAMP_CTRL.SW_TRIGID. When XTIMESTAMP_STATUS.TL0=1, this bit-field shows the user-defined identifier of the corresponding Software trigger which is lost as defined by XTIMESTAMP_CTRL.SW_TRIGID.
+ */
+IFX_EXTERN uint8 IfxGeth_Eth_getCrossTimeStampSwTriggerIdStatus(IfxGeth_Eth *geth);
+
+/** \brief Returns Cross TimeStamp Trigger Lost 0 Status
+ *
+ * \param[in] geth GETH driver Handle
+ *
+ * \retval This bit-field is set to 1 to indicate if the capture request from a trigger input 0 is lost due to FIFO full condition. Software write with 1 clears this bit-field.
+ */
+IFX_EXTERN boolean IfxGeth_Eth_getCrossTimeStampTriggerLost0Status(IfxGeth_Eth *geth);
+
+/** \brief Returns Cross TimeStamp Trigger Lost 1 Status
+ *
+ * \param[in] geth GETH driver Handle
+ *
+ * \retval This bit-field is set to 1 to indicate if the capture request from a trigger input 1 is lost due to FIFO full condition. Software write with 1 clears this bit-field.
+ */
+IFX_EXTERN boolean IfxGeth_Eth_getCrossTimeStampTriggerLost1Status(IfxGeth_Eth *geth);
+
+/** \brief Returns Cross TimeStamp Trigger Lost 2 Status
+ *
+ * \param[in] geth GETH driver Handle
+ *
+ * \retval This bit-field is set to 1 to indicate if the capture request from a trigger input 2 is lost due to FIFO full condition. Software write with 1 clears this bit-field.
+ */
+IFX_EXTERN boolean IfxGeth_Eth_getCrossTimeStampTriggerLost2Status(IfxGeth_Eth *geth);
+
+/** \brief Returns Cross TimeStamp Trigger Lost 3 Status
+ *
+ * \param[in] geth GETH driver Handle
+ *
+ * \retval This bit-field is set to 1 to indicate if the capture request from a trigger input 3 is lost due to FIFO full condition. Software write with 1 clears this bit-field.
+ */
+IFX_EXTERN boolean IfxGeth_Eth_getCrossTimeStampTriggerLost3Status(IfxGeth_Eth *geth);
+
+/** \brief Clears Cross TimeStamp Trigger Lost 0 Status
+ *
+ * \param[inout] geth GETH driver Handle
+ *
+ * \retval none
+ */
+IFX_EXTERN void IfxGeth_Eth_clearCrossTimeStampTriggerLost0Status(IfxGeth_Eth *geth);
+
+/** \brief Clears Cross TimeStamp Trigger Lost 1 Status
+ *
+ * \param[inout] geth GETH driver Handle
+ *
+ * \retval none
+ */
+IFX_EXTERN void IfxGeth_Eth_clearCrossTimeStampTriggerLost1Status(IfxGeth_Eth *geth);
+
+/** \brief Clears Cross TimeStamp Trigger Lost 2 Status
+ *
+ * \param[inout] geth GETH driver Handle
+ *
+ * \retval none
+ */
+IFX_EXTERN void IfxGeth_Eth_clearCrossTimeStampTriggerLost2Status(IfxGeth_Eth *geth);
+
+/** \brief Clears Cross TimeStamp Trigger Lost 3 Status
+ *
+ * \param[inout] geth GETH driver Handle
+ *
+ * \retval none
+ */
+IFX_EXTERN void IfxGeth_Eth_clearCrossTimeStampTriggerLost3Status(IfxGeth_Eth *geth);
+#endif /* #if defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) */
 
 /** \addtogroup IfxLld_Geth_Eth_Variables
  * \{ */

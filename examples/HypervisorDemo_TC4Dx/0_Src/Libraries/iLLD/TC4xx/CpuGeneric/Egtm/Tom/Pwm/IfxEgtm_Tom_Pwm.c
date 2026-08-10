@@ -38,6 +38,7 @@
 #pragma diag_suppress 96 /* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X)
 #include "IfxEgtm_Tom_Pwm.h"
 
 /******************************************************************************/
@@ -123,6 +124,7 @@ boolean IfxEgtm_Tom_Pwm_init(IfxEgtm_Tom_Pwm_Driver *driver, const IfxEgtm_Tom_P
     {
         IfxEgtm_PinMap_setTomTout(config->pin.outputPin, config->pin.outputMode, config->pin.padDriver);
 
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC4ZX) 
 	    if (config->pin.outputPin->pin.port == &MODULE_P16)
 	    {
 	        if ((config->pin.outputPin->pin.pinIndex == 0) || (config->pin.outputPin->pin.pinIndex == 1))
@@ -130,6 +132,7 @@ boolean IfxEgtm_Tom_Pwm_init(IfxEgtm_Tom_Pwm_Driver *driver, const IfxEgtm_Tom_P
 	            IfxPort_setPinModex(config->pin.outputPin->pin.port, config->pin.outputPin->pin.pinIndex, IfxPort_Modex_gpioMode);
 	        }
 	    }
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC4ZX) */
     }
 
 
@@ -207,6 +210,8 @@ void IfxEgtm_Tom_Pwm_stop(IfxEgtm_Tom_Pwm_Driver *driver, boolean immediate)
     /* Trigger the stop now */
     IfxEgtm_Tom_Tgc_trigger(driver->tgc[0]);
 }
+
+#endif /* !defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

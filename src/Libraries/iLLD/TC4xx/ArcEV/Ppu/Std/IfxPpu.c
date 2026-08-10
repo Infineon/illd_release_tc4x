@@ -2,7 +2,7 @@
  * \file IfxPpu.c
  * \brief PPU mutex and semaphore implementations using ARC atomic exchange.
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *

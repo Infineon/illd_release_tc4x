@@ -3,7 +3,7 @@
  * \brief PSI5 PSI5 details
  * \ingroup IfxLld_Psi5
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -189,7 +189,7 @@ typedef struct
 {
     boolean                         outputInverterEnabled;         /**< \brief Specifies the pulse polarity of the output */
     boolean                         inputInverterEnabled;          /**< \brief Specifies the pulse polarity of the input */
-    IfxPsi5_DigitalInputFilterDepth digitalInputFilterDepth;       /**< \brief Specifies the the number of port input samples considered for floating average */
+    IfxPsi5_DigitalInputFilterDepth digitalInputFilterDepth;       /**< \brief Specifies the number of port input samples considered for floating average */
 } IfxPsi5_Psi5_InputOutputControl;
 
 /** \brief Psi5 serial message with individual members

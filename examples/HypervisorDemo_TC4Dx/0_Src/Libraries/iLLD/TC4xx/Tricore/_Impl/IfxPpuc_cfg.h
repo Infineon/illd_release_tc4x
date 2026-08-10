@@ -44,6 +44,18 @@
 
 #if defined DEVICE_TC4DX
 #include "TC4Dx/IfxPpuc_cfg_TC4Dx.h"
+#elif defined DEVICE_TC49XN
+#include "TC49xN/IfxPpuc_cfg_TC49xN.h"
+#elif defined DEVICE_TC45X
+#include "TC45x/IfxPpuc_cfg_TC45x.h"
+#elif defined DEVICE_TC46XAA
+#include "TC46xAA/IfxPpuc_cfg_TC46xAA.h"
+#elif defined DEVICE_TC46X
+#include "TC46x/IfxPpuc_cfg_TC46x.h"
+#elif defined DEVICE_TC4EX
+#include "TC4Ex/IfxPpuc_cfg_TC4Ex.h"
+#elif defined DEVICE_TC4PX
+#include "TC4Px/IfxPpuc_cfg_TC4Px.h"
 #endif
 
 #endif /* IFXPPUC_CFG_H */

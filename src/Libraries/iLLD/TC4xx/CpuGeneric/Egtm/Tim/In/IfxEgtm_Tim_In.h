@@ -3,7 +3,7 @@
  * \brief EGTM IN details
  * \ingroup IfxLld_Egtm
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -63,7 +63,7 @@
  *     }
  *     \endcode
  *
- * \subsection IfxLld_Egtm_Tim_In_Step4 Step 4: Initalize TIM
+ * \subsection IfxLld_Egtm_Tim_In_Step4 Step 4: Initialize TIM
  *
  *     \code
  *     // Initialize the Config Structure

@@ -3,7 +3,7 @@
  * \brief PPUC  basic functionality
  * \ingroup IfxLld_Ppuc
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -372,7 +372,7 @@ typedef struct
 /*-------------------------Inline Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Sets the base adress for the STU descriptor
+/** \brief Sets the base address for the STU descriptor
  * \param ppuc PPUC module pointer
  * \param address Base address of STU descriptor
  * \return None

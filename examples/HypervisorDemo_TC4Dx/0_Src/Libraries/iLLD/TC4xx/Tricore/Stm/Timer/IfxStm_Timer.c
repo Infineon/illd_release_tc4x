@@ -167,9 +167,9 @@ void IfxStm_Timer_stop(IfxStm_Timer *driver)
 
 void IfxStm_Timer_updateInputFrequency(volatile IfxStm_Timer *driver)
 {
-    float32 freqency;
-    freqency               = (float32)IfxStm_getFrequency();
-    driver->base.clockFreq = freqency / (1 << driver->comparatorShift);
+    float32 frequency;
+    frequency               = (float32)IfxStm_getFrequency();
+    driver->base.clockFreq = frequency / (1 << driver->comparatorShift);
 }
 
 

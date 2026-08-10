@@ -2,7 +2,7 @@
  * \file IfxSent_Sent.c
  * \brief SENT SENT details
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -38,6 +38,7 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X)
 #include "IfxSent_Sent.h"
 
 /******************************************************************************/
@@ -381,3 +382,4 @@ void IfxSent_Sent_spcPulseTrigger(IfxSent_Sent_Channel *channel)
     channel->channel->SCR.B.TRIG = IfxSent_TriggerSource_immediate;
 }
 
+#endif /* #if !defined(DEVICE_TC45X) */

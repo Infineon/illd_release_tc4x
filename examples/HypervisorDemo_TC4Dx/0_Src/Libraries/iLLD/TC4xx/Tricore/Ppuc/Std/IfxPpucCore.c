@@ -38,6 +38,7 @@
 #pragma diag_suppress 96	/* To suppress empty file warning */
 #endif
 
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) ||defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC45X) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
 #include "IfxPpucCore.h"
 
 /******************************************************************************/
@@ -91,6 +92,7 @@ void IfxPpucCore_configureAccessToPpucVccm(IfxApApu_ApuConfig *apConfig)
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_PPU_VMEMAP.VMEM.ACCEN, apConfig);
 }
 
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) ||defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC45X) || defined(DEVICE_TC4EX)*/
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

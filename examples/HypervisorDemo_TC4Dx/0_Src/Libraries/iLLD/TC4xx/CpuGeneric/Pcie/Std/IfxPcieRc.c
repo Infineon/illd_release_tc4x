@@ -38,6 +38,7 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC45X)
 #include "IfxPcieRc.h"
 
 /******************************************************************************/
@@ -85,6 +86,8 @@ void IfxPcieRc_setNumOfLanes(Ifx_PCIE_DSP *PcieDspReg, IfxPcieRc_LaneWidth laneW
 
     PcieDspReg->PORTLOGIC.GEN2_CTRL_OFF.U = lnkWidthReg;
 }
+
+#endif /* defined(DEVICE_TC4DX) || defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

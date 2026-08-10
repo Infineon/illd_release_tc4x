@@ -2,7 +2,7 @@
  * \file IfxSdmmc_Emmc.c
  * \brief SDMMC EMMC details
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -38,6 +38,7 @@
 #pragma diag_suppress 96 /* To suppress empty file warning */
 #endif
 
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC48X)
 #include "IfxSdmmc_Emmc.h"
 
 /******************************************************************************/
@@ -1277,6 +1278,8 @@ IfxSdmmc_Status IfxSdmmc_Emmc_multiBlockAdma2Transfer(IfxSdmmc_Emmc *emmc, IfxSd
 
     return status;
 }
+
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC48X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

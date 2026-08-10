@@ -2,7 +2,7 @@
  * \file IfxHssl_Hssl.c
  * \brief HSSL HSSL details
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -39,6 +39,7 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X)
 #include "IfxHssl_Hssl.h"
 
 /******************************************************************************/
@@ -145,7 +146,7 @@ void IfxHssl_Hssl_initChannelConfig(IfxHssl_Hssl_ChannelConfig *channelConfig, I
     channelConfig->channelId     = IfxHssl_ChannelId_0;          /* default channel 0 */
     channelConfig->streamingMode = IfxHssl_StreamingMode_single; /* default streaming mode continuous */
     channelConfig->loopBack      = hsct->loopBack;
-    hssl->loopBack               = hsct->loopBack;               /* copy to hssl handle, used in trasfer apis */
+    hssl->loopBack               = hsct->loopBack;               /* copy to hssl handle, used in transfer apis */
 }
 
 
@@ -202,19 +203,28 @@ void IfxHssl_Hssl_initHsctModule(IfxHssl_Hsct *hsct, const IfxHssl_Hsct_Config *
         IfxPort_LvdsConfig lvdsCfg;
 
         lvdsCfg.enablePortControlled = IfxPort_ControlledBy_hsct;
+#if !defined(DEVICE_TC4PX) && !defined(DEVICE_TC4EX) && !defined(DEVICE_TC46X)
         lvdsCfg.lvdsMode             = IfxPort_LvdsMode_high;
         lvdsCfg.lvdsTerm             = config->lvdsTerm;
+#endif
+        lvdsCfg.padSupply            = IfxPort_PadSupply_5v;
 #if (IFXHSSL_NUM_MODULES == 1)		
+#if !defined(DEVICE_TC4PX) && !defined(DEVICE_TC4EX) && !defined(DEVICE_TC46X)
         lvdsCfg.lvdsMode             = IfxPort_getPinLVDS(&MODULE_P21, 2);
+#endif
         IfxPort_setPinModeLVDS(&MODULE_P21, 2, IfxPort_Mode_inputNoPullDevice, &lvdsCfg);     //Rx
 
+#if !defined(DEVICE_TC4PX) && !defined(DEVICE_TC4EX) && !defined(DEVICE_TC46X)
         lvdsCfg.lvdsMode = IfxPort_getPinLVDS(&MODULE_P21, 4);
+#endif
         IfxPort_setPinModeLVDS(&MODULE_P21, 4, IfxPort_Mode_outputPushPullGeneral, &lvdsCfg); //Tx
 #else		
         if (hsctSFR == &MODULE_HSCT1)
         {
             IfxPort_setPinModeLVDS(&MODULE_P21, 0, IfxPort_Mode_inputNoPullDevice, &lvdsCfg);     //Rx
+#if !defined(DEVICE_TC4PX) && !defined(DEVICE_TC4EX) && !defined(DEVICE_TC46X)
             lvdsCfg.lvdsMode = IfxPort_getPinLVDS(&MODULE_P22, 2);
+#endif
             IfxPort_setPinModeLVDS(&MODULE_P22, 2, IfxPort_Mode_outputPushPullGeneral, &lvdsCfg); //Tx
         }
         else
@@ -285,8 +295,9 @@ void IfxHssl_Hssl_initHsctModuleConfig(IfxHssl_Hsct_Config *config, Ifx_HSCT *hs
 
     config->loopBack          = FALSE; /* default with out loopback */
 
+#if !defined(DEVICE_TC4PX) && !defined(DEVICE_TC4EX) && !defined(DEVICE_TC46X)
     config->lvdsTerm          = IfxPort_LvdsTerm_internal;
-
+#endif
     config->refClockFrequency = IfxHssl_RefClockFrequency_20Mhz;
 
     config->sysClockDivider   = IfxHssl_SysClockDivider_2;
@@ -613,6 +624,8 @@ IfxHssl_Hssl_Status IfxHssl_Hssl_writeStream(IfxHssl_Hssl *hssl, uint32 *data, I
     /* streaming started */
     return IfxHssl_Hssl_Status_ok;
 }
+
+#endif /* #if !defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

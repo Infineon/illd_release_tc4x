@@ -3,7 +3,7 @@
  * \brief Shell functions.
  * \ingroup library_srvsw_sysse_comm_shell
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *

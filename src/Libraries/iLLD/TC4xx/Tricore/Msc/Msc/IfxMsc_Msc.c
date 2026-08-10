@@ -2,7 +2,7 @@
  * \file IfxMsc_Msc.c
  * \brief MSC MSC details
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -38,6 +38,7 @@
 #pragma diag_suppress 96 /* To suppress empty file warning */
 #endif
 
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
 #include "IfxMsc_Msc.h"
 
 /******************************************************************************/
@@ -125,7 +126,7 @@ void IfxMsc_Msc_initModule(IfxMsc_Msc *msc, const IfxMsc_Msc_Config *config)
         else
         {
             /* Initialize MSC BaudRate at 6.25MHz, Fsys = 100MHz */
-            mscSfr->FDR.B.STEP = (uint32)IfxMsc_upstreamFractionalBaudCalculator(mscSfr, config->clockConfig.baudrate);
+            mscSfr->FDR.B.STEP = IfxMsc_upstreamFractionalBaudCalculator(mscSfr, config->clockConfig.baudrate);
         }
     }
 
@@ -139,7 +140,7 @@ void IfxMsc_Msc_initModule(IfxMsc_Msc *msc, const IfxMsc_Msc_Config *config)
         /* Fractional divider */
         else
         {
-            mscSfr->FDR.B.STEP = (uint32)IfxMsc_downstreamFractionalBaudCalculator(mscSfr, config->clockConfig.baudrate);
+            mscSfr->FDR.B.STEP = IfxMsc_downstreamFractionalBaudCalculator(mscSfr, config->clockConfig.baudrate);
         }
     }
 
@@ -900,6 +901,8 @@ void IfxMsc_Msc_sendSlowChannelDataAndCommand(IfxMsc_Msc *msc, IfxMsc_Msc_SlowCh
     /* Send data */
     mscSfr->ISC.B.SDP = 1;
 }
+
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC4EX) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

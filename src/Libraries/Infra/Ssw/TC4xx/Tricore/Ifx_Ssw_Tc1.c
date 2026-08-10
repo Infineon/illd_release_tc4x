@@ -2,7 +2,7 @@
  * \file Ifx_Ssw_Tc1.c
  * \brief Startup Software for Core1
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -50,7 +50,9 @@
 **                      Imported Function Declarations                        **
 *******************************************************************************/
 
+#ifndef DEVICE_TC45X
 IFX_SSW_USED IFX_SSW_NOINLINE void Ifx_Ssw_disableVirtualization_Cpu1(void);
+#endif /* #ifndef DEVICE_TC45X */
 
 IFX_SSW_COMMON_LINKER_SYMBOLS();
 IFX_SSW_CORE_LINKER_SYMBOLS(1);
@@ -84,6 +86,7 @@ void __Core1_start(void)
         IfxSswProt_setState((Ifx_PROT_PROT *)&(MODULE_CPU1.PROTSFRE), IfxSswProt_State_run);
     #endif
 	
+#ifndef DEVICE_TC45X
     Ifx_Ssw_MTCR(CPU_FCX, IFX_CFG_SSW_CSA_PTR((unsigned int)__CSA(1)));
 
     Ifx_Ssw_disableVirtualization_Cpu1();
@@ -96,6 +99,7 @@ void __Core1_start(void)
     #if (IFX_PROT_ENABLED == 1U)
         IfxSswProt_setState((Ifx_PROT_PROT *)&(MODULE_CPU1.PROTSFRE), IfxSswProt_State_run);
     #endif
+#endif /* #ifndef DEVICE_TC45X */
 
     /* Set the PSW to its reset value in case of a warm start,clear PSW.IS */
     Ifx_Ssw_MTCR(CPU_PSW, IFX_CFG_SSW_PSW_DEFAULT);
@@ -188,6 +192,7 @@ void __Core1_start(void)
 
 
 
+#ifndef DEVICE_TC45X
 #if defined(__HIGHTEC__) && !defined(__clang__)
 #pragma GCC optimize ("O0")
 #elif defined(__GNUC__) && !defined(__HIGHTEC__)
@@ -202,6 +207,7 @@ void Ifx_Ssw_disableVirtualization_Cpu1(void)
 #elif defined(__GNUC__) && !defined(__HIGHTEC__)
 #pragma GCC reset_options
 #endif
+#endif /* #ifndef DEVICE_TC45X */
 
 /******************************************************************************
  *                        reset vector address                                *

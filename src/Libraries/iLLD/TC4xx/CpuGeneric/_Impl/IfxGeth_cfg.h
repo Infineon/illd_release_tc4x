@@ -3,7 +3,7 @@
  * \brief GETH on-chip implementation data
  * \ingroup IfxLld_Geth
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -45,6 +45,14 @@
 
 #if defined DEVICE_TC4DX
 #include "TC4Dx/IfxGeth_cfg_TC4Dx.h"
+#elif defined DEVICE_TC44X
+#include "TC44x/IfxGeth_cfg_TC44x.h"
+#elif defined DEVICE_TC48XAA
+#include "TC48xAA/IfxGeth_cfg_TC48xAA.h"
+#elif defined DEVICE_TC48X
+#include "TC48x/IfxGeth_cfg_TC48x.h"
+#elif defined DEVICE_TC4ZX
+#include "TC4Zx/IfxGeth_cfg_TC4Zx.h"
 #endif
 
 #endif /* IFXGETH_CFG_H */

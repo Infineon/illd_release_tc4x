@@ -2,7 +2,7 @@
  * \file IfxPsi5s_cfg.c
  * \brief PSI5S on-chip implementation data
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -38,6 +38,8 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X) && !defined(DEVICE_TC44X) && !defined(DEVICE_TC4EX) && !defined(DEVICE_TC4PX)
+
 #include "IfxPsi5s_cfg.h"
 
 /******************************************************************************/
@@ -50,6 +52,8 @@ IFX_CONST IfxModule_IndexMap IfxPsi5s_cfg_indexMap[IFXPSI5S_NUM_MODULES] = {
     {&MODULE_PSI5S1, (uint32)IfxPsi5s_Index_1}
 #endif
 };
+
+#endif /* #if !defined(DEVICE_TC45X) && !defined(DEVICE_TC44X) && !defined(DEVICE_TC4EX) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

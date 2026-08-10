@@ -33,7 +33,13 @@
 /******************************************************************************/
 
 #include "IfxClock.h"
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN)
 #include "IfxDmu_reg.h"
+#endif /* #if defined(DEVICE_TC4DX)  || defined(DEVICE_TC49XN) */
+#if defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC45X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
+#include "IfxDmur_reg.h"
+#include "IfxPmur_reg.h"
+#endif /* #if defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC45X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC4EX) */
 
 /******************************************************************************/
 /*------------------------Private Variables/Constants-------------------------*/
@@ -121,7 +127,8 @@ IFX_CONST IfxClock_Config           IfxClock_defaultClockConfig = {
     IfxClock_PllInputClockSelection_fOsc0,
     IfxClock_SysClockSourceSelect_pll,
     IfxClock_PerClockSourceSelect_pll,
-    IFXCLOCK_CFG_CLK_OSCCON
+    IFXCLOCK_CFG_CLK_OSCCON,
+    IFX_CFG_CLOCK_OSCCON_MODE
 };
 
 IFX_CONST IfxClock_Mod_Config       IfxClock_defaultModConfig = {
@@ -251,6 +258,19 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
 
     /* If Crystal Osc powered down then do the Osc power-up, since it takes ~3ms to power up */
     /* TC49xA step workaround due to HW bug */
+#if defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X)
+#if (IFX_CFG_CLOCK_EXT_CLOCK == 1)
+    /* Check for CCU lock bit with a timeout of at least 100 micro seconds */
+    while (CLOCK_CCUSTAT.B.LCK != 0U)
+    {
+        IFXCLOCK_LOOP_TIMEOUT_CHECK(timeoutCycleCount, initError);
+    }
+    /* External clock selected */
+    CLOCK_OSCCON.B.MODE = 2U;
+#else
+	IfxClock_powerOnCrystalOsc(pllCfg->oscConModeVal);
+#endif	/* #if (IFX_CFG_CLOCK_EXT_CLOCK == 1) */
+#else
     if (CLOCK_OSCCON.B.MODE == 7U)
     {
         CLOCK_OSCCON.B.MODE = 3U;
@@ -267,10 +287,10 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
     {
         if ((CLOCK_OSCCON.B.MODE != 2U) && (CLOCK_OSCCON.B.MODE != 0U))
         {
-            IfxClock_powerOnCrystalOsc();
+            IfxClock_powerOnCrystalOsc(pllCfg->oscConModeVal);
         }
     }
-
+#endif /* #if defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) */
 
     /* If Ramp Osc powered down then do the Osc power-up */
     if (CLOCK_RAMPSTAT.B.ACTIVE != 1U)
@@ -326,6 +346,7 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
         }
 
         /* PLL input selection */
+#if !defined(DEVICE_TC4ZX)
 #if (IFX_CLOCK_BYPASS_FOSC_F == 1)
 
         if (pllCfg->pllInputClockSelection == IfxClock_PllInputClockSelection_fOsc_f)
@@ -339,6 +360,7 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
         }
 
 #endif /* #if (IFX_CLOCK_BYPASS_FOSC_F == 1) */
+#endif /* #if !defined(DEVICE_TC4ZX) */
 
         CLOCK_OSCCON.B.INSEL = pllCfg->pllInputClockSelection;
     }
@@ -446,18 +468,20 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
             }
 
             /* Step 9. Configure KxPREDIV */
-
+			#if defined(DEVICE_TC4DX)
 			/* Set K2PREDIV and K3PREDIV to final value */
-
+			#else
+			/* Set K2PREDIV to final value */
+			#endif /* #if defined(DEVICE_TC4DX) */
             
             Ifx_CLOCK_SYSPLLCON1 sysPllCon1;
 
             sysPllCon1.U          = CLOCK_SYSPLLCON1.U;
 
             sysPllCon1.B.K2PREDIV = pllCfg->sysPllConfig.k2PreDivider;
-
+            #if defined(DEVICE_TC4DX)
 			sysPllCon1.B.K3PREDIV = pllCfg->sysPllConfig.k3PreDivider;
-
+			#endif /* #if defined(DEVICE_TC4DX) */
             CLOCK_SYSPLLCON1.U    = sysPllCon1.U;
 
             /* Step 10. Wait for 10 micro seconds  */
@@ -472,16 +496,18 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
             }
 
             /* Step 11. Configure KxDIV */
-
+			#if defined(DEVICE_TC4DX)
 			/* Step 11.a. Set K2DIV and K3DIV to final value */
-
+			#else
+			/* Step 11.a. Set K2DIV to final value */
+			#endif /* #if defined(DEVICE_TC4DX) */
 
             sysPllCon1.U       = CLOCK_SYSPLLCON1.U;
 
             sysPllCon1.B.K2DIV = pllCfg->sysPllConfig.k2Divider;
-
+#if defined(DEVICE_TC4DX)
 			sysPllCon1.B.K3DIV = pllCfg->sysPllConfig.k3Divider;
-
+#endif /* #if defined(DEVICE_TC4DX) */
 
             CLOCK_SYSPLLCON1.U = sysPllCon1.U;
 
@@ -1254,8 +1280,13 @@ boolean IfxClock_init(const IfxClock_Config *config)
 
     if ((config != NULL_PTR) && (config->flashFconWaitStateConfig != ((void *)0)))
     {
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN)
         DMU_GP_HOST_DFWAIT.B.RFLASH = config->flashFconWaitStateConfig->dFlashWaitCycles;
         DMU_GP_HOST_PFWAIT.B.RFLASH = config->flashFconWaitStateConfig->pFlashWaitCycles;
+#else
+		DMUR0_UR_DRWAIT.B.VALUE  = config->flashFconWaitStateConfig->dFlashWaitCycles;
+        PMUR0A_UR_PRWAIT.B.VALUE = config->flashFconWaitStateConfig->pFlashWaitCycles;
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) */
     }
 
     if (config != NULL_PTR)
@@ -2594,9 +2625,11 @@ uint32 IfxClock_getExtClock0Frequency(void)
         case 5:
             freq = IfxClock_getPerPllFrequency2();     //	fPLL2
             break;
+#if defined(DEVICE_TC4DX)			
         case 6:
             freq = IfxClock_getPerPllFrequency3();     //	fPLL3
             break;
+#endif			
         case 7:
             freq = IfxClock_getModuleFrequency() / 2u; //	fFRAC
             break;
@@ -2697,9 +2730,11 @@ uint32 IfxClock_getExtClock1Frequency(void)
         case 5:
             freq = IfxClock_getPerPllFrequency2();                         //	fPLL2
             break;
+#if defined(DEVICE_TC4DX)			
         case 6:
             freq = IfxClock_getPerPllFrequency3();                         //	fPLL3
             break;
+#endif			
         case 7:
             freq = IfxClock_getSpbFrequency() / (CLOCK_EXTCON.B.DIV1 + 1); //	fDIV1
             break;
@@ -2769,6 +2804,11 @@ uint32 IfxClock_getExtClock1Frequency(void)
             freq = IfxClock_getAudioSourceFrequency();                    //fAUDIO
             break;	
 #endif /* #if IFXCLOCK_IS_EXTCLK_AUDIO_AVAILABLE */			
+#if defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC45X) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)	
+        case 0x1E:
+            freq = IfxClock_getPerPllFrequency3();
+            break;
+#endif /* #if defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC45X) || defined(DEVICE_TC4EX) */
         default:
             freq = 0;
         }
@@ -2776,6 +2816,16 @@ uint32 IfxClock_getExtClock1Frequency(void)
 
     return freq;
 }
+
+
+#if defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC45X) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)		
+uint32 IfxClock_getPpuFrequency(void)
+{
+    uint32 frequency = IfxClock_getSriFrequency();
+
+    return frequency;
+}
+#endif /* #if defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC45X) || defined(DEVICE_TC4EX) */
 
 
 boolean IfxClock_configureRampOscillator(uint32 rampFreq, IfxClock_RampSeqCmd rampSeqCmd)

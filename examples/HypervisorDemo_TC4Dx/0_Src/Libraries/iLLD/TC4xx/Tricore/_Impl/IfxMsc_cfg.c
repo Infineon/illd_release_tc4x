@@ -38,6 +38,8 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC48XAA) && !defined(DEVICE_TC48X) && !defined(DEVICE_TC45X) && !defined(DEVICE_TC44X)
+
 #include "IfxMsc_cfg.h"
 
 /******************************************************************************/
@@ -53,6 +55,8 @@ IFX_CONST IfxModule_IndexMap IfxMsc_cfg_indexMap[IFXMSC_NUM_MODULES] = {
     {&MODULE_MSC2, (uint32)IfxMsc_Index_2}
 #endif /*#if (IFXMSC_NUM_MODULES > 2) */
 };
+
+#endif /* #if !defined(DEVICE_TC48XAA) && !defined(DEVICE_TC48X) && !defined(DEVICE_TC45X) && !defined(DEVICE_TC44X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

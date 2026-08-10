@@ -2,7 +2,7 @@
  * \file IfxFce.c
  * \brief FCE  basic functionality
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -38,6 +38,7 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC48XAA) && !defined(DEVICE_TC48X)
 #include "IfxFce.h"
 
 /******************************************************************************/
@@ -88,6 +89,8 @@ void IfxFce_configureAccessToFce(IfxApApu_ApuConfig *apConfig)
 {
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_FCE.ACCEN, apConfig);
 }
+
+#endif /* #if !defined(DEVICE_TC48XAA) && !defined(DEVICE_TC48X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

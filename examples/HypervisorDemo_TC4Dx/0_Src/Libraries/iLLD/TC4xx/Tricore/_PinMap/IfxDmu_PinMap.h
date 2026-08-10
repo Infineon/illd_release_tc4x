@@ -64,6 +64,13 @@ typedef const struct
 #include "TC4Dx/IfxDmu_PinMap_TC4Dx_BGA292_COM.h"
 #endif
 
+#elif defined(DEVICE_TC49XN)
+#if defined(IFX_PIN_PACKAGE_BGA436_STD)
+#include "TC49xN/IfxDmu_PinMap_TC49xN_BGA436_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA292_STD)
+#include "TC49xN/IfxDmu_PinMap_TC49xN_BGA292_STD.h"
+#endif
+
 #endif /* #if defined(DEVICE_TC4DX) */
 
 #endif /* IFXDMU_PINMAP_H */

@@ -44,6 +44,22 @@
 
 #if defined DEVICE_TC4DX
 #include "TC4Dx/IfxHsphy_cfg_TC4Dx.h"
+#elif defined DEVICE_TC49XN
+#include "TC49xN/IfxHsphy_cfg_TC49xN.h"
+#elif defined DEVICE_TC44X
+#include "TC44x/IfxHsphy_cfg_TC44x.h"
+#elif defined DEVICE_TC45X
+#include "TC45x/IfxHsphy_cfg_TC45x.h"
+#elif defined DEVICE_TC46XAA
+#include "TC46xAA/IfxHsphy_cfg_TC46xAA.h"
+#elif defined DEVICE_TC46X
+#include "TC46x/IfxHsphy_cfg_TC46x.h"
+#elif defined DEVICE_TC48XAA
+#include "TC48xAA/IfxHsphy_cfg_TC48xAA.h"
+#elif defined DEVICE_TC48X
+#include "TC48x/IfxHsphy_cfg_TC48x.h"
+#elif defined DEVICE_TC4ZX
+#include "TC4Zx/IfxHsphy_cfg_TC4Zx.h"
 #endif
 
 #endif /* IFXHSPHY_CFG_H */

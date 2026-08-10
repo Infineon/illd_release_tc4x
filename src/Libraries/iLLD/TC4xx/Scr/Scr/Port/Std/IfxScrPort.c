@@ -2,7 +2,7 @@
  * \file IfxScrPort.c
  * \brief SCR PORT  basic functionality
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -37,6 +37,7 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X)
 
 #include "IfxScrPort.h"
 
@@ -212,6 +213,7 @@ void IfxScrPort_configurePin(IfxScrPort_PinConfig *pinConfig)
             SCR_P2_PDR4.U  = ((SCR_P2_PDR4.U & ~(0xF << (((pinConfig->pin) & 1) << 2))) | (unsigned char)((pinConfig->driverMode) << (((pinConfig->pin) & 1) << 2)));
             break;
 
+#if !defined(DEVICE_TC49XN)			
         case IfxScrPort_PinIndex_5:
             IfxScrPort_setIoPage(IfxScrPort_Page_1);
             SCR_P2_IOCR5.U = (unsigned char)(SCR_P2_IOCR5.U & ~(IFX_SCR_P_IOCR_PC_MSK << IFX_SCR_P_IOCR_PC_OFF)) | (pinConfig->pinMode << IFX_SCR_P_IOCR_PC_OFF);
@@ -232,6 +234,7 @@ void IfxScrPort_configurePin(IfxScrPort_PinConfig *pinConfig)
             IfxScrPort_setIoPage(IfxScrPort_Page_2);
             SCR_P2_PDR6.U  = ((SCR_P2_PDR6.U & ~(0xF << (((pinConfig->pin) & 1) << 2))) | (unsigned char)((pinConfig->driverMode) << (((pinConfig->pin) & 1) << 2)));
             break;
+#endif /* #if !defined(DEVICE_TC49XN) */			
         default:
             break;
         }
@@ -275,6 +278,7 @@ void IfxScrPort_configurePin(IfxScrPort_PinConfig *pinConfig)
             SCR_P3_PDR4.U  = ((SCR_P3_PDR4.U & ~(0xF << (((pinConfig->pin) & 1) << 2))) | (unsigned char)((pinConfig->driverMode) << (((pinConfig->pin) & 1) << 2)));
             break;
 
+#if !defined(DEVICE_TC49XN)				
         case IfxScrPort_PinIndex_5:
             IfxScrPort_setIoPage(IfxScrPort_Page_1);
             SCR_P3_IOCR5.U = (unsigned char)(SCR_P3_IOCR5.U & ~(IFX_SCR_P_IOCR_PC_MSK << IFX_SCR_P_IOCR_PC_OFF)) | (pinConfig->pinMode << IFX_SCR_P_IOCR_PC_OFF);
@@ -295,12 +299,14 @@ void IfxScrPort_configurePin(IfxScrPort_PinConfig *pinConfig)
             IfxScrPort_setIoPage(IfxScrPort_Page_2);
             SCR_P3_PDR6.U  = ((SCR_P3_PDR6.U & ~(0xF << (((pinConfig->pin) & 1) << 2))) | (unsigned char)((pinConfig->driverMode) << (((pinConfig->pin) & 1) << 2)));
             break;
+#endif /* #if !defined(DEVICE_TC49XN) */			
         default:
             break;
         }
     }
 }
 
+#endif /* #if !defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

@@ -2,7 +2,7 @@
  * \file IfxLeth_Eth.c
  * \brief LETH ETH details
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -297,7 +297,11 @@ void IfxLeth_Eth_singlePortInit(IfxLeth_Eth *leth, IfxLeth_PortIndex portIndex, 
     if (config->interruptConfig.mtl.priority > 0)
     {
         volatile Ifx_SRC_SRCR *srcSFR;
+#if defined(DEVICE_TC4DX)		
         srcSFR = IfxLeth_getSrcPointer(IfxLeth_ServiceRequest_Intr);
+#else		
+        srcSFR = IfxLeth_getSrcPointer(lethSFR, IfxLeth_ServiceRequest_Intr);
+#endif	/* #if defined(DEVICE_TC4DX) */	
         IfxSrc_init(srcSFR, config->interruptConfig.mtl.provider, config->interruptConfig.mtl.priority, config->interruptConfig.mtl.vmId);
         IfxSrc_enable(srcSFR);
     }
@@ -314,7 +318,11 @@ void IfxLeth_Eth_singlePortInit(IfxLeth_Eth *leth, IfxLeth_PortIndex portIndex, 
         dma->CH[0].INTERRUPT_ENABLE.B.NIE = 1;
 
         volatile Ifx_SRC_SRCR *srcSFR;
+#if defined(DEVICE_TC4DX)		
         srcSFR = IfxLeth_getSrcPointer(IfxLeth_ServiceRequest_DmaTx_0); /*DMA Tx Channel 0*/
+#else		
+        srcSFR = IfxLeth_getSrcPointer(lethSFR, IfxLeth_ServiceRequest_DmaTx_0); /*DMA Tx Channel 0*/
+#endif        
         IfxSrc_init(srcSFR, config->interruptConfig.dmaTx0.provider, config->interruptConfig.dmaTx0.priority, config->interruptConfig.dmaTx0.vmId);
         IfxSrc_enable(srcSFR);
     }
@@ -335,7 +343,11 @@ void IfxLeth_Eth_singlePortInit(IfxLeth_Eth *leth, IfxLeth_PortIndex portIndex, 
         }
 
         volatile Ifx_SRC_SRCR *srcSFR;
+#if defined(DEVICE_TC4DX)		
         srcSFR = IfxLeth_getSrcPointer(IfxLeth_ServiceRequest_DmaRx_0); /*DMA Rx Channel 0*/
+#else		
+        srcSFR = IfxLeth_getSrcPointer(lethSFR, IfxLeth_ServiceRequest_DmaRx_0); /*DMA Rx Channel 0*/
+#endif        
         IfxSrc_init(srcSFR, config->interruptConfig.dmaRx0.provider, config->interruptConfig.dmaRx0.priority, config->interruptConfig.dmaRx0.vmId);
         IfxSrc_enable(srcSFR);
     }
@@ -664,9 +676,13 @@ void IfxLeth_Eth_configureDMA(IfxLeth_Eth *leth, IfxLeth_Eth_DmaConfig *config)
                     dmaCh->INTERRUPT_ENABLE.B.NIE = 1;
 
                     volatile Ifx_SRC_SRCR *srcSFR;
+#if defined(DEVICE_TC4DX)
                     /* Leth DMA Tx Channel node indexed by (IfxLeth_ServiceRequest_DmaTx_0 + channelIndex) */
                     srcSFR = IfxLeth_getSrcPointer((IfxLeth_ServiceRequest)(IfxLeth_ServiceRequest_DmaTx_0 + channelIndex));
-                  
+#else					
+                    /* Leth DMA Tx Channel node indexed by (IfxLeth_ServiceRequest_DmaTx_0 + channelIndex) */
+                    srcSFR = IfxLeth_getSrcPointer(lethSFR, (IfxLeth_ServiceRequest)(IfxLeth_ServiceRequest_DmaTx_0 + channelIndex));
+#endif                    
                     IfxSrc_init(srcSFR, config->interrupt.dmaTx[channelIndex].provider, config->interrupt.dmaTx[channelIndex].priority, config->interrupt.dmaTx[channelIndex].vmId);
                     IfxSrc_enable(srcSFR);
                 }
@@ -694,9 +710,13 @@ void IfxLeth_Eth_configureDMA(IfxLeth_Eth *leth, IfxLeth_Eth_DmaConfig *config)
                     }
 
                     volatile Ifx_SRC_SRCR *srcSFR;
+#if defined(DEVICE_TC4DX)
                     /* Leth DMA Rx Channel node indexed by (IfxLeth_ServiceRequest_DmaRx_0 + channelIndex) */
                     srcSFR = IfxLeth_getSrcPointer((IfxLeth_ServiceRequest)(IfxLeth_ServiceRequest_DmaRx_0 + channelIndex));
-                   
+#else					
+                    /* Leth DMA Rx Channel node indexed by (IfxLeth_ServiceRequest_DmaRx_0 + channelIndex) */
+                    srcSFR = IfxLeth_getSrcPointer(lethSFR, (IfxLeth_ServiceRequest)(IfxLeth_ServiceRequest_DmaRx_0 + channelIndex));
+#endif                    
                     IfxSrc_init(srcSFR, config->interrupt.dmaRx[channelIndex].provider, config->interrupt.dmaRx[channelIndex].priority, config->interrupt.dmaRx[channelIndex].vmId);
                     IfxSrc_enable(srcSFR);
                 }
@@ -1892,7 +1912,11 @@ void IfxLeth_Eth_initModule(IfxLeth_Eth *leth, IfxLeth_Eth_Config *config)
     if (config->interrupt.priority > 0)
     {
         volatile Ifx_SRC_SRCR *srcSFR;
+#if defined(DEVICE_TC4DX)		
         srcSFR = IfxLeth_getSrcPointer(IfxLeth_ServiceRequest_Intr);
+#else		
+        srcSFR = IfxLeth_getSrcPointer(lethSFR, IfxLeth_ServiceRequest_Intr);
+#endif		
         IfxSrc_init(srcSFR, config->interrupt.provider, config->interrupt.priority, config->interrupt.vmId);
         IfxSrc_enable(srcSFR);
     }

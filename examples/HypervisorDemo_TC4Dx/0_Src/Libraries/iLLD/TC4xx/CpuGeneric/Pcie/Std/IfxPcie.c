@@ -38,6 +38,7 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC45X)
 #include "IfxPcie.h"
 #include "IfxPcie_usp_bf.h"
 
@@ -530,6 +531,8 @@ void IfxPcie_configureAccessToPcies(IfxApApu_ApuConfig *apConfig)
 #endif /* #if (IFXPCIE_CFG_NUM_MODULES >1) */
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_PCIE1_DSP.ACCEN, apConfig);
 }
+
+#endif /* defined(DEVICE_TC4DX) || defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

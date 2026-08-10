@@ -3,7 +3,7 @@
  * \brief SENT SENT details
  * \ingroup IfxLld_Sent
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -418,7 +418,7 @@ typedef struct
     Ifx_SENT *sent;       /**< \brief Specifies pointer to SENT registers */
 } IfxSent_Sent;
 
-/** \brief Specifies interrupt flags union . In addition it allows to write and read to/from all flags as once via the ALL member.
+/** \brief Specifies interrupt flags union. In addition it allows to write and read to/from all flags as once via the ALL member.
  */
 typedef union
 {
@@ -638,15 +638,15 @@ IFX_EXTERN boolean IfxSent_Sent_initChannel(IfxSent_Sent_Channel *channel, const
  */
 IFX_EXTERN void IfxSent_Sent_initChannelConfig(IfxSent_Sent_ChannelConfig *config, IfxSent_Sent *driver);
 
-/** \brief Reads the nibbles recieved in the Data register and stores it in the provided frame structure.
+/** \brief Reads the nibbles received in the Data register and stores it in the provided frame structure.
  * \param channel SENT Channel whose data has to be read
  * \param frame Data read from the SENT Channel
  * \return None
  */
 IFX_EXTERN void IfxSent_Sent_readChannelDataFrame(IfxSent_Sent_Channel *channel, IfxSent_Sent_Frame *frame);
 
-/** \brief reads the Serial data recieved and collected over several SENT frames
- * \param channel reads the Serial data recieved and collected over several SENT frames
+/** \brief reads the Serial data received and collected over several SENT frames
+ * \param channel reads the Serial data received and collected over several SENT frames
  * \param message Data pointer pointing to the serial data read from the SENT Channel
  * \return TRUE if serial message received otherwise false
  *
@@ -655,7 +655,7 @@ IFX_EXTERN void IfxSent_Sent_readChannelDataFrame(IfxSent_Sent_Channel *channel,
 IFX_EXTERN boolean IfxSent_Sent_readChannelSerialMessageFrame(IfxSent_Sent_Channel *channel, IfxSent_Sent_SerialMessageFrame *message);
 
 /** \brief Generates SPC signal for the sensor
- * \param channel reads the Serial data recieved and collected over several SENT frames
+ * \param channel reads the Serial data received and collected over several SENT frames
  * \param pulseLength configure the SPC pulse length
  * \param delay configure the SPC pulse start delay
  * \return None
@@ -663,7 +663,7 @@ IFX_EXTERN boolean IfxSent_Sent_readChannelSerialMessageFrame(IfxSent_Sent_Chann
 IFX_EXTERN void IfxSent_Sent_spcPulseUpdate(IfxSent_Sent_Channel *channel, uint8 pulseLength, uint8 delay);
 
 /** \brief Trigger SPC signal for the sensor
- * \param channel reads the Serial data recieved and collected over several SENT frames
+ * \param channel reads the Serial data received and collected over several SENT frames
  * \return None
  */
 IFX_EXTERN void IfxSent_Sent_spcPulseTrigger(IfxSent_Sent_Channel *channel);

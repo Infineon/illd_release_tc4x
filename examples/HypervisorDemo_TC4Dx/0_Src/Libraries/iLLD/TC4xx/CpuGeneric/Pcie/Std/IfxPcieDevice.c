@@ -38,7 +38,9 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC45X)
 #include "IfxPcieDevice.h"
+#endif
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

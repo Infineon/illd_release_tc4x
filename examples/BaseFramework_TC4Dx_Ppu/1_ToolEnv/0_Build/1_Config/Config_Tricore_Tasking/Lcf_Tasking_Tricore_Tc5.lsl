@@ -7,6 +7,7 @@
 #define LCF_PPU_FLASH_SIZE    1M
 #define LCF_PPU_LMURAM_SIZE   512k
 #define LCF_PPU_CSM_SIZE      512k
+#define LCF_PPU_VCCM_SIZE     128k
 
 #define LCF_CPU0 0
 #define LCF_CPU1 1
@@ -135,6 +136,14 @@ derivative tc4D
         type = ram;
         map     cached (dest=bus:sri, dest_offset=0x92080000,           size=512k);
         map not_cached (dest=bus:sri, dest_offset=0xb2080000, reserved, size=512k);
+    }
+
+    memory ppu_vccm
+    {
+        mau = 8;
+        size = 128k;
+        type = ram;
+        map not_cached (dest=bus:sri, dest_offset=0xb2040000, reserved, size=128k);
     }
 
     section_setup :vtc:linear
@@ -952,6 +961,14 @@ derivative tc4D
             }
             "__PPU_CSM_START"= "_lc_gb_ppu_csm";
             "__PPU_CSM_END"= "_lc_ge_ppu_csm";
+
+            /*Fixed memory Allocations for PPU Local data in VCCM*/
+            group ppu_vccm (ordered, attributes=rwxu, run_addr= mem:ppu_vccm/not_cached)
+            {
+                reserved "ppu_vccm" (size = sizeof(mem:ppu_vccm));
+            }
+            "__PPU_VCCM_START"= "_lc_gb_ppu_vccm";
+            "__PPU_VCCM_END"= "_lc_ge_ppu_vccm";
         }
 
         /*Far Data Sections, selectable by toolchain*/

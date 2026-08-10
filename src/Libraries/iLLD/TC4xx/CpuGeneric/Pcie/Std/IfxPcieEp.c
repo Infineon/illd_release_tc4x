@@ -2,7 +2,7 @@
  * \file IfxPcieEp.c
  * \brief PCIE  basic functionality
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -38,6 +38,7 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC45X)
 #include "IfxPcieEp.h"
 
 /******************************************************************************/
@@ -217,6 +218,8 @@ void IfxPcieEp_clearIntrTriggerStatus(Ifx_PCIE_USP *pcieEpSFR, uint32 value)
 {
     pcieEpSFR->INT.TRIGCLR.U = value;
 }
+
+#endif /* defined(DEVICE_TC4DX) || defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

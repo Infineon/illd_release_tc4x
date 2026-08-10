@@ -46,6 +46,24 @@
 
 #if defined DEVICE_TC4DX
 #include "TC4Dx/IfxEray_cfg_TC4Dx.h"
+#elif defined DEVICE_TC49XN
+#include "TC49xN/IfxEray_cfg_TC49xN.h"
+#elif defined DEVICE_TC44X
+#include "TC44x/IfxEray_cfg_TC44x.h"
+#elif defined DEVICE_TC46XAA
+#include "TC46xAA/IfxEray_cfg_TC46xAA.h"
+#elif defined DEVICE_TC46X
+#include "TC46x/IfxEray_cfg_TC46x.h"
+#elif defined DEVICE_TC48XAA
+#include "TC48xAA/IfxEray_cfg_TC48xAA.h"
+#elif defined DEVICE_TC48X
+#include "TC48x/IfxEray_cfg_TC48x.h"
+#elif defined DEVICE_TC4ZX
+#include "TC4Zx/IfxEray_cfg_TC4Zx.h"
+#elif defined DEVICE_TC4EX
+#include "TC4Ex/IfxEray_cfg_TC4Ex.h"
+#elif defined DEVICE_TC4PX
+#include "TC4Px/IfxEray_cfg_TC4Px.h"
 #endif
 
 #endif /* IFXERAY_CFG_H */

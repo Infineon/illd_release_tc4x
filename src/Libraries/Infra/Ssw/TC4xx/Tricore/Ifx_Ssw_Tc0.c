@@ -2,7 +2,7 @@
  * \file Ifx_Ssw_Tc0.c
  * \brief Startup Software for Core0
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -60,7 +60,9 @@ IFX_SSW_USED static void __StartUpSoftware_Phase7MulticoreStartup(void);
 IFX_SSW_USED static void __StartUpSoftware_KeyoffPhase(void);
 IFX_SSW_USED static void __CStartBasic(void);
 IFX_SSW_USED static void __Core0_start(void);
+#ifndef DEVICE_TC45X
 IFX_SSW_USED IFX_SSW_NOINLINE void Ifx_Ssw_disableVirtualization_Cpu0(void);
+#endif /* #ifndef DEVICE_TC45X */
 IFX_SSW_COMMON_LINKER_SYMBOLS();
 IFX_SSW_CORE_LINKER_SYMBOLS(0);
 
@@ -153,6 +155,7 @@ static void __StartUpSoftware(void)
     /* Trap vector table initialization is necessary if it is not same as default value */
     Ifx_Ssw_MTCR(CPU_BTV, (unsigned int)__TRAPTAB(0));
 
+#ifndef DEVICE_TC45X
     /* Point the FCX to PSPR needed for disabling virtualization */
     Ifx_Ssw_MTCR(CPU_FCX, IFX_CFG_SSW_CSA_PTR(IFX_CFG_SSW_CSA_BOOT_PTR_START));
 
@@ -160,6 +163,7 @@ static void __StartUpSoftware(void)
 
     /* Re-Initialize the BTV to the HRA context post disabling virtualization */
     Ifx_Ssw_MTCR(CPU_BTV, (unsigned int)__TRAPTAB(0));
+#endif /* #ifndef DEVICE_TC45X */
 
     /*Initialize the context save area for CPU0. Function Calls Possible */
     /* Setup the context save area linked list to PSPR */
@@ -489,6 +493,7 @@ static void __CStartBasic(void)
 }
 
 
+#ifndef DEVICE_TC45X
 #if defined(__HIGHTEC__) && !defined(__clang__)
 #pragma GCC optimize ("O0")
 #elif defined(__GNUC__) && !defined(__HIGHTEC__)
@@ -503,6 +508,7 @@ void Ifx_Ssw_disableVirtualization_Cpu0(void)
 #elif defined(__GNUC__) && !defined(__HIGHTEC__)
 #pragma GCC reset_options
 #endif
+#endif /* #ifndef DEVICE_TC45X */
 
 static void __StartUpSoftware_KeyoffPhase(void)
 {

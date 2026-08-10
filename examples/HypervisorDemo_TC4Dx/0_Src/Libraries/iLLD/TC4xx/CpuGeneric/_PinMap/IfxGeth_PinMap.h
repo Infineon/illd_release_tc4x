@@ -95,6 +95,17 @@ typedef const struct
     IfxPort_OutputIdx select;          /**< \brief Port control code */
 } IfxGeth_Mdc_Out;
 
+#if defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X)
+/** \brief
+ */
+typedef const struct
+{
+    Ifx_GETH   *module;       /**< \brief Base address */
+    IfxPort_Pin pin;          /**< \brief Port pin */
+    Ifx_RxSel   select;       /**< \brief Input multiplexer value */
+} IfxGeth_Mdio_In;
+#endif /* #if defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) */
+
 /** \brief
  */
 typedef const struct
@@ -105,6 +116,18 @@ typedef const struct
     IfxPort_OutputIdx outSelect;       /**< \brief Port control code */
 } IfxGeth_Mdio_InOut;
 
+#if defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC48X)
+/** \brief   
+*/
+typedef const struct
+{
+    Ifx_GETH*             module;      /**< \brief Base address */
+    IfxGeth_PortIndex     portIndex;   /**< \brief GETH PORT index */
+    IfxPort_Pin           pin;         /**< \brief Port pin */
+    Ifx_RxSel             select;      /**< \brief Input multiplexer value */
+} IfxGeth_P_In;
+#endif /* #if defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC48X)*/
+
 /** \brief
  */
 typedef const struct
@@ -114,6 +137,17 @@ typedef const struct
     IfxPort_Pin       pin;             /**< \brief Port pin */
     IfxPort_OutputIdx select;          /**< \brief Port control code */
 } IfxGeth_Pps_Out;
+
+#if defined(DEVICE_TC44X)
+/** \brief   
+*/
+typedef const struct
+{
+    Ifx_GETH*             module;   /**< \brief Base address */
+    IfxPort_Pin           pin;      /**< \brief Port pin */
+    IfxPort_OutputIdx     select;   /**< \brief Port control code */
+} IfxGeth_Px_Out;
+#endif /* #if defined(DEVICE_TC44X) */
 
 /** \brief
  */
@@ -244,6 +278,46 @@ typedef const struct
 #include "TC4Dx/IfxGeth_PinMap_TC4Dx_BGA436_COM.h"
 #elif defined(IFX_PIN_PACKAGE_BGA292_COM)
 #include "TC4Dx/IfxGeth_PinMap_TC4Dx_BGA292_COM.h"
+#endif
+
+#elif defined(DEVICE_TC48XAA)
+#if defined(IFX_PIN_PACKAGE_BGA436_COM)
+#include "TC48xAA/IfxGeth_PinMap_TC48xAA_BGA436_COM.h"
+#elif defined(IFX_PIN_PACKAGE_BGA292_COM)
+#include "TC48xAA/IfxGeth_PinMap_TC48xAA_BGA292_COM.h"
+#elif defined(IFX_PIN_PACKAGE_BGA292_STD)
+#include "TC48xAA/IfxGeth_PinMap_TC48xAA_BGA292_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA224_STD)
+#include "TC48xAA/IfxGeth_PinMap_TC48xAA_BGA224_STD.h"
+#endif
+
+#elif defined(DEVICE_TC48X)
+#if defined(IFX_PIN_PACKAGE_BGA436_COM)
+#include "TC48x/IfxGeth_PinMap_TC48x_BGA436_COM.h"
+#elif defined(IFX_PIN_PACKAGE_BGA292_COM)
+#include "TC48x/IfxGeth_PinMap_TC48x_BGA292_COM.h"
+#elif defined(IFX_PIN_PACKAGE_BGA292_STD)
+#include "TC48x/IfxGeth_PinMap_TC48x_BGA292_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA224_STD)
+#include "TC48x/IfxGeth_PinMap_TC48x_BGA224_STD.h"
+#endif
+
+#elif defined(DEVICE_TC44X)
+#if defined(IFX_PIN_PACKAGE_BGA292_STD)
+#include "TC44x/IfxGeth_PinMap_TC44x_BGA292_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA292_COM)
+#include "TC44x/IfxGeth_PinMap_TC44x_BGA292_COM.h"
+#elif defined(IFX_PIN_PACKAGE_BGA224_STD)
+#include "TC44x/IfxGeth_PinMap_TC44x_BGA224_STD.h"
+#elif defined(IFX_PIN_PACKAGE_BGA188_STD)
+#include "TC44x/IfxGeth_PinMap_TC44x_BGA188_STD.h"
+#endif
+
+#elif defined(DEVICE_TC4ZX)
+#if defined(IFX_PIN_PACKAGE_BGA436_COM)
+#include "TC4Zx/IfxGeth_PinMap_TC4Zx_BGA436_COM.h"
+#elif defined(IFX_PIN_PACKAGE_BGA292_COM)
+#include "TC4Zx/IfxGeth_PinMap_TC4Zx_BGA292_COM.h"
 #endif
 
 #endif /* #if defined(DEVICE_TC4DX) */

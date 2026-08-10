@@ -2,7 +2,7 @@
  * \file IfxPcieLib_Device.c
  * \brief PCIE DEVICE details
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -39,6 +39,7 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC45X)
 #include "IfxPcieLib_Device.h"
 
 /******************************************************************************/
@@ -292,6 +293,8 @@ void IfxPcieLib_Device_setupOutboundTlp(Ifx_PCIE_DSP_ATU_OUTBOUND *outBoundPtr, 
     atuRegion->direction         = IfxPcie_AtuDirection_outBound;
     atuRegion->tlpType           = outboundTlp->tlpHeader.type;
 }
+
+#endif /* defined(DEVICE_TC4DX) || defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

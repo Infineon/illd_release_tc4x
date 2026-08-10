@@ -3,7 +3,7 @@
  * \brief ERAY  basic functionality
  * \ingroup IfxLld_Eray
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -104,10 +104,10 @@ typedef enum
     IfxEray_ClearErrorFlag_ioba = 1024,      /**< \brief illegal output buffer access event. */
     IfxEray_ClearErrorFlag_mhf  = 2048,      /**< \brief message handler constraint flag. */
     IfxEray_ClearErrorFlag_eda  = 65536,     /**< \brief error event on channel A. */
-    IfxEray_ClearErrorFlag_ltva = 131072,    /**< \brief latest transmit violation flag on channel A . */
+    IfxEray_ClearErrorFlag_ltva = 131072,    /**< \brief latest transmit violation flag on channel A. */
     IfxEray_ClearErrorFlag_taba = 262144,    /**< \brief transmission across channel A boundary flag. */
     IfxEray_ClearErrorFlag_edb  = 16777216,  /**< \brief error event on channel B. */
-    IfxEray_ClearErrorFlag_ltvb = 33554432,  /**< \brief latest transmit violation flag on channel B . */
+    IfxEray_ClearErrorFlag_ltvb = 33554432,  /**< \brief latest transmit violation flag on channel B. */
     IfxEray_ClearErrorFlag_tabb = 67108864   /**< \brief transmission across channel B boundary flag. */
 } IfxEray_ClearErrorFlag;
 
@@ -387,7 +387,7 @@ typedef struct
     IfxEray_BufferDirection  bufferDirection;                 /**< \brief selects buffer as a transmit buffer or as a receive buffer. */
     boolean                  transmitPayloadIndicatior;       /**< \brief weather payload indicator is set or not. */
     IfxEray_TransmissionMode transmissionMode;                /**< \brief transmission mode of Header. */
-    boolean                  bufferServiceEnabled;            /**< \brief wether buffer service request is enabled or not. */
+    boolean                  bufferServiceEnabled;            /**< \brief whether buffer service request is enabled or not. */
     uint8                    payloadLength;                   /**< \brief length of data section. */
     uint16                   dataPointer;                     /**< \brief pointer to the data section of message buffer in RAM. */
     boolean                  startupFrameIndicator;           /**< \brief whether startup frame is indicated or not. */
@@ -401,7 +401,7 @@ typedef struct
     uint16 frameId : 11;                     /**< \brief received frame id. */
     uint8  payloadLength : 7;                /**< \brief received payload length. */
     uint16 headerCrc : 11;                   /**< \brief received header crc. */
-    uint8  nullFrameIndicator : 1;           /**< \brief 0 : no data frame received; 1: atleast one data frame received. */
+    uint8  nullFrameIndicator : 1;           /**< \brief 0 : no data frame received; 1: at least one data frame received. */
     uint8  syncFrame : 1;                    /**< \brief 0 : received frame is not a synch frame ; 1 : receive frame is a synch frame. */
     uint8  startupFrame : 1;                 /**< \brief 0 : received frame is not a startup frame ; 1 : receive frame is a startup frame. */
     uint8  cycleNumber : 7;                  /**< \brief cycle number in which frame is received. */
@@ -412,8 +412,8 @@ typedef struct
  */
 typedef struct
 {
-    boolean headerTransfered;        /**< \brief whether header is transfered from input buffers to Message RAM or not. */
-    boolean dataTransfered;          /**< \brief whether data is transfered from input buffers to Message RAM or not. */
+    boolean headerTransfered;        /**< \brief whether header is transferred from input buffers to Message RAM or not. */
+    boolean dataTransfered;          /**< \brief whether data is transferred from input buffers to Message RAM or not. */
     boolean transferRequested;       /**< \brief transmit buffer released for transmission or not. */
     uint8   bufferIndex;             /**< \brief buffer index in the Message RAM. */
 } IfxEray_SlotConfig;
@@ -766,7 +766,7 @@ IFX_INLINE void IfxEray_receiveHeader(Ifx_ERAY *eray, boolean headerReceived);
 
 /** \brief sets the bit to send header in  frame.
  * \param eray pointer to ERAY module registers.
- * \param headerTransfered whether header transfered or not.
+ * \param headerTransfered whether header transferred or not.
  * \return None
  */
 IFX_INLINE void IfxEray_sendHeader(Ifx_ERAY *eray, boolean headerTransfered);
@@ -1143,7 +1143,7 @@ IFX_INLINE void IfxEray_receiveData(Ifx_ERAY *eray, boolean dataReceived);
 
 /** \brief sets the bit to send data in  frame.
  * \param eray pointer to ERAY module registers.
- * \param dataTransfered whether data transfered or not.
+ * \param dataTransfered whether data transferred or not.
  * \return None
  */
 IFX_INLINE void IfxEray_sendData(Ifx_ERAY *eray, boolean dataTransfered);

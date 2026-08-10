@@ -3,7 +3,7 @@
  * \brief VMT  basic functionality
  * \ingroup IfxLld_Vmt
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -301,6 +301,7 @@
      ((unsigned int)IFX_VMT_MC_ECCD_UCERR_MSK << IFX_VMT_MC_ECCD_UCERR_OFF) | \
      ((unsigned int)IFX_VMT_MC_ECCD_MERR_MSK << IFX_VMT_MC_ECCD_MERR_OFF))
 
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC45X)
 /** \brief CPU0 PSPR base address
  */
 #define IFXVMT_PSPR_BEGIN               0xC0000000
@@ -357,6 +358,7 @@
 /** \brief Number of Data CRC
  */
 #define IFXVMT_NUM_WORD_DATA_CRC        (IFXVMT_FAILID_WORD_SIZE - 2)
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC45X) */
 
 /******************************************************************************/
 /*-----------------------------Data Structures--------------------------------*/
@@ -388,6 +390,11 @@ typedef struct
 typedef struct
 {
     IfxVmt_MbistSel sshSel;               /**< \brief Member (config0) */
+#if !defined(DEVICE_TC4DX) && !defined(DEVICE_TC49XN) && !defined(DEVICE_TC45X)
+    uint8           lowAddress;                        /**< \brief Lower address (scrambled) of memory Range to be tested */
+    uint8           highAddress;                       /**< \brief Higher address (scrambled) of memory Range to be tested */
+    uint8           uncorrectableErrorThreshold;       /**< \brief Threshold number for uncorrectable errors */
+#endif /* #if !defined(DEVICE_TC4DX) && !defined(DEVICE_TC49XN) && !defined(DEVICE_TC45X) */	
     uint8           preClearEnable;       /**< \brief Enable SRAM clearing before the test */
 } IfxVmt_MbistSshConfig;
 
@@ -656,7 +663,7 @@ IFX_EXTERN uint8 IfxVmt_runMarchUTest(IfxVmt_MbistSel mbistSel, uint8 rangeSel, 
  * 2. write back all bits inverted
  * 3. Read data Word including check bits
  * 4. Write back all bits inverted
- * At the end of this procedure the user data remains unchanged and and every bit has been set to 0 and 1. Any single Stuck-At error will be visible as a correctable error.
+ * At the end of this procedure the user data remains unchanged and every bit has been set to 0 and 1. Any single Stuck-At error will be visible as a correctable error.
  * Note: The function should be called with adequate PROT and APU handling (PROTE/PROTCSE).
  * The Error flags need to be cleared to enable further tracking after the test
  * \param mbistSel Memory Selection
@@ -881,6 +888,15 @@ IFX_EXTERN void IfxVmt_KxInit(const IfxVmt_SshSelectionConfig *mbistConfig, uint
 IFX_EXTERN uint32 IfxVmt_K3PrepareExtractStore(const IfxVmt_SramInfo **sramInfo, IfxVmt_K3PhaseInputs *k3PhaseInputs);
 #endif /* #if IFXVMT_K3_PREPARE_EXTRACT_STORE */
 
+#if !defined(DEVICE_TC4DX) && !defined(DEVICE_TC49XN) && !defined(DEVICE_TC45X)
+/******************************************************************************/
+/*-------------------Global Exported Variables/Constants----------------------*/
+/******************************************************************************/
+
+IFX_EXTERN IFX_CONST IfxVmt_MbistConfig *IfxVmt_mbistGangConfig[];
+
+/******************************************************************************/
+#endif /* !defined(DEVICE_TC4DX) && !defined(DEVICE_TC49XN) && !defined(DEVICE_TC45X) */
 
 /******************************************************************************/
 /*---------------------Inline Function Implementations------------------------*/

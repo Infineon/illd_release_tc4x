@@ -29,7 +29,7 @@
  * \ingroup library_srvsw_stdif
  *
  * The standard interface timer (Timer) abstract the hardware used for timer feature. It provide, after proper initialization an hardware
- * independant way to interact with the timer functionallity like setting period, trigger points, ...
+ * independent way to interact with the timer functionality like setting period, trigger points, ...
  *
  * The figure below shows the standard timer interface.
  *
@@ -246,7 +246,7 @@ typedef struct
 {
     boolean            enabled;             /**< \brief If true, the trigger functionality is Initialised, else ignored */
     Ifx_TimerValue     triggerPoint;        /**< \brief Trigger point in timer ticks */
-    Ifx_Priority       isrPriority;         /**< \brief Interrupt isrPriority of the trigger interrupt, if 0 the interrupt is disable */
+    Ifx_Priority       isrPriority;         /**< \brief Interrupt isrPriority of the trigger interrupt, if 0 the interrupt is disabled */
     IfxSrc_Tos         isrProvider;         /**< \brief Interrupt service provider for the trigger interrupt */
     IfxPort_OutputMode outputMode;          /**< \brief Output mode *//* FIXME use generic type (No specific tricore AURIX type ) */
     IfxPort_PadDriver  outputDriver;        /**< \brief Output pad driver *//* FIXME use generic type (No specific tricore AURIX type ) */
@@ -258,7 +258,7 @@ typedef struct
 typedef struct
 {
     float32                   frequency;     /**< \brief PWM frequency in Hz. This parameter is only used to initialise the timer structure. An additional cell is required to build the timer. */
-    Ifx_Priority              isrPriority;   /**< \brief Interrupt isrPriority of the timer interrupt, if 0 the interrupt is disable */
+    Ifx_Priority              isrPriority;   /**< \brief Interrupt isrPriority of the timer interrupt, if 0 the interrupt is disabled */
     IfxSrc_Tos                isrProvider;   /**< \brief Interrupt service provider for the timer interrupt */
     float32                   minResolution; /**< \brief Minimum resolution of the timer in seconds. if 0, this parameter is ignored. If the configuration does not enable this setting a warning is given */
     IfxStdIf_Timer_TrigConfig trigger;       /**< \brief Trigger configuration */

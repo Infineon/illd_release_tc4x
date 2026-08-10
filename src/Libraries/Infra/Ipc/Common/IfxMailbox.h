@@ -1,7 +1,7 @@
 /**
  * \file IfxMailBox.h
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -35,6 +35,8 @@
 #define KERNEL_ID_OFFSET (STATUS_OFFSET + 4)
 #define ARG_COUNT_OFFSET (KERNEL_ID_OFFSET + 4)
 #define FIRST_ARG_OFFSET (ARG_COUNT_OFFSET + 4)
+
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC4ZX)
 
 /** \brief TC0 Mailbox
  */
@@ -77,6 +79,69 @@
 /** \brief PPU Mailbox
  */
 #define PPU_STATUS_MAILBOX         (0xB0680E00)
+
+#elif defined(DEVICE_TC45X) || defined(DEVICE_TC48X) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC44X) || defined(DEVICE_TC42X) ||\
+	  defined(DEVICE_TC4SX) || defined(DEVICE_TC4PX) || defined(DEVICE_TC4EX)
+/** \brief TC0 Mailbox
+ */
+#define TRICORE_0_REQUEST_MAILBOX  (0xB000F200)
+
+/** \brief TC1 Mailbox
+ */
+#if (IFXCPU_NUM_SAFE_MODULES >= 2U)
+#define TRICORE_1_REQUEST_MAILBOX  (0xB000F400)
+#endif
+
+/** \brief TC2 Mailbox
+ */
+#if (IFXCPU_NUM_SAFE_MODULES >= 3U)
+#define TRICORE_2_REQUEST_MAILBOX  (0xB000F600)
+#endif
+
+/** \brief TC3 Mailbox
+ */
+#if (IFXCPU_NUM_SAFE_MODULES >= 4U)
+#define TRICORE_3_REQUEST_MAILBOX  (0xB000F800)
+#endif
+
+/** \brief TC6 Mailbox
+ */
+#define TRICORE_6_HANDSHAKE_MAILBOX  (0xB000FC00)
+
+/** \brief PPU Mailbox
+ */
+#define PPU_STATUS_MAILBOX         (0xB001C000)
+
+#elif defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA)
+
+/** \brief TC0 Mailbox
+ */
+#define TRICORE_0_REQUEST_MAILBOX  (0xB047F200)
+
+/** \brief TC1 Mailbox
+ */
+#define TRICORE_1_REQUEST_MAILBOX  (0xB047F400)
+
+/** \brief TC2 Mailbox
+ */
+#define TRICORE_2_REQUEST_MAILBOX  (0xB047F600)
+
+/** \brief TC3 Mailbox
+ */
+#define TRICORE_3_REQUEST_MAILBOX  (0xB047F800)
+
+
+/** \brief TC5 Mailbox
+ */
+#define TRICORE_6_HANDSHAKE_MAILBOX  (0xB047FA00)
+
+/** \brief PPU Mailbox
+ */
+#define PPU_STATUS_MAILBOX         (0xB001C000)
+
+#else
+#error "Device not defined in Ifx_Cfg.h file."
+#endif
 
 /** \brief MAX Args
  */

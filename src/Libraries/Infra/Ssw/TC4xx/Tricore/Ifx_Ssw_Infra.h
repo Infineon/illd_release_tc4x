@@ -2,7 +2,7 @@
  * \file Ifx_Ssw_Infra.h
  * \brief Startup Software support functions.
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -68,19 +68,37 @@
 #define IFX_SSW_CSA_SIZE                            16U
 
 /* \brief CSA START pointer in PSPR0 location */
+#ifndef DEVICE_TC45X
 #ifndef IFX_CFG_SSW_CSA_BOOT_PTR_START
 #define IFX_CFG_SSW_CSA_BOOT_PTR_START              (0x7010EC00)
 #endif
+#elif defined(DEVICE_TC45X)
+#ifndef IFX_CFG_SSW_CSA_BOOT_PTR_START
+#define IFX_CFG_SSW_CSA_BOOT_PTR_START              (0x70106C00)
+#endif
+#endif /* #ifndef DEVICE_TC45X */
 
 /* \brief CSA END pointer in PSPR0 location */
+#ifndef DEVICE_TC45X
 #ifndef IFX_CFG_SSW_CSA_BOOT_PTR_END
 #define IFX_CFG_SSW_CSA_BOOT_PTR_END                (0x7010FC00)
 #endif
+#elif defined(DEVICE_TC45X)
+#ifndef IFX_CFG_SSW_CSA_BOOT_PTR_END
+#define IFX_CFG_SSW_CSA_BOOT_PTR_END                (0x70107C00)
+#endif
+#endif /* #ifndef DEVICE_TC45X */
 
 /* \brief USTACK pointer in PSPR0 location */
+#ifndef DEVICE_TC45X
 #ifndef IFX_CFG_SSW_CSA_USTACK_PTR
 #define IFX_CFG_SSW_CSA_USTACK_PTR                  (0x7010EB00)
 #endif
+#elif defined(DEVICE_TC45X)
+#ifndef IFX_CFG_SSW_CSA_USTACK_PTR
+#define IFX_CFG_SSW_CSA_USTACK_PTR                  (0x70106B00)
+#endif
+#endif /* #ifndef DEVICE_TC45X */
 
 #ifndef IFX_CFG_SSW_STARTCPU_WAIT_TIME_IN_SECONDS
 #define IFX_CFG_SSW_STARTCPU_WAIT_TIME_IN_SECONDS   (0.0001)
@@ -261,10 +279,12 @@
 #endif
 #endif
 
+#ifndef DEVICE_TC45X
 #define Ifx_Ssw_disableVirtualization()                                                    \
     Ifx_Ssw_MTCR(CPU_VCON0, (unsigned int)0U);                                             \
     Ifx_Ssw_MTCR(CPU_PSW, (unsigned int)0xB00U);                                           \
     Ifx_Ssw_RFH();
+#endif /* #ifndef DEVICE_TC45X */
 	
 
 #ifndef IFX_CFG_SSW_WDG_RELOAD_VALUE

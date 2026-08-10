@@ -2,7 +2,7 @@
  * \file IfxPsi5.c
  * \brief PSI5  basic functionality
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -38,6 +38,7 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X) && !defined(DEVICE_TC4EX) && !defined(DEVICE_TC4PX)
 #include "IfxPsi5.h"
 
 /******************************************************************************/
@@ -162,6 +163,7 @@ void IfxPsi5_enableChannel(Ifx_PSI5 *psi5, IfxPsi5_ChannelId channelId)
     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_PSI5.PROTE, IfxApProt_State_run);
 #endif
 }
+#endif /* #if !defined(DEVICE_TC45X) && !defined(DEVICE_TC4EX)*/
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

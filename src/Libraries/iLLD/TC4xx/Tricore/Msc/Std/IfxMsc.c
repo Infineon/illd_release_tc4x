@@ -2,7 +2,7 @@
  * \file IfxMsc.c
  * \brief MSC  basic functionality
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -38,6 +38,7 @@
 #pragma diag_suppress 96 /* To suppress empty file warning */
 #endif
 
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
 #include "IfxMsc.h"
 
 /******************************************************************************/
@@ -94,9 +95,9 @@ uint32 IfxMsc_downstreamAbraBaudCalculator(uint32 baud)
 }
 
 
-uint64 IfxMsc_downstreamFractionalBaudCalculator(Ifx_MSC *msc, uint32 baud)
+uint32 IfxMsc_downstreamFractionalBaudCalculator(Ifx_MSC *msc, uint32 baud)
 {
-    uint64 step = 0;
+    uint32 step = 0;
     uint32 fsys = 0;
 
     if (msc->FDR.B.ACS == IfxMsc_Clock_fSPB)
@@ -108,7 +109,7 @@ uint64 IfxMsc_downstreamFractionalBaudCalculator(Ifx_MSC *msc, uint32 baud)
         fsys = IfxClock_getSriFrequency();
     }
 
-    step = (uint64)((uint64)(2 * baud * 1024)) / fsys;
+    step = (uint32)(((uint64)2 * baud * 1024) / fsys);
 
     return step;
 }
@@ -233,10 +234,10 @@ void IfxMsc_resetModule(Ifx_MSC *msc)
 }
 
 
-uint64 IfxMsc_upstreamFractionalBaudCalculator(Ifx_MSC *msc, uint32 baud)
+uint32 IfxMsc_upstreamFractionalBaudCalculator(Ifx_MSC *msc, uint32 baud)
 {
     uint32 fsys = 0;
-    uint64 step = 0;
+    uint32 step = 0;
     uint32 df   = 1;
 
     if (msc->FDR.B.ACS == IfxMsc_Clock_fSPB)
@@ -259,7 +260,7 @@ uint64 IfxMsc_upstreamFractionalBaudCalculator(Ifx_MSC *msc, uint32 baud)
         df = 0;
     }
 
-    step = (uint64)((uint64)((df * baud) * 1024)) / fsys;
+    step = (uint32)(((uint64)df * baud * 1024) / fsys);
 
     return step;
 }
@@ -516,6 +517,8 @@ float32 IfxMsc_getUpstreamBaudrate(Ifx_MSC *msc)
 
     return baudrate;
 }
+
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC4EX) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

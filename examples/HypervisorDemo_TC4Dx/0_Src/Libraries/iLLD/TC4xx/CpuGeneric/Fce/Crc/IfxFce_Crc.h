@@ -239,7 +239,7 @@ typedef struct
     boolean crcMismatch;       /**< \brief Specifies enabel/disable of CRC mismatch interrupt. Range: TRUE CRC mismatch interrupt is enabled, FALSE CRC mismatch interrupt is disabled.*/
     boolean configError;       /**< \brief Specifies enabel/disable of configuration error interrupt. Range: TRUE configuration error interrupt is enabled, FALSE Configuration error interrupt is disabled. */
     boolean lengthError;       /**< \brief Specifies enabel/disable of length error interrupt. Range: TRUE Length error interrupt is enabled, FALSE Length error interrupt is disabled. */
-    boolean busError;          /**< \brief Specifies enabel/disable of bus error interrupt. Range: TRUE Bus error Interrupt is enabled , FALSE Bus error interrupt is disabled. */
+    boolean busError;          /**< \brief Specifies enabel/disable of bus error interrupt. Range: TRUE Bus error Interrupt is enabled, FALSE Bus error interrupt is disabled. */
 } IfxFce_Crc_EnabledInterrupts;
 
 /** \} */
@@ -286,7 +286,7 @@ typedef struct
     IfxDma_ChannelId             fceChannelId;                    /**< \brief Select the Dma channel for Fce operation */
     IfxFce_CrcChannel            crcChannel;                      /**< \brief Specifies the Crc Channel */
     IfxFce_CrcKernel             crcKernel;                       /**< \brief Specifies the Crc kernel */
-    boolean                      crcCheckCompared;                /**< \brief Specifies whether CRC check comparision is enabled or not */
+    boolean                      crcCheckCompared;                /**< \brief Specifies whether CRC check comparison is enabled or not */
     boolean                      automaticLengthReload;           /**< \brief Specifies the enable/disable of automatic length reload */
     boolean                      dataByteReflectionEnabled;       /**< \brief Specifies enable/disable of input data byte wise reflection */
     boolean                      crc32BitReflectionEnabled;       /**< \brief Specifies enable/disable of CRC 32-bit wise reflection */

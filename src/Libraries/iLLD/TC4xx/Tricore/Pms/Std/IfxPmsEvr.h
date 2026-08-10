@@ -3,7 +3,7 @@
  * \brief PMS  basic functionality
  * \ingroup IfxLld_Pms
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -66,19 +66,19 @@
 /******************************************************************************/
 /*-----------------------------------Macros-----------------------------------*/
 /******************************************************************************/
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
 #define IFXPMSEVR_SARHVLSB_MV   (4.741f)
 #else
 #define IFXPMSEVR_SARHVLSB_MV   (2.830f)
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
 
 #define IFXPMSEVR_SARCORELSB_MV (0.586f)
 
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX)|| defined(DEVICE_TC4PX)
 #define IFXPMSEVR_TRKHVLSB_MV   (22.64f)
 #else
 #define IFXPMSEVR_TRKHVLSB_MV   (11.32f)
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
 
 /** \brief Timeout period for SDVOK to set 20us
  */
@@ -412,7 +412,7 @@ typedef enum
 typedef enum
 {
     IfxPmsEvr_StatusRegister_interrupt     = 0,  /**< \brief Interrupt status register */
-    IfxPmsEvr_StatusRegister_pad           = 1,  /**< \brief PAD status regsiter */
+    IfxPmsEvr_StatusRegister_pad           = 1,  /**< \brief PAD status register */
     IfxPmsEvr_StatusRegister_wakeupstat0   = 2,  /**< \brief wakeup status regsiter0 */
     IfxPmsEvr_StatusRegister_wakeupstat1   = 3,  /**< \brief wakeup status regsiter1 */
     IfxPmsEvr_StatusRegister_wakeuptimer   = 4,  /**< \brief wakeup timer status register */
@@ -676,7 +676,7 @@ IFX_INLINE uint32 IfxPmsEvr_getDriftMonitorStatusRegister(Ifx_PMS *pms, IfxPmsEv
  * \brief Return the value of the selected status register.
  *
  * \param[in] pms Pointer to PMS module.
- * \param]in] reg Enum for status regsiter.
+ * \param]in] reg Enum for status register.
  * 				  Range: \ref IfxPmsEvr_StatusRegister
  *
  * \retval uint32 Returns status value of selected status register,
@@ -1609,7 +1609,7 @@ IFX_INLINE float32 IfxPmsEvr_getPeakVoltageDetectedValueinMv(Ifx_PMS *pms, IfxPm
  * \param[in] supply Peak detection voltage source selection for Vdd,Vddext and Vddextdc.
  * 					 Range: \ref IfxPmsEvr_PeakDetectionVoltageSource
  *
- * \retval uint32 Returns theshold count value from PEAK.VxxSTAT.B.THRESCOUNT. Range: 0 to 0x1F,
+ * \retval uint32 Returns threshold count value from PEAK.VxxSTAT.B.THRESCOUNT. Range: 0 to 0x1F,
  *
  * Coding example:
  * \code
@@ -1812,6 +1812,7 @@ IFX_EXTERN uint32 IfxPmsEvr_scaleExtVoltageSetup(Ifx_PMS *pms, IfxPmsEvr_Externa
  */
 IFX_EXTERN boolean IfxPmsEvr_scaleEvrVoltage(Ifx_PMS *pms, IfxPmsEvr_EvrcVoltScalingConfig *config);
 
+#if !defined(DEVICE_TC4EX) && !defined(DEVICE_TC4PX)
 /**
  * \brief Enable voltage rail in ASSW.
  *
@@ -1832,6 +1833,7 @@ IFX_EXTERN boolean IfxPmsEvr_scaleEvrVoltage(Ifx_PMS *pms, IfxPmsEvr_EvrcVoltSca
  * \endcode
  */
 IFX_EXTERN boolean IfxPmsEvr_enableVoltageRail(Ifx_PMS *pms, IfxPmsEvr_PrimaryMonitorVoltageSource supply);
+#endif /* #if !defined(DEVICE_TC4EX) */
 
 /**
  * \brief Configures access to all masters to all the PMS in the device.
@@ -2442,11 +2444,11 @@ IFX_INLINE void IfxPmsEvr_setSecondaryUnderVoltageThresholdMv(Ifx_PMS *pms, floa
         break;
 #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDDP3NVM
     case IfxPmsEvr_SecondaryMonitorVoltageSource_vddp3nvm:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         pms->VMONS.VDDP3NVMCON.B.UVVAL = (uint16)(inputVoltage / IFXPMSEVR_SARMVLSB_MV);
 #else
         pms->VMONS.VDDP3NVMCON.B.UVVAL = (uint16)(inputVoltage / IFXPMSEVR_SARHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741  */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
 #endif /* #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDDP3NVM */
 #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDDEXTHS		
@@ -2455,16 +2457,16 @@ IFX_INLINE void IfxPmsEvr_setSecondaryUnderVoltageThresholdMv(Ifx_PMS *pms, floa
         pms->VMONS.VDDEXTHSCON.B.UVVAL = (uint16)(inputVoltage / IFXPMSEVR_SARHVLSB_MV);
 #else
         pms->VMONS.VDDEXTHSCON.B.UVVAL = (uint16)(inputVoltage / IFXPMSEVR_SARHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741  */ 
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */ 
         break;
 #endif /* #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDDEXTHS */
 #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDD3PMS
     case IfxPmsEvr_SecondaryMonitorVoltageSource_vdd3pms:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         pms->VMONS.VDD3PMSCON.B.UVVAL = (uint16)(inputVoltage / IFXPMSEVR_SARMVLSB_MV);
 #else
         pms->VMONS.VDD3PMSCON.B.UVVAL = (uint16)(inputVoltage / IFXPMSEVR_SARHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */ 
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */ 
         break;
 #endif /* #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDD3PMS */
 #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDDRIF0
@@ -3395,14 +3397,14 @@ IFX_INLINE float32 IfxPmsEvr_getPrimaryMonitorResultMv(Ifx_PMS *pms, IfxPmsEvr_P
     switch (source)
     {
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vdd:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_4EX) || defined(DEVICE_TC4PX)
         result = (pms->VMONP.VDDSTAT.B.RESULT) * IFXPMSEVR_TRKCORELSB_MV;
 #else
         result = (pms->VMONP.VDDSTAT.B.RESULT) * IFXPMSEVR_SARHVLSB_MV;
 #endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_4EX) */
         break;
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vddext:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_4EX) || defined(DEVICE_TC4PX)
         result = (pms->VMONP.VDDEXTSTAT.B.RESULT) * IFXPMSEVR_SARHVLSB_MV;
 #else
         result = (pms->VMONP.VDDEXTSTAT.B.RESULT) * IFXPMSEVR_TRKHVLSB_MV;
@@ -3495,11 +3497,11 @@ IFX_INLINE float32 IfxPmsEvr_getPrimaryMonitorResultMv(Ifx_PMS *pms, IfxPmsEvr_P
 #endif /* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDSB */
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDP3NVM
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vddp3nvm:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         result = (pms->VMONP.VDDP3NVMSTAT.B.RESULT) * IFXPMSEVR_SARMVLSB_MV;
 #else
         result = (pms->VMONP.VDDP3NVMSTAT.B.RESULT) * IFXPMSEVR_SARHVLSB_MV;
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741  */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
 #endif /* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDP3NVM */
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDEXTHS
@@ -3509,11 +3511,11 @@ IFX_INLINE float32 IfxPmsEvr_getPrimaryMonitorResultMv(Ifx_PMS *pms, IfxPmsEvr_P
 #endif /* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDEXTHS */		
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDD3PMS
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vdd3pms:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         result = (pms->VMONP.VDD3PMSSTAT.B.RESULT) * IFXPMSEVR_SARMVLSB_MV;
 #else
         result = (pms->VMONP.VDD3PMSSTAT.B.RESULT) * IFXPMSEVR_SARHVLSB_MV;
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
 #endif /* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDD3PMS */
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDPHRIF0
@@ -3655,11 +3657,11 @@ IFX_INLINE float32 IfxPmsEvr_getSecondaryMonitorResultMv(Ifx_PMS *pms, IfxPmsEvr
         break;
 #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDDP3NVM
     case IfxPmsEvr_SecondaryMonitorVoltageSource_vddp3nvm:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         result = (pms->VMONS.VDDP3NVMSTAT.B.RESULT) * IFXPMSEVR_SARMVLSB_MV;
 #else
         result = (pms->VMONS.VDDP3NVMSTAT.B.RESULT) * IFXPMSEVR_SARHVLSB_MV;
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
 #endif /* #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDDP3NVM */
 #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDDEXTHS
@@ -3669,11 +3671,11 @@ IFX_INLINE float32 IfxPmsEvr_getSecondaryMonitorResultMv(Ifx_PMS *pms, IfxPmsEvr
 #endif /* #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDDEXTHS */
 #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDD3PMS
     case IfxPmsEvr_SecondaryMonitorVoltageSource_vdd3pms:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         result = (pms->VMONS.VDD3PMSSTAT.B.RESULT) * IFXPMSEVR_SARMVLSB_MV;
 #else
         result = (pms->VMONP.VDD3PMSSTAT.B.RESULT) * IFXPMSEVR_SARHVLSB_MV;
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
 #endif /* #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDD3PMS */
 #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDDSB
@@ -3729,11 +3731,11 @@ IFX_INLINE void IfxPmsEvr_setPrimaryUnderVoltageThresholdMv(Ifx_PMS *pms, float3
     switch (supply)
     {
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vdd:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         pms->VMONP.VDDCON.B.UVVAL = (uint16)(underVoltage / IFXPMSEVR_TRKCORELSB_MV);
 #else
         pms->VMONP.VDDCON.B.UVVAL = (uint16)(underVoltage / IFXPMSEVR_SARHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vddext:
 #if IFXPMS_SUPPLY_RAIL_SARHV_4P741
@@ -3829,11 +3831,11 @@ IFX_INLINE void IfxPmsEvr_setPrimaryUnderVoltageThresholdMv(Ifx_PMS *pms, float3
 #endif /* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDSB */
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDP3NVM
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vddp3nvm:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         pms->VMONP.VDDP3NVMCON.B.UVVAL = (uint16)(underVoltage / IFXPMSEVR_SARMVLSB_MV);
 #else
         pms->VMONP.VDDP3NVMCON.B.UVVAL = (uint16)(underVoltage / IFXPMSEVR_SARHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
 #endif /* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDP3NVM */
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDEXTHS
@@ -3843,11 +3845,11 @@ IFX_INLINE void IfxPmsEvr_setPrimaryUnderVoltageThresholdMv(Ifx_PMS *pms, float3
 #endif /* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDEXTHS */
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDD3PMS
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vdd3pms:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         pms->VMONP.VDD3PMSCON.B.UVVAL = (uint16)(underVoltage / IFXPMSEVR_SARMVLSB_MV);
 #else
         pms->VMONP.VDD3PMSCON.B.UVVAL = (uint16)(underVoltage / IFXPMSEVR_SARHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
 #endif /* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDD3PMS */	
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDPHRIF0
@@ -3895,18 +3897,18 @@ IFX_INLINE void IfxPmsEvr_setPrimaryOverVoltageThresholdMv(Ifx_PMS *pms, float32
     switch (supply)
     {
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vdd:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         pms->VMONP.VDDCON.B.OVVAL = (uint16)(overVoltage / IFXPMSEVR_TRKCORELSB_MV);
 #else
         pms->VMONP.VDDCON.B.OVVAL = (uint16)(overVoltage / IFXPMSEVR_SARHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vddext:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         pms->VMONP.VDDEXTCON.B.OVVAL = (uint16)(overVoltage / IFXPMSEVR_SARHVLSB_MV);
 #else
         pms->VMONP.VDDEXTCON.B.OVVAL = (uint16)(overVoltage / IFXPMSEVR_TRKHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VSSDCHS
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vssdchs:
@@ -3987,11 +3989,11 @@ IFX_INLINE void IfxPmsEvr_setPrimaryOverVoltageThresholdMv(Ifx_PMS *pms, float32
 #endif /* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDSB */
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDP3NVM
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vddp3nvm:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         pms->VMONP.VDDP3NVMCON.B.OVVAL = (uint16)(overVoltage / IFXPMSEVR_SARMVLSB_MV);
 #else
         pms->VMONP.VDDP3NVMCON.B.OVVAL = (uint16)(overVoltage / IFXPMSEVR_SARHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
 #endif /* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDP3NVM */
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDEXTHS
@@ -4001,11 +4003,11 @@ IFX_INLINE void IfxPmsEvr_setPrimaryOverVoltageThresholdMv(Ifx_PMS *pms, float32
 #endif /* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDEXTHS */
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDD3PMS
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vdd3pms:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         pms->VMONP.VDD3PMSCON.B.OVVAL = (uint16)(overVoltage / IFXPMSEVR_SARMVLSB_MV);
 #else
         pms->VMONP.VDD3PMSCON.B.OVVAL = (uint16)(overVoltage / IFXPMSEVR_SARHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
 #endif	/* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDD3PMS */
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDPHRIF0
@@ -4349,18 +4351,18 @@ IFX_INLINE float32 IfxPmsEvr_getDriftMonitoringAverageVoltageMv(Ifx_PMS *pms, If
         average = (pms->DRMON.VDDSTAT.B.VALUE * IFXPMSEVR_SARHVLSB_MV);
         break;
     case IfxPmsEvr_DriftMonitorVoltageSource_vddext:
-#if (IFXPMS_SUPPLY_RAIL_SARHV_4P741 == TRUE)
+#if !defined(DEVICE_TC4PX) && !defined(DEVICE_TC44X) && (IFXPMS_SUPPLY_RAIL_SARHV_4P741 == TRUE)
         average = (pms->DRMON.VDDEXTSTAT.B.VALUE * IFXPMSEVR_SARHVLSB_MV);
-#elif (IFXPMS_SUPPLY_RAIL_SARHV_4P741 == FALSE)
+#elif defined(DEVICE_TC44X) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX) || (IFXPMS_SUPPLY_RAIL_SARHV_4P741 == FALSE)
         average = (pms->DRMON.VDDEXTSTAT.B.VALUE * IFXPMSEVR_TRKHVLSB_MV);
-#endif /* (IFXPMS_SUPPLY_RAIL_SARHV_4P741 == TRUE) */
+#endif /* #if !defined(DEVICE_TC44X) && (IFXPMS_SUPPLY_RAIL_SARHV_4P741 == TRUE) */
         break;
     case IfxPmsEvr_DriftMonitorVoltageSource_vddextdc:
-#if (IFXPMS_SUPPLY_RAIL_SARHV_4P741 == TRUE)
+#if !defined(DEVICE_TC44X) && (IFXPMS_SUPPLY_RAIL_SARHV_4P741 == TRUE)
         average = (pms->DRMON.VDDEXTDCSTAT.B.VALUE * IFXPMSEVR_SARHVLSB_MV);
-#elif (IFXPMS_SUPPLY_RAIL_SARHV_4P741 == FALSE)
+#elif defined(DEVICE_TC44X) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX) || (IFXPMS_SUPPLY_RAIL_SARHV_4P741 == FALSE)
         average = (pms->DRMON.VDDEXTDCSTAT.B.VALUE * IFXPMSEVR_TRKHVLSB_MV);
-#endif /* (IFXPMS_SUPPLY_RAIL_SARHV_4P741 == TRUE) */
+#endif /* #if !defined(DEVICE_TC44X) && (IFXPMS_SUPPLY_RAIL_SARHV_4P741 == TRUE) */
         break;
     case IfxPmsEvr_DriftMonitorVoltageSource_vddm:
         average = (pms->DRMON.VDDMSTAT.B.VALUE * IFXPMSEVR_SARHVLSB_MV);
@@ -4848,18 +4850,18 @@ IFX_INLINE uint16 IfxPmsEvr_getPrimaryUnderVoltageThresholdMv(Ifx_PMS *pms, IfxP
     switch (supply)
     {
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vdd:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         mV = (uint16)(pms->VMONP.VDDCON.B.UVVAL * IFXPMSEVR_TRKCORELSB_MV);
 #else
         mV = (uint16)(pms->VMONP.VDDCON.B.UVVAL * IFXPMSEVR_SARHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vddext:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX)  || defined(DEVICE_TC4PX)
         mV = (uint16)(pms->VMONP.VDDEXTCON.B.UVVAL * IFXPMSEVR_SARHVLSB_MV);
 #else
         mV = (uint16)(pms->VMONP.VDDEXTCON.B.UVVAL * IFXPMSEVR_TRKHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741  */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VSSDCHS
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vssdchs:
@@ -4948,11 +4950,11 @@ IFX_INLINE uint16 IfxPmsEvr_getPrimaryUnderVoltageThresholdMv(Ifx_PMS *pms, IfxP
 #endif /* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDSB */
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDP3NVM
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vddp3nvm:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         mV = (uint16)(pms->VMONP.VDDP3NVMCON.B.UVVAL * IFXPMSEVR_SARMVLSB_MV);
 #else
         mV = (uint16)(pms->VMONP.VDDP3NVMCON.B.UVVAL * IFXPMSEVR_SARHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
 #endif /* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDP3NVM */
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDEXTHS
@@ -4962,11 +4964,11 @@ IFX_INLINE uint16 IfxPmsEvr_getPrimaryUnderVoltageThresholdMv(Ifx_PMS *pms, IfxP
 #endif /* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDEXTHS */
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDD3PMS
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vdd3pms:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX)  || defined(DEVICE_TC4PX)
         mV = (uint16)(pms->VMONP.VDD3PMSCON.B.UVVAL * IFXPMSEVR_SARMVLSB_MV);
 #else
         mV = (uint16)(pms->VMONP.VDD3PMSCON.B.UVVAL * IFXPMSEVR_SARHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
 #endif /* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDD3PMS */
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDPHRIF0
@@ -5018,18 +5020,18 @@ IFX_INLINE uint16 IfxPmsEvr_getPrimaryOverVoltageThresholdMv(Ifx_PMS *pms, IfxPm
     switch (supply)
     {
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vdd:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         mV = (uint16)(pms->VMONP.VDDCON.B.OVVAL * IFXPMSEVR_TRKCORELSB_MV);
 #else
         mV = (uint16)(pms->VMONP.VDDCON.B.OVVAL * IFXPMSEVR_SARHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vddext:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         mV = (uint16)(pms->VMONP.VDDEXTCON.B.OVVAL * IFXPMSEVR_SARHVLSB_MV);
 #else
         mV = (uint16)(pms->VMONP.VDDEXTCON.B.OVVAL * IFXPMSEVR_TRKHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VSSDCHS
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vssdchs:
@@ -5118,11 +5120,11 @@ IFX_INLINE uint16 IfxPmsEvr_getPrimaryOverVoltageThresholdMv(Ifx_PMS *pms, IfxPm
 #endif /* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDSB */
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDP3NVM
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vddp3nvm:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         mV = (uint16)(pms->VMONP.VDDP3NVMCON.B.OVVAL * IFXPMSEVR_SARMVLSB_MV);
 #else
         mV = (uint16)(pms->VMONP.VDDP3NVMCON.B.OVVAL * IFXPMSEVR_SARHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
 #endif /* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDP3NVM */
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDEXTHS
@@ -5132,11 +5134,11 @@ IFX_INLINE uint16 IfxPmsEvr_getPrimaryOverVoltageThresholdMv(Ifx_PMS *pms, IfxPm
 #endif /* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDEXTHS */
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDD3PMS
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vdd3pms:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         mV = (uint16)(pms->VMONP.VDD3PMSCON.B.OVVAL * IFXPMSEVR_SARMVLSB_MV);
 #else
         mV = (uint16)(pms->VMONP.VDD3PMSCON.B.OVVAL * IFXPMSEVR_SARHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
 #endif	/* 	#if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDEXTHS */
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDPHRIF0
@@ -5188,18 +5190,18 @@ IFX_INLINE uint16 IfxPmsEvr_getRstVoltageThresholdMv(Ifx_PMS *pms, IfxPmsEvr_Pri
     switch (supply)
     {
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vdd:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         mV = (uint16)(pms->VMONP.VDDRST.B.RESETTRIM * IFXPMSEVR_TRKCORELSB_MV);
 #else
         mV = (uint16)(pms->VMONP.VDDRST.B.RESETTRIM * IFXPMSEVR_SARHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vddext:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         mV = (uint16)(pms->VMONP.VDDEXTRST.B.RESETTRIM * IFXPMSEVR_SARHVLSB_MV);
 #else
         mV = (uint16)(pms->VMONP.VDDEXTRST.B.RESETTRIM * IFXPMSEVR_TRKHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VSSDCHS
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vssdchs:
@@ -5288,11 +5290,11 @@ IFX_INLINE uint16 IfxPmsEvr_getRstVoltageThresholdMv(Ifx_PMS *pms, IfxPmsEvr_Pri
 #endif /* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDSB	 */
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDP3NVM
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vddp3nvm:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         mV = (uint16)(pms->VMONP.VDDP3NVMRST.B.RESETTRIM * IFXPMSEVR_SARMVLSB_MV);
 #else
         mV = (uint16)(pms->VMONP.VDDP3NVMRST.B.RESETTRIM * IFXPMSEVR_SARHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
 #endif /* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDP3NVM */
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDEXTHS
@@ -5302,11 +5304,11 @@ IFX_INLINE uint16 IfxPmsEvr_getRstVoltageThresholdMv(Ifx_PMS *pms, IfxPmsEvr_Pri
 #endif /* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDEXTHS */
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDD3PMS
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vdd3pms:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         mV = (uint16)(pms->VMONP.VDD3PMSRST.B.RESETTRIM * IFXPMSEVR_SARMVLSB_MV);
 #else
         mV = (uint16)(pms->VMONP.VDD3PMSRST.B.RESETTRIM * IFXPMSEVR_SARHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741  */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
 #endif	/* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDD3PMS */
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDPHRIF0
@@ -5356,18 +5358,18 @@ IFX_INLINE void IfxPmsEvr_setRstVoltageThresholdMv(Ifx_PMS *pms, uint16 voltage,
     switch (supply)
     {
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vdd:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         pms->VMONP.VDDRST.B.RESETTRIM = (uint16)(voltage / IFXPMSEVR_TRKCORELSB_MV);
 #else
         pms->VMONP.VDDRST.B.RESETTRIM = (uint16)(voltage / IFXPMSEVR_SARHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741  */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vddext:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX)  || defined(DEVICE_TC4PX)
         pms->VMONP.VDDEXTRST.B.RESETTRIM = (uint16)(voltage / IFXPMSEVR_SARHVLSB_MV);
 #else
         pms->VMONP.VDDEXTRST.B.RESETTRIM = (uint16)(voltage / IFXPMSEVR_TRKHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741  */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VSSDCHS
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vssdchs:
@@ -5456,11 +5458,11 @@ IFX_INLINE void IfxPmsEvr_setRstVoltageThresholdMv(Ifx_PMS *pms, uint16 voltage,
 #endif /* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDSB */
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDP3NVM
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vddp3nvm:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         pms->VMONP.VDDP3NVMRST.B.RESETTRIM = (uint16)(voltage / IFXPMSEVR_SARMVLSB_MV);
 #else
         pms->VMONP.VDDP3NVMRST.B.RESETTRIM = (uint16)(voltage / IFXPMSEVR_SARHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741  */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
 #endif /* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDP3NVM */
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDEXTHS
@@ -5470,11 +5472,11 @@ IFX_INLINE void IfxPmsEvr_setRstVoltageThresholdMv(Ifx_PMS *pms, uint16 voltage,
 #endif /* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDEXTHS */
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDD3PMS
     case IfxPmsEvr_PrimaryMonitorVoltageSource_vdd3pms:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         pms->VMONP.VDD3PMSRST.B.RESETTRIM = (uint16)(voltage / IFXPMSEVR_SARMVLSB_MV);
 #else
         pms->VMONP.VDD3PMSRST.B.RESETTRIM = (uint16)(voltage / IFXPMSEVR_SARHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741  */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
 #endif	/* #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDD3PMS */	
 #if IFXPMS_PRIMARY_MONITOR_VOLTAGE_SOURCE_VDDPHRIF0
@@ -5914,11 +5916,11 @@ IFX_INLINE uint16 IfxPmsEvr_getSecondaryUnderVoltageThresholdMv(Ifx_PMS *pms, If
         break;
 #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDDP3NVM	
     case IfxPmsEvr_SecondaryMonitorVoltageSource_vddp3nvm:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         mV = (uint16)(pms->VMONS.VDDP3NVMCON.B.UVVAL * IFXPMSEVR_SARMVLSB_MV);
 #else
         mV = (uint16)(pms->VMONS.VDDP3NVMCON.B.UVVAL * IFXPMSEVR_SARHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741  */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
 #endif /* #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDDP3NVM */
 #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDDEXTHS	
@@ -5928,11 +5930,11 @@ IFX_INLINE uint16 IfxPmsEvr_getSecondaryUnderVoltageThresholdMv(Ifx_PMS *pms, If
 #endif /* #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDDEXTHS */
 #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDD3PMS		
     case IfxPmsEvr_SecondaryMonitorVoltageSource_vdd3pms:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         mV = (uint16)(pms->VMONS.VDD3PMSCON.B.UVVAL * IFXPMSEVR_SARMVLSB_MV);
 #else
         mV = (uint16)(pms->VMONS.VDD3PMSCON.B.UVVAL * IFXPMSEVR_SARHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741  */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
 #endif /* #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDD3PMS */
 #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDDRIF0		
@@ -6092,11 +6094,11 @@ IFX_INLINE uint16 IfxPmsEvr_getSecondaryOverVoltageThresholdMv(Ifx_PMS *pms, Ifx
         break;
 #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDDP3NVM	
     case IfxPmsEvr_SecondaryMonitorVoltageSource_vddp3nvm:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         mV = (uint16)(pms->VMONS.VDDP3NVMCON.B.OVVAL * IFXPMSEVR_SARMVLSB_MV);
 #else
         mV = (uint16)(pms->VMONS.VDDP3NVMCON.B.OVVAL * IFXPMSEVR_SARHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741  */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;	
 #endif /* #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDDP3NVM */
 #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDDEXTHS	
@@ -6106,11 +6108,11 @@ IFX_INLINE uint16 IfxPmsEvr_getSecondaryOverVoltageThresholdMv(Ifx_PMS *pms, Ifx
 #endif /* #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDDEXTHS */
 #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDD3PMS		
     case IfxPmsEvr_SecondaryMonitorVoltageSource_vdd3pms:
-#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 
+#if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX)
         mV = (uint16)(pms->VMONS.VDD3PMSCON.B.OVVAL * IFXPMSEVR_SARMVLSB_MV);
 #else
         mV = (uint16)(pms->VMONS.VDD3PMSCON.B.OVVAL * IFXPMSEVR_SARHVLSB_MV);
-#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741  */
+#endif /* #if IFXPMS_SUPPLY_RAIL_SARHV_4P741 || defined(DEVICE_TC4EX) */
         break;
 #endif /* #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDD3PMS */
 #if IFXPMS_SECONDARY_MONITOR_VOLTAGE_SOURCE_VDDRIF0	

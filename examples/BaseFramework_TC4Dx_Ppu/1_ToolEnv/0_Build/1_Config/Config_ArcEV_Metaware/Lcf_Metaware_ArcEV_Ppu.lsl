@@ -121,7 +121,7 @@ _eMPU_REGION5 = ADDR(lmu_not_allocated1) + SIZEOF(lmu_not_allocated1);
 _pMPU_REGION5 = (_MPU_PERMISSION_READ | _MPU_PERMISSION_WRITE);
 
 _fMPU_REGION6 = ADDR(lmu_not_allocated2);
-_eMPU_REGION6 = ADDR(lmu_not_allocated1) + SIZEOF(lmu_not_allocated1);
+_eMPU_REGION6 = ADDR(lmu_not_allocated2) + SIZEOF(lmu_not_allocated2);
 _pMPU_REGION6 = (_MPU_PERMISSION_READ | _MPU_PERMISSION_WRITE);
 
 _fMPU_REGION7 = ADDR(per_space_no_aloc1);

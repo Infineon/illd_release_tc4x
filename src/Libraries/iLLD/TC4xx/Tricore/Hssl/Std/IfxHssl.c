@@ -2,7 +2,7 @@
  * \file IfxHssl.c
  * \brief HSSL  basic functionality
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -39,6 +39,7 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X)
 #include "IfxHssl.h"
 
 /******************************************************************************/
@@ -622,6 +623,8 @@ IfxHssl_BaudrateStatus IfxHssl_getBaudrate(Ifx_HSCT *hsctSFR, IfxHssl_BaudrateAn
 
     return IfxHssl_BaudrateStatus_valid;
 }
+
+#endif /* #if !defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

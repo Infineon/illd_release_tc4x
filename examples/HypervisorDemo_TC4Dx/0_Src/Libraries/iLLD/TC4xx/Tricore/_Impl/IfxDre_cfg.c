@@ -40,6 +40,8 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X)
+
 #include "IfxDre_cfg.h"
 
 /******************************************************************************/
@@ -47,6 +49,8 @@
 /******************************************************************************/
 
 IFX_CONST IfxModule_IndexMap IfxDre_cfg_indexMap[IFXDRE_NUM_MODULES] = {{&MODULE_DRE, (uint32)IfxDre_Index_0}, };
+
+#endif /* #if !defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

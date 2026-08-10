@@ -127,9 +127,39 @@ void IfxSrc_configOtgbServiceProviderTrigger(volatile Ifx_INT *intr, IfxSrc_spCo
 
 void IfxSrc_configureAccessToSrcs(IfxApApu_ApuConfig *apConfig)
 {
+#if defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X)
+	IfxSrc_Tos tos[IFXSRC_NUM_ICU] = {IfxSrc_Tos_cpu0,IfxSrc_Tos_cpu1,IfxSrc_Tos_cpu2,IfxSrc_Tos_cpu3,IfxSrc_Tos_csrm,IfxSrc_Tos_dma0};
+#elif defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA)
+	IfxSrc_Tos tos[IFXSRC_NUM_ICU] = {IfxSrc_Tos_cpu0,IfxSrc_Tos_cpu1,IfxSrc_Tos_cpu2,IfxSrc_Tos_cpu3,IfxSrc_Tos_csrm,IfxSrc_Tos_dma0,IfxSrc_Tos_gtm,IfxSrc_Tos_ppu};
+#elif defined(DEVICE_TC45X)
+    IfxSrc_Tos tos[IFXSRC_NUM_ICU] = {IfxSrc_Tos_cpu0,IfxSrc_Tos_cpu1,IfxSrc_Tos_csrm,IfxSrc_Tos_dma0,IfxSrc_Tos_ppu,IfxSrc_Tos_rdma };
+#elif defined(DEVICE_TC44X)
+    IfxSrc_Tos tos[IFXSRC_NUM_ICU] = {IfxSrc_Tos_cpu0,IfxSrc_Tos_cpu1,IfxSrc_Tos_cpu2,IfxSrc_Tos_csrm,IfxSrc_Tos_dma0};
+#elif defined(DEVICE_TC4ZX)
+    IfxSrc_Tos tos[IFXSRC_NUM_ICU] = {IfxSrc_Tos_cpu0,IfxSrc_Tos_cpu1,IfxSrc_Tos_cpu2,IfxSrc_Tos_cpu3,IfxSrc_Tos_cpu4,IfxSrc_Tos_cpu5,IfxSrc_Tos_csrm,IfxSrc_Tos_dma0,IfxSrc_Tos_dma1};
+#elif defined(DEVICE_TC4EX)
+    IfxSrc_Tos tos[IFXSRC_NUM_ICU] = {IfxSrc_Tos_cpu0,IfxSrc_Tos_cpu1,IfxSrc_Tos_cpu2,IfxSrc_Tos_csrm,IfxSrc_Tos_dma0,IfxSrc_Tos_gtm,IfxSrc_Tos_ppu};
+#elif defined(DEVICE_TC4PX)
+    IfxSrc_Tos tos[IFXSRC_NUM_ICU] = {IfxSrc_Tos_cpu0,IfxSrc_Tos_cpu1,IfxSrc_Tos_csrm,IfxSrc_Tos_dma0,IfxSrc_Tos_ppu};
+#else
 	uint8 tos;
+#endif /* #if defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) */
 
-   
+#if defined(DEVICE_TC49XN)
+    /* Allow Service Request register access register access for CPUx targeted SRNs (TOS=x) */
+    for (tos = 0; tos < IFXSRC_NUM_CORES; tos++)
+    {
+        IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_INT.TOS[tos].ACCENSCTRL, apConfig);
+        IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_INT.TOS[tos].ACCENSCFG, apConfig);
+    }
+
+    for (tos = 6U; tos <= IFXSRC_NUM_ICU; tos++)
+	{
+		IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_INT.TOS[tos].ACCENSCTRL, apConfig);
+		IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_INT.TOS[tos].ACCENSCFG, apConfig);
+	}
+#elif defined(DEVICE_TC4DX)
+    
     /* Allow Service Request register access register access for CPUx targeted SRNs (TOS=x) */
     for (tos = 0; tos < IFXSRC_NUM_ICU; tos++)
     {
@@ -139,4 +169,13 @@ void IfxSrc_configureAccessToSrcs(IfxApApu_ApuConfig *apConfig)
             IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_INT.TOS[tos].ACCENSCFG, apConfig);
         }
     }
+#else
+    uint8 i;
+    /* Allow Service Request register access register access for CPUx targeted SRNs (TOS=x) */
+	for (i = 0; i < IFXSRC_NUM_ICU; i++)
+	{
+		IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_INT.TOS[tos[i]].ACCENSCTRL, apConfig);
+		IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_INT.TOS[tos[i]].ACCENSCFG, apConfig);
+	}
+#endif /* #if defined(DEVICE_TC49XN) */
 }

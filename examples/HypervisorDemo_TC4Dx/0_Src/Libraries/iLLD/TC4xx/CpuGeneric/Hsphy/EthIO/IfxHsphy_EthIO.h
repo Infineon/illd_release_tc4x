@@ -53,6 +53,7 @@
 /*-------------------------Global Function Prototypes-------------------------*/
 /******************************************************************************/
 
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX)
 /** \brief Ethernet interface mode selection
  * \param[inout] hsphySFR HSPHY pointer
  * \param[in] ethIndex Index references to PHYs. Range \ref IfxHsphy_EthIndex
@@ -61,6 +62,17 @@
  * \retval None
  */
 IFX_EXTERN void IfxHsphy_EthIO_interfaceSelect(Ifx_HSPHY *hsphySFR, IfxHsphy_EthIndex ethIndex, IfxHsphy_EthCtrlExtPhySel ethCtrlExtPhySel, boolean ethPort16);
+
+#else
+
+/** \brief Ethernet interface mode selection
+ * \param[inout] hsphyRegPtr HSPHY pointer
+ * \param[in] phyIndex Index references to PHYs. Range \ref IfxHsphy_PhyIndex
+ * \param[in] device Configure the device types. Range \ref IfxHsphy_TrgtDevice
+ * \retval TRUE Error in selection of phy, FALSE selection of phy Success
+ */
+IFX_EXTERN boolean IfxHsphy_EthIO_interfaceSelect(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_PhyIndex phyIndex, IfxHsphy_TrgtDevice device);
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) */
 
 /** \} */
 

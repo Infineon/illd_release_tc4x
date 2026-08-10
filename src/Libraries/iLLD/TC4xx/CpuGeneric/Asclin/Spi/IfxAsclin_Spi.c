@@ -2,7 +2,7 @@
  * \file IfxAsclin_Spi.c
  * \brief ASCLIN SPI details
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -156,7 +156,7 @@ IfxAsclin_Status IfxAsclin_Spi_initModule(IfxAsclin_Spi *asclin, const IfxAsclin
     IfxAsclin_setShiftDirection(asclinSFR, config->frame.shiftDir);             /* setting the shift direction */
 
     /* data control initialisation */
-    IfxAsclin_setDataLength(asclinSFR, config->dataLength);                     /* setting the number of bytes to be transfered */
+    IfxAsclin_setDataLength(asclinSFR, config->dataLength);                     /* setting the number of bytes to be transferred */
 
     /* fifo control initialisation */
     /* set the FIFO widths based on the supplied datalength */

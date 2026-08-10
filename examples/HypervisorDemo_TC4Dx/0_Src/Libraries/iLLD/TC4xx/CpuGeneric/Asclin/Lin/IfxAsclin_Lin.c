@@ -299,7 +299,7 @@ IfxAsclin_Status IfxAsclin_Lin_initModule(IfxAsclin_Lin *asclin, const IfxAsclin
     IfxAsclin_setShiftDirection(asclinSFR, config->frame.shiftDir);                        /* setting the shift direction */
 
     /* data control initialisation */
-    IfxAsclin_setDataLength(asclinSFR, config->data.dataLength);                           /* setting the number of bytes to be transfered */
+    IfxAsclin_setDataLength(asclinSFR, config->data.dataLength);                           /* setting the number of bytes to be transferred */
     IfxAsclin_setHeaderResponseSelect(asclinSFR, config->data.headerOnly);                 /* setting the header only or header and response mode */
     IfxAsclin_setLinResponseTimeoutMode(asclinSFR, config->data.responseTimeoutMode);      /* setting the response timeout mode (frame/response) */
     IfxAsclin_setChecksumMode(asclinSFR, config->data.checksum);                           /* setting the checksum mode (classic/enhanced) */
@@ -525,7 +525,7 @@ void IfxAsclin_Lin_receiveHeader(IfxAsclin_Lin *asclin, uint8 *id)
 
     /* prepare for header reception */
     IfxAsclin_Lin_prepareHeaderReception(asclin);
-    /* wait until receive header end acknowledgemnet */
+    /* wait until receive header end acknowledgement */
     result |= IfxAsclin_Lin_waitForReceivedHeader(asclin);
 
     if (result == 1)
@@ -546,7 +546,7 @@ void IfxAsclin_Lin_receiveResponse(IfxAsclin_Lin *asclin, uint8 *data, uint32 le
 
     /* prepare the response reception */
     IfxAsclin_Lin_prepareResponseReception(asclin, length);
-    /* wait until receive response end acknowledgemnet or an error is occured */
+    /* wait until receive response end acknowledgement or an error is occurred */
     result |= IfxAsclin_Lin_waitForReceivedResponse(asclin);
 
     if (result == 1)
@@ -594,7 +594,7 @@ void IfxAsclin_Lin_sendHeader(IfxAsclin_Lin *asclin, uint8 *id)
 
     if (asclin->isInterruptMode == FALSE)                         /* only for Polling Mode */
     {
-    	/* waiting until transmit header end acknowledgemnet */
+    	/* waiting until transmit header end acknowledgement */
         result |= IfxAsclin_Lin_waitForTransmittedHeader(asclin);
 
         if (result == 1)
@@ -618,7 +618,7 @@ void IfxAsclin_Lin_sendResponse(IfxAsclin_Lin *asclin, uint8 *data, uint32 lengt
     /* getting the pointer to ASCLIN registers from module handler */
     Ifx_ASCLIN *asclinSFR = asclin->asclin;
 
-    /* set number of bytes to be transfered */
+    /* set number of bytes to be transferred */
     IfxAsclin_setDataLength(asclinSFR, (IfxAsclin_DataLength)(length - 1));
     /* clear all flags */
     IfxAsclin_clearAllFlags(asclinSFR);
@@ -632,7 +632,7 @@ void IfxAsclin_Lin_sendResponse(IfxAsclin_Lin *asclin, uint8 *data, uint32 lengt
     IfxAsclin_write8(asclinSFR, data, length);
     /* set TRRQS flag */
     IfxAsclin_setTransmitResponseRequestFlag(asclinSFR);
-    /* wait until transmit response end acknowledgemnet */
+    /* wait until transmit response end acknowledgement */
     result |= IfxAsclin_Lin_waitForTransmittedResponse(asclin);
 
     if (result == 1)
@@ -649,7 +649,7 @@ boolean IfxAsclin_Lin_waitForReceivedHeader(IfxAsclin_Lin *asclin)
     /* clear all aknowledgement and error flags status */
     IfxAsclin_Lin_clearFlagsStatus(asclin);
 
-    /* wait until receive header end acknowledgemnet has been detected  */
+    /* wait until receive header end acknowledgement has been detected  */
     while (asclin->acknowledgmentFlags.rxHeaderEnd != 1)
     {
         IfxAsclin_Lin_checkForReceivedHeaderFlags(asclin);
@@ -676,7 +676,7 @@ boolean IfxAsclin_Lin_waitForReceivedResponse(IfxAsclin_Lin *asclin)
     /* clear all aknowledgement and error flags status */
     IfxAsclin_Lin_clearFlagsStatus(asclin);
 
-    /* wait until receive response end acknowledgemnet has been detected */
+    /* wait until receive response end acknowledgement has been detected */
     while (asclin->acknowledgmentFlags.rxResponseEnd != 1)
     {
         IfxAsclin_Lin_checkForReceivedResponseFlags(asclin);
@@ -704,7 +704,7 @@ boolean IfxAsclin_Lin_waitForTransmittedHeader(IfxAsclin_Lin *asclin)
     /* clear all aknowledgement and error flags status */
     IfxAsclin_Lin_clearFlagsStatus(asclin);
 
-    /* wait until transmit header end acknowledgemnet has been detected */
+    /* wait until transmit header end acknowledgement has been detected */
     while (asclin->acknowledgmentFlags.txHeaderEnd != 1)
     {
         IfxAsclin_Lin_checkForTransmittedHeaderFlags(asclin);
@@ -730,7 +730,7 @@ boolean IfxAsclin_Lin_waitForTransmittedResponse(IfxAsclin_Lin *asclin)
     /* clear all aknowledgement and error flags status */
     IfxAsclin_Lin_clearFlagsStatus(asclin);
 
-    /* wait until transmit response end acknowledgemnet has been detected */
+    /* wait until transmit response end acknowledgement has been detected */
     while (asclin->acknowledgmentFlags.txResponseEnd != 1)
     {
         IfxAsclin_Lin_checkForTransmittedResponseFlags(asclin);
@@ -947,7 +947,7 @@ void IfxAsclin_Lin_sendFrame(IfxAsclin_Lin *asclin, IfxAsclin_Lin_PduType *pdupt
 
     else if ((pduptr->direction == IfxAsclin_Lin_Direction_TransmitHeaderAndResponse) || (pduptr->direction == IfxAsclin_Lin_Direction_TransmitHeaderAndReceiveResponse))
     {
-    	/* set number of bytes to be transfered */
+    	/* set number of bytes to be transferred */
         IfxAsclin_setDataLength(asclinSFR, (IfxAsclin_DataLength)(pduptr->dataLength - 1));
 
         /* configure RXFIFO */
@@ -1013,6 +1013,7 @@ void IfxAsclin_Lin_sendFrame(IfxAsclin_Lin *asclin, IfxAsclin_Lin_PduType *pdupt
             flagsenable.B.CEE                                  = 1;
             flagsenable.B.FEE                                  = 1;
             flagsenable.B.RTE                                  = 1;
+            flagsenable.B.LPE         						   = 1;
             flagsenable.B.LCE                                  = 1;
             flagsenable.B.BDE                                  = 1;
 

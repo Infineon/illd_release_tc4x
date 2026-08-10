@@ -40,6 +40,7 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC45X)
 #include "IfxPcie_Ep.h"
 
 /******************************************************************************/
@@ -323,7 +324,7 @@ IfxPcie_Status IfxPcie_Ep_initModule(IfxPcie_Ep *epHandle, IfxPcie_Ep_Config *co
     /* STEP 1: Enable the Module */
     IfxPcie_enableModule((IfxPcie *)pcie);
 
-    /* STEP 2: Set device type to RC */
+    /* STEP 2: Set device type to EP */
     IfxPcie_setDeviceMode((IfxPcie *)pcie, IfxPcie_DeviceMode_ep);
     epHandle->pcieSFR = config->pcieSFR;
 
@@ -910,6 +911,8 @@ IfxPcie_Status IfxPcie_Ep_sendLtrMessage(IfxPcie_Ep *epHandle, IfxPcieCap_LtrMes
 
     return status;
 }
+
+#endif /* defined(DEVICE_TC4DX) || defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

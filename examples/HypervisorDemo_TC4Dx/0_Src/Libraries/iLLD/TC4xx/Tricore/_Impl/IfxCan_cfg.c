@@ -37,6 +37,8 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X)
+
 #include "IfxCan_cfg.h"
 
 /******************************************************************************/
@@ -70,6 +72,8 @@ IFX_CONST volatile void     *IfxCan_ramAddress[IFXCAN_NUM_MODULES] = {
 	&MODULE_CAN4_RAM
 #endif /* #if (IFXCAN_NUM_MODULES > 4) */
 };
+
+#endif /* #if !defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

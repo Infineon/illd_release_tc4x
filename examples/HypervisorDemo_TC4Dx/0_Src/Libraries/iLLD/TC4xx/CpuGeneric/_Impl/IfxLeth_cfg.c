@@ -47,10 +47,12 @@
 /******************************************************************************/
 
 IFX_CONST IfxModule_IndexMap IfxLeth_cfg_indexMap[IFXLETH_NUM_MODULES] = {
+#ifndef DEVICE_TC45X
     {&MODULE_LETH0, (uint32)IfxLeth_Index_0},
-#if (IFXLETH_NUM_MODULES > 1)
+#endif /* #ifndef DEVICE_TC45X */
+#if (IFXLETH_NUM_MODULES > 1) || defined(DEVICE_TC45X)
 	{&MODULE_LETH1, (uint32)IfxLeth_Index_1}
-#endif /* #if (IFXLETH_NUM_MODULES > 1) */
+#endif /* #if (IFXLETH_NUM_MODULES > 1) || defined(DEVICE_TC45X) */
 };
 
 #if defined (_TASKING_) || defined (_ghs_)

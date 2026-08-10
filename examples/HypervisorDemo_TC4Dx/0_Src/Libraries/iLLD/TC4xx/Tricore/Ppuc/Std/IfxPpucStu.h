@@ -372,7 +372,7 @@ typedef struct
 /*-------------------------Inline Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Sets the base adress for the STU descriptor
+/** \brief Sets the base address for the STU descriptor
  * \param ppuc PPUC module pointer
  * \param address Base address of STU descriptor
  * \return None

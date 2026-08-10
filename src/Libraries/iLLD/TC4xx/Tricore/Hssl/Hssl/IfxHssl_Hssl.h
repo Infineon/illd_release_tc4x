@@ -3,7 +3,7 @@
  * \brief HSSL HSSL details
  * \ingroup IfxLld_Hssl
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -219,7 +219,7 @@
  *
  * HSSL driver also supports streaming transfers of data as a memory block at both low and high speeds.
  *
- * Preparing the target for streaming with the desired memory location where the data needs to be transfered
+ * Preparing the target for streaming with the desired memory location where the data needs to be transferred
  *
  * \code
  *     // choose a channel other than channel2 for register access
@@ -358,7 +358,7 @@
  *
  * Interrupts can be enabled from the application by using the APIs provided in the driver,
  * there are APIs available in the driver to enable, disable, clear and read the status of interrupt falgs, along with these,\n
- * APIs to enable the the enterrupts are also available.
+ * APIs to enable the interrupts are also available.
  *
  * here is an example of how to use the interrupts in HSSL driver.
  *
@@ -748,7 +748,7 @@ IFX_EXTERN void IfxHssl_Hssl_delay(IfxHssl_Hsct *hsct);
 
 /** \brief Prepares the target device for streaming
  * \param channel channel handle
- * \param slaveTargetAddress address of the location on target device where the data needs to be transfered
+ * \param slaveTargetAddress address of the location on target device where the data needs to be transferred
  * \param count Frame count (length of the data in the memory as 256 bytes per frame)
  * \return module status (ok, busy, error)
  *

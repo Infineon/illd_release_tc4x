@@ -38,6 +38,7 @@
 #pragma diag_suppress 96 /* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X)
 #include "IfxEgtm_Tim.h"
 
 /******************************************************************************/
@@ -111,6 +112,7 @@ void IfxEgtm_Tim_Ch_setControl(Ifx_EGTM_CLS_TIM_CH *channel, IfxEgtm_Tim_Channel
     channel->CTRL.U    = ctrl.U;
 }
 
+#endif /* !defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

@@ -2,7 +2,7 @@
  * \file IfxEgtm_Cmu.c
  * \brief EGTM  basic functionality
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -38,6 +38,7 @@
 #pragma diag_suppress 96 /* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X)
 #include "IfxEgtm_Cmu.h"
 #include "math.h"
 
@@ -339,6 +340,8 @@ void IfxEgtm_Cmu_setGclkFrequency(Ifx_EGTM *egtm, float32 frequency)
     egtm->CLS->CMU.GCLK_NUM.B.GCLK_NUM = zBest;   /* Write twice to be sure */
     egtm->CLS->CMU.GCLK_DEN.B.GCLK_DEN = nBest;
 }
+
+#endif /* !defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

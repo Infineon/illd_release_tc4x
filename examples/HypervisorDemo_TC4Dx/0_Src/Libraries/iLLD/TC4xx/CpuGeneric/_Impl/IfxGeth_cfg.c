@@ -40,6 +40,8 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC49XN) && !defined(DEVICE_TC46X) && !defined(DEVICE_TC46XAA) && !defined(DEVICE_TC45X) && !defined(DEVICE_TC4EX) && !defined(DEVICE_TC4PX)
+
 #include "IfxGeth_cfg.h"
 
 /******************************************************************************/
@@ -55,8 +57,13 @@ IFX_CONST IfxGeth_TxTrafficClassMap IfxGeth_cfg_trafficClassMap[IFXGETH_NUM_PORT
         {&GETH0_PORT0_MTL_TCQ0_TXQ0_OPERATION_MODE, IfxGeth_TxTrafficClass_0, IfxGeth_TxTrafficClassType_0},
         {&GETH0_PORT0_MTL_TCQ1_TXQ1_OPERATION_MODE, IfxGeth_TxTrafficClass_1, IfxGeth_TxTrafficClassType_0},
         {&GETH0_PORT0_MTL_TCQ2_TXQ2_OPERATION_MODE, IfxGeth_TxTrafficClass_2, IfxGeth_TxTrafficClassType_0},
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC4ZX)
         {&GETH0_PORT0_MTL_TCQ3_TXQ3_OPERATION_MODE, IfxGeth_TxTrafficClass_3, IfxGeth_TxTrafficClassType_0},
         {&GETH0_PORT0_MTL_TCQ4_TXQ4_OPERATION_MODE, IfxGeth_TxTrafficClass_4, IfxGeth_TxTrafficClassType_0},
+#elif defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X)
+        {&GETH0_PORT0_MTL_TCQ3_TXQ3_OPERATION_MODE, IfxGeth_TxTrafficClass_3, IfxGeth_TxTrafficClassType_1},
+        {&GETH0_PORT0_MTL_TCQ4_TXQ4_OPERATION_MODE, IfxGeth_TxTrafficClass_4, IfxGeth_TxTrafficClassType_1},
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC4ZX) */
         {&GETH0_PORT0_MTL_TCQ5_TXQ5_OPERATION_MODE, IfxGeth_TxTrafficClass_5, IfxGeth_TxTrafficClassType_1},
         {&GETH0_PORT0_MTL_TCQ6_TXQ6_OPERATION_MODE, IfxGeth_TxTrafficClass_6, IfxGeth_TxTrafficClassType_1},
         {&GETH0_PORT0_MTL_TCQ7_TXQ7_OPERATION_MODE, IfxGeth_TxTrafficClass_7, IfxGeth_TxTrafficClassType_1}
@@ -65,13 +72,20 @@ IFX_CONST IfxGeth_TxTrafficClassMap IfxGeth_cfg_trafficClassMap[IFXGETH_NUM_PORT
         {&GETH0_PORT1_MTL_TCQ0_TXQ0_OPERATION_MODE, IfxGeth_TxTrafficClass_0, IfxGeth_TxTrafficClassType_0},
         {&GETH0_PORT1_MTL_TCQ1_TXQ1_OPERATION_MODE, IfxGeth_TxTrafficClass_1, IfxGeth_TxTrafficClassType_0},
         {&GETH0_PORT1_MTL_TCQ2_TXQ2_OPERATION_MODE, IfxGeth_TxTrafficClass_2, IfxGeth_TxTrafficClassType_0},
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC4ZX)
         {&GETH0_PORT1_MTL_TCQ3_TXQ3_OPERATION_MODE, IfxGeth_TxTrafficClass_3, IfxGeth_TxTrafficClassType_0},
         {&GETH0_PORT1_MTL_TCQ4_TXQ4_OPERATION_MODE, IfxGeth_TxTrafficClass_4, IfxGeth_TxTrafficClassType_0},
+#elif defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X)
+        {&GETH0_PORT1_MTL_TCQ3_TXQ3_OPERATION_MODE, IfxGeth_TxTrafficClass_3, IfxGeth_TxTrafficClassType_1},
+        {&GETH0_PORT1_MTL_TCQ4_TXQ4_OPERATION_MODE, IfxGeth_TxTrafficClass_4, IfxGeth_TxTrafficClassType_1},
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC4ZX) */
         {&GETH0_PORT1_MTL_TCQ5_TXQ5_OPERATION_MODE, IfxGeth_TxTrafficClass_5, IfxGeth_TxTrafficClassType_1},
         {&GETH0_PORT1_MTL_TCQ6_TXQ6_OPERATION_MODE, IfxGeth_TxTrafficClass_6, IfxGeth_TxTrafficClassType_1},
         {&GETH0_PORT1_MTL_TCQ7_TXQ7_OPERATION_MODE, IfxGeth_TxTrafficClass_7, IfxGeth_TxTrafficClassType_1}
     }
 };
+
+#endif /* #if !defined(DEVICE_TC49XN) && !defined(DEVICE_TC46X) && !defined(DEVICE_TC46XAA) && !defined(DEVICE_TC45X) && !defined(DEVICE_TC4EX) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

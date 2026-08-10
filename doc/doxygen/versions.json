@@ -1,0 +1,14 @@
+{
+  "versions": [
+    {
+      "label": "Latest",
+      "version": "latest",
+      "path": "./"
+    },
+    {
+      "label": "V1.22.0",
+      "version": "V1.22.0",
+      "path": "./"
+    }
+  ]
+}

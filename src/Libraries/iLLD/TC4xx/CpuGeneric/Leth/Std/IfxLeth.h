@@ -3,7 +3,7 @@
  * \brief LETH  basic functionality
  * \ingroup IfxLld_Leth
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -1091,6 +1091,7 @@ IFX_EXTERN void IfxLeth_setPhyInterface(Ifx_LETH *lethSFR, IfxLeth_PortIndex por
  */
 IFX_EXTERN void IfxLeth_enablePortClock(Ifx_LETH *lethSFR, IfxLeth_PortIndex portIndex);
 
+#if defined(DEVICE_TC4DX)
 /** \brief Returns the Src Pointer of the selected LETH service request node
  *
  * \param[in] serviceRequest Service Request number
@@ -1099,6 +1100,17 @@ IFX_EXTERN void IfxLeth_enablePortClock(Ifx_LETH *lethSFR, IfxLeth_PortIndex por
  * \return pointer to Src register
  */
 IFX_EXTERN volatile Ifx_SRC_SRCR *IfxLeth_getSrcPointer(IfxLeth_ServiceRequest serviceRequest);
+#else
+/** \brief Returns the Src Pointer of the selected LETH service request node
+ *
+ * \param[in] lethSFR        LETH module pointer
+ * \param[in] serviceRequest Service Request number
+ *                           Range: \ref IfxLeth_ServiceRequest
+ *
+ * \return pointer to Src register
+ */
+IFX_EXTERN volatile Ifx_SRC_SRCR *IfxLeth_getSrcPointer(Ifx_LETH *lethSFR, IfxLeth_ServiceRequest serviceRequest);
+#endif
 
 #if IFXLETH_IS_BRIDGE_AVAILABLE
 /** \brief Initialize the LETH Port Mode in the bridge

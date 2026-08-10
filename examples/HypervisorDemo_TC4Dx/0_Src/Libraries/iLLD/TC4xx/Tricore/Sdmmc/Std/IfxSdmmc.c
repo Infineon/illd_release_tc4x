@@ -38,6 +38,7 @@
 #pragma diag_suppress 96 /* To suppress empty file warning */
 #endif
 
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX)  || defined(DEVICE_TC48X)
 #include "IfxSdmmc.h"
 
 /******************************************************************************/
@@ -448,6 +449,8 @@ IfxSdmmc_FrequencyConfigStatus IfxSdmmc_getFrequencyValues(Ifx_SDMMC *sdmmcSFR, 
         return IfxSdmmc_FrequencyConfigStatus_unSupportedFreq;
     }
 }
+
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC48X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

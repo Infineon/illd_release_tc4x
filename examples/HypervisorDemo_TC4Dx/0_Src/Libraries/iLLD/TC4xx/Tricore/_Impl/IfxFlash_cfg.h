@@ -44,6 +44,8 @@
 
 #if defined DEVICE_TC4DX
 #include "TC4Dx/IfxFlash_cfg_TC4Dx.h"
+#elif defined DEVICE_TC49XN
+#include "TC49xN/IfxFlash_cfg_TC49xN.h"
 #endif
 
 #endif /* IFXFLASH_CFG_H */

@@ -2,7 +2,7 @@
  * \file IfxQspi_SpiSlave.c
  * \brief QSPI SPISLAVE details 
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -115,7 +115,7 @@ void IfxQspi_SpiSlave_initModule(IfxQspi_SpiSlave *handle, const IfxQspi_SpiSlav
     Ifx_QSPI *qspiSFR = config->qspi;
     Ifx_DMA  *dmaSFR  = NULL_PTR;
 
-    if (config->dma.dmaIndex < IFXDMA_NUM_MODULES)
+    if ((config->dma.dmaIndex >= IfxDma_Index_0) && (config->dma.dmaIndex < IFXDMA_NUM_MODULES))
     {
         dmaSFR = (Ifx_DMA *)IfxDma_cfg_indexMap[config->dma.dmaIndex].module;
     }

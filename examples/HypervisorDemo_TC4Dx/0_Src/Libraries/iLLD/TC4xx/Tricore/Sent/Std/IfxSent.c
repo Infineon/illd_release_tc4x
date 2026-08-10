@@ -38,6 +38,7 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X)
 #include "IfxSent.h"
 
 /******************************************************************************/
@@ -189,3 +190,4 @@ IfxSent_ChannelStatus IfxSent_getChannelStatus(Ifx_SENT *sent, IfxSent_ChannelId
     return (IfxSent_ChannelStatus)(sent->CH[channelId].RSR.B.CST);
 }
 
+#endif /* #if !defined(DEVICE_TC45X) */

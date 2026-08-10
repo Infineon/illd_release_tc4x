@@ -38,6 +38,7 @@
 #pragma diag_suppress 96	/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC4EX)  && !defined(DEVICE_TC4PX)
 #include "IfxHsphy_Mp8g.h"
 
 /******************************************************************************/
@@ -288,6 +289,8 @@ void IfxHsphy_Mp8g_PowerDownReset(Ifx_HSPHY *hsphySFR, IfxHsphy_PhyIndex phyInde
     hsphySFR->PHY[phyIndex].CTRL1.B.PWRDWN = phyPowerMode;
     hsphySFR->PHY[phyIndex].CTRL1.B.RST    = 0;
 }
+
+#endif /* #if !defined(DEVICE_TC4EX) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

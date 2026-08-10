@@ -3,7 +3,7 @@
  * \brief PSI5  basic functionality
  * \ingroup IfxLld_Psi5
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -604,7 +604,7 @@ IFX_INLINE uint32 IfxPsi5_getReceiveDataRegisterLow(Ifx_PSI5 *psi5, IfxPsi5_Chan
  * \param psi5 Pointer to the PSI5 SFR handle.
  * \param channel The channel ID for which the interrupts should be cleared.
  * \param intStatusReg The interrupt status register to be cleared.
- * \param value The register to be selected depending on the interrupt source to be probed(slot specific sources are in INTSTATB) .
+ * \param value The register to be selected depending on the interrupt source to be probed(slot specific sources are in INTSTATB).
  * \return None
  */
 IFX_INLINE void IfxPsi5_clearAllInterrupt(Ifx_PSI5 *psi5, IfxPsi5_ChannelId channel, IfxPsi5_InterruptStatusRegister intStatusReg, uint32 value);
@@ -663,7 +663,7 @@ IFX_INLINE void IfxPsi5_enableAllChannels(Ifx_PSI5 *psi5);
 /** \brief Configures FIFO and Ring Buffer operation
  * \param psi5 Pointer to PSI5 SFR's base address
  * \param channel Channel Id of PSI5 channel whose receiver operation has to be configured
- * \param value Values representing differnt settings for FIFO and Ring Buffer like FIFO Read Pointer,FIFO/Ring Buffer Write Pointer,FIFO Warning Level,Write Pointer WRAP Indicator and FIFO Flushing
+ * \param value Values representing different settings for FIFO and Ring Buffer like FIFO Read Pointer,FIFO/Ring Buffer Write Pointer,FIFO Warning Level,Write Pointer WRAP Indicator and FIFO Flushing
  * \return None
  */
 IFX_INLINE void IfxPsi5_setReceiveFifoWarningLevel(Ifx_PSI5 *psi5, IfxPsi5_ChannelId channel, uint32 value);
@@ -671,7 +671,7 @@ IFX_INLINE void IfxPsi5_setReceiveFifoWarningLevel(Ifx_PSI5 *psi5, IfxPsi5_Chann
 /** \brief Sets the receiver control register for a specific PSI5 channel
  * \param psi5 Pointer to PSI5 SFR's base address
  * \param channel Channel Id of PSI5 channel whose receiver operation has to be configured
- * \param rcr The reciever control registers for setting up different parameters for PSI5 receiver operation.
+ * \param rcr The receiver control registers for setting up different parameters for PSI5 receiver operation.
  * Functionalities related to registers A, B and C can  be found in the IfxPsi5_ReceiverControlRegister enum.
  * \param value Value to be written into the RCRy(y = A,B,C) register.
  * \return None

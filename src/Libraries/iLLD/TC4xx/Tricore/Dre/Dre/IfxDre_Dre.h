@@ -3,7 +3,7 @@
  * \brief DRE DRE details
  * \ingroup IfxLld_Dre
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -403,6 +403,7 @@ typedef struct
 
 /** \brief Ethernet address database Configuration
  */
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX)
 typedef struct
 {
     IfxLeth_TxDmaChannel lethMac0TxChannelNumber;       /**< \brief LETH DMA Tx Channel Number assigned to LETH Mac0 */
@@ -418,6 +419,47 @@ typedef struct
     IfxGeth_TxDmaChannel gethMac1TxChannelNumber;       /**< \brief GETH DMA Tx Channel Number assigned to GETH Mac1 */
     IfxGeth_RxDmaChannel gethMac1RxChannelNumber;       /**< \brief GETH DMA Rx Channel Number assigned to GETH Mac1 */
 } IfxDre_Dre_EADConfig; 
+#elif defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) 
+typedef struct
+{
+    IfxLeth_TxDmaChannel lethTxChannelNumber0;       /**< \brief LETH DMA Tx Channel Number assigned to DRE LETH0 link */
+    IfxLeth_Index        lethTxChannelNumber0Index;  /**< \brief Index of the LETH Module to which the Dma channel belongs to */
+
+    IfxLeth_RxDmaChannel lethRxChannelNumber0;       /**< \brief LETH DMA Rx Channel Number assigned to DRE LETH0 link */
+    IfxLeth_Index        lethRxChannelNumber0Index;  /**< \brief Index of the LETH Module to which the Dma channel belongs to */
+
+    IfxLeth_TxDmaChannel lethTxChannelNumber1;       /**< \brief LETH DMA Tx Channel Number assigned to DRE LETH1 link */
+    IfxLeth_Index        lethTxChannelNumber1Index;  /**< \brief Index of the LETH Module to which the Dma channel belongs to */
+
+    IfxLeth_RxDmaChannel lethRxChannelNumber1;       /**< \brief LETH DMA Rx Channel Number assigned to DRE LETH1 link */
+    IfxLeth_Index        lethRxChannelNumber1Index;  /**< \brief Index of the LETH Module to which the Dma channel belongs to */
+
+    IfxLeth_TxDmaChannel lethTxChannelNumber2;       /**< \brief LETH DMA Tx Channel Number assigned to DRE LETH2 link */
+    IfxLeth_Index        lethTxChannelNumber2Index;  /**< \brief Index of the LETH Module to which the Dma channel belongs to */
+
+    IfxLeth_RxDmaChannel lethRxChannelNumber2;       /**< \brief LETH DMA Rx Channel Number assigned to DRE LETH2 link */
+    IfxLeth_Index        lethRxChannelNumber2Index;  /**< \brief Index of the LETH Module to which the Dma channel belongs to */
+
+    IfxLeth_TxDmaChannel lethTxChannelNumber3;       /**< \brief LETH DMA Tx Channel Number assigned to DRE LETH3 link */
+    IfxLeth_Index        lethTxChannelNumber3Index;  /**< \brief Index of the LETH Module to which the Dma channel belongs to */
+
+    IfxLeth_RxDmaChannel lethRxChannelNumber3;       /**< \brief LETH DMA Rx Channel Number assigned to DRE LETH3 link */
+    IfxLeth_Index        lethRxChannelNumber3Index;  /**< \brief Index of the LETH Module to which the Dma channel belongs to */
+
+} IfxDre_Dre_EADConfig;
+#else
+typedef struct
+{
+    IfxLeth_TxDmaChannel lethTxChannelNumber0;       /**< \brief LETH DMA Tx Channel Number assigned to DRE LETH0 link */
+    IfxLeth_RxDmaChannel lethRxChannelNumber0;       /**< \brief LETH DMA Rx Channel Number assigned to DRE LETH0 link */
+    IfxLeth_TxDmaChannel lethTxChannelNumber1;       /**< \brief LETH DMA Tx Channel Number assigned to DRE LETH1 link */
+    IfxLeth_RxDmaChannel lethRxChannelNumber1;       /**< \brief LETH DMA Rx Channel Number assigned to DRE LETH1 link */
+    IfxLeth_TxDmaChannel lethTxChannelNumber2;       /**< \brief LETH DMA Tx Channel Number assigned to DRE LETH2 link */
+    IfxLeth_RxDmaChannel lethRxChannelNumber2;       /**< \brief LETH DMA Rx Channel Number assigned to DRE LETH2 link */
+    IfxLeth_TxDmaChannel lethTxChannelNumber3;       /**< \brief LETH DMA Tx Channel Number assigned to DRE LETH3 link */
+    IfxLeth_RxDmaChannel lethRxChannelNumber3;       /**< \brief LETH DMA Rx Channel Number assigned to DRE LETH3 link */
+} IfxDre_Dre_EADConfig;
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) */
 
 /** \brief Configuration for Eth Forwarding Element in Forwarding Table
  */
@@ -476,10 +518,17 @@ typedef struct
     IfxDre_EthDmaChannel         dmaChannel;                          /**< \brief DMA Channel assigned to MAC in respective ETH Interface for Tx */
     boolean                      triggerType;                         /**< \brief DMA/IR Trigger Type. Refer to TETHDLi_CTRL.TRIG. Range: 0: DMA, Tx to Ethernet DMA, 1: IR Trigger interrupt */
     uint8                        slotNumber;                          /**< \brief Slot Number configuration. This bit is the static configuration for all Tx descriptors TDESCi_RD3.SLOTNUM. Range: 0 to 0xF */
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX)
 	IfxGeth_SourceAddressControl sourceAddressInsertionControl;       /**< \brief Source Address Insertion Control. Values are equal for both GETH and LETH */
+#elif defined(DEVICE_TC49XN) || defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA) || defined(DEVICE_TC4EX) || defined(DEVICE_TC4PX) 
+	IfxDre_Eth_SourceAddressControl  sourceAddressInsertionControl;   /**< \brief Source Address Insertion Control. Values are equal for both GETH and LETH */
+#endif  /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) */
 	boolean                      interruptOnCompletion;               /**< \brief Interrupt on completion. Refer to TETHDLi_CTRL.IOC. Range: 0: Packet not transmitted, 1: Packet has been transmitted */
     uint8                        descriptorPointer;                   /**< \brief Current descriptor pointer. By default, keep it to 0. Range: 0 to 3 */
     boolean                      descriptorPointerConfigEnable;       /**< \brief Bypass configuring PTR (current descriptor pointer) using descriptorPointer. Range: FALSE: PTR is not configured, TRUE: PTR is configured */
+#if defined(DEVICE_TC4EX) || defined(DEVICE_TC4ZX) || defined(DEVICE_TC4PX) || defined(DEVICE_TC48X) || defined(DEVICE_TC46X)
+    boolean                      singleDescriptorModeEnable;          /**< \brief Enable Single descriptor mode. Range: False: Disabled. True: DRE disables the preemptive acknowledge of Receive Descriptor for Ethernet to ethernet unicast forward frames based on read by destination Ethernet port from EIBUF and also the number of active descriptors in the Tx descriptor list is limited to 1. */
+#endif /* #if defined(DEVICE_TC4EX) */
 } IfxDre_Dre_TxEthConfig;
 
 /** \brief Can and Eth Watchdog Config

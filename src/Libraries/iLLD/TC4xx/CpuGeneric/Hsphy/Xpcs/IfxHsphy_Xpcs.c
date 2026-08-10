@@ -2,7 +2,7 @@
  * \file IfxHsphy_Xpcs.c
  * \brief HSPHY XPCS details
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -38,6 +38,7 @@
 #pragma diag_suppress 96	/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC4EX)  && !defined(DEVICE_TC4PX)
 #include "IfxHsphy_Xpcs.h"
 
 /******************************************************************************/
@@ -416,6 +417,8 @@ boolean IfxHsphy_Xpcs_setUsxgmiiSpeedMode(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_TrgtD
     return (boolean)timeOutError;
 }
 #endif /* #if IFXHSPHY_IS_PADINTERFACE_USXSGMII_AVAILABLE */
+
+#endif /* #if !defined(DEVICE_TC4EX) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

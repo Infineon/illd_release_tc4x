@@ -2,7 +2,7 @@
  * \file IfxSent_cfg.c
  * \brief SENT on-chip implementation data
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -38,6 +38,8 @@
 #pragma diag_suppress 96		/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC45X)
+
 #include "IfxSent_cfg.h"
 
 /******************************************************************************/
@@ -48,6 +50,8 @@ IFX_CONST IfxModule_IndexMap IfxSent_cfg_indexMap[IFXSENT_NUM_MODULES] = {
     {&MODULE_SENT0, (uint32)IfxSent_Index_0},
     {&MODULE_SENT1, (uint32)IfxSent_Index_1}
 };
+
+#endif /* #if !defined(DEVICE_TC45X) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore

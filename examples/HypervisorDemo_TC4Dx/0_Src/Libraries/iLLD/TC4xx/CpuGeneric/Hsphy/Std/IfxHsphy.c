@@ -38,6 +38,7 @@
 #pragma diag_suppress 96	/* To suppress empty file warning */
 #endif
 
+#if !defined(DEVICE_TC4EX) && !defined(DEVICE_TC4PX)
 #include "IfxHsphy.h"
 
 /******************************************************************************/
@@ -437,8 +438,13 @@ void IfxHsphy_initApConfig(IfxHsphy_ApConfig *config)
     IfxApProt_initConfig(&config->proteConfig);
     IfxApProt_initConfig(&config->protseConfig);
     IfxApApu_initConfig(&config->apuGlobalConfig);
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX)
     IfxApApu_initConfig(&config->apuCh0Config);
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) */
     IfxApApu_initConfig(&config->apuCh1Config);
+#if defined(DEVICE_TC45X)
+    IfxApApu_initConfig(&config->apuCh2Config);
+#endif /* #if defined(DEVICE_TC45X) */
 }
 
 
@@ -454,8 +460,14 @@ void IfxHsphy_initAp(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_ApConfig *config)
 
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&hsphyRegPtr->ACCENGLB, &config->apuGlobalConfig);
 
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX)
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&hsphyRegPtr->ACCENCH[0], &config->apuCh0Config);
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) */
 	IfxApApu_init((Ifx_ACCEN_ACCEN *)&hsphyRegPtr->ACCENCH[1], &config->apuCh1Config);
+#if defined(DEVICE_TC45X)
+	IfxApApu_init((Ifx_ACCEN_ACCEN *)&hsphyRegPtr->ACCENCH[2], &config->apuCh2Config);
+#endif /* #if defined(DEVICE_TC45X) */
+
     IfxApProt_setState((Ifx_PROT_PROT *)&hsphyRegPtr->PROTSE, IfxApProt_State_run);
 }
 
@@ -1400,7 +1412,11 @@ void IfxHsphy_configureAccessToHsphy(IfxApApu_ApuConfig *apConfig)
     uint8 i = 0;
     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_HSPHY.ACCENGLB, apConfig);
 
-    for (i = 0; i < IFXHSPHY_NUM_OF_PHY; i++)  
+#if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX)
+    for (i = 0; i < IFXHSPHY_NUM_OF_PHY; i++)
+#else
+    for (i = IFXHSPHY_START_INDEX; i <= IFXHSPHY_END_INDEX; i++)
+#endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X) || defined(DEVICE_TC4ZX) */    
 	{
         IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_HSPHY.ACCENCH[i], apConfig);
     }
@@ -1967,6 +1983,8 @@ void IfxHsphy_Geth_setMdioPinsEnable(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_EthIndex e
     hsphyRegPtr->ETH[ethIndex].B.MDIOEN = 1;
 }
 #endif /* #if IFXHSPHY_IS_GETH_AVAILABLE */
+
+#endif /* #if !defined(DEVICE_TC4EX) */
 
 #if defined (_TASKING_) || defined (_ghs_)
 #pragma restore
