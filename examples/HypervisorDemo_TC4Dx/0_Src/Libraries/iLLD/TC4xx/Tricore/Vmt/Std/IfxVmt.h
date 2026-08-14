@@ -660,7 +660,7 @@ IFX_EXTERN uint8 IfxVmt_runMarchUTest(IfxVmt_MbistSel mbistSel, uint8 rangeSel, 
  * 2. write back all bits inverted
  * 3. Read data Word including check bits
  * 4. Write back all bits inverted
- * At the end of this procedure the user data remains unchanged and and every bit has been set to 0 and 1. Any single Stuck-At error will be visible as a correctable error.
+ * At the end of this procedure the user data remains unchanged and every bit has been set to 0 and 1. Any single Stuck-At error will be visible as a correctable error.
  * Note: The function should be called with adequate PROT and APU handling (PROTE/PROTCSE).
  * The Error flags need to be cleared to enable further tracking after the test
  * \param mbistSel Memory Selection

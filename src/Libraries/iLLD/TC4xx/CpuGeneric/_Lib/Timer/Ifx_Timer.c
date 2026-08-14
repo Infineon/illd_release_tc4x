@@ -3,7 +3,7 @@
  * \brief Board support package
  * \ingroup library_srvsw_sysse_bsp_bsp
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -67,7 +67,7 @@ void Ifx_waitPoll(void)
 
 /** \brief Wait time function.
  *
- * This is an empty function that that returns after the timeout elapsed. The
+ * This is an empty function that returns after the timeout elapsed. The
  * minimal time spend in the function is guaranteed, but not the max time.
  *
  * \param timeout Specifies the time the function waits for before returning

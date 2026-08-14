@@ -4,9 +4,9 @@
  *
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-10-27 12:27:41
  *
  *                                 IMPORTANT NOTICE
- *
  *
  * Infineon Technologies AG (Infineon) licenses this file to you under the
  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use

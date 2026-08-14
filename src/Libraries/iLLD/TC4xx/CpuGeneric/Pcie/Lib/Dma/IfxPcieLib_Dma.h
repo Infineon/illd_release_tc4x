@@ -3,7 +3,7 @@
  * \brief PCIE DMA details
  * \ingroup IfxLld_Pcie
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -253,7 +253,7 @@
  *
  *     \endcode
  *
- * \subsection IfxLld_Pcie_Dma_Step4 STEP 4: Complete configuration & intialize DMA write channel
+ * \subsection IfxLld_Pcie_Dma_Step4 STEP 4: Complete configuration & initialize DMA write channel
  *
  * In this section, we will complete the configuration and initialize channel (see below: #8 and #9).\n
  *

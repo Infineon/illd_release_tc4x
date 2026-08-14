@@ -3,7 +3,7 @@
  * \brief SCR SSC basic functionality
  * \ingroup IfxLld_Scr
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -263,7 +263,7 @@ IFX_INLINE void IfxScrSsc_setBaudrate(uint32 baudrate);
  *              IfxScrSsc_Event_baudrateErro 3
  *              IfxScrSsc_Event_busy
  *              IfxScrSsc_Event_receiveFifoFull
- * \return Status of the event.TRUE implies ocuurence/ongoing of event.FALSE implies non-occurence/end of event
+ * \return Status of the event.TRUE implies occurrence/ongoing of event.FALSE implies non-occurrence/end of event
  */
 
 IFX_INLINE boolean IfxScrSsc_getStatus(IfxScrSsc_Event event);

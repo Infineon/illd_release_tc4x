@@ -3,7 +3,7 @@
  * \brief Board support package
  * \ingroup library_srvsw_sysse_bsp_bsp
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -376,7 +376,7 @@ IFX_INLINE boolean poll(volatile boolean *test, Ifx_TickTime timeout)
 #if !defined(IFX_ILLD_PPU_USAGE)
 /** \brief Return the elapsed time in system timer ticks, and enable the interrupts.
  *
- * The interrupts are enable by the function
+ * The interrupts are enabled by the function
  *
  * \param since time returned by timingNoInterruptStart()
  * \param interruptEnabled If TRUE, the interrupts will be enabled before the function exit. This parameter should be set to the value returned by \ref  timingNoInterruptStart()

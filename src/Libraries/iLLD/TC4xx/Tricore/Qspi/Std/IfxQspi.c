@@ -2,7 +2,7 @@
  * \file IfxQspi.c
  * \brief QSPI  basic functionality
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -183,7 +183,7 @@ uint32 IfxQspi_calculateExtendedConfigurationValue(Ifx_QSPI *qspi, const uint8 c
      * Thus, we cannot influence the value of A, once A+B+C is found out
      * (A+1 is always (A+B+C)/2).
      * However, in between B and C - we should try to maximize B (and minimize C).
-     * The goal will be to do this - keep max value of B always and keep only any remaining value for C .
+     * The goal will be to do this - keep max value of B always and keep only any remaining value for C.
      */
     halfBaud     = bestAbc / 2;
     diffB        = halfBaud - maxB;

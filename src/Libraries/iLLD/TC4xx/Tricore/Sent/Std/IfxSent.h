@@ -3,7 +3,7 @@
  * \brief SENT  basic functionality
  * \ingroup IfxLld_Sent
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -67,7 +67,7 @@
 
 /** \addtogroup IfxLld_Sent_Std_Enumerations
  * \{ */
-/** \brief SENT.CH[channelId].IOCR.ALTI , Specifies alternate input for channel
+/** \brief SENT.CH[channelId].IOCR.ALTI, Specifies alternate input for channel
  */
 typedef enum
 {
@@ -89,7 +89,7 @@ typedef enum
     IfxSent_ChannelStatus_synchronize = 3  /**< \brief Specifies the channel is synchronized */
 } IfxSent_ChannelStatus;
 
-/** \brief SENT.FDR.DM , Specifies clock divider mode
+/** \brief SENT.FDR.DM, Specifies clock divider mode
  */
 typedef enum
 {
@@ -98,7 +98,7 @@ typedef enum
     IfxSent_ClockDividerMode_fractional = 2  /**< \brief Specifies clock fractional divider mode */
 } IfxSent_ClockDividerMode;
 
-/** \brief SENT.CH[channelId].SDS.CON , Specifies received configuration bit value
+/** \brief SENT.CH[channelId].SDS.CON, Specifies received configuration bit value
  */
 typedef enum
 {
@@ -106,7 +106,7 @@ typedef enum
     IfxSent_ConfigBit_1       /**< \brief Specifies received configuration bit value 1 */
 } IfxSent_ConfigBit;
 
-/** \brief SENT.CH[channelId].IOCR.DEPTH , Specifies number of port input samples
+/** \brief SENT.CH[channelId].IOCR.DEPTH, Specifies number of port input samples
  */
 typedef enum
 {
@@ -128,7 +128,7 @@ typedef enum
     IfxSent_DigitalGlitchesLength_15        /**< \brief Specifies 15 port input samples */
 } IfxSent_DigitalGlitchesLength;
 
-/** \brief SENT.CH[channelId].RCR.ESF , Specifies the serial frame structure
+/** \brief SENT.CH[channelId].RCR.ESF, Specifies the serial frame structure
  */
 typedef enum
 {
@@ -136,7 +136,7 @@ typedef enum
     IfxSent_ExtendedSerialFrameMode_extended = 1   /**< \brief Specifies the extended serial frame structure */
 } IfxSent_ExtendedSerialFrameMode;
 
-/** \brief SENT.CH[channelId].IOCR.ETS , Specifies the external (GTM/eGTM) trigger line
+/** \brief SENT.CH[channelId].IOCR.ETS, Specifies the external (GTM/eGTM) trigger line
  */
 typedef enum
 {
@@ -462,7 +462,7 @@ IFX_INLINE void IfxSent_clearInterruptStatus(Ifx_SENT *sent, IfxSent_ChannelId c
 /**
  * \param sent base address of the SENT register space
  * \param channelId SENT channel number
- * \return The Data content of a recieved Data Frame
+ * \return The Data content of a received Data Frame
  */
 IFX_INLINE uint32 IfxSent_readReceivedData(Ifx_SENT *sent, IfxSent_ChannelId channelId);
 
@@ -550,7 +550,7 @@ IFX_EXTERN void IfxSent_initializeChannelUnitTime(Ifx_SENT *sent, IfxSent_Channe
 /** \brief Initialize and get the clock for SENT kernel
  * \param sent base address of the SENT register space
  * \param dividerMode Divider mode for clock output
- * \param stepValue clock frequency for for module fractional divider
+ * \param stepValue clock frequency for module fractional divider
  * \return None
  */
 IFX_EXTERN void IfxSent_initializeModuleClock(Ifx_SENT *sent, IfxSent_ClockDividerMode dividerMode, uint16 stepValue);

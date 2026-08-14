@@ -3,7 +3,7 @@
  * \brief SCR RTC  basic functionality
  * \ingroup IfxLld_Scr
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -168,7 +168,7 @@ IFX_INLINE void IfxScrRtc_disableCompareInterrupt(void);
  */
 IFX_INLINE boolean IfxScrRtc_isCompareInterruptEnabled(void);
 
-/** \brief Check if Compare match interrupt has occured
+/** \brief Check if Compare match interrupt has occurred
  * \return Returns status of compare interrupt.
  */
 IFX_INLINE boolean IfxScrRtc_isCompareInterruptOccured(void);

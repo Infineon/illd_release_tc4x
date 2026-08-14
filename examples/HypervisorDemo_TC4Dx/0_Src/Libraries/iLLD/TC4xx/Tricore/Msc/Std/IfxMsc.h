@@ -1290,7 +1290,7 @@ IFX_EXTERN void IfxMsc_resetModule(Ifx_MSC *msc);
 /*-------------------------Global Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Get the NDD value for the supplied baud rate when when ABRA block is enabled
+/** \brief Get the NDD value for the supplied baud rate when ABRA block is enabled
  * \param baud Required baud rate
  * \return NDD value
  */
@@ -1301,7 +1301,7 @@ IFX_EXTERN uint32 IfxMsc_downstreamAbraBaudCalculator(uint32 baud);
  * \param baud Required baud rate
  * \return Step value
  */
-IFX_EXTERN uint64 IfxMsc_upstreamFractionalBaudCalculator(Ifx_MSC *msc, uint32 baud);
+IFX_EXTERN uint32 IfxMsc_upstreamFractionalBaudCalculator(Ifx_MSC *msc, uint32 baud);
 
 /** \brief Get the step value for the supplied baud rate when divider mode is normal
  * \param msc pointer to the base of MSC registers
@@ -1408,7 +1408,7 @@ IFX_EXTERN float32 IfxMsc_getUpstreamBaudrate(Ifx_MSC *msc);
 /*-------------------------Inline Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Clears The Recieve Data Interrupt Flag
+/** \brief Clears The Receive Data Interrupt Flag
  * \param msc pointer to the base of MSC registers
  * \return None
  */
@@ -1445,7 +1445,7 @@ IFX_INLINE boolean IfxMsc_getAsyncClockBypass(Ifx_MSC *msc);
  */
 IFX_INLINE boolean IfxMsc_getDownStreamExtension(Ifx_MSC *msc);
 
-/** \brief Returns the Recieve Data Interrupt Flag Status
+/** \brief Returns the Receive Data Interrupt Flag Status
  * \param msc pointer to the base of MSC registers
  * \return Status
  */
@@ -1572,9 +1572,9 @@ IFX_INLINE void IfxMsc_setSuspendMode(Ifx_MSC *msc, IfxMsc_SuspendMode mode);
  */
 IFX_INLINE void IfxMsc_setTransmissionMode(Ifx_MSC *msc, IfxMsc_TransmissionMode mode);
 
-/** \brief Sets The Upstream Channel Recieve Rate
+/** \brief Sets The Upstream Channel Receive Rate
  * \param msc pointer to the base of MSC registers
- * \param recieveRate Recieve Rate
+ * \param recieveRate Receive Rate
  * \return None
  */
 IFX_INLINE void IfxMsc_setUpstreamChannelRecieveRate(Ifx_MSC *msc, IfxMsc_UpstreamChannelReceivingRate recieveRate);
@@ -1593,13 +1593,13 @@ IFX_INLINE void IfxMsc_setUpstreamTimeout(Ifx_MSC *msc, IfxMsc_UpstreamTimeoutVa
  */
 IFX_INLINE void IfxMsc_setUpstreamTimeoutPrescalar(Ifx_MSC *msc, IfxMsc_UpstreamTimeoutPrescaler prescalar);
 
-/** \brief Indicates if Overflow error has occured
+/** \brief Indicates if Overflow error has occurred
  * \param msc Pointer to MSC SFR base address
  * \return Returns overflow error status
  */
 IFX_INLINE boolean IfxMsc_hasAbraOverflowErrorOccured(Ifx_MSC *msc);
 
-/** \brief Indicates if Underflow error has occured
+/** \brief Indicates if Underflow error has occurred
  * \param msc Pointer to MSC SFR base address
  * \return Returns underflow error status
  */
@@ -1760,7 +1760,7 @@ IFX_EXTERN void IfxMsc_clearDataFrameInterruptFlag(Ifx_MSC *msc);
  * \param baud Required baud rate
  * \return Step Value
  */
-IFX_EXTERN uint64 IfxMsc_downstreamFractionalBaudCalculator(Ifx_MSC *msc, uint32 baud);
+IFX_EXTERN uint32 IfxMsc_downstreamFractionalBaudCalculator(Ifx_MSC *msc, uint32 baud);
 
 /** \brief Get the step value for the supplied baud rate when divider mode is normal for downstream
  * \param msc Select DataType Ref
@@ -1815,7 +1815,7 @@ IFX_EXTERN void IfxMsc_setManchesterCoding(Ifx_MSC *msc, IfxMsc_ManchesterConfig
 
 /** \brief Configure Slow Channel
  * Use IfxMsc_manualloadCxModeCommand to load command Frame data after configuring Slow Channel.
- * Writting Command data to DCE and DC registers will initiate slow channel transfer immediately.
+ * Writing Command data to DCE and DC registers will initiate slow channel transfer immediately.
  * \param msc pointer to the base of MSC registers
  * \param slowChannelConfig Pointer to Slow Channel Configuration Structure
  * \return None

@@ -3,7 +3,7 @@
  * \brief GETH ETH details
  * \ingroup IfxLld_Geth
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -264,7 +264,7 @@ typedef struct
 typedef struct
 {
     IfxGeth_PhyInterfaceMode phyInterfaceMode;       /**< \brief External Phy Interface Mode */
-    IfxGeth_Eth_MacConfig    mac;                    /**< \brief Configuration Structure for the the MAC initialization */
+    IfxGeth_Eth_MacConfig    mac;                    /**< \brief Configuration Structure for the MAC initialization */
     IfxGeth_Eth_MtlConfig    mtl;                    /**< \brief Configuration Structure for the MTL initialization */
 } IfxGeth_Eth_PortConfig;
 
@@ -1653,7 +1653,7 @@ IFX_EXTERN boolean IfxGeth_Eth_getRxDescriptorStatus(IfxGeth_Eth *geth, IfxGeth_
  * \param[inout] geth                   GETH driver Handle
  * \param[in]    channelId              Tx DMA Channel number
  * \param[in]    enable                 TRUE: Enable slot comparison, FALSE: Disable.
- * \param[in]    advanceSlotCheckEnable TRUE: TX DMA fetches data from the buffer when the RSN value is equal to or less than the SLOTNUM value programmed in that descriptor by up to 2 slots, FALSE: DMA will start fetching the the data when the RSN value is equal to or less than the SLOTNUM value by one slot.
+ * \param[in]    advanceSlotCheckEnable TRUE: TX DMA fetches data from the buffer when the RSN value is equal to or less than the SLOTNUM value programmed in that descriptor by up to 2 slots, FALSE: DMA will start fetching the data when the RSN value is equal to or less than the SLOTNUM value by one slot.
  *
  * \retval None
  */

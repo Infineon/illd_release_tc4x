@@ -829,7 +829,7 @@ IFX_EXTERN boolean IfxHsphy_Geth_rgmiiInit(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_Geth
 
 /** \brief rmii ouput pin configuration
  * \param[in] hsphyRegPtr hsphy register pointer
- * \param[in] rmiiPins rmii config Note : Atleast one pin needs to be configured in this param before invoking the API
+ * \param[in] rmiiPins rmii config Note : At least one pin needs to be configured in this param before invoking the API
  * \retval None
  */
 IFX_EXTERN void IfxHsphy_Geth_setupRmiiOutputPins(Ifx_HSPHY *hsphyRegPtr, const IfxHsphy_Geth_RmiiPins *rmiiPins);
@@ -848,7 +848,7 @@ IFX_EXTERN void IfxHsphy_Xspi_deInit(Ifx_HSPHY *hsphyRegPtr);
 IFX_EXTERN boolean IfxHsphy_Xspi_xspiInit(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_Xspi_XspiCfg *config);
 
 /** \brief Xspi pins mapping API
- * Note : Atleast one pin needs to be configured in the config->xspiPins param before invoking the API
+ * Note : At least one pin needs to be configured in the config->xspiPins param before invoking the API
  * \param[in] hsphyRegPtr hsphy register pointer
  * \param[in] config Xspi config reference
  * \retval None
@@ -857,14 +857,14 @@ IFX_EXTERN void IfxHsphy_Xspi_setXspiPins(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_Xspi_
 
 /** \brief rgmii output pin mapping API
  * \param[in] hsphyRegPtr hsphy register pointer
- * \param[in] rgmiiPins Rgmii Pin reference pointer Note : Atleast one pin needs to be configured in this param before invoking the API
+ * \param[in] rgmiiPins Rgmii Pin reference pointer Note : At least one pin needs to be configured in this param before invoking the API
  * \retval None
  */
 IFX_EXTERN void IfxHsphy_Geth_setupRgmiiOutputPins(Ifx_HSPHY *hsphyRegPtr, const IfxHsphy_Geth_RgmiiPins *rgmiiPins);
 
 /** \brief Mii output pin mapping API
  * \param[in] hsphyRegPtr hsphy register pointer
- * \param[in] miiPins Mii reference pin pointer Note : Atleast one pin needs to be configured in this param before invoking the API
+ * \param[in] miiPins Mii reference pin pointer Note : At least one pin needs to be configured in this param before invoking the API
  * \retval None
  */
 IFX_EXTERN void IfxHsphy_Geth_setupMiiOutputPins(Ifx_HSPHY *hsphyRegPtr, const IfxHsphy_Geth_MiiPins *miiPins);
@@ -875,7 +875,7 @@ IFX_EXTERN void IfxHsphy_Geth_setupMiiOutputPins(Ifx_HSPHY *hsphyRegPtr, const I
  * \param[] phyIdx configure the phy index
  * \param[] regAddr configure the externl PHY register addr to be read
  * \param[] pdata configure the pointer variable to store the read data
- * \retval True: Fail timeout error occured   False: Success
+ * \retval True: Fail timeout error occurred   False: Success
  */
 IFX_EXTERN boolean IfxHsphy_Phy_readMDIORegister(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_PhyIndex phyIdx, uint32 regAddr, uint32 *pdata);
 
@@ -884,7 +884,7 @@ IFX_EXTERN boolean IfxHsphy_Phy_readMDIORegister(Ifx_HSPHY *hsphyRegPtr, IfxHsph
  * \param[in] phyIdx configure the phy index. Range \ref IfxHsphy_PhyIndex
  * \param[in] regAddr configure the externl PHY register addr to be written
  * \param[in] data configure the data to be written. Range 0x0 to 0xFFFFFFFF
- * \retval True: Fail timeout error occured   False: Success
+ * \retval True: Fail timeout error occurred   False: Success
  */
 IFX_EXTERN boolean IfxHsphy_Phy_writeMDIORegister(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_PhyIndex phyIdx, uint32 regAddr, uint32 data);
 
@@ -939,7 +939,7 @@ IFX_EXTERN void IfxHsphy_Geth_setRmiiPins(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_EthIn
 /** \brief Rmii input pin config API
  * \param[inout] hsphyRegPtr hsphy register pointer
  * \param[in] ethIndex Configuration for ethIndex values. Range \ref IfxHsphy_EthIndex 
- * \param[in] rmiiPins rmii pins reference Note : Atleast one pin needs to be configured in this param before invoking the API
+ * \param[in] rmiiPins rmii pins reference Note : At least one pin needs to be configured in this param before invoking the API
  * \retval None
  */
 IFX_EXTERN void IfxHsphy_Geth_setupRmiiInputPins(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_EthIndex ethIndex, const IfxHsphy_Geth_RmiiPins *rmiiPins);
@@ -947,7 +947,7 @@ IFX_EXTERN void IfxHsphy_Geth_setupRmiiInputPins(Ifx_HSPHY *hsphyRegPtr, IfxHsph
 /** \brief Rgmii input Pin mapping API
  * \param[inout] hsphyRegPtr hsphy register pointer
  * \param[in] ethIndex Configuration for ethIndex values. Range \ref IfxHsphy_EthIndex 
- * \param[in] rgmiiPins rgmii pin reference pointer Note : Atleast one pin needs to be configured in this param before invoking the API
+ * \param[in] rgmiiPins rgmii pin reference pointer Note : At least one pin needs to be configured in this param before invoking the API
  * \retval None
  */
 IFX_EXTERN void IfxHsphy_Geth_setupRgmiiInputPins(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_EthIndex ethIndex, const IfxHsphy_Geth_RgmiiPins *rgmiiPins);
@@ -955,7 +955,7 @@ IFX_EXTERN void IfxHsphy_Geth_setupRgmiiInputPins(Ifx_HSPHY *hsphyRegPtr, IfxHsp
 /** \brief Mii pin mapping API
  * \param[inout] hsphyRegPtr hsphy register pointer
  * \param[in] ethIndex Configuration for ethIndex values. Range \ref IfxHsphy_EthIndex 
- * \param[in] miiPins mii pin reference pointer Note : Atleast one pin needs to be configured in this param before invoking the API
+ * \param[in] miiPins mii pin reference pointer Note : At least one pin needs to be configured in this param before invoking the API
  * \retval None
  */
 IFX_EXTERN void IfxHsphy_Geth_setupMiiInputPins(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_EthIndex ethIndex, const IfxHsphy_Geth_MiiPins *miiPins);

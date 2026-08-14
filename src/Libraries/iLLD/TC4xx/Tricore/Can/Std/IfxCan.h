@@ -3,7 +3,7 @@
  * \brief CAN  basic functionality
  * \ingroup IfxLld_Can
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -473,14 +473,14 @@ typedef enum
  */
 typedef enum
 {
-    IfxCan_LastErrorCodeType_noError       = 0, /**< \brief No Error occured in the recent CAN message transmission or reception. */
-    IfxCan_LastErrorCodeType_stuffError    = 1, /**< \brief More than 5 consecutive equal bits recieved in CAN message */
-    IfxCan_LastErrorCodeType_formError     = 2, /**< \brief Fixed format part of recieved frame has wrong format */
-    IfxCan_LastErrorCodeType_ackError      = 3, /**< \brief No ACK recieved from another node for transmitted CAN message */
+    IfxCan_LastErrorCodeType_noError       = 0, /**< \brief No Error occurred in the recent CAN message transmission or reception. */
+    IfxCan_LastErrorCodeType_stuffError    = 1, /**< \brief More than 5 consecutive equal bits received in CAN message */
+    IfxCan_LastErrorCodeType_formError     = 2, /**< \brief Fixed format part of received frame has wrong format */
+    IfxCan_LastErrorCodeType_ackError      = 3, /**< \brief No ACK received from another node for transmitted CAN message */
     IfxCan_LastErrorCodeType_bit1Error     = 4, /**< \brief Transmitted recessive and read back dominant on the CAN bus. */
     IfxCan_LastErrorCodeType_bit0Error     = 5, /**< \brief Transmitted dominant and read back recessive on the CAN bus. */
     IfxCan_LastErrorCodeType_crcError      = 6, /**< \brief CRC Error */
-    IfxCan_LastErrorCodeType_noCANBusEvent = 7  /**< \brief No CAN bus event occured */
+    IfxCan_LastErrorCodeType_noCANBusEvent = 7  /**< \brief No CAN bus event occurred */
 } IfxCan_LastErrorCodeType;
 
 /** \brief Message Id length (Standard / Extended)
@@ -1606,7 +1606,7 @@ typedef struct
     IfxCan_DestinationId destinationId;                  /**< \brief Destination ID */
     boolean              enableFormatModification;       /**< \brief CAN Frame Format Modifier enable bit. TRUE: Enabled, FALSE: Disabled */
     boolean              frameType;                      /**< \brief Type of Can Frame. 0: Classical CAN frame format, 1: CAN FD frame format */
-    boolean              lengthModifier;                 /**< \brief Enable Data Length Code (DLC) Modification. 0: Destination CAN frame length is same as the received CAN frame, 1: Destination CAN Frame length is as defined by ISO 11898-1 */
+    uint8                lengthModifier;                 /**< \brief Enable Data Length Code (DLC) Modification. 0: Destination CAN frame length is same as the received CAN frame, != 0: Destination CAN Frame length is as defined by ISO 11898-1.Range: 0 to 15 */
     uint16               canIdModifier;                  /**< \brief 11 bit CAN Frame ID modifier value. The New Destination CAN Frame ID = (canIdModifier XOR RX_CANID). Range: 0 to 0x7FF */
 } IfxCan_StdUnicastRouting;
 
@@ -1634,8 +1634,13 @@ typedef struct
  */
 typedef struct
 {
-    uint8                index;               /**< \brief Routing Rule Index (0-63) */
-    IfxCan_DestinationId destinationId;       /**< \brief Destination ID */
+    uint8                index;                          /**< \brief Routing Rule Index (0-63) */
+    IfxCan_DestinationId destinationId;                  /**< \brief Destination ID */
+    boolean              enableFormatModification;       /**< \brief CAN Frame Format Modifier enable bit (FDFM). TRUE: Enabled, FALSE: Disabled */
+    boolean              frameType;                      /**< \brief Type of CAN Frame (FDF). 0: Classical CAN frame format, 1: CAN FD frame format. Valid only when enableFormatModification is TRUE */
+    uint8                lengthModifier;                 /**< \brief Data Length Code (DLC). 0: Destination CAN frame length is same as the received CAN frame, != 0: Destination CAN frame length as defined by ISO 11898-1. Range: 0 to 15 */
+    uint16               canIdModifier;                  /**< \brief 11-bit CAN Frame ID modifier value (IDXOR). The Destination CAN Frame ID = ([canIdModifier << idShift] XOR RX_CANID). Range: 0 to 0x7FF */
+    uint8                idShift;                        /**< \brief CAN Frame ID modifier shift value (IDSHIFT). The Destination CAN Frame ID = ([canIdModifier << idShift] XOR RX_CANID). Range: 0 to 7 */
 } IfxCan_XtdUnicastRouting;
 
 /** \} */
@@ -1645,8 +1650,8 @@ typedef struct
  */
 typedef struct
 {
-    boolean rxWatchdogTimeout0 : 1;              /**< \brief Enable Recieve watchdog timeout 0 error interrupt . Set:Enabled, Reset:Disabled */
-    boolean rxWatchdogTimeout1 : 1;              /**< \brief Enable Recieve watchdog timeout 1 error interrupt . Set:Enabled, Reset:Disabled */
+    boolean rxWatchdogTimeout0 : 1;              /**< \brief Enable Receive watchdog timeout 0 error interrupt. Set:Enabled, Reset:Disabled */
+    boolean rxWatchdogTimeout1 : 1;              /**< \brief Enable Receive watchdog timeout 1 error interrupt. Set:Enabled, Reset:Disabled */
     boolean txWatchdogTimeout0 : 1;              /**< \brief Enable Transmit watchdog timeout 0 error interrupt. Set:Enabled, Reset:Disabled */
     boolean txWatchdogTimeout1 : 1;              /**< \brief Enable Transmit watchdog timeout 1 error interrupt. Set:Enabled, Reset:Disabled */
     boolean crcError : 1;                        /**< \brief Enable CRE CRC error interrupt. Set:Enabled, Reset:Disabled */
@@ -1850,8 +1855,8 @@ IFX_INLINE IfxCan_CanNodeCommunicationState IfxCan_Node_getActivityStatus(Ifx_CA
 IFX_INLINE IfxCan_LastErrorCodeType IfxCan_Node_getDataPhaseLastErrorCode(Ifx_CAN_N *node);
 
 /** \brief Protocol Exception Event status.
- * TRUE: Protocol Exception event occured.
- * FALSE: Protocol Exception event not occured.
+ * TRUE: Protocol Exception event occurred.
+ * FALSE: Protocol Exception event not occurred.
  *
  * \param[in] node Specifies the pointer to CAN node registers.
  *
@@ -1859,7 +1864,7 @@ IFX_INLINE IfxCan_LastErrorCodeType IfxCan_Node_getDataPhaseLastErrorCode(Ifx_CA
  */
 IFX_INLINE boolean IfxCan_Node_isProtocolExceptionEventOccured(Ifx_CAN_N *node);
 
-/** \brief Returns the error status of the recent recieved CAN FD message.
+/** \brief Returns the error status of the recent received CAN FD message.
  * TRUE : Error status indicator is enabled.
  * FALSE: Erro status indicator not enabled.
  *
@@ -2081,7 +2086,7 @@ IFX_EXTERN uint32 IfxCan_Node_getFdBaudRate(Ifx_CAN_N *node);
 /*-------------------------Inline Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Bit Rate Switch status of the last recieved CAN FD message.
+/** \brief Bit Rate Switch status of the last received CAN FD message.
  * TRUE: Bit rate switch is enabled.
  * FALSE: Bit rate switch is disabled.
  *
@@ -2117,7 +2122,7 @@ IFX_INLINE boolean IfxCan_Node_isTxBufferCancellationFinished(Ifx_CAN_N *node, I
  */
 IFX_INLINE boolean IfxCan_Node_isTxBufferRequestPending(Ifx_CAN_N *node, IfxCan_TxBufferId txBufferId);
 
-/** \brief Returns the status of whether transmission occured on the selected Tx buffer.
+/** \brief Returns the status of whether transmission occurred on the selected Tx buffer.
  *
  * \param[in] node       Specifies the pointer to the CAN Node registers.
  * \param[in] txBufferId Tx Buffer number. Range: \ref IfxCan_TxBufferId.
@@ -2195,7 +2200,7 @@ IFX_INLINE void IfxCan_Node_setErrorStateIndicator(Ifx_CAN_N *node, Ifx_CAN_TXMS
 /** \brief Sets the Message Marker (MM) for transmit frame.
  *
  * \param[inout] txBufferElement Tx Buffer Element.
- * \param[in]    bufferId        MM, Message Marker , Buffer Id. Range: \ref IfxCan_TxBufferId.
+ * \param[in]    bufferId        MM, Message Marker, Buffer Id. Range: \ref IfxCan_TxBufferId.
  *
  * \retval None
  */
@@ -2959,7 +2964,7 @@ IFX_EXTERN void IfxCan_Node_setInterruptLine(Ifx_CAN_N *node, IfxCan_Interrupt i
 /*-------------------------Inline Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Returns the base adress of the selected Node of CAN module.
+/** \brief Returns the base address of the selected Node of CAN module.
  *
  * \param[in] can    Specifies the pointer to the CAN registers.
  * \param[in] nodeId Node number of the module. Range: \ref IfxCan_NodeId.
@@ -3068,7 +3073,7 @@ IFX_EXTERN void IfxCan_resetModule(Ifx_CAN *can);
  */
 IFX_EXTERN void IfxCan_setClockSource(Ifx_CAN *can, IfxCan_ClockSelect clockSelect, IfxCan_ClockSource clockSource);
 
-/** \brief Returns the adress of the selected routing element.
+/** \brief Returns the address of the selected routing element.
  *
  * \param[in] ramBaseAddress                   Address of CAN RAM. Range: 0 to 0xFFFFFFFF
  * \param[in] standardRoutingTableStartAddress Offset of Std Routing Table from Base Ram Address. Range: 0 to 0xFFFF
@@ -3078,7 +3083,7 @@ IFX_EXTERN void IfxCan_setClockSource(Ifx_CAN *can, IfxCan_ClockSelect clockSele
  */
 IFX_EXTERN Ifx_CAN_SRT *IfxCan_Node_getStandardRoutingElementAddress(uint32 ramBaseAddress, uint16 standardRoutingTableStartAddress, uint8 index);
 
-/** \brief Returns the adress of the selected routing element.
+/** \brief Returns the address of the selected routing element.
  *
  * \param[in] ramBaseAddress                   Address of CAN RAM. Range: 0 to 0xFFFFFFFF
  * \param[in] extendedRoutingTableStartAddress Offset of Xtd Routing Table from Base Ram Address. Range: 0 to 0xFFFF
@@ -4106,7 +4111,7 @@ IFX_INLINE void IfxCan_Node_setMessageMarker(Ifx_CAN_TXMSG *txBufferElement, Ifx
 
 IFX_INLINE void IfxCan_Node_setMsgId(Ifx_CAN_TXMSG *txBufferElement, uint32 messageId, IfxCan_MessageIdLength messageIdLength)
 {
-    /* set identifier extention */
+    /* set identifier extension */
     txBufferElement->T0.B.XTD = (messageIdLength != IfxCan_MessageIdLength_extended) ? 0 : 1;
     /* set identifier */
     txBufferElement->T0.B.ID  = messageId << ((messageIdLength != IfxCan_MessageIdLength_standard) ? 0 : 18);
@@ -4116,7 +4121,7 @@ IFX_INLINE void IfxCan_Node_setMsgId(Ifx_CAN_TXMSG *txBufferElement, uint32 mess
 IFX_INLINE void IfxCan_Node_setMesssageId(Ifx_CAN_N *node, Ifx_CAN_TXMSG *txBufferElement, uint32 messageId, IfxCan_MessageIdLength messageIdLength)
 {
     IFX_UNUSED_PARAMETER(node);
-    /* set identifier extention */
+    /* set identifier extension */
     txBufferElement->T0.B.XTD = (messageIdLength != IfxCan_MessageIdLength_extended) ? 0 : 1;
     /* set identifier */
     txBufferElement->T0.B.ID  = messageId << ((messageIdLength != IfxCan_MessageIdLength_standard) ? 0 : 18);
@@ -4208,7 +4213,7 @@ IFX_INLINE uint32 IfxCan_Node_getDataLengthCode(Ifx_CAN_RXMSG *rxBufferElement)
 
 IFX_INLINE uint32 IfxCan_Node_getMesssageId(Ifx_CAN_RXMSG *rxBufferElement)
 {
-    /* get identifier extention */
+    /* get identifier extension */
     IfxCan_MessageIdLength messageIdLength = (IfxCan_MessageIdLength)rxBufferElement->R0.B.XTD;
 
     /* get identifier */
@@ -4580,7 +4585,7 @@ IFX_INLINE uint8 IfxCan_Node_getMMFromTxEventFifo(Ifx_CAN_TXEVENT *txEventFifoEl
 
 IFX_INLINE uint32 IfxCan_Node_getMesssageIdFromTxEventFifo(Ifx_CAN_TXEVENT *txEventFifoElement)
 {
-    /* get identifier extention */
+    /* get identifier extension */
     IfxCan_MessageIdLength messageIdLength = (IfxCan_MessageIdLength)txEventFifoElement->E0.B.XTD;
 
     /* get identifier */

@@ -2,7 +2,7 @@
  * \file IfxSmu.c
  * \brief SMU  basic functionality 
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -647,7 +647,7 @@ void IfxSmu_enableFaultToRunState(boolean smuIndex, boolean stateType)
     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.SAFE[smuIndex].PROTSE, IfxApProt_State_config);
 #endif
 
-    /* Enable FAULT to RUN State Transition in Alarm Global Configuration . */
+    /* Enable FAULT to RUN State Transition in Alarm Global Configuration. */
     if (stateType == 0)
     {
         MODULE_SMU.SAFE[smuIndex].AGC.B.EFRST0 = 1;

@@ -16,6 +16,7 @@ LCF_HEAP_SIZE = 4k;
 LCF_PPU_FLASH_SIZE  = 1M;
 LCF_PPU_LMURAM_SIZE = 512k;
 LCF_PPU_CSM_SIZE    = 512k;
+LCF_PPU_VCCM_SIZE   = 128k;
 
 LCF_DSPR4_START = 0x30000000;
 LCF_DSPR4_SIZE  = 240K;
@@ -73,6 +74,8 @@ MEMORY
 
     ppu_csm (w!x): org = 0x92080000, len = 512k
     ppu_csm_nc (w!x): org = 0xb2080000, len = 512k
+
+    ppu_vccm_nc (w!x): org = 0xb2040000, len = 128k
 }
 
 /* map cached and non cached addresses */
@@ -98,7 +101,7 @@ REGION_ALIAS( default_rom , pfls4)
 
     SECTIONS
     {
-		.start_tc4 (LCF_STARTPTR_NC_CPU4) :  { KEEP (*(.start_cpu4)); } > pfls4_nc
+		.start_tc4 (LCF_STARTPTR_NC_CPU4) :  { KEEP (*(.start_cpu4*)); } > pfls4_nc
         .traptab_tc4 (LCF_TRAPVEC4_START) : { PROVIDE(__TRAPTAB_CPU4 = .); KEEP (*(.traptab_cpu4)); } > pfls4
 		 PROVIDE(__START4 = LCF_STARTPTR_NC_CPU4);
 	}
@@ -361,6 +364,13 @@ SECTIONS
         . += LCF_PPU_CSM_SIZE;
         PROVIDE(__PPU_CSM_END = .);
     } > ppu_csm_nc
+
+    .ppu_vccm (NOLOAD) :
+    {
+        PROVIDE(__PPU_VCCM_START = .);
+        . += LCF_PPU_VCCM_SIZE;
+        PROVIDE(__PPU_VCCM_END = .);
+    } > ppu_vccm_nc
 
 
 }

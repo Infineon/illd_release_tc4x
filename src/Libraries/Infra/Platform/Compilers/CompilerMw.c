@@ -1,7 +1,7 @@
 /**
  * \file CompilerMw.c
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -27,7 +27,7 @@
 #include "Ifx_Types.h"
 #include "Compilers.h"
 
-#if defined(__CCAC__)
+#if defined(__CCAC__) && !defined(__IFX_LLVM__)
 /*!
  * \brief Data s C variables.
  */

@@ -701,7 +701,7 @@ IFX_EXTERN void IfxPsi5s_resetModule(Ifx_PSI5S *psi5s);
  * \param interruptSource The interrupt source to check the status for.
  * \return Interrupt status
  *       - TRUE: The interrupt is active.
- *       - FALSE: An interrupt has not occured.
+ *       - FALSE: An interrupt has not occurred.
  */
 IFX_INLINE boolean IfxPsi5s_getInterruptStatus(Ifx_PSI5S *psi5s, IfxPsi5s_ChannelId channel, IfxPsi5s_InterruptSource interruptSource);
 

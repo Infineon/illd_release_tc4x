@@ -3,7 +3,7 @@
  * \brief STM  basic functionality
  * \ingroup IfxLld_Stm
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -484,7 +484,7 @@ IFX_INLINE void IfxStm_increaseCompare(Ifx_CPU *cpu, IfxStm_Comparator comparato
 IFX_INLINE void IfxStm_updateCompare(Ifx_CPU *cpu, IfxStm_Comparator comparator, uint32 ticks);
 
 /** \brief Returns the number of micro seconds for the selected ticks based on the STM frequency.
- * Note: The user to ensure that overflow doesnt occur.
+ * Note: The user to ensure that overflow doesn't occur.
  *
  * \param[in] ticks Number of ticks that need to be converted to microseconds. Range: 0 to 0xFFFFFFFFFFFFFFFF.
  *
@@ -502,7 +502,7 @@ IFX_INLINE uint64 IfxStm_getMicrosecondsFromTicks(uint64 ticks);
 IFX_INLINE uint64 IfxStm_getMillisecondsFromTicks(uint64 ticks);
 
 /** \brief Returns the number of nano seconds for the selected ticks based on the STM frequency.
- * Note: The user to ensure that overflow doesnt occur.
+ * Note: The user to ensure that overflow doesn't occur.
  *
  * \param[in] ticks Number of ticks that need to be converted to nanoseconds. Range: 0 to 0xFFFFFFFFFFFFFFFF.
  *
@@ -618,12 +618,12 @@ IFX_INLINE sint64 IfxStm_now(void);
  */
 IFX_INLINE sint64 IfxStm_getDeadLine(sint64 timeout);
 
-/** \brief Checked if deadline has occured.
+/** \brief Checked if deadline has occurred.
  *
  * \param[in] deadLine Deadline value.
  *
  * \retval TRUE If the deadline has occurred.
- *         FALSE If If the deadline has not occurred.
+ *         FALSE If the deadline has not occurred.
  */
 IFX_INLINE boolean IfxStm_isDeadLine(sint64 deadLine);
 

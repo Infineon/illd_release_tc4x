@@ -12,6 +12,7 @@ LCF_HEAP_SIZE = 4k;
 LCF_PPU_FLASH_SIZE  = 1M;
 LCF_PPU_LMURAM_SIZE = 512k;
 LCF_PPU_CSM_SIZE    = 512k;
+LCF_PPU_VCCM_SIZE   = 128k;
 
 
 
@@ -80,6 +81,8 @@ MEMORY
 
     ppu_csm : org = 0x92080000, len = 512k
     ppu_csm_nc : org = 0xb2080000, len = 512k
+
+    ppu_vccm_nc : org = 0xb2040000, len = 128k
     
     ppu_code : org = 0x81300000, len = 1M
     ppu_code_nc : org = 0xa1300000, len = 1M 
@@ -311,6 +314,17 @@ SECTIONS
         __PPU_CSM_END = .;
         }
     } > ppu_csm_nc
+    
+    GROUP LOAD(> pfls1) :
+    {
+        .ppu_vccm :
+        {
+        . = ALIGN(4);
+        __PPU_VCCM_START = .;
+        . += LCF_PPU_VCCM_SIZE;
+        __PPU_VCCM_END = .;
+        }
+    } > ppu_vccm_nc
     
     GROUP LOAD(> pfls1) :
     {

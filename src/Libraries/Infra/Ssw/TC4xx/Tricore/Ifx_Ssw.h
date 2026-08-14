@@ -2,7 +2,7 @@
  * \file Ifx_Ssw.h
  * \brief Startup Software configuration. Can configure which core to be enabled.
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -21,7 +21,7 @@
  * defects in the licensed items, or non-infringement of third parties'
  * intellectual property rights. See the full license text for the specific
  * language governing permissions and limitations under IFASLL.
- *
+ * 
  */
 
 #ifndef IFX_SSW_H

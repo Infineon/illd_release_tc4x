@@ -3,7 +3,7 @@
  * \brief XSPI SPI details
  * \ingroup IfxLld_Xspi
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -253,7 +253,7 @@ typedef struct
     IfxXspi_Spi_Timing          timing;
     IfxXspi_Spi_FifoControl     fifoControl;
     IfxXspi_Spi_InterruptConfig interruptConfig;
-    IfxXspi_Spi_DmaConfig      *dmaConfig;
+    IfxXspi_Spi_DmaConfig       dmaConfig;
     IfxXspi_SelectPort          portSelect;
 } IfxXspi_Spi_Config;
 
@@ -268,7 +268,7 @@ typedef struct
     uint32                    waitCycles;              /**< \brief reqd only for enhanced spi modes */
     uint32                    addressLength;           /**< \brief reqd only for enhanced spi modes */
     IfxXspi_TransferMode      transferMode;            /**< \brief Transfer Mode */
-    IfxXspi_InstructionLength instructionLength;       /**< \brief Length of instruction to be transfered */
+    IfxXspi_InstructionLength instructionLength;       /**< \brief Length of instruction to be transferred */
     IfxXspi_ClockPhase        clockPhase;              /**< \brief clock phase configuration */
     IfxXspi_ClockPolarity     clockPolarity;           /**< \brief clock polarity configuration */
     IfxXspi_SlaveSelectEnable slaveSelectEnable;       /**< \brief xspi transfer Slave select enable */
@@ -439,8 +439,8 @@ typedef struct
     boolean                           xipModeBitEnable;             /**< \brief XIP mode bit enable */
     boolean                           xipFixDfs;                    /**< \brief XIP continuous mode DFS fix */
     uint8                             counterTimeOut;               /**< \brief XIP time out value in terms of hclk */
-    uint16                            incrInstruction;              /**< \brief Opcodes to be transfered in instruction phase of XIP transfer */
-    uint16                            wrapInstruction;              /**< \brief Opcodes to be transfered in instruction phase of XIP transfer */
+    uint16                            incrInstruction;              /**< \brief Opcodes to be transferred in instruction phase of XIP transfer */
+    uint16                            wrapInstruction;              /**< \brief Opcodes to be transferred in instruction phase of XIP transfer */
     uint16                            xipModeBitsValue;             /**< \brief XIP mode bit value to be Transmit */
     IfxXspi_InstructionLength         instLength;                   /**< \brief Instruction Length for XIP transfer */
     IfxXspi_DataframeSize             dataFrameSize;                /**< \brief Data frame size for XIP transfer */
@@ -475,7 +475,7 @@ typedef struct
     boolean                   xipContinuousTransfer;         /**< \brief Enable if the continuous XIP transfers needs to be triggered */
     boolean                   xipDataFrameSizeEnable;        /**< \brief TRUE: DFS from CTRL0.DFS will be considered FALSE: DFS will be derived from BURST/SIZE AXI Signals */
     boolean                   xipInstFrameEnable;            /**< \brief Enables instruction fram during XIP cmd+data phase */
-    IfxXspi_XipBitLength      xipBitLen;                     /**< \brief Specify the lenght of mode bits to be send if mode bits are enabled */
+    IfxXspi_XipBitLength      xipBitLen;                     /**< \brief Specify the length of mode bits to be send if mode bits are enabled */
     uint8                     xipTimeoutValue;               /**< \brief Specify the timeout value for XIP continuous mode if enabled Note: 0x00 means counter is disabled */
     uint16                    xipIncrInstruction;            /**< \brief Specify INCR type instruction value to send out in XIP transfer to flash side */
     uint16                    xipWrapInstruction;            /**< \brief Specify WRAP type instruction value to send out in XIP transfer to flash side */

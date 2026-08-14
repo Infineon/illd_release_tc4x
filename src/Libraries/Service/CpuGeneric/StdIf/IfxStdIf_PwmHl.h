@@ -3,7 +3,7 @@
  * \brief Standard interface: Multi-channels, dual-complementary PWM interface
  * \ingroup IfxStdIf
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -29,7 +29,7 @@
  * \ingroup library_srvsw_stdif
  *
  * The standard interface pwm high/low (PwmHl) abstract the hardware used for pwm feature. It provide, after proper initialization an hardware
- * independant way to interact with the PWM functionallity like setting duty cycles, dead time,timer functionalities, ...
+ * independent way to interact with the PWM functionality like setting duty cycles, dead time,timer functionalities, ...
  *
  * The figure below shows the standard Multi-channels, dual-complementary PWM interface.
  *

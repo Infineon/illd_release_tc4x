@@ -5,6 +5,7 @@
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
+ *
  *                                 IMPORTANT NOTICE
  *
  *
@@ -21,7 +22,6 @@
  * defects in the licensed items, or non-infringement of third parties'
  * intellectual property rights. See the full license text for the specific
  * language governing permissions and limitations under IFASLL.
-
  *
  */
 

@@ -2,8 +2,10 @@
 
 ## Folder structure
 illd_release_tc4x contains the following folders and file
-* `doc`          : contains the TC4xx UM and iLLD Release note
+* `github`       : github workflow files
+* `doc`          : contains the doxygen files and iLLD Release note
 * `examples`     : contains the BaseFramework projects for the TC4xx devices 
+* `scripts`      : contains the scripts for generating doxygen documentation
 * `src`          : contains the source code for TC4xx
 * `IFASLL202501` : contains the click license for TC4xx
 * `Readme.md`    : Contains information about the folder structure, package usage and iLLD software
@@ -15,7 +17,7 @@ The TC4xx BaseFramework project contains only the AppSw, the libraries are not i
 
 								  
 ## iLLD version info
-iLLD Release version	V2.6.0
+iLLD Release version	V2.7.0
 
 								   
 ## Revision History

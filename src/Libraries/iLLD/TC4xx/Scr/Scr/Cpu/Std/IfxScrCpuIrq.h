@@ -3,7 +3,7 @@
  * \brief SCR CPU  basic functionality
  * \ingroup IfxLld_Scr
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -379,7 +379,7 @@ IFX_INLINE uint8 IfxScrCpuIrq_readMessageFromTricore(void)
     SCR_SYSCON0.U  = SCR_SYSCON0.U & (uint8)(0xFE);
     SCR_SCUSCR_PAGE.U = (SCR_SCUSCR_PAGE.U & (uint8)0xF8U) | (uint8)(0x01);
     /* TOCHECK : Waiting for the page bit to update is really needed.
-     * In RTL the page value was not updated and and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
+     * In RTL the page value was not updated and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
      */
     while(!(SCR_SCUSCR_PAGE.B.PAGE == 0x1))
     {}
@@ -393,7 +393,7 @@ IFX_INLINE void IfxScrCpuIrq_sendMessageToTricore(uint8 messageToTricore)
     SCR_SYSCON0.U         = SCR_SYSCON0.U & (uint8)(0xFE);
     SCR_SCUSCR_PAGE.U        = (SCR_SCUSCR_PAGE.U & (uint8)0xF8U) | (uint8)(0x01);
     /* TOCHECK : Waiting for the page bit to update.
-     * In RTL the page value was not updated and and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
+     * In RTL the page value was not updated and writing to SCRINTEXCHG caused an unexpected reset(RSTCON).
      */
     while(!(SCR_SCUSCR_PAGE.B.PAGE == 0x1))
     {}

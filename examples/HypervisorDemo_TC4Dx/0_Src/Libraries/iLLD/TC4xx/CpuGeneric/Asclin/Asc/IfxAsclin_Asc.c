@@ -39,7 +39,7 @@
 
 uint8 IfxAsclin_Asc_blockingRead(IfxAsclin_Asc *asclin)
 {
-    Ifx_SizeT count = 1;
+    uint16 count = 1;
     uint8     data;
 
     while (IfxAsclin_Asc_read(asclin, &data, &count, TIME_INFINITE) != TRUE)
@@ -51,19 +51,19 @@ uint8 IfxAsclin_Asc_blockingRead(IfxAsclin_Asc *asclin)
 
 boolean IfxAsclin_Asc_blockingWrite(IfxAsclin_Asc *asclin, uint8 data)
 {
-    Ifx_SizeT count = 1;
+    uint16 count = 1;
 
     return IfxAsclin_Asc_write(asclin, &data, &count, TIME_INFINITE);
 }
 
 
-boolean IfxAsclin_Asc_canReadCount(IfxAsclin_Asc *asclin, Ifx_SizeT count, Ifx_TickTime timeout)
+boolean IfxAsclin_Asc_canReadCount(IfxAsclin_Asc *asclin, uint16 count, Ifx_TickTime timeout)
 {
     return Ifx_Fifo_canReadCount(asclin->rx, count, timeout);
 }
 
 
-boolean IfxAsclin_Asc_canWriteCount(IfxAsclin_Asc *asclin, Ifx_SizeT count, Ifx_TickTime timeout)
+boolean IfxAsclin_Asc_canWriteCount(IfxAsclin_Asc *asclin, uint16 count, Ifx_TickTime timeout)
 {
     return Ifx_Fifo_canWriteCount(asclin->tx, count, timeout);
 }
@@ -114,7 +114,7 @@ boolean IfxAsclin_Asc_flushTx(IfxAsclin_Asc *asclin, Ifx_TickTime timeout)
 }
 
 
-sint32 IfxAsclin_Asc_getReadCount(IfxAsclin_Asc *asclin)
+uint32 IfxAsclin_Asc_getReadCount(IfxAsclin_Asc *asclin)
 {
     return Ifx_Fifo_readCount(asclin->rx);
 }
@@ -138,7 +138,7 @@ Ifx_TickTime IfxAsclin_Asc_getTxTimeStamp(IfxAsclin_Asc *asclin)
 }
 
 
-sint32 IfxAsclin_Asc_getWriteCount(IfxAsclin_Asc *asclin)
+uint32 IfxAsclin_Asc_getWriteCount(IfxAsclin_Asc *asclin)
 {
     return Ifx_Fifo_writeCount(asclin->tx);
 }
@@ -293,7 +293,7 @@ IfxAsclin_Status IfxAsclin_Asc_initModule(IfxAsclin_Asc *asclin, const IfxAsclin
     asclin->txInProgress     = FALSE;
 
     /* buffer mode */
-    Ifx_SizeT elementSize;
+    uint16 elementSize;
     asclin->dataBufferMode = config->dataBufferMode;
     asclin->txTimestamp    = 0;
     asclin->isrCount       = 0;
@@ -314,6 +314,8 @@ IfxAsclin_Status IfxAsclin_Asc_initModule(IfxAsclin_Asc *asclin, const IfxAsclin
     }
 
     /* SW Fifos */
+    /* Note: The txBuffer address configured should be word (i.e. 4 Bytes) aligned.
+     * Unaligned memory may result in undefined behaviour including trap. */
     if (config->txBuffer != NULL_PTR)
     {
         asclin->tx = Ifx_Fifo_init(config->txBuffer, config->txBufferSize, elementSize);
@@ -326,6 +328,8 @@ IfxAsclin_Status IfxAsclin_Asc_initModule(IfxAsclin_Asc *asclin, const IfxAsclin
         status = IfxAsclin_Status_configurationError;
     }
 
+    /* Note: The rxBuffer address configured should be word (i.e. 4 Bytes) aligned.
+     * Unaligned memory may result in undefined behaviour including trap. */
     if (config->rxBuffer != NULL_PTR)
     {
         asclin->rx = Ifx_Fifo_init(config->rxBuffer, config->rxBufferSize, elementSize);
@@ -378,7 +382,6 @@ IfxAsclin_Status IfxAsclin_Asc_initModule(IfxAsclin_Asc *asclin, const IfxAsclin
         volatile Ifx_SRC_SRCR *src;
         src = IfxAsclin_getSrcPointerEr(asclinSFR);
         IfxSrc_init(src, tos, config->interrupt.erPriority, vmid);
-        IfxAsclin_enableParityErrorFlag(asclinSFR, TRUE);
         IfxSrc_enable(src);
     }
 
@@ -595,7 +598,7 @@ void IfxAsclin_Asc_isrTransmit(IfxAsclin_Asc *asclin)
                 uint16         count            = 0, i_count = 0;
                 volatile uint8 hw_tx_fill_level = 0;
 
-                count            = Ifx_Fifo_readCount(asclin->tx); /*SW FIFO fill level*/
+                count            = Ifx_Fifo_readCount(asclin->tx); /* SW FIFO fill level */
 
                 hw_tx_fill_level = IfxAsclin_getTxFifoFillLevel(asclin->asclin);
 
@@ -639,9 +642,9 @@ void IfxAsclin_Asc_isrTransmit(IfxAsclin_Asc *asclin)
 }
 
 
-boolean IfxAsclin_Asc_read(IfxAsclin_Asc *asclin, void *data, Ifx_SizeT *count, Ifx_TickTime timeout)
+boolean IfxAsclin_Asc_read(IfxAsclin_Asc *asclin, void *data, uint16 *count, Ifx_TickTime timeout)
 {
-    Ifx_SizeT left = Ifx_Fifo_read(asclin->rx, data, *count, timeout);
+    uint16 left = Ifx_Fifo_read(asclin->rx, data, *count, timeout);
 
     *count -= left;
 
@@ -655,9 +658,9 @@ void IfxAsclin_Asc_resetSendCount(IfxAsclin_Asc *asclin)
 }
 
 
-boolean IfxAsclin_Asc_write(IfxAsclin_Asc *asclin, const void *data, Ifx_SizeT *count, Ifx_TickTime timeout)
+boolean IfxAsclin_Asc_write(IfxAsclin_Asc *asclin, const void *data, uint16 *count, Ifx_TickTime timeout)
 {
-    Ifx_SizeT left;
+    uint16 left;
     boolean   result       = TRUE;
     boolean   tx_status    = asclin->txInProgress;
     uint16    tx_fifo_size = (uint16)asclin->tx->size;
@@ -666,7 +669,7 @@ boolean IfxAsclin_Asc_write(IfxAsclin_Asc *asclin, const void *data, Ifx_SizeT *
     {
         if ((!tx_status) && (*count > tx_fifo_size))                 /* transmission not initialised and data size is greater than S/W FIFO */
         {
-            Ifx_Fifo_write(asclin->tx, data, tx_fifo_size, timeout); /*Fill upto the S/W FIFO size and initiate transmission*/
+            Ifx_Fifo_write(asclin->tx, data, tx_fifo_size, timeout); /* fill upto the S/W FIFO size and initiate transmission */
             IfxAsclin_Asc_initiateTransmission(asclin);
 
             left = Ifx_Fifo_write(asclin->tx, (((const uint8 *)data) + tx_fifo_size), (*count) - tx_fifo_size, timeout);

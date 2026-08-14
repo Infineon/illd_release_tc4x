@@ -84,7 +84,7 @@ typedef enum
 } IfxEgtm_Dtm_ClockSource;
 
 /** \brief Dead Time Path on output x of channel y\n
- * Definition in IfxEGTM.DTM[i].CH.CTRL2.B.DTxy ( i = 0 to 35; x = 0 , 1; and y = 0 to 4)
+ * Definition in IfxEGTM.DTM[i].CH.CTRL2.B.DTxy ( i = 0 to 35; x = 0, 1; and y = 0 to 4)
  */
 typedef enum
 {

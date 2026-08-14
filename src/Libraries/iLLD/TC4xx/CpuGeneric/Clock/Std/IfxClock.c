@@ -2,7 +2,7 @@
  * \file IfxClock.c
  * \brief CLOCK  basic functionality
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -120,7 +120,8 @@ IFX_CONST IfxClock_Config           IfxClock_defaultClockConfig = {
     IfxClock_PllInputClockSelection_fOsc0,
     IfxClock_SysClockSourceSelect_pll,
     IfxClock_PerClockSourceSelect_pll,
-    IFXCLOCK_CFG_CLK_OSCCON
+    IFXCLOCK_CFG_CLK_OSCCON,
+    IFX_CFG_CLOCK_OSCCON_MODE
 };
 
 IFX_CONST IfxClock_Mod_Config       IfxClock_defaultModConfig = {
@@ -266,7 +267,7 @@ boolean IfxClock_configureCcuPll(const IfxClock_Config *pllCfg)
     {
         if ((CLOCK_OSCCON.B.MODE != 2U) && (CLOCK_OSCCON.B.MODE != 0U))
         {
-            IfxClock_powerOnCrystalOsc();
+            IfxClock_powerOnCrystalOsc(pllCfg->oscConModeVal);
         }
     }
 

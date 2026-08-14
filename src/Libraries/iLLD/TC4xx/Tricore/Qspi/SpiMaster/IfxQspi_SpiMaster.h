@@ -3,7 +3,7 @@
  * \brief QSPI SPIMASTER details
  * \ingroup IfxLld_Qspi
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -30,7 +30,7 @@
  *
  * The SPI Master interface driver provides a default QSPI configuration for a bidirectional serial communication of data words.
  *
- * Data transactions are buffered by the hardware based FIFOs. Incoming and outgoing data is transfered in background from/to the QSPI peripheral by interrupt service handlers, which are part of this driver as well. This allows a nonblocking communication without stalling the thread(s) from where data is sent and received.
+ * Data transactions are buffered by the hardware based FIFOs. Incoming and outgoing data is transferred in background from/to the QSPI peripheral by interrupt service handlers, which are part of this driver as well. This allows a nonblocking communication without stalling the thread(s) from where data is sent and received.
  * Optionally Dma can be used for data transfers. Only the interrupt configuration and Module initialisation are different when dma is used.
  *
  * In the following sections it will be described, how to integrate the driver into the application framework.
@@ -575,7 +575,7 @@ typedef struct
 {
     IfxDma_Dma_Channel rxDmaChannel;         /**< \brief receive DMA channel handle */
     IfxDma_Dma_Channel txDmaChannel;         /**< \brief transmit DMA channel handle */
-    IfxDma_ChannelId   rxDmaChannelId;       /**< \brief DMA channel no for the Spi recieve */
+    IfxDma_ChannelId   rxDmaChannelId;       /**< \brief DMA channel no for the Spi receive */
     IfxDma_ChannelId   txDmaChannelId;       /**< \brief DMA channel no for the Spi transmit */
     boolean            useDma;               /**< \brief use Dma for Data transfer/s. Range: TRUE enable Data transfer, FALSE disable Data transfer. */
     IfxDma_Index       dmaIndex;             /**< \brief Dma Module Index */
@@ -585,7 +585,7 @@ typedef struct
  */
 typedef struct
 {
-    IfxDma_ChannelId rxDmaChannelId;       /**< \brief DMA channel no for the Spi recieve */
+    IfxDma_ChannelId rxDmaChannelId;       /**< \brief DMA channel no for the Spi receive */
     IfxDma_ChannelId txDmaChannelId;       /**< \brief DMA channel no for the Spi transmit */
     boolean          useDma;               /**< \brief use Dma for Data transfer/s. Range: TRUE enable Data transfer, FALSE disable Data transfer. */
     IfxDma_Index     dmaIndex;             /**< \brief Dma Module Index */
@@ -679,7 +679,7 @@ typedef struct
     IfxQspi_SpiMaster_ChannelBasedCs     channelBasedCs;           /**< \brief define the slso behaviour */
     IfxQspi_SpiMaster_Mode               mode;                     /**< \brief Qspi Operating Mode */
     IfxQspi_SpiMaster_ErrorFlags         errorFlags;               /**< \brief Spi Master Error Flags */
-    uint32                               dummyTxValue;             /**< \brief Dummy TX value, which will be sent for "recieve only" mode. Range: 0 to 0xFFFFFFFF. */
+    uint32                               dummyTxValue;             /**< \brief Dummy TX value, which will be sent for "receive only" mode. Range: 0 to 0xFFFFFFFF. */
     uint32                               dummyRxValue;             /**< \brief Dummy Rx value, for "transmit only" modes. Range: 0 to 0xFFFFFFFF. */
     uint32                               txCount;                  /**< \brief keeps track of transmission. Range: 0 to 0xFFFFFFFF. */
     uint32                               rxCount;                  /**< \brief keeps track of reception. Range: 0 to 0xFFFFFFFF. */
@@ -699,7 +699,7 @@ typedef struct
     IfxQspi_SpiMaster_InputOutput    sls;                  /**< \brief Union of Slave Select pins */
     IfxQspi_SpiMaster_ChannelBasedCs channelBasedCs;       /**< \brief define the slso behaviour */
     IfxQspi_SpiMaster_Mode           mode;                 /**< \brief Qspi Operating Mode */
-    uint32                           dummyTxValue;         /**< \brief Dummy TX value to be sent for "recieve only" modes. Range: 0 to 0xFFFFFFFF. */
+    uint32                           dummyTxValue;         /**< \brief Dummy TX value to be sent for "receive only" modes. Range: 0 to 0xFFFFFFFF. */
     uint32                           dummyRxValue;         /**< \brief Dummy RX value for transmit only modes. Range: 0 to 0xFFFFFFFF. */
     IfxQspi_SpiMaster               *spiMaster;            /**< \brief Pointer to the master configuration */
     Ifx_QSPI                        *qspi;                 /**< \brief Pointer to QSPI module registers */
@@ -834,7 +834,7 @@ IFX_EXTERN void IfxQspi_SpiMaster_initChannelConfig(IfxQspi_SpiMaster_ChannelCon
  *
  * \retval IfxQspi_Status Status of exchange of data. Range: \ref IfxQspi_Status.
  *
- * Usage example: see \ref IfxLld_Qspi_SpiMaster_Usage .
+ * Usage example: see \ref IfxLld_Qspi_SpiMaster_Usage.
  * Limitations:
  *
  *  1. Simplex data transfer is not supported from slave to master

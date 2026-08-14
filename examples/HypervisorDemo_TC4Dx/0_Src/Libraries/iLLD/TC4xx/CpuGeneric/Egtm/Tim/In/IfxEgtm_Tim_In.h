@@ -63,7 +63,7 @@
  *     }
  *     \endcode
  *
- * \subsection IfxLld_Egtm_Tim_In_Step4 Step 4: Initalize TIM
+ * \subsection IfxLld_Egtm_Tim_In_Step4 Step 4: Initialize TIM
  *
  *     \code
  *     // Initialize the Config Structure

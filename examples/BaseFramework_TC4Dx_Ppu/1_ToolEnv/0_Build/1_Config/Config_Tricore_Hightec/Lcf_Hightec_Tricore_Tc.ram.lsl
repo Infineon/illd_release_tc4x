@@ -34,6 +34,7 @@ LCF_HEAP_SIZE =    4k;
 LCF_PPU_FLASH_SIZE  = 1M;
 LCF_PPU_LMURAM_SIZE = 512k;
 LCF_PPU_CSM_SIZE    = 512k;
+LCF_PPU_VCCM_SIZE   = 128k;
 
 LCF_DSPR5_START = 0x20000000;
 LCF_DSPR5_SIZE  = 240k;
@@ -187,6 +188,8 @@ MEMORY
 
     ppu_csm (w!x): org = 0x92080000, len = 512k
     ppu_csm_nc (w!x): org = 0xb2080000, len = 512k
+
+    ppu_vccm_nc (w!x): org = 0xb2040000, len = 128k
 }
 
 /* map cached and non cached addresses */
@@ -228,7 +231,7 @@ REGION_ALIAS( default_dlmu , cpu5_dlmu)
 /*Fixed memory Allocations for _START*/
 SECTIONS
 {
-    .start_tc0 (LCF_STARTPTR_NC_CPU0) : { KEEP (*(.start)); } > cpu0_dlmu_nc
+    .start_tc0 (LCF_STARTPTR_NC_CPU0) : { KEEP (*(.start .start.*)); } > cpu0_dlmu_nc
     .interface_const (0x90000020) : { __IF_CONST = .; KEEP (*(.interface_const)); } > cpu0_dlmu
     .traptab_tc0 (LCF_TRAPVEC0_START) : { PROVIDE(__TRAPTAB_CPU0 = .); KEEP (*(.traptab_cpu0)); } > cpu0_dlmu
 
@@ -246,35 +249,35 @@ SECTIONS
 
 SECTIONS
 {
-    .start_tc1 (LCF_STARTPTR_NC_CPU1) : { KEEP (*(.start_cpu1)); } > cpu1_dlmu_nc
+    .start_tc1 (LCF_STARTPTR_NC_CPU1) : { KEEP (*(.start_cpu1*)); } > cpu1_dlmu_nc
     .traptab_tc1 (LCF_TRAPVEC1_START) : { PROVIDE(__TRAPTAB_CPU1 = .); KEEP (*(.traptab_cpu1)); } > cpu1_dlmu
     PROVIDE(__START1 = LCF_STARTPTR_NC_CPU1);
 }
 
 SECTIONS
 {
-    .start_tc2 (LCF_STARTPTR_NC_CPU2) : { KEEP (*(.start_cpu2)); } > cpu2_dlmu_nc
+    .start_tc2 (LCF_STARTPTR_NC_CPU2) : { KEEP (*(.start_cpu2*)); } > cpu2_dlmu_nc
     .traptab_tc2 (LCF_TRAPVEC2_START) : { PROVIDE(__TRAPTAB_CPU2 = .); KEEP (*(.traptab_cpu2)); } > cpu2_dlmu
     PROVIDE(__START2 = LCF_STARTPTR_NC_CPU2);
 }
 
 SECTIONS
 {
-    .start_tc3 (LCF_STARTPTR_NC_CPU3) : { KEEP (*(.start_cpu3)); } > cpu3_dlmu_nc
+    .start_tc3 (LCF_STARTPTR_NC_CPU3) : { KEEP (*(.start_cpu3*)); } > cpu3_dlmu_nc
     .traptab_tc3 (LCF_TRAPVEC3_START) : { PROVIDE(__TRAPTAB_CPU3 = .); KEEP (*(.traptab_cpu3)); } > cpu3_dlmu
     PROVIDE(__START3 = LCF_STARTPTR_NC_CPU3);
 }
 
 SECTIONS
 {
-    .start_tc4 (LCF_STARTPTR_NC_CPU4) : { KEEP (*(.start_cpu4)); } > cpu4_dlmu_nc
+    .start_tc4 (LCF_STARTPTR_NC_CPU4) : { KEEP (*(.start_cpu4*)); } > cpu4_dlmu_nc
     .traptab_tc4 (LCF_TRAPVEC4_START) : { PROVIDE(__TRAPTAB_CPU4 = .); KEEP (*(.traptab_cpu4)); } > cpu4_dlmu
     PROVIDE(__START4 = LCF_STARTPTR_NC_CPU4);
 }
 
 SECTIONS
 {
-    .start_tc5 (LCF_STARTPTR_NC_CPU5) : { KEEP (*(.start_cpu5)); } > cpu5_dlmu_nc
+    .start_tc5 (LCF_STARTPTR_NC_CPU5) : { KEEP (*(.start_cpu5*)); } > cpu5_dlmu_nc
     .traptab_tc5 (LCF_TRAPVEC5_START) : { PROVIDE(__TRAPTAB_CPU5 = .); KEEP (*(.traptab_cpu5)); } > cpu5_dlmu
     PROVIDE(__START5 = LCF_STARTPTR_NC_CPU5);
 }
@@ -799,6 +802,13 @@ SECTIONS
         . += LCF_PPU_CSM_SIZE;
         PROVIDE(__PPU_CSM_END = .);
     } > ppu_csm_nc
+
+    .ppu_vccm (NOLOAD) :
+    {
+        PROVIDE(__PPU_VCCM_START = .);
+        . += LCF_PPU_VCCM_SIZE;
+        PROVIDE(__PPU_VCCM_END = .);
+    } > ppu_vccm_nc
 }
 
 /*Sections located at absolute fixed address*/

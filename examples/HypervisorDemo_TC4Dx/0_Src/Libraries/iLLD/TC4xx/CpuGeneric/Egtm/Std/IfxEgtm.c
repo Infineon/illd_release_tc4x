@@ -228,6 +228,7 @@ void IfxEgtm_configureAccessToEgtms(IfxApApu_ApuConfig *apConfig)
 
     IfxApApu_init((volatile Ifx_ACCEN_ACCEN *)(volatile void *)&MODULE_EGTM.WRAP.ACCEN, apConfig);
     IfxApApu_init((volatile Ifx_ACCEN_ACCEN *)(volatile void *)&MODULE_EGTM.CTRLGTM.ACCEN, apConfig);
+
     IfxApApu_init((volatile Ifx_ACCEN_ACCEN *)(volatile void *)&MODULE_EGTM.SAFEGTM.ACCEN, apConfig);
 }
 

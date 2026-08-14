@@ -120,7 +120,7 @@ typedef enum
     IfxPort_LvdsMode_medium = 1  /**< \brief LVDS-M Mode */
 } IfxPort_LvdsMode;
 
-/** \brief specifies external or internal LVDS reciever Termination Mode
+/** \brief specifies external or internal LVDS receiver Termination Mode
  */
 typedef enum
 {

@@ -323,7 +323,7 @@ IfxPcie_Status IfxPcie_Ep_initModule(IfxPcie_Ep *epHandle, IfxPcie_Ep_Config *co
     /* STEP 1: Enable the Module */
     IfxPcie_enableModule((IfxPcie *)pcie);
 
-    /* STEP 2: Set device type to RC */
+    /* STEP 2: Set device type to EP */
     IfxPcie_setDeviceMode((IfxPcie *)pcie, IfxPcie_DeviceMode_ep);
     epHandle->pcieSFR = config->pcieSFR;
 

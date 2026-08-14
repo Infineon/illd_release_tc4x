@@ -3,7 +3,7 @@
  * \brief PORT  basic functionality
  * \ingroup IfxLld_Port
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -120,7 +120,7 @@ typedef enum
     IfxPort_LvdsMode_medium = 1  /**< \brief LVDS-M Mode */
 } IfxPort_LvdsMode;
 
-/** \brief specifies external or internal LVDS reciever Termination Mode
+/** \brief specifies external or internal LVDS receiver Termination Mode
  */
 typedef enum
 {

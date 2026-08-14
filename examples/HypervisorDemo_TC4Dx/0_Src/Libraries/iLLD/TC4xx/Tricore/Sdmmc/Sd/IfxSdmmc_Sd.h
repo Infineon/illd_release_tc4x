@@ -276,7 +276,8 @@ typedef struct
     IfxSdmmc_Dat3_InOut *dat3;            /**< \brief Dat 3 */
     IfxPort_InputMode    inputMode;       /**< \brief Input Mod efor the IN pins */
     IfxPort_PadDriver    pinDriver;       /**< \brief Speed grade of the pins */
-} IfxSdmmc_Sd_Pins;
+    IfxPort_PadDriver    pinDriverCmd;    /**< \brief Speed grade of the CMD pins */
+} IfxSdmmc_Sd_Pins; 
 
 /** \} */
 

@@ -164,7 +164,7 @@ IFX_INLINE void IfxSmuStdby_enableSmuStdby(IfxSmuStdby_SmuStdbyModuleState enabl
  */
 IFX_INLINE void IfxSmuStdby_enableSmuStdbyMonBist(void);
 
-/** \brief Funtion returns Smu Standby Alarm Group status.
+/** \brief Function returns Smu Standby Alarm Group status.
  *
  * \param[in] alarm Smu alarm group and position. Range: \ref IfxSmu_Alarm.
  *
@@ -172,7 +172,7 @@ IFX_INLINE void IfxSmuStdby_enableSmuStdbyMonBist(void);
  */
 IFX_INLINE uint32 IfxSmuStdby_getSmuStdbyAlarmGroupStatus(IfxSmu_Alarm alarm);
 
-/** \brief Funtion returns Smu Standby Alarm status.
+/** \brief Function returns Smu Standby Alarm status.
  *
  * \param[in] alarm Smu alarm group and position.
  *
@@ -247,7 +247,7 @@ IFX_INLINE void IfxSmuStdby_setFspPullDownActive(IfxSmuStdby_FspIndex index, Ifx
 /*-------------------------Global Function Prototypes-------------------------*/
 /******************************************************************************/
 
-/** \brief Function to configure FSP functionality , FaultSignalAlarmConfigEventFlag
+/** \brief Function to configure FSP functionality, FaultSignalAlarmConfigEventFlag
  * Note: This function has an assumption that the FSP0-3 register bitfields remain the same. In case this changes the API will need an update.
  *
  * \param[inout] address Pointer to the FSP register to be configured.

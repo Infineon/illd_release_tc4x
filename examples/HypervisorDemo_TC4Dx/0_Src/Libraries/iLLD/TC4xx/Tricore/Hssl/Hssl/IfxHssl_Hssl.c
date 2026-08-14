@@ -146,7 +146,7 @@ void IfxHssl_Hssl_initChannelConfig(IfxHssl_Hssl_ChannelConfig *channelConfig, I
     channelConfig->channelId     = IfxHssl_ChannelId_0;          /* default channel 0 */
     channelConfig->streamingMode = IfxHssl_StreamingMode_single; /* default streaming mode continuous */
     channelConfig->loopBack      = hsct->loopBack;
-    hssl->loopBack               = hsct->loopBack;               /* copy to hssl handle, used in trasfer apis */
+    hssl->loopBack               = hsct->loopBack;               /* copy to hssl handle, used in transfer apis */
 }
 
 

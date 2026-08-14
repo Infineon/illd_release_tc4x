@@ -3,7 +3,7 @@
  * \brief HSPHY HSPHY details
  * \ingroup IfxLld_Hsphy
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -59,7 +59,7 @@
  *   }IfxHsphy_Hsphy_phyConfig;
  *   \endcode
  *
- *   Configure the above struct for the target selection through to used to hsphy i.e PCIE,XGMAC,XSPI,TRACE
+ *   Configure the above struct for the target selection to be used by hsphy i.e PCIE,XGMAC,XSPI,TRACE
  *
  *   The HSPHY driver needs the following infromation to check if the connectivity is possible using the indexes
  *   hsphyIdx - Refers to the HPSHY module index.

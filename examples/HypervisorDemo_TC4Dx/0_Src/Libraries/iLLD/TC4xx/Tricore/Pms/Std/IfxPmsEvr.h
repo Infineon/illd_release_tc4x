@@ -412,7 +412,7 @@ typedef enum
 typedef enum
 {
     IfxPmsEvr_StatusRegister_interrupt     = 0,  /**< \brief Interrupt status register */
-    IfxPmsEvr_StatusRegister_pad           = 1,  /**< \brief PAD status regsiter */
+    IfxPmsEvr_StatusRegister_pad           = 1,  /**< \brief PAD status register */
     IfxPmsEvr_StatusRegister_wakeupstat0   = 2,  /**< \brief wakeup status regsiter0 */
     IfxPmsEvr_StatusRegister_wakeupstat1   = 3,  /**< \brief wakeup status regsiter1 */
     IfxPmsEvr_StatusRegister_wakeuptimer   = 4,  /**< \brief wakeup timer status register */
@@ -676,7 +676,7 @@ IFX_INLINE uint32 IfxPmsEvr_getDriftMonitorStatusRegister(Ifx_PMS *pms, IfxPmsEv
  * \brief Return the value of the selected status register.
  *
  * \param[in] pms Pointer to PMS module.
- * \param]in] reg Enum for status regsiter.
+ * \param]in] reg Enum for status register.
  * 				  Range: \ref IfxPmsEvr_StatusRegister
  *
  * \retval uint32 Returns status value of selected status register,
@@ -1609,7 +1609,7 @@ IFX_INLINE float32 IfxPmsEvr_getPeakVoltageDetectedValueinMv(Ifx_PMS *pms, IfxPm
  * \param[in] supply Peak detection voltage source selection for Vdd,Vddext and Vddextdc.
  * 					 Range: \ref IfxPmsEvr_PeakDetectionVoltageSource
  *
- * \retval uint32 Returns theshold count value from PEAK.VxxSTAT.B.THRESCOUNT. Range: 0 to 0x1F,
+ * \retval uint32 Returns threshold count value from PEAK.VxxSTAT.B.THRESCOUNT. Range: 0 to 0x1F,
  *
  * Coding example:
  * \code

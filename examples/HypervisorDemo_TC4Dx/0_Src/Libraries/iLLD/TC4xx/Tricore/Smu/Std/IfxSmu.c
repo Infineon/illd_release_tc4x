@@ -647,7 +647,7 @@ void IfxSmu_enableFaultToRunState(boolean smuIndex, boolean stateType)
     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.SAFE[smuIndex].PROTSE, IfxApProt_State_config);
 #endif
 
-    /* Enable FAULT to RUN State Transition in Alarm Global Configuration . */
+    /* Enable FAULT to RUN State Transition in Alarm Global Configuration. */
     if (stateType == 0)
     {
         MODULE_SMU.SAFE[smuIndex].AGC.B.EFRST0 = 1;

@@ -783,7 +783,7 @@ IFX_INLINE void IfxHssl_lockAddressWindows(Ifx_HSSL *hssl, IfxHssl_Hssl_Security
  */
 IFX_INLINE void IfxHssl_enableOcsTriggerWriteProtection(Ifx_HSSL *hssl);
 
-/** \brief Configure the Trigger Set and Otgb bus line. TGB and TGS can be configured only if TG_P is enabled , otherwise the write is ignored. Call API IfxHssl_enableOcsTriggerWriteProtection before calling this API.
+/** \brief Configure the Trigger Set and Otgb bus line. TGB and TGS can be configured only if TG_P is enabled, otherwise the write is ignored. Call API IfxHssl_enableOcsTriggerWriteProtection before calling this API.
  * \param hssl pointer to HSSL registers
  * \param triggerSet Trigger Set Configuration.
  * \param busNumber Otgb bus number.

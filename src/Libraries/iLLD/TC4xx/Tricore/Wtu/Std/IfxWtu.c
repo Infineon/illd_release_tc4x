@@ -2,7 +2,7 @@
  * \file IfxWtu.c
  * \brief WTU  basic functionality
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -126,7 +126,7 @@ void IfxWtu_initCpuWatchdog(Ifx_WTU_WDTCPU *wtu, IfxWtu_Config *config)
     /* Modify access ready - write WDT_CTRLA register */
     wtu->CTRLA.U = wtu_ctrla.U;
 
-    /* LCK bit to be cleared in CTRLA before writting the bitfileds in CTRLB register */
+    /* LCK bit to be cleared in CTRLA before writing the bitfields in CTRLB register */
 
     IfxWtu_initConfig1Register(&wtu_ctrlb, config);
 
@@ -163,7 +163,7 @@ void IfxWtu_initSecurityWatchdog(Ifx_WTU_WDTSEC *wtu, IfxWtu_Config *config)
     /* Modify access ready - write WDT_CTRLA register */
     wtu->CTRLA.U = wtu_ctrla.U;
 
-    /* LCK bit to be cleared in CTRLA before writting the bitfileds in CTRLB register */
+    /* LCK bit to be cleared in CTRLA before writing the bitfields in CTRLB register */
 
     IfxWtu_initConfig1Register(&wtu_ctrlb, config);
 
@@ -200,7 +200,7 @@ void IfxWtu_initSystemWatchdog(Ifx_WTU_WDTSYS *wtu, IfxWtu_Config *config)
     /* Modify access ready - write WDT_CTRLA register */
     wtu->CTRLA.U = wtu_ctrla.U;
 
-    /* LCK bit to be cleared in CTRLA before writting the bitfileds in CTRLB register */
+    /* LCK bit to be cleared in CTRLA before writing the bitfields in CTRLB register */
 
     IfxWtu_initConfig1Register(&wtu_ctrlb, config);
 

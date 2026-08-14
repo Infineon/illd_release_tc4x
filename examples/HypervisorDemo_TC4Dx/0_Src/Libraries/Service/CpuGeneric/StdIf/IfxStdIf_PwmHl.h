@@ -29,7 +29,7 @@
  * \ingroup library_srvsw_stdif
  *
  * The standard interface pwm high/low (PwmHl) abstract the hardware used for pwm feature. It provide, after proper initialization an hardware
- * independant way to interact with the PWM functionallity like setting duty cycles, dead time,timer functionalities, ...
+ * independent way to interact with the PWM functionality like setting duty cycles, dead time,timer functionalities, ...
  *
  * The figure below shows the standard Multi-channels, dual-complementary PWM interface.
  *

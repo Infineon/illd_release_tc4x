@@ -114,7 +114,7 @@
 #include "Ap/Std/IfxApApu.h"
 #include "Ap/Std/IfxApProt.h"
 #include "_Utilities/Ifx_Assert.h"
-#include "SysSe/Bsp/Bsp.h"
+#include "_Lib/Timer/Ifx_Timer.h"
 
 /******************************************************************************/
 /*-----------------------------------Macros-----------------------------------*/
@@ -147,7 +147,7 @@
 /*-----------------------------Data Structures--------------------------------*/
 /******************************************************************************/
 
-/** \addtogroup IfxLld_Adc_Data_Structures 
+/** \addtogroup IfxLld_Adc_Std_Data_Structures 
  * \{ */
 /** \brief Data structure holding interrupt configuration 
  */
@@ -197,7 +197,7 @@ typedef enum
     IfxAdc_GlobalResource_cdsp    /**< \brief Global parts of Cdsp */
 } IfxAdc_GlobalResource;
 
-/** \brief Enumeration describing the status of ADC module enabled/diabled
+/** \brief Enumeration describing the status of ADC module enabled/disabled
  */
 typedef enum
 {
@@ -257,7 +257,7 @@ typedef enum
     IfxAdc_DsadcBoundaryCmpMode_disable    = 0,  /**< \brief Boundary mode disable */
     IfxAdc_DsadcBoundaryCmpMode_upperBound = 1,  /**< \brief Boundary Flag is high when result exceeds upper limit */
     IfxAdc_DsadcBoundaryCmpMode_lowerBound = 2,  /**< \brief Boundary Flag is high when result is lower than lower limit */
-    IfxAdc_DsadcBoundaryCmpMode_bothBound  = 3   /**< \brief Boudary Flag is high when result is out of the band */
+    IfxAdc_DsadcBoundaryCmpMode_bothBound  = 3   /**< \brief Boundary Flag is high when result is out of the band */
 } IfxAdc_DsadcBoundaryCmpMode;
 
 /** \brief Enumeration for Boundary service request (BNDCFG.SR2CFG)
@@ -532,10 +532,10 @@ typedef enum
  */
 typedef enum
 {
-    IfxAdc_DsadcTriggerMode_none,         /**< \brief No Trigger */
-    IfxAdc_DsadcTriggerMode_risingEdge,   /**< \brief Rising Edge */
-    IfxAdc_DsadcTriggerMode_fallingEdge,  /**< \brief Falling edge */
-    IfxAdc_DsadcTriggerMode_bothEdge      /**< \brief Both Edge trigger */
+    IfxAdc_DsadcTriggerMode_none,             /**< \brief No Trigger */
+    IfxAdc_DsadcTriggerMode_risingEdge,       /**< \brief Rising Edge */
+    IfxAdc_DsadcTriggerMode_fallingEdge,      /**< \brief Falling edge */
+    IfxAdc_DsadcTriggerMode_noneAlwaysActive  /**< \brief No Trigger, Integrator always active */
 } IfxAdc_DsadcTriggerMode;
 
 /** \brief Enumeration holding Hardware Trigger mux selection
@@ -661,7 +661,7 @@ typedef enum
 
 /** \addtogroup IfxLld_Adc_Std_Tmadc_Enum
  * \{ */
-/** \brief Enumeration describing the mode of comparision for boundary check of TMADC
+/** \brief Enumeration describing the mode of comparison for boundary check of TMADC
  */
 typedef enum
 {
@@ -1035,7 +1035,7 @@ typedef enum
 #if IFXADC_IS_CDSP_AVAILABLE
 /** \addtogroup IfxLld_Adc_Std_Cdsp_Enum
  * \{ */
-/** \brief Enumeration describing the mode of comparision for boundary check of CDSP
+/** \brief Enumeration describing the mode of comparison for boundary check of CDSP
  */
 typedef enum
 {
@@ -1460,6 +1460,9 @@ typedef enum
     IfxAdc_CdspTriggerSel_count  /**< \brief Number of IfxAdc_CdspTriggerSel items */
 } IfxAdc_CdspTriggerSel;
 
+#endif /* #if IFXADC_IS_CDSP_AVAILABLE */
+
+#if (IFXADC_IS_GTM_AVAILABLE || IFXADC_IS_EGTM_AVAILABLE)
 /** \brief Enumeration for ADC boundary flag output mux selection (OUT0..OUT3)
  */
 typedef enum
@@ -1474,64 +1477,109 @@ typedef enum
  */
 typedef enum
 {
-    IfxAdc_Select_BoundaryFlag_tmadc0Out0 = 0,  /**< \brief TMADC0 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_tmadc0Out1 = 1,  /**< \brief TMADC0 OUT1 selected */
-    IfxAdc_Select_BoundaryFlag_tmadc1Out0 = 2,  /**< \brief TMADC1 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_tmadc1Out1 = 3,  /**< \brief TMADC1 OUT1 selected */
-    IfxAdc_Select_BoundaryFlag_tmadc2Out0 = 4,  /**< \brief TMADC2 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_tmadc2Out1 = 5,  /**< \brief TMADC2 OUT1 selected */
-    IfxAdc_Select_BoundaryFlag_tmadc3Out0 = 6,  /**< \brief TMADC3 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_tmadc3Out1 = 7,  /**< \brief TMADC3 OUT1 selected */
-    IfxAdc_Select_BoundaryFlag_tmadc4Out0 = 8,  /**< \brief TMADC4 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_tmadc4Out1 = 9,  /**< \brief TMADC4 OUT1 selected */
-    IfxAdc_Select_BoundaryFlag_tmadc5Out0 = 10, /**< \brief TMADC5 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_tmadc5Out1 = 11, /**< \brief TMADC5 OUT1 selected */
-    IfxAdc_Select_BoundaryFlag_tmadc6Out0 = 12, /**< \brief TMADC6 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_tmadc6Out1 = 13, /**< \brief TMADC6 OUT1 selected */
-    IfxAdc_Select_BoundaryFlag_fcc0Out0   = 14, /**< \brief FCC0 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_fcc1Out0   = 15, /**< \brief FCC1 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_fcc2Out0   = 16, /**< \brief FCC2 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_fcc3Out0   = 17, /**< \brief FCC3 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_fcc4Out0   = 18, /**< \brief FCC4 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_fcc5Out0   = 19, /**< \brief FCC5 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_fcc6Out0   = 20, /**< \brief FCC6 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_fcc7Out0   = 21, /**< \brief FCC7 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_fcc8Out0   = 22, /**< \brief FCC8 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_fcc9Out0   = 23, /**< \brief FCC9 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_dsadc0Out0 = 24, /**< \brief DSADC0 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_dsadc1Out0 = 25, /**< \brief DSADC1 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_dsadc2Out0 = 26, /**< \brief DSADC2 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_dsadc3Out0 = 27, /**< \brief DSADC3 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_dsadc4Out0 = 28, /**< \brief DSADC4 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_dsadc5Out0 = 29, /**< \brief DSADC5 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_dsadc6Out0 = 30, /**< \brief DSADC6 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_dsadc7Out0 = 31, /**< \brief DSADC7 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_dsadc8Out0 = 32, /**< \brief DSADC8 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_dsadc9Out0 = 33, /**< \brief DSADC9 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_exmod0Out0 = 34, /**< \brief EXMOD0 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_exmod1Out0 = 35, /**< \brief EXMOD1 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_exmod2Out0 = 36, /**< \brief EXMOD2 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_exmod3Out0 = 37, /**< \brief EXMOD3 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_exmod4Out0 = 38, /**< \brief EXMOD4 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_exmod5Out0 = 39, /**< \brief EXMOD5 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_exmod6Out0 = 40, /**< \brief EXMOD6 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_exmod7Out0 = 41, /**< \brief EXMOD7 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_cdsp0Out0  = 42, /**< \brief CDSP0 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_cdsp1Out0  = 43, /**< \brief CDSP1 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_cdsp2Out0  = 44, /**< \brief CDSP2 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_cdsp3Out0  = 45, /**< \brief CDSP3 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_cdsp4Out0  = 46, /**< \brief CDSP4 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_cdsp5Out0  = 47, /**< \brief CDSP5 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_cdsp6Out0  = 48, /**< \brief CDSP6 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_cdsp7Out0  = 49, /**< \brief CDSP7 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_cdsp8Out0  = 50, /**< \brief CDSP8 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_cdsp9Out0  = 51, /**< \brief CDSP9 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_cdsp10Out0 = 52, /**< \brief CDSP10 OUT0 selected */
-    IfxAdc_Select_BoundaryFlag_cdsp11Out0 = 53  /**< \brief CDSP11 OUT0 selected */
-} IfxAdc_Select_BoundaryFlag;
+    /* TMADC boundary flags (BFL[0:15]) - 8 modules x 2 outputs */
+    IfxAdc_SelectBoundaryFlag_tmadc0Out0 = 0,   /**< \brief TMADC0 OUT0 selected (ADC_BFL0) */
+    IfxAdc_SelectBoundaryFlag_tmadc0Out1 = 1,   /**< \brief TMADC0 OUT1 selected (ADC_BFL1) */
+    IfxAdc_SelectBoundaryFlag_tmadc1Out0 = 2,   /**< \brief TMADC1 OUT0 selected (ADC_BFL2) */
+    IfxAdc_SelectBoundaryFlag_tmadc1Out1 = 3,   /**< \brief TMADC1 OUT1 selected (ADC_BFL3) */
+    IfxAdc_SelectBoundaryFlag_tmadc2Out0 = 4,   /**< \brief TMADC2 OUT0 selected (ADC_BFL4) */
+    IfxAdc_SelectBoundaryFlag_tmadc2Out1 = 5,   /**< \brief TMADC2 OUT1 selected (ADC_BFL5) */
+    IfxAdc_SelectBoundaryFlag_tmadc3Out0 = 6,   /**< \brief TMADC3 OUT0 selected (ADC_BFL6) */
+    IfxAdc_SelectBoundaryFlag_tmadc3Out1 = 7,   /**< \brief TMADC3 OUT1 selected (ADC_BFL7) */
+#if (IFXADC_NUM_TMADC > 4)
+    IfxAdc_SelectBoundaryFlag_tmadc4Out0 = 8,   /**< \brief TMADC4 OUT0 selected (ADC_BFL8) */
+    IfxAdc_SelectBoundaryFlag_tmadc4Out1 = 9,   /**< \brief TMADC4 OUT1 selected (ADC_BFL9) */
+#endif
+#if (IFXADC_NUM_TMADC > 5)
+    IfxAdc_SelectBoundaryFlag_tmadc5Out0 = 10,  /**< \brief TMADC5 OUT0 selected (ADC_BFL10) */
+    IfxAdc_SelectBoundaryFlag_tmadc5Out1 = 11,  /**< \brief TMADC5 OUT1 selected (ADC_BFL11) */
+#endif
+#if (IFXADC_NUM_TMADC > 6)
+    IfxAdc_SelectBoundaryFlag_tmadc6Out0 = 12,  /**< \brief TMADC6 OUT0 selected (ADC_BFL12) */
+    IfxAdc_SelectBoundaryFlag_tmadc6Out1 = 13,  /**< \brief TMADC6 OUT1 selected (ADC_BFL13) */
+#endif
+#if (IFXADC_NUM_TMADC > 7)
+    IfxAdc_SelectBoundaryFlag_tmadc7Out0 = 14,  /**< \brief TMADC7 OUT0 selected (ADC_BFL14) */
+    IfxAdc_SelectBoundaryFlag_tmadc7Out1 = 15,  /**< \brief TMADC7 OUT1 selected (ADC_BFL15) */
+#endif
+
+    /* FCC boundary flags (BFL[16:25]) - 10 modules x 1 output */
+#if IFXADC_IS_FCC_AVAILABLE
+    IfxAdc_SelectBoundaryFlag_fcc0Out0 = 16,    /**< \brief FCC0 OUT0 selected (ADC_BFL16) */
+    IfxAdc_SelectBoundaryFlag_fcc1Out0 = 17,    /**< \brief FCC1 OUT0 selected (ADC_BFL17) */
+    IfxAdc_SelectBoundaryFlag_fcc2Out0 = 18,    /**< \brief FCC2 OUT0 selected (ADC_BFL18) */
+    IfxAdc_SelectBoundaryFlag_fcc3Out0 = 19,    /**< \brief FCC3 OUT0 selected (ADC_BFL19) */
+    IfxAdc_SelectBoundaryFlag_fcc4Out0 = 20,    /**< \brief FCC4 OUT0 selected (ADC_BFL20) */
+    IfxAdc_SelectBoundaryFlag_fcc5Out0 = 21,    /**< \brief FCC5 OUT0 selected (ADC_BFL21) */
+    IfxAdc_SelectBoundaryFlag_fcc6Out0 = 22,    /**< \brief FCC6 OUT0 selected (ADC_BFL22) */
+    IfxAdc_SelectBoundaryFlag_fcc7Out0 = 23,    /**< \brief FCC7 OUT0 selected (ADC_BFL23) */
+    IfxAdc_SelectBoundaryFlag_fcc8Out0 = 24,    /**< \brief FCC8 OUT0 selected (ADC_BFL24) */
+    IfxAdc_SelectBoundaryFlag_fcc9Out0 = 25,    /**< \brief FCC9 OUT0 selected (ADC_BFL25) */
+#endif
+
+    /* DSADC boundary flags (BFL[26:35]) - 10 modules x 1 output */
+#if IFXADC_IS_DSADC_AVAILABLE
+    IfxAdc_SelectBoundaryFlag_dsadc0Out0 = 26,  /**< \brief DSADC0 OUT0 selected (ADC_BFL26) */
+    IfxAdc_SelectBoundaryFlag_dsadc1Out0 = 27,  /**< \brief DSADC1 OUT0 selected (ADC_BFL27) */
+    IfxAdc_SelectBoundaryFlag_dsadc2Out0 = 28,  /**< \brief DSADC2 OUT0 selected (ADC_BFL28) */
+#if (IFXADC_NUM_DSADC_IN_CHANNELS > 3)
+    IfxAdc_SelectBoundaryFlag_dsadc3Out0 = 29,  /**< \brief DSADC3 OUT0 selected (ADC_BFL29) */
+    IfxAdc_SelectBoundaryFlag_dsadc4Out0 = 30,  /**< \brief DSADC4 OUT0 selected (ADC_BFL30) */
+    IfxAdc_SelectBoundaryFlag_dsadc5Out0 = 31,  /**< \brief DSADC5 OUT0 selected (ADC_BFL31) */
+    IfxAdc_SelectBoundaryFlag_dsadc6Out0 = 32,  /**< \brief DSADC6 OUT0 selected (ADC_BFL32) */
+    IfxAdc_SelectBoundaryFlag_dsadc7Out0 = 33,  /**< \brief DSADC7 OUT0 selected (ADC_BFL33) */
+    IfxAdc_SelectBoundaryFlag_dsadc8Out0 = 34,  /**< \brief DSADC8 OUT0 selected (ADC_BFL34) */
+    IfxAdc_SelectBoundaryFlag_dsadc9Out0 = 35,  /**< \brief DSADC9 OUT0 selected (ADC_BFL35) */
+#endif
+#endif
+
+    /* EXMOD boundary flags (BFL[36:43]) - 8 modules x 1 output */
+#if IFXADC_IS_EXMOD_AVAILABLE
+    IfxAdc_SelectBoundaryFlag_exmod0Out0 = 36,  /**< \brief EXMOD0 OUT0 selected (ADC_BFL36) */
+    IfxAdc_SelectBoundaryFlag_exmod1Out0 = 37,  /**< \brief EXMOD1 OUT0 selected (ADC_BFL37) */
+    IfxAdc_SelectBoundaryFlag_exmod2Out0 = 38,  /**< \brief EXMOD2 OUT0 selected (ADC_BFL38) */
+    IfxAdc_SelectBoundaryFlag_exmod3Out0 = 39,  /**< \brief EXMOD3 OUT0 selected (ADC_BFL39) */
+    IfxAdc_SelectBoundaryFlag_exmod4Out0 = 40,  /**< \brief EXMOD4 OUT0 selected (ADC_BFL40) */
+    IfxAdc_SelectBoundaryFlag_exmod5Out0 = 41,  /**< \brief EXMOD5 OUT0 selected (ADC_BFL41) */
+    IfxAdc_SelectBoundaryFlag_exmod6Out0 = 42,  /**< \brief EXMOD6 OUT0 selected (ADC_BFL42) */
+    IfxAdc_SelectBoundaryFlag_exmod7Out0 = 43,  /**< \brief EXMOD7 OUT0 selected (ADC_BFL43) */
+#endif
+
+    /* CDSP boundary flags (BFL[44:61]) - 18 modules x 1 output */
+    IfxAdc_SelectBoundaryFlag_cdsp0Out0 = 44,   /**< \brief CDSP0 OUT0 selected (ADC_BFL44) */
+#if (IFXADC_NUM_CDSP_CORES > 1)
+    IfxAdc_SelectBoundaryFlag_cdsp1Out0 = 45,   /**< \brief CDSP1 OUT0 selected (ADC_BFL45) */
+#endif
+#if (IFXADC_NUM_CDSP_CORES > 2)
+    IfxAdc_SelectBoundaryFlag_cdsp2Out0 = 46,   /**< \brief CDSP2 OUT0 selected (ADC_BFL46) */
+#endif
+#if (IFXADC_NUM_CDSP_CORES > 3)
+    IfxAdc_SelectBoundaryFlag_cdsp3Out0 = 47,   /**< \brief CDSP3 OUT0 selected (ADC_BFL47) */
+#endif
+#if (IFXADC_NUM_CDSP_CORES > 4)
+    IfxAdc_SelectBoundaryFlag_cdsp4Out0 = 48,   /**< \brief CDSP4 OUT0 selected (ADC_BFL48) */
+#endif
+#if (IFXADC_NUM_CDSP_CORES > 5)
+    IfxAdc_SelectBoundaryFlag_cdsp5Out0  = 49,  /**< \brief CDSP5 OUT0 selected (ADC_BFL49) */
+    IfxAdc_SelectBoundaryFlag_cdsp6Out0  = 50,  /**< \brief CDSP6 OUT0 selected (ADC_BFL50) */
+    IfxAdc_SelectBoundaryFlag_cdsp7Out0  = 51,  /**< \brief CDSP7 OUT0 selected (ADC_BFL51) */
+    IfxAdc_SelectBoundaryFlag_cdsp8Out0  = 52,  /**< \brief CDSP8 OUT0 selected (ADC_BFL52) */
+    IfxAdc_SelectBoundaryFlag_cdsp9Out0  = 53,  /**< \brief CDSP9 OUT0 selected (ADC_BFL53) */
+    IfxAdc_SelectBoundaryFlag_cdsp10Out0 = 54,  /**< \brief CDSP10 OUT0 selected (ADC_BFL54) */
+    IfxAdc_SelectBoundaryFlag_cdsp11Out0 = 55,  /**< \brief CDSP11 OUT0 selected (ADC_BFL55) */
+#endif
+#if (IFXADC_NUM_CDSP_CORES > 12)
+    IfxAdc_SelectBoundaryFlag_cdsp12Out0 = 56,  /**< \brief CDSP12 OUT0 selected (ADC_BFL56) */
+    IfxAdc_SelectBoundaryFlag_cdsp13Out0 = 57,  /**< \brief CDSP13 OUT0 selected (ADC_BFL57) */
+    IfxAdc_SelectBoundaryFlag_cdsp14Out0 = 58,  /**< \brief CDSP14 OUT0 selected (ADC_BFL58) */
+    IfxAdc_SelectBoundaryFlag_cdsp15Out0 = 59,  /**< \brief CDSP15 OUT0 selected (ADC_BFL59) */
+    IfxAdc_SelectBoundaryFlag_cdsp16Out0 = 60,  /**< \brief CDSP16 OUT0 selected (ADC_BFL60) */
+    IfxAdc_SelectBoundaryFlag_cdsp17Out0 = 61,  /**< \brief CDSP17 OUT0 selected (ADC_BFL61) */
+#endif
+} IfxAdc_SelectBoundaryFlag;
 
 /** \} */
-#endif /* #if IFXADC_IS_CDSP_AVAILABLE */
+#endif /* (#if IFXADC_IS_GTM_AVAILABLE || IFXADC_IS_EGTM_AVAILABLE) */
 
 /** \addtogroup IfxLld_Adc_Std_Module_Adc
  * \{ */
@@ -1552,7 +1600,7 @@ IFX_INLINE void IfxAdc_enableModule(Ifx_ADC *modSFR);
  *
  * \param[in] modSFR Pointer to the ADC SFR structure
  *
- * \retval value 0 specifies the ADC clock is enable and value 1 specifies the ADC clock is disabled
+ * \retval value 0 specifies the ADC clock is enabled and value 1 specifies the ADC clock is disabled
  * Range: \ref IfxAdc_ModuleState
  */
 IFX_INLINE IfxAdc_ModuleState IfxAdc_isModuleEnabled(Ifx_ADC *modSFR);
@@ -1766,18 +1814,18 @@ IFX_INLINE boolean IfxAdc_isTmadcSwTriggerIgnored(Ifx_ADC_TMADC *tmadc, IfxAdc_T
  */
 IFX_INLINE boolean IfxAdc_getTmadcBoundaryFlag(Ifx_ADC_TMADC *tmadc, IfxAdc_TmadcBoundaryReg boundaryReg);
 
-/** \brief Check if error event occured on the channel.
+/** \brief Check if error event occurred on the channel.
  *
  * \param[inout] tmadc   Pointer to tmadc module sfr
  * \param[in]    channel Channel id
  *                       Range: \ref IfxAdc_TmadcChannel
  *
- * \retval TRUE: Error event occured on this channel
+ * \retval TRUE: Error event occurred on this channel
  *         FALSE: No error event on the channel
  */
 IFX_INLINE boolean IfxAdc_isTmadcErrorEventOccured(Ifx_ADC_TMADC *tmadc, IfxAdc_TmadcChannel channel);
 
-/** \brief Check if boundary event occured on the channel.
+/** \brief Check if boundary event occurred on the channel.
  *
  * \param[inout] tmadc     Pointer to tmadc module sfr
  * \param[in]    resultReg Result register
@@ -2764,7 +2812,7 @@ IFX_INLINE void IfxAdc_haltCdspCore(Ifx_ADC_CDSP *cdsp, IfxAdc_CdspCore coreId);
  *
  * \param[in]    srcAddr  source address
  * \param[inout] destAddr Destination address
- * \param[in]    size     Data size to be transfered.
+ * \param[in]    size     Data size to be transferred.
  *                        Range: 0 to  0xFFFF
  *
  * \retval None
@@ -2883,12 +2931,12 @@ IFX_EXTERN void IfxAdc_configureAccessToAdcModule(Ifx_ADC *adc, IfxApApu_ApuConf
  *
  * \param[inout] adc                ADC module
  * \param[in]    output             GTM boundary flag output selector (OUT0..OUT3). Range: \ref IfxAdc_BoundaryFlagOutput
- * \param[in]    moduleBoundaryFlag Boundary flag source selection. Range: \ref IfxAdc_Select_BoundaryFlag
+ * \param[in]    moduleBoundaryFlag Boundary flag source selection. Range: \ref IfxAdc_SelectBoundaryFlag
  * \param[in]    gtmCluster         GTM cluster index. Range 0 to 7.
  *
  * \retval None
  */
-IFX_EXTERN void IfxAdc_routeBoundaryFlagOutputToGtm(Ifx_ADC *adc, IfxAdc_BoundaryFlagOutput output, IfxAdc_Select_BoundaryFlag moduleBoundaryFlag, uint8 gtmCluster);
+IFX_EXTERN void IfxAdc_routeBoundaryFlagOutputToGtm(Ifx_ADC *adc, IfxAdc_BoundaryFlagOutput output, IfxAdc_SelectBoundaryFlag moduleBoundaryFlag, uint8 gtmCluster);
 #endif /* #if IFXADC_IS_GTM_AVAILABLE */
 
 #if IFXADC_IS_EGTM_AVAILABLE
@@ -2896,12 +2944,12 @@ IFX_EXTERN void IfxAdc_routeBoundaryFlagOutputToGtm(Ifx_ADC *adc, IfxAdc_Boundar
  *
  * \param[inout] adc                ADC module
  * \param[in]    output             EGTM boundary flag output selector (OUT0..OUT3). Range: \ref IfxAdc_BoundaryFlagOutput
- * \param[in]    moduleBoundaryFlag Boundary flag source selection. Range: \ref IfxAdc_Select_BoundaryFlag
+ * \param[in]    moduleBoundaryFlag Boundary flag source selection. Range: \ref IfxAdc_SelectBoundaryFlag
  * \param[in]    gtmCluster         EGTM cluster index. Range 0 to 3.
  *
  * \retval None
  */
-IFX_EXTERN void IfxAdc_routeBoundaryFlagOutputToEgtm(Ifx_ADC *adc, IfxAdc_BoundaryFlagOutput output, IfxAdc_Select_BoundaryFlag moduleBoundaryFlag, uint8 egtmCluster);
+IFX_EXTERN void IfxAdc_routeBoundaryFlagOutputToEgtm(Ifx_ADC *adc, IfxAdc_BoundaryFlagOutput output, IfxAdc_SelectBoundaryFlag moduleBoundaryFlag, uint8 egtmCluster);
 #endif /* #if IFXADC_IS_EGTM_AVAILABLE */
 
 /******************************************************************************/

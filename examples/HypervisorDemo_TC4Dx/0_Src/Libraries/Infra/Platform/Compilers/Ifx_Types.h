@@ -251,7 +251,10 @@ typedef enum
 #elif defined(__MSVC__)
 #include "Ifx_TypesMsvc.h"
 
-#elif defined(__CCAC__)
+#elif defined(__CCAC__) && defined(__IFX_LLVM__)
+#include "Ifx_TypesLlvm.h"
+
+#elif defined(__CCAC__) && !defined(__IFX_LLVM__)
 #include "Ifx_TypesMw.h"
 #else
 #error Unsupported compiler.

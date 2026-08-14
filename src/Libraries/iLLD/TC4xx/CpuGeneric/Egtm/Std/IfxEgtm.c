@@ -2,7 +2,7 @@
  * \file IfxEgtm.c
  * \brief EGTM  basic functionality
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -228,6 +228,7 @@ void IfxEgtm_configureAccessToEgtms(IfxApApu_ApuConfig *apConfig)
 
     IfxApApu_init((volatile Ifx_ACCEN_ACCEN *)(volatile void *)&MODULE_EGTM.WRAP.ACCEN, apConfig);
     IfxApApu_init((volatile Ifx_ACCEN_ACCEN *)(volatile void *)&MODULE_EGTM.CTRLGTM.ACCEN, apConfig);
+
     IfxApApu_init((volatile Ifx_ACCEN_ACCEN *)(volatile void *)&MODULE_EGTM.SAFEGTM.ACCEN, apConfig);
 }
 

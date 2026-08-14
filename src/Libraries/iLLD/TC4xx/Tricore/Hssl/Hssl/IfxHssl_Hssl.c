@@ -2,7 +2,7 @@
  * \file IfxHssl_Hssl.c
  * \brief HSSL HSSL details
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -145,7 +145,7 @@ void IfxHssl_Hssl_initChannelConfig(IfxHssl_Hssl_ChannelConfig *channelConfig, I
     channelConfig->channelId     = IfxHssl_ChannelId_0;          /* default channel 0 */
     channelConfig->streamingMode = IfxHssl_StreamingMode_single; /* default streaming mode continuous */
     channelConfig->loopBack      = hsct->loopBack;
-    hssl->loopBack               = hsct->loopBack;               /* copy to hssl handle, used in trasfer apis */
+    hssl->loopBack               = hsct->loopBack;               /* copy to hssl handle, used in transfer apis */
 }
 
 
