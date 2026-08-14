@@ -661,7 +661,7 @@ IFX_INLINE void IfxCpu_updatePerformanceCounter(uint32 address, uint32 count);
  */
 IFX_EXTERN boolean IfxCpu_acquireMutex(IfxCpu_mutexLock *lock);
 
-/** \brief API to unlock the mutex .
+/** \brief API to unlock the mutex.
  *
  * This API can be used to unlock the previously acquired mutex.
  *
@@ -681,7 +681,7 @@ IFX_EXTERN boolean IfxCpu_acquireMutex(IfxCpu_mutexLock *lock);
  */
 IFX_EXTERN void IfxCpu_releaseMutex(IfxCpu_mutexLock *lock);
 
-/** \brief API to unlock the resource .
+/** \brief API to unlock the resource.
  *
  * This API can be used to unlock the previously acquired lock.
  *
@@ -737,11 +737,11 @@ IFX_EXTERN uint32 IfxCpu_disableOverlayBlock(uint32 cpu, uint32 ovcBlock);
  * The data overlay provides the capability to redirect selected data accesses to the Overlay memory. Data accesses made by the TriCore to Program Flash, Online Data Acquisition space, or EBU space can be redirected. Overlay memory may be located in the Local Memory (if present), in the Emulation Memory (Emulation Device only), or in the EBU space,or in the DPSR/PSPR memory.
  *
  * How the overlay Memory works?
- * Any data access to segment 8 or segment A is checked against all the activated overlay blocks. For each activated overlay block, address bits 27..5 are compared with the target base address , and this bit-wise comparison is qualified by the content of address mask. Address bits participate in the comparison if the corresponding mask bits are set to one. The access is redirected, if all the address bits selected by mask equal to the corresponding bits in target address.
+ * Any data access to segment 8 or segment A is checked against all the activated overlay blocks. For each activated overlay block, address bits 27..5 are compared with the target base address, and this bit-wise comparison is qualified by the content of address mask. Address bits participate in the comparison if the corresponding mask bits are set to one. The access is redirected, if all the address bits selected by mask equal to the corresponding bits in target address.
  * The address for redirection is constructed as follows:
  * 1. Address bits 31..22 are set according to the overlay memory selection and the cache-ability of the original address.
  * 2. For address bits 21..5:
- * - If the corresponding address mask bit is set, the address bit value is taken from overlay base address .
+ * - If the corresponding address mask bit is set, the address bit value is taken from overlay base address.
  * - If the corresponding address mask bit is cleared, the address bit value is taken from the original address.
  * 3. Address bits 4..0 are always taken directly from the original address.
  * If there is no redirection, the original address is used to perform the access.
@@ -749,7 +749,7 @@ IFX_EXTERN uint32 IfxCpu_disableOverlayBlock(uint32 cpu, uint32 ovcBlock);
  *
  * \param[in] cpu                 Core no of the CPU. Range: 0 to max number of CPU's supported for the variant
  * \param[in] overlayBlock        Overlay Block. Range: 0 to 31.
- * \param[in] overlayMemorySelect Overlay Memory Select. Range. 0 to 0xFFFFFFFF..
+ * \param[in] overlayMemorySelect Overlay Memory Select. Range. 0 to 0xFFFFFFFF.
  * \param[in] overlayAddressMask  Overlay Address Mask. Range: \ref IfxCpu_OverlayAddressMask.
  * \param[in] targetBaseAddress   Target Base address (i.e Source address to be re-directed). Range. 0 to 0xFFFFFFFF.
  * \param[in] overlayBaseAddress  Overlay or Re-directed Base address (Bits 21..5 of the base address the overlay memory block in the overlay memory). Range: 0 to 0xFFFFFFFF.

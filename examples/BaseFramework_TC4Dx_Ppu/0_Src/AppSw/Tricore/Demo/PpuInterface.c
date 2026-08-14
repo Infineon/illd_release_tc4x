@@ -42,6 +42,8 @@
 /*********************************************************************************************************************/
 extern unsigned __PPU_CSM_START[];
 extern unsigned __PPU_CSM_END[];
+extern unsigned __PPU_VCCM_START[];
+extern unsigned __PPU_VCCM_END[];
 /*********************************************************************************************************************/
 /*--------------------------------------------Private Variables/Constants--------------------------------------------*/
 /*********************************************************************************************************************/
@@ -71,6 +73,13 @@ void PpuInterface_startPpu(void)
         //TODO:  This is a workaround because of VMT driver not supporting 3rd Party IPs
         volatile uint64*addressCSM = (volatile uint64*)__PPU_CSM_START;
         while (addressCSM < (volatile uint64*)__PPU_CSM_END) *addressCSM++= 0x0ULL;
+    }
+
+    {
+        /* Clear and ECC-Initialize the VCCM */
+        //TODO:  This is a workaround because of VMT driver not supporting 3rd Party IPs
+        volatile uint64*addressVCCM = (volatile uint64*)__PPU_VCCM_START;
+        while (addressVCCM < (volatile uint64*)__PPU_VCCM_END) *addressVCCM++= 0x0ULL;
     }
 
     {

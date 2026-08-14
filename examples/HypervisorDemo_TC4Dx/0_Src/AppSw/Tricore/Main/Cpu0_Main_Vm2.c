@@ -5,6 +5,7 @@
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
+ *
  *                                 IMPORTANT NOTICE
  *
  *

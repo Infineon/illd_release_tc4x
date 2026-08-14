@@ -2,7 +2,7 @@
  * \file IfxSdmmc_Sd.c
  * \brief SDMMC SD details
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -23,7 +23,7 @@
  * intellectual property rights. See the full license text for the specific
  * language governing permissions and limitations under IFASLL.
  *
- *
+ * 
  */
 
 /******************************************************************************/
@@ -658,8 +658,9 @@ IFX_STATIC IfxSdmmc_Status IfxSdmmc_Sd_setVoltageWindow(IfxSdmmc_Sd *sd)
 void IfxSdmmc_Sd_setupPins(IfxSdmmc_Sd *sd, IfxSdmmc_Sd_Pins *pins)
 {
     IFX_UNUSED_PARAMETER(sd)
-    IfxPort_InputMode inMode = pins->inputMode;
-    IfxPort_PadDriver    speedGrade = pins->pinDriver;
+    IfxPort_InputMode inMode        = pins->inputMode;
+    IfxPort_PadDriver speedGrade    = pins->pinDriver;
+    IfxPort_PadDriver speedGradeCmd = pins->pinDriverCmd;
 
     IfxSdmmc_Clk_Out    *clk        = pins->clk;
     IfxSdmmc_Cmd_InOut  *cmd        = pins->cmd;
@@ -677,7 +678,7 @@ void IfxSdmmc_Sd_setupPins(IfxSdmmc_Sd *sd, IfxSdmmc_Sd_Pins *pins)
     if (cmd != NULL_PTR)
     {
         IfxPort_setPinModeInput(cmd->pin.port, cmd->pin.pinIndex, inMode);
-        IfxPort_setPinPadDriver(cmd->pin.port, cmd->pin.pinIndex, speedGrade);
+        IfxPort_setPinPadDriver(cmd->pin.port, cmd->pin.pinIndex, speedGradeCmd);
     }
 
     if (dat0 != NULL_PTR)

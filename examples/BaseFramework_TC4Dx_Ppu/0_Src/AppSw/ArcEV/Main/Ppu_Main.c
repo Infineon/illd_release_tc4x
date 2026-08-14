@@ -1,10 +1,6 @@
 /**********************************************************************************************************************
  * \file Ppu_Main.c
- * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
- *
- *
- *                                 IMPORTANT NOTICE
- *
+ * \copyright Copyright (C) Infineon Technologies AG 2026
  *
  * Infineon Technologies AG (Infineon) licenses this file to you under the
  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
@@ -23,7 +19,7 @@
 
 #include "Ifx_Types.h"
 #include "TricoreInterface.h"
-#if defined(__arc__)
+#if defined(__arc__) && !defined(__IFX_LLVM__)
 #include "speed_aux.h"
 #endif
 
@@ -35,10 +31,13 @@ uint32 counterPpu = 0u;
 int main(void)
 {
 	/* disable MPU protection of the PPU */
-#if defined(__arc__)
+#if defined(__arc__) && !defined(__IFX_LLVM__)
     speed_hal_aux_Reg mpu_reg;
     mpu_reg.addr = 0x409;
     speed_hal_aux_Store( 0x0, mpu_reg );
+#elif defined(__arc__) && defined(__IFX_LLVM__)
+    /* arc-llvm (clang) has no MetaWare speed HAL: write AUX reg 0x409 directly */
+    _sr(0, 0x409);
 #endif
 
     /* Notifies CPU0 that PPU is booted up */

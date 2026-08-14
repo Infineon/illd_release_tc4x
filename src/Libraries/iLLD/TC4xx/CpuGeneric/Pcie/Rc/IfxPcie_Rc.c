@@ -2,7 +2,7 @@
  * \file IfxPcie_Rc.c
  * \brief PCIE RC details
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -197,7 +197,7 @@ IfxPcie_Status IfxPcie_Rc_init(IfxPcie_Rc *rcHandle, IfxPcie_Rc_Config *config)
         IfxPcie_Rc_enableEndPoints(rcHandle);                          /* Enable all End Points memories, bus masters */
         rcHandle->state = IfxPcie_Rc_State_enumerated;
 
-        status          = IfxPcie_Rc_initInterrupts(rcHandle, config); /* Now, Initialize the Interrupts from EP , RC */
+        status          = IfxPcie_Rc_initInterrupts(rcHandle, config); /* Now, Initialize the Interrupts from EP, RC */
     }
 
     IfxPcieLib_Device_freeAtuRegion((IfxPcie *)(rcHandle->pcieSFR), &(rcHandle->atu.outboundRegion[IFXPCIE_CFG_ECAM_ATU_INDEX]));

@@ -1,7 +1,7 @@
 /**
  * \file Compilers.h
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -72,7 +72,7 @@
 #elif defined(__HIGHTEC__) && !defined(__clang__)
 #include "CompilerGnuc.h"
 
-#elif defined(__GNUC__) && !defined(__HIGHTEC__)
+#elif defined(__GNUC__) && !defined(__HIGHTEC__) && !defined(__CCAC__)
 #include "CompilerGcc.h"
 
 #elif defined(__HIGHTEC__) && defined(__clang__)
@@ -81,7 +81,10 @@
 #elif defined(__ghs__)
 #include "CompilerGhs.h"
 
-#elif defined(__CCAC__)
+#elif defined(__CCAC__) && defined(__IFX_LLVM__)
+#include "CompilerLlvm.h"
+
+#elif defined(__CCAC__) && !defined(__IFX_LLVM__)
 #include "CompilerMw.h"
 
 #elif defined(__MSVC__)
@@ -194,7 +197,7 @@
 #define DATA_SECTION(sec) _Pragma(#sec)
 #define END_DATA_SECTION DATA_SECTION(section farbss align restore) \
 		DATA_SECTION(section farbss)
-#elif defined(__GNUC__)
+#elif defined(__GNUC__) && !defined(__CCAC__)
 #define BEGIN_DATA_SECTION(sec) DATA_SECTION(section #sec aw 4)
 #define DATA_SECTION(sec) _Pragma(#sec)
 #define END_DATA_SECTION DATA_SECTION(section)
@@ -206,7 +209,9 @@
 #define BEGIN_DATA_SECTION(sec) DATA_SECTION(section #sec WX)
 #define DATA_SECTION(sec) _Pragma(#sec)
 #define END_DATA_SECTION DATA_SECTION(section DATA X)
-#elif defined(__CCAC__)
+#elif defined(__CCAC__) && defined(__IFX_LLVM__)
+/* Not used by PPU code. Intentionally empty. */
+#elif defined(__CCAC__) && !defined(__IFX_LLVM__)
 /* TODO Section pragmas to be defined */
 #else
 #error "Please specify compiler."

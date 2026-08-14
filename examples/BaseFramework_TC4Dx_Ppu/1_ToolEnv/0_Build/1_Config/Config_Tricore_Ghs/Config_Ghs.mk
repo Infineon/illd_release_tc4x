@@ -23,7 +23,7 @@
 #                                                                             #
 ###############################################################################
 
-B_GHS_TRICORE_PATH= C:\Tools\Compilers\GreenHills\2025.1
+B_GHS_TRICORE_PATH= C:\Tools\Compilers\GreenHills\2026.1
 
 B_GHS_TRICORE_CC_OPTIONS= -c11 -cpu=tc1v18 -farcalls -frigor=accurate \
 			-globalcheck=normal -globalcheck_qualifiers --gnu_asm -lnk=-no_append \

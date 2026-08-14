@@ -2,7 +2,7 @@
  * \file IfxXspi_Spi.c
  * \brief XSPI SPI details
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -188,11 +188,11 @@ IfxXspi_Status IfxXspi_Spi_initModule(IfxXspi_Spi *xspi, const IfxXspi_Spi_Confi
         Ifx_XSPI_DMACR dmacr;
         dmacr.U       = xspiSFR->DMACR.U;
 
-        dmacr.B.IDMAE = config->dmaConfig->internalDmaEnable;       /**<\ DMA Enable*/
-        dmacr.B.AINC  = config->dmaConfig->addressIncrement;        /**<\ Address Increment (increment the AXI address on every transfer)*/
-        //dmacr.B.TDMAE     = config->dmaConfig->txFifoDmaEnable;		/**<\ Transmit Fifo DMA Enable*/
-        //dmacr.B.RDMAE     = config->dmaConfig->rxFifoDmaEnable;		/**<\ Receive Fifo DMA Enable*/
-        dmacr.B.ATW   = config->dmaConfig->transferwidth;           /**<\ AXI transfer width for DMA transfers*/
+        dmacr.B.IDMAE = config->dmaConfig.internalDmaEnable;       /**<\ DMA Enable*/
+        dmacr.B.AINC  = config->dmaConfig.addressIncrement;        /**<\ Address Increment (increment the AXI address on every transfer)*/
+        //dmacr.B.TDMAE     = config->dmaConfig.txFifoDmaEnable;		/**<\ Transmit Fifo DMA Enable*/
+        //dmacr.B.RDMAE     = config->dmaConfig.rxFifoDmaEnable;		/**<\ Receive Fifo DMA Enable*/
+        dmacr.B.ATW   = config->dmaConfig.transferwidth;           /**<\ AXI transfer width for DMA transfers*/
         //dmacr.B.ACACHE = 0;
         dmacr.B.APROT = 0;
         //dmacr.B.AID = 0;
@@ -200,8 +200,8 @@ IfxXspi_Status IfxXspi_Spi_initModule(IfxXspi_Spi *xspi, const IfxXspi_Spi_Confi
         xspiSFR->DMACR.U = dmacr.U;
 
         /* Configuring Source and Destination Burst Length */
-        xspiSFR->AXIAWLEN.B.AWLEN = config->dmaConfig->destinationBurstLength;
-        xspiSFR->AXIARLEN.B.ARLEN = config->dmaConfig->sourceBurstLength;
+        xspiSFR->AXIAWLEN.B.AWLEN = config->dmaConfig.destinationBurstLength;
+        xspiSFR->AXIARLEN.B.ARLEN = config->dmaConfig.sourceBurstLength;
     }
 
     /* initialising the interrupts */
@@ -232,18 +232,7 @@ IfxXspi_Status IfxXspi_Spi_initModule(IfxXspi_Spi *xspi, const IfxXspi_Spi_Confi
 
 void IfxXspi_Spi_initModuleConfig(IfxXspi_Spi_Config *config, Ifx_XSPI *xspi)
 {
-    IfxXspi_Spi_DmaConfig    dmaDefaultConfig = {
-        .txFifoDmaEnable        = 0,
-        .rxFifoDmaEnable        = 0,
-        .internalDmaEnable      = 0,
-        .addressIncrement       = 0,
-        .destinationBurstLength = 0,
-        .sourceBurstLength      = 0,
-        .dmaTxDataLevel         = 0,
-        .dmaRxDataLevel         = 0,
-        .transferwidth          = IfxXspi_TransferWidth_1,
-    };
-    const IfxXspi_Spi_Config defaultConfig = {
+    *config = (IfxXspi_Spi_Config){
         .xspi    = NULL_PTR,
 
         .control = {
@@ -295,8 +284,17 @@ void IfxXspi_Spi_initModuleConfig(IfxXspi_Spi_Config *config, Ifx_XSPI *xspi)
             .interruptMask.txFifoOverFlowInterruptMask    = IfxXspi_InterruptMask_Mask,
             .interruptMask.txFifoEmptyInterruptMask       = IfxXspi_InterruptMask_Mask,
         },
-
-        .dmaConfig       = &dmaDefaultConfig,
+        .dmaConfig       = {
+			.txFifoDmaEnable        = 0,
+			.rxFifoDmaEnable        = 0,
+			.internalDmaEnable      = 0,
+			.addressIncrement       = 0,
+			.destinationBurstLength = 0,
+			.sourceBurstLength      = 0,
+			.dmaTxDataLevel         = 0,
+			.dmaRxDataLevel         = 0,
+			.transferwidth          = IfxXspi_TransferWidth_1,
+		},
         .portSelect      = IfxXspi_SelectPort_16,                /* Port 16 Select by default */
         .enhancedControl = {
             .clockStretchEnable  = 1,                            /*No Clock Stretch Enable */
@@ -313,7 +311,6 @@ void IfxXspi_Spi_initModuleConfig(IfxXspi_Spi_Config *config, Ifx_XSPI *xspi)
         }
     };
 
-    *config      = defaultConfig; /*Default Config*/
     config->xspi = xspi;          /*Module Pointer*/
 }
 
@@ -343,7 +340,7 @@ IfxXspi_Spi_Status IfxXspi_Spi_dmaExchange(IfxXspi_Spi *xspi, IfxXspi_Spi_DmaJob
         case IfxXspi_TransferMode_Rx:
         case IfxXspi_TransferMode_EepromRead:
 
-            // for Rx only , should we send a dummy byte i.e write dummy byte to DR?
+            // for Rx only, should we send a dummy byte i.e write dummy byte to DR?
             xspi->xspi->CTRLR1.B.NDF             = dmaJob->numberOfDataFrames;
             xspi->xspi->DMACR.B.AINC             = dmaJob->addressIncrement;
             xspi->xspi->AXIAR0.U                 = (uint32)dmaJob->data;
@@ -541,7 +538,7 @@ boolean IfxXspi_Spi_exchange(IfxXspi_Spi *xspi, IfxXspi_Spi_CpuJobConfig *jobCon
             break;
 
         case IfxXspi_TransferMode_EepromRead:
-            //send op code and address (as tx data) + dummy bytes to be added to tx buffer.. TBD
+            //send op code and address (as tx data) + dummy bytes to be added to tx buffer. TBD
             // First Tx opcode, address and dummy bytes. so enable corresponding intr
             xspi->xspi->IMR.B.TXOIM = IfxXspi_InterruptMask_UnMask;
             xspi->xspi->IMR.B.TXEIM = IfxXspi_InterruptMask_UnMask;

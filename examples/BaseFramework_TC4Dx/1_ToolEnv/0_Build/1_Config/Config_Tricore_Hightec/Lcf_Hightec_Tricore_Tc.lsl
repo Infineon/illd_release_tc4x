@@ -235,7 +235,7 @@ REGION_ALIAS( default_rom , pfls5)
     /* Fixed memory Allocations for _START */
     SECTIONS
     {
-		.start_tc0 (LCF_STARTPTR_NC_CPU0) : { KEEP (*(.start)); } > pfls0_nc
+		.start_tc0 (LCF_STARTPTR_NC_CPU0) : { KEEP (*(.start .start.*)); } > pfls0_nc
 		.interface_const (0x80000020) : { __IF_CONST = .; KEEP (*(.interface_const)); } > pfls0
 		.traptab_tc0 (LCF_TRAPVEC0_START) : { PROVIDE(__TRAPTAB_CPU0 = .); KEEP (*(.traptab_cpu0)); } > pfls0
 		PROVIDE(__IF_CONST = 0x80000020);
@@ -255,31 +255,31 @@ REGION_ALIAS( default_rom , pfls5)
 
     SECTIONS
     {
-		.start_tc1 (LCF_STARTPTR_NC_CPU1) :  { KEEP (*(.start_cpu1)); } > pfls1_nc
+		.start_tc1 (LCF_STARTPTR_NC_CPU1) :  { KEEP (*(.start_cpu1*)); } > pfls1_nc
         .traptab_tc1 (LCF_TRAPVEC1_START) : { PROVIDE(__TRAPTAB_CPU1 = .); KEEP (*(.traptab_cpu1)); } > pfls1
 		 PROVIDE(__START1 = LCF_STARTPTR_NC_CPU1);
 	}
     SECTIONS
     {
-		.start_tc2 (LCF_STARTPTR_NC_CPU2) :  { KEEP (*(.start_cpu2)); } > pfls2_nc
+		.start_tc2 (LCF_STARTPTR_NC_CPU2) :  { KEEP (*(.start_cpu2*)); } > pfls2_nc
         .traptab_tc2 (LCF_TRAPVEC2_START) : { PROVIDE(__TRAPTAB_CPU2 = .); KEEP (*(.traptab_cpu2)); } > pfls2
 		 PROVIDE(__START2 = LCF_STARTPTR_NC_CPU2);
 	}
     SECTIONS
     {
-		.start_tc3 (LCF_STARTPTR_NC_CPU3) :  { KEEP (*(.start_cpu3)); } > pfls3_nc
+		.start_tc3 (LCF_STARTPTR_NC_CPU3) :  { KEEP (*(.start_cpu3*)); } > pfls3_nc
         .traptab_tc3 (LCF_TRAPVEC3_START) : { PROVIDE(__TRAPTAB_CPU3 = .); KEEP (*(.traptab_cpu3)); } > pfls3
 		 PROVIDE(__START3 = LCF_STARTPTR_NC_CPU3);
 	}
     SECTIONS
     {
-		.start_tc4 (LCF_STARTPTR_NC_CPU4) :  { KEEP (*(.start_cpu4)); } > pfls4_nc
+		.start_tc4 (LCF_STARTPTR_NC_CPU4) :  { KEEP (*(.start_cpu4*)); } > pfls4_nc
         .traptab_tc4 (LCF_TRAPVEC4_START) : { PROVIDE(__TRAPTAB_CPU4 = .); KEEP (*(.traptab_cpu4)); } > pfls4
 		 PROVIDE(__START4 = LCF_STARTPTR_NC_CPU4);
 	}
     SECTIONS
     {
-		.start_tc5 (LCF_STARTPTR_NC_CPU5) :  { KEEP (*(.start_cpu5)); } > pfls5_nc
+		.start_tc5 (LCF_STARTPTR_NC_CPU5) :  { KEEP (*(.start_cpu5*)); } > pfls5_nc
         .traptab_tc5 (LCF_TRAPVEC5_START) : { PROVIDE(__TRAPTAB_CPU5 = .); KEEP (*(.traptab_cpu5)); } > pfls5
 		 PROVIDE(__START5 = LCF_STARTPTR_NC_CPU5);
 	}

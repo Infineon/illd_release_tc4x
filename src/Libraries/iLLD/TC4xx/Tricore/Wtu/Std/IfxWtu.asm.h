@@ -3,7 +3,7 @@
  * \brief WTU  basic functionality
  * \ingroup IfxLld_Wtu
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -32,7 +32,7 @@
 #include "Ifx_Types.h"
 #include "IfxWtu_reg.h"
 
-/** \addtogroup IfxLld_Scu_Std_Wdt_Operative
+/** \addtogroup IfxLld_Wtu_Std_Wtu_Operative
  * \{ */
 #define IFXWTU_CALCULATELFSR(pwd) ((((((pwd) >> 14) ^ ((pwd) >> 13) ^ ((pwd) >> 12) ^ ((pwd) >> 2) ^ 1) & 1)) | (((pwd) << 1) & 0x7FFF))
 /**

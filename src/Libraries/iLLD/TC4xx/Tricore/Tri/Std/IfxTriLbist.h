@@ -3,7 +3,7 @@
  * \brief LBIST  basic functionality
  * \ingroup IfxLld_Lbist
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -28,6 +28,10 @@
  * This driver provides LBIST APIs which are used to trigger the Logic BIST module.
  * Caution: Draft implementation, APIs may change.
  *
+ * \defgroup IfxLld_Lbist Lbist
+ * \ingroup IfxLld
+ * \defgroup IfxLld_Lbist_Std Standard Driver
+ * \ingroup IfxLld_Lbist
  * \defgroup IfxLld_Lbist_Std_Lbist Lbist Basic Functionality
  * \ingroup IfxLld_Lbist_Std
  */

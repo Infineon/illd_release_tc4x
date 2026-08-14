@@ -28,7 +28,7 @@
  * \defgroup library_srvsw_stdif_dpipe Standard interface: Data Pipe
  * \ingroup library_srvsw_stdif
  *
- * The standard interafce data pipe (DPipe) abstract the hardware used for data transfer. It provide, after proper initialization an hardware independant way to write
+ * The standard interafce data pipe (DPipe) abstract the hardware used for data transfer. It provide, after proper initialization an hardware independent way to write
  * and read data to/from as communciation channel.
  *
  * \par Porting StandardIo to DPipe

@@ -3,7 +3,7 @@
  * \brief SMU on-chip implementation data
  * \ingroup IfxLld_Smu
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  * Date: 2025-10-09 08:35:30

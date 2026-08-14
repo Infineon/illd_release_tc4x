@@ -3,7 +3,7 @@
  * \brief PORT on-chip implementation data
  * \ingroup IfxLld_Scr
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -26,6 +26,8 @@
  *
  * \defgroup IfxLld_ScrTimer01 SCRTIMER01
  * \ingroup IfxLld_Scr
+ * \defgroup IfxLld_ScrTimer01_Std Standard Driver
+ * \ingroup IfxLld_ScrTimer01
  */
 
 #ifndef IFXSCRTIMER01_CFG_H

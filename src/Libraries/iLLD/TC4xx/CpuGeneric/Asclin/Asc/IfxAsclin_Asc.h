@@ -3,7 +3,7 @@
  * \brief ASCLIN ASC details
  * \ingroup IfxLld_Asclin
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -30,7 +30,7 @@
  *
  * The ASC interface driver provides a default ASCLIN configuration for asynchronous serial communication in 8bit mode, and a set of data transfer routines.
  *
- * Data transfers are buffered by the hardware based FIFOs, and in addition by software based FIFOs with a configurable size. Incoming and outgoing data is transfered in background from/to the ASCLIN peripheral by interrupt service handlers, which are part of this driver as well. This allows a nonblocking communication without stalling the thread(s) from where data is sent and received.
+ * Data transfers are buffered by the hardware based FIFOs, and in addition by software based FIFOs with a configurable size. Incoming and outgoing data is transferred in background from/to the ASCLIN peripheral by interrupt service handlers, which are part of this driver as well. This allows a nonblocking communication without stalling the thread(s) from where data is sent and received.
  *
  * In the following sections it will be described, how to integrate the driver into the application framework.
  *
@@ -58,6 +58,8 @@
  * \endcode
  *
  * As you can see above, the transfer buffers allocate not only memory for the data itself, but also for FIFO runtime variables. 8 bytes have to be added to ensure a proper circular buffer handling independent from the address to which the buffers have been located.
+ *
+ * Note: The buffer addresses configured should be word (i.e. 4 Bytes) aligned. Unaligned memory may result in undefined behaviour including trap.
  *
  * \subsection IfxLld_Asclin_Asc_Interrupt Interrupt Handler Installation
  *
@@ -110,7 +112,15 @@
  *     ascConfig.baudrate.prescaler = 1;
  *     ascConfig.baudrate.baudrate = 1000000; // FDR values will be calculated in initModule
  *
- *     // ISR priorities and interrupt target
+ *     // By default, error interrupts are not configured (i.e. disabled).
+ *     // Each error interrupt type can be individually enabled or disabled.
+ *     // eg. ascConfig.errorFlags.flags.xxxxx = true;
+ *
+ *     // For Error Interrupt routing to be enabled, the priority for each interrupt type should 
+ *     // be configured greater than 0.
+ *     // The configured priority level would be used as the priority for the interrupt target.
+ *
+ *     // configure ISR priorities and interrupt target
  *     ascConfig.interrupt.txPriority = IFX_INTPRIO_ASCLIN0_TX;
  *     ascConfig.interrupt.rxPriority = IFX_INTPRIO_ASCLIN0_RX;
  *     ascConfig.interrupt.erPriority = IFX_INTPRIO_ASCLIN0_ER;
@@ -148,7 +158,7 @@
  *
  * The ASC driver provides simple to use transfer functions, which are blocking.
  *
- * This means: you can send as much data as you want without taking care for the fill state of the FIFO. If the FIFO is full, the blocking function will wait until the next byte has been transfered to ASCLIN before putting the new byte into the FIFO:
+ * This means: you can send as much data as you want without taking care for the fill state of the FIFO. If the FIFO is full, the blocking function will wait until the next byte has been transferred to ASCLIN before putting the new byte into the FIFO:
  * \code
  *     // send 3 bytes
  *     IfxAsclin_Asc_blockingWrite(&asc, 0x01);
@@ -169,7 +179,7 @@
  * \code
  *     uint8     txData[9] = { 0x49, 0x6e, 0x66, 0x69, 0x6e, 0x65, 0x6f, 0x6e, 0x0a };
  *     {
- *         Ifx_SizeT count = 9;
+ *         uint16 count = 9;
  *         IfxAsclin_Asc_write(&asc, txData, &count, TIME_INFINITE);
  *     }
  * \endcode
@@ -181,7 +191,7 @@
  *
  *     {
  *         // wait until 5 bytes have been received
- *         Ifx_SizeT count = 5;
+ *         uint16 count = 5;
  *         IfxAsclin_Asc_read(&asc, rxData, &count, TIME_INFINITE);
  *     }
  * \endcode
@@ -192,7 +202,7 @@
  *
  *     {
  *         // how many bytes have been received?
- *         Ifx_SizeT count = IfxAsclin_Asc_getReadCount(&asc);
+ *         uint16 count = IfxAsclin_Asc_getReadCount(&asc);
  *
  *         // limit to our buffer size
  *         count = count < 5 ? count : 5;
@@ -323,7 +333,7 @@ typedef struct
     uint8 rxFifoOverflow : 1;                   /**< \brief Receive FIFO overflow error. Range: 0 - No overflow error occurred, 1 - Overflow error occurred */
     uint8 rxFifoUnderflow : 1;                  /**< \brief Receive FIFO underflow error. Range: 0 - No underflow error occurred, 1 - Underflow error occurred */
     uint8 txFifoOverflow : 1;                   /**< \brief Transmit FIFO overflow error. Range: 0 - No overflow error occurred, 1 - Overflow error occurred */
-    uint8 txOverloadOfMultipleTriggers : 1;     /**< \brief Transmit overload Multiple Triggers errors. Range: 0 - No Overload Of Multiple Triggers interrupt occured, 1 - Overload Of Multiple Triggers interrupt occured */
+    uint8 txOverloadOfMultipleTriggers : 1;     /**< \brief Transmit overload Multiple Triggers errors. Range: 0 - No Overload Of Multiple Triggers interrupt occurred, 1 - Overload Of Multiple Triggers interrupt occurred */
     uint8 txFifoEmpty : 1;                      /**< \brief Transmit FIFO empty error. Range: 0 - No Tx Fifo empty interrupt occurred, 1 -  Tx Fifo empty interrupt occurred */
 } IfxAsclin_Asc_ErrorFlags;
 
@@ -441,13 +451,13 @@ typedef struct
     IFX_CONST IfxAsclin_Asc_Pins  *pins;                 /**< \brief Structure for ASC pins */
     IfxAsclin_ClockSource          clockSource;          /**< \brief CSR.CLKSEL, clock source selection */
     IfxAsclin_Asc_ErrorFlagsUnion  errorFlags;           /**< \brief Structure for error flags */
-    Ifx_SizeT                      txBufferSize;         /**< \brief Size of the tx buffer. Range: 0 to 0x7FFF */
+    uint16                         txBufferSize;         /**< \brief Size of the tx buffer. Range: 0 to 0x7FFF */
     void                          *txBuffer;             /**< \brief The buffer parameter must point on a free memory location where the buffer object will be Initialised.
                                                           *
                                                           * The Size of this area must be at least equals to "txBufferSize + sizeof(Ifx_Fifo) + 8". Not tacking this in account may result in unpredictable behavior.
                                                           *
                                                           * If set to NULL_PTR, the buffer will  be allocated dynamically according to txBufferSize */
-    Ifx_SizeT rxBufferSize;                              /**< \brief Size of the rx buffer. Range: 0 to 0x7FFF */
+    uint16    rxBufferSize;                                 /**< \brief Size of the rx buffer. Range: 0 to 0x7FFF */
     void     *rxBuffer;                                  /**< \brief The buffer parameter must point on a free memory location where the buffer object will be Initialised.
                                                           *
                                                           * The Size of this area must be at least equals to "rxBufferSize + sizeof(Ifx_Fifo) + 8". Not tacking this in account may result in unpredictable behavior.
@@ -558,7 +568,7 @@ IFX_EXTERN boolean IfxAsclin_Asc_blockingWrite(IfxAsclin_Asc *asclin, uint8 data
  * \retval Returns TRUE if at least count bytes are available for read in the rx buffer, if not the Event is armed to be set when the buffer count is bigger or equal to the requested count,
  * 				   FALSE otherwise.
  */
-IFX_EXTERN boolean IfxAsclin_Asc_canReadCount(IfxAsclin_Asc *asclin, Ifx_SizeT count, Ifx_TickTime timeout);
+IFX_EXTERN boolean IfxAsclin_Asc_canReadCount(IfxAsclin_Asc *asclin, uint16 count, Ifx_TickTime timeout);
 
 /**
  * \brief Checks if the specified number of bytes can be written to the Tx buffer.
@@ -573,7 +583,7 @@ IFX_EXTERN boolean IfxAsclin_Asc_canReadCount(IfxAsclin_Asc *asclin, Ifx_SizeT c
  * \retval Returns TRUE if at least count bytes can be written to the tx buffer, if not the Event is armed to be set when the buffer free count is bigger or equal to the requested count,
  * 				   FALSE otherwise.
  */
-IFX_EXTERN boolean IfxAsclin_Asc_canWriteCount(IfxAsclin_Asc *asclin, Ifx_SizeT count, Ifx_TickTime timeout);
+IFX_EXTERN boolean IfxAsclin_Asc_canWriteCount(IfxAsclin_Asc *asclin, uint16 count, Ifx_TickTime timeout);
 
 /**
  * \brief Clears the receive FIFO buffer and flushes any remaining data in the Rx FIFO.
@@ -613,10 +623,10 @@ IFX_EXTERN boolean IfxAsclin_Asc_flushTx(IfxAsclin_Asc *asclin, Ifx_TickTime tim
  *
  * \param[in] asclin Module handle.
  *
- * \retval sint32 Number of bytes in the rx buffer.
+ * \retval uint32 Number of bytes in the rx buffer.
  * 				  Range: 0 to the size of the Rx FIFO.
  */
-IFX_EXTERN sint32 IfxAsclin_Asc_getReadCount(IfxAsclin_Asc *asclin);
+IFX_EXTERN uint32 IfxAsclin_Asc_getReadCount(IfxAsclin_Asc *asclin);
 
 /**
  * \brief Retrieves the read event flag status.
@@ -655,10 +665,10 @@ IFX_EXTERN Ifx_TickTime IfxAsclin_Asc_getTxTimeStamp(IfxAsclin_Asc *asclin);
  *
  * \param[in] asclin Pointer to the IfxAsclin_Asc instance.
  *
- * \retval sint32 The number of free bytes in the tx buffer.
+ * \retval uint32 The number of free bytes in the tx buffer.
  * 				  Range: 0 to the size of the Rx FIFO.
  */
-IFX_EXTERN sint32 IfxAsclin_Asc_getWriteCount(IfxAsclin_Asc *asclin);
+IFX_EXTERN uint32 IfxAsclin_Asc_getWriteCount(IfxAsclin_Asc *asclin);
 
 /**
  * \brief Retrieves the write event flag status.
@@ -686,7 +696,7 @@ IFX_EXTERN volatile boolean *IfxAsclin_Asc_getWriteEvent(IfxAsclin_Asc *asclin);
  * \note A coding example can be found in \ref IfxLld_Asclin_Asc_Usage
  *
  */
-IFX_EXTERN boolean IfxAsclin_Asc_read(IfxAsclin_Asc *asclin, void *data, Ifx_SizeT *count, Ifx_TickTime timeout);
+IFX_EXTERN boolean IfxAsclin_Asc_read(IfxAsclin_Asc *asclin, void *data, uint16 *count, Ifx_TickTime timeout);
 
 /**
  * \brief Resets the send count value.
@@ -714,7 +724,7 @@ IFX_EXTERN void IfxAsclin_Asc_resetSendCount(IfxAsclin_Asc *asclin);
  * \note A coding example can be found in \ref IfxLld_Asclin_Asc_Usage
  *
  */
-IFX_EXTERN boolean IfxAsclin_Asc_write(IfxAsclin_Asc *asclin, const void *data, Ifx_SizeT *count, Ifx_TickTime timeout);
+IFX_EXTERN boolean IfxAsclin_Asc_write(IfxAsclin_Asc *asclin, const void *data, uint16 *count, Ifx_TickTime timeout);
 
 /**
  * \brief Retrieves the current count of Interrupt Service Requests (ISR) for the ASCLIN instance.

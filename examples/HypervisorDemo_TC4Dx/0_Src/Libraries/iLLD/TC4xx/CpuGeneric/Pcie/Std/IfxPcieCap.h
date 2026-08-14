@@ -174,7 +174,7 @@ typedef enum
     IfxPcieCap_ObffCapability_None,  /**< \brief OBFF not supported */
     IfxPcieCap_ObffCapability_Msg,   /**< \brief OBFF using Message */
     IfxPcieCap_ObffCapability_Wake,  /**< \brief OBFF using WAKE signalling */
-    IfxPcieCap_ObffCapability_Both   /**< \brief OBFF using WAKE signalling and MessGE */
+    IfxPcieCap_ObffCapability_Both   /**< \brief OBFF using WAKE signalling and Message */
 } IfxPcieCap_ObffCapability;
 
 /** \brief OBFF Type
@@ -381,7 +381,7 @@ typedef struct
     uint32 atomOpRout : 1;          /**< \brief Atomic Op Routing supported */
     uint32 atomOpCmpl32 : 1;        /**< \brief Atomic Op 32 Bit Completion */
     uint32 atomOpCmpl64 : 1;        /**< \brief Atomic Op 64 Bit Completion */
-    uint32 casCmpl128 : 1;          /**< \brief 128 Bit Bit CAS completer supported */
+    uint32 casCmpl128 : 1;          /**< \brief 128 Bit CAS completer supported */
     uint32 roPrDisable : 1;         /**< \brief No RO enabled PR-PR Passing */
     uint32 ltr : 1;                 /**< \brief LTR Mechanism supported */
     uint32 tphCmpl : 2;             /**< \brief TPH Completer supported */

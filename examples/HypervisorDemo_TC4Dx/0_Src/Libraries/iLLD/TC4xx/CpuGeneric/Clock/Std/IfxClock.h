@@ -81,7 +81,7 @@
  *         IfxClock_init(&IfxClock_testClockConfig);
  * \endcode
  *
- *    The SYS PLL, PER PLL1 , PLL2, PLL3 and clocks are now initialised based on the XTAL and PLL values configured in Ifx_Cfg.h and are ready for use now!
+ *    The SYS PLL, PER PLL1, PLL2, PLL3 and clocks are now initialised based on the XTAL and PLL values configured in Ifx_Cfg.h and are ready for use now!
  *
  * Alternately the PLL and clocks can be initialised using below method which provides greater control on the configuration.
  *
@@ -206,7 +206,7 @@
  *  // put this as part of the CCU configuration:
  *  IfxClock_sampleClockConfig.modulationConfig = &IfxClock_SampleModConfig;
  *
- *  // now initalize the CCU PLL and clock with the init function
+ *  // now initialize the CCU PLL and clock with the init function
  *  IfxClock_init(&IfxClock_sampleClockConfig)
  * \endcode
  *
@@ -572,10 +572,10 @@ typedef enum
 
 /** \brief PLL0 Divider Select: defines the pre-dividing factor in front of the K2-Divider
  *  Register : SYSPLLCON0.B.K2PREDIV ;
- *  00B DIVBY1_0 / The 1.0 pre-divider between DCO and K2-Divider is selected for PLL0 . Hence, the resulting divider factor in front of the K2-Divider is fDCO / 1.0.
- *  01B DIVBY2_0 / The 2.0 pre-divider between DCO and K2-Divider is selected for PLL0 . Hence, the resulting divider factor in front of the K2-Divider is fDCO / 2.0.
- *  10B DIVBY1_2 / The 1.2 pre-divider between DCO and K2-Divider is selected for PLL0 . Hence, the resulting divider factor in front of the K2-Divider is fDCO / 1.2.
- *  11B DIVBY1_6 / The 1.6 pre-divider between DCO and K2-Divider is selected for PLL0 . Hence, the resulting divider factor in front of the K2-Divider is fDCO / 1.6.
+ *  00B DIVBY1_0 / The 1.0 pre-divider between DCO and K2-Divider is selected for PLL0. Hence, the resulting divider factor in front of the K2-Divider is fDCO / 1.0.
+ *  01B DIVBY2_0 / The 2.0 pre-divider between DCO and K2-Divider is selected for PLL0. Hence, the resulting divider factor in front of the K2-Divider is fDCO / 2.0.
+ *  10B DIVBY1_2 / The 1.2 pre-divider between DCO and K2-Divider is selected for PLL0. Hence, the resulting divider factor in front of the K2-Divider is fDCO / 1.2.
+ *  11B DIVBY1_6 / The 1.6 pre-divider between DCO and K2-Divider is selected for PLL0. Hence, the resulting divider factor in front of the K2-Divider is fDCO / 1.6.
  */
 typedef enum
 {
@@ -651,10 +651,10 @@ typedef enum
 
 /** \brief PLL3 Divider Select: defines the pre-dividing factor in front of the K4-Divider
  *  Register : PERPLLCON0.B.K4PREDIV ;
- *  00B DIVBY1_0 / The 1.0 pre-divider between DCO and K3-Divider is selected for PLL2 . Hence, the resulting divider factor in front of the K3-Divider is fDCO / 1.0.
- *  01B DIVBY2_0 / The 2.0 pre-divider between DCO and K4-Divider is selected for PLL3 . Hence, the resulting divider factor in front of the K4-Divider is fDCO / 2.0.
- *  10B DIVBY1_2 / The 1.2 pre-divider between DCO and K4-Divider is selected for PLL3 . Hence, the resulting divider factor in front of the K4-Divider is fDCO / 1.2.
- *  11B DIVBY1_6 / The 1.6 pre-divider between DCO and K4-Divider is selected for PLL3 . Hence, the resulting divider factor in front of the K4-Divider is fDCO / 1.6
+ *  00B DIVBY1_0 / The 1.0 pre-divider between DCO and K3-Divider is selected for PLL2. Hence, the resulting divider factor in front of the K3-Divider is fDCO / 1.0.
+ *  01B DIVBY2_0 / The 2.0 pre-divider between DCO and K4-Divider is selected for PLL3. Hence, the resulting divider factor in front of the K4-Divider is fDCO / 2.0.
+ *  10B DIVBY1_2 / The 1.2 pre-divider between DCO and K4-Divider is selected for PLL3. Hence, the resulting divider factor in front of the K4-Divider is fDCO / 1.2.
+ *  11B DIVBY1_6 / The 1.6 pre-divider between DCO and K4-Divider is selected for PLL3. Hence, the resulting divider factor in front of the K4-Divider is fDCO / 1.6
  */
 typedef enum
 {
@@ -1114,7 +1114,7 @@ typedef struct
 } IfxClock_OscconRegConfig;
 
 /** \brief Configuration structure type for the Per Pll config
- *   This structure must be used to configure the P, N , K2, K3,K4 divider dividers.
+ *   This structure must be used to configure the P, N, K2, K3, K4 divider dividers.
  *   fPLL1 = N * fIN / P * K2 * 1. 0 -> K2PREDIV = 0
  *   fPLL1 = N * fIN / P * K2 * 2. 0 -> K2PREDIV = 1
  *   fPLL1 = N * fIN / P * K2 * 1. 2 -> K2PREDIV = 2
@@ -1237,6 +1237,7 @@ typedef struct
     IfxClock_SysClockSourceSelect            SysClockSourceSelect;
     IfxClock_PerClockSourceSelect            PerClockSourceSelect;
     IfxClock_OscconRegConfig                 osccon;                         /**< \brief OSCCON Configurations */
+    uint32                                   oscConModeVal;                  /**< \brief OSCCON.MODE value applied when IFX_CFG_CLOCK_EXT_CLOCK is 0. Allows the oscillator mode to be selected via the configuration structure instead of the IFX_CFG_CLOCK_EXT_CLOCK compile switch. */
 } IfxClock_Config;
 
 /** \brief structure holding the RGain parameters for modulation
@@ -1575,9 +1576,10 @@ IFX_INLINE uint32 IfxClock_checkPerPllLock(IfxClock_Fsource fsource);
 
 /** \brief API to enable/power-on the Crystal oscillator.
  *
+ * \param oscConMode OSCCON.MODE value to be programmed
  * \retval None
  */
-IFX_INLINE void IfxClock_powerOnCrystalOsc(void);
+IFX_INLINE void IfxClock_powerOnCrystalOsc(uint32 oscConMode);
 
 /** \brief API to enable/power-on the Ramp oscillator.
  *
@@ -2240,7 +2242,7 @@ IFX_EXTERN uint8 IfxClock_audioFreqTuning(uint32 nDiv);
 IFX_EXTERN float32 IfxClock_computeApllFreqFromNDivRegVal(uint32 nDivRegValue);
 
 /** \brief API to disable the APLL.
- * This API will power off the Audio PLL .
+ * This API will power off the Audio PLL.
  *
  * \retval TRUE: Operation successful, FALSE: Operation Failure.
  */
@@ -2839,7 +2841,7 @@ IFX_INLINE uint32 IfxClock_checkPerPllLock(IfxClock_Fsource fsource)
 }
 
 
-IFX_INLINE void IfxClock_powerOnCrystalOsc(void)
+IFX_INLINE void IfxClock_powerOnCrystalOsc(uint32 oscConMode)
 {
     Ifx_CLOCK_OSCCON scuOsccon;
     uint8            initError         = 0;
@@ -2847,11 +2849,7 @@ IFX_INLINE void IfxClock_powerOnCrystalOsc(void)
 
     scuOsccon.U = CLOCK_OSCCON.U;
 
-#if (IFX_CFG_CLOCK_EXT_CLOCK == 1)
-    scuOsccon.B.MODE = 2U;         /* external clock selected */
-#else
-    scuOsccon.B.MODE = 0U;         /*oscillator enabled */
-#endif
+    scuOsccon.B.MODE = oscConMode;         /* oscillator mode selected from configuration */
 
     while (CLOCK_CCUSTAT.B.LCK != 0U)
     {
@@ -2997,7 +2995,7 @@ IFX_INLINE uint32 IfxClock_getMt0Frequency(void)
 {
     uint32 fmt0 = 0U;
 
-    if (ERAY0_CLC.B.DISS == 0u) // Check if module clock is enable
+    if (ERAY0_CLC.B.DISS == 0u) // Check if module clock is enabled
     {
         uint32         fmicrotick = 0U;
         Ifx_ERAY_PRTC1 prtc1;

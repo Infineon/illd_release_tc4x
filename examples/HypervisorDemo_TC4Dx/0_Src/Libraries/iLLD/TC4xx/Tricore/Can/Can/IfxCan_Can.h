@@ -239,11 +239,11 @@
  *     txData[0] = 0xC0CAC01A;
  *     txData[1] = 0xBA5EBA11;
  *
- *     // Initialise the message strcture with defualt values
+ *     // Initialise the message structure with default values
  *     IfxCan_Message txMsg;
  *     IfxCan_Can_initMessage(&txMsg);
  *
- *     // change the relevent members of message structure
+ *     // change the relevant members of message structure
  *     txMsg.bufferNumber = 0;
  *     txMsg.messageId = 0x0;
  *
@@ -361,11 +361,11 @@
  *         txData[i] = 0x11223300 + i;
  *     }
  *
- *     // Initialise the message structure with defualt values
+ *     // Initialise the message structure with default values
  *     IfxCan_Message txMsg;
  *     IfxCan_Can_initMessage(&txMsg);
  *
- *     // change the relevent members of the message structure
+ *     // change the relevant members of the message structure
  *     txMsg.bufferNumber = 1;
  *     txMsg.messageId = 0x7ff;
  *     txMsg.dataLengthCode = IfxCan_DataLengthCode_32;     // accordingly txData array is loaded upto txData[8]
@@ -503,7 +503,7 @@
  *     rxData[0] = 0xdeaddead;
  *     rxData[1] = 0xdeaddead;
  *
- *     // Initialise the tx message structure with defualt values
+ *     // Initialise the tx message structure with default values
  *     IfxCan_Message txMsg;
  *     IfxCan_Can_initMessage(&txMsg);
  *
@@ -513,7 +513,7 @@
  *     txMsg.storeInTxFifoQueue = TRUE;    // enable writing the data into FIFO/Queue,
  *                                          // this will enable the sendMessage API to get the next Tx element based on the put index of the Tx FIFO
  *
- *     // Initialise the rx message structure with defualt values
+ *     // Initialise the rx message structure with default values
  *     IfxCan_Message rxMsg;
  *     IfxCan_Can_initMessage(&rxMsg);
  *

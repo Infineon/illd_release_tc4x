@@ -265,17 +265,17 @@ IFX_INLINE void IfxSmm_disableVoltageDroopLegacyTimer(void);
  */
 IFX_INLINE void IfxSmm_enableVoltageDroopLegacyTimerOverflowFlag(void);
 
-/** \brief Enables the activation of interrupt on timer overflow or timeout of load jump sequence unit A..
+/** \brief Enables the activation of interrupt on timer overflow or timeout of load jump sequence unit A.
  * \return None
  */
 IFX_INLINE void IfxSmm_enableVoltageDroopLegacyTimerOverflowInterrupt(void);
 
-/** \brief Disables the update of Voltage Droop Timer Overflow Flag on timer overflow or timeout of load jump sequence unit A..
+/** \brief Disables the update of Voltage Droop Timer Overflow Flag on timer overflow or timeout of load jump sequence unit A.
  * \return None
  */
 IFX_INLINE void IfxSmm_disableVoltageDroopLegacyTimerOverflowFlag(void);
 
-/** \brief Disables the activation of interrupt on timer overflow or timeout of load jump sequence unit A..
+/** \brief Disables the activation of interrupt on timer overflow or timeout of load jump sequence unit A.
  * \return None
  */
 IFX_INLINE void IfxSmm_disableVoltageDroopLegacyTimerOverflowInterrupt(void);
@@ -285,7 +285,7 @@ IFX_INLINE void IfxSmm_disableVoltageDroopLegacyTimerOverflowInterrupt(void);
  */
 IFX_INLINE void IfxSmm_startVoltageDroopLegacyTimer(void);
 
-/** \brief Stops Voltage Droop timer of load jump sequence unit A..
+/** \brief Stops Voltage Droop timer of load jump sequence unit A.
  * \return None
  */
 IFX_INLINE void IfxSmm_stopVoltageDroopLegacyTimer(void);

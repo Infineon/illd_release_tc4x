@@ -107,7 +107,7 @@ IFX_EXTERN IfxSrc_Tos IfxCpu_Irq_getTos(IfxCpu_ResourceCpu coreId);
  * This address is assigned to BIV during startup.\n
  * For Tricore, this vector position is important, because whenever an interrupt occurs, with whichever priority,
  * the execution control jumps to this vector position. The code at this vector position will:\n
- * 1) fetch the priority of the targetted interrupt.\n
+ * 1) fetch the priority of the targeted interrupt.\n
  * 2) fetch the interrupt handler defined for this priority (this is done by Interrupt handler installation. Refer
  * \ref IfxLld_Cpu_Irq_Step4\n
  * 3) Then call the handler as notmal function call.

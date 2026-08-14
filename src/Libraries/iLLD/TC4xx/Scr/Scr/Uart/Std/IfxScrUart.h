@@ -3,7 +3,7 @@
  * \brief SCR UART basic functionality
  * \ingroup IfxLld_Scr
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -202,7 +202,7 @@ typedef struct
 typedef struct
 {
     uint8                  linId;           /**< \brief LIN Frame ID field */
-    uint8                 *linDataPtr;      /**< \brief Pointer to the the data to be transmitted over LIN */
+    uint8                 *linDataPtr;      /**< \brief Pointer to the data to be transmitted over LIN */
     IfxScrUart_LinDataSize dataSizeinBytes; /**< \brief Size of the data to be transmitted */
     uint8                  checksum;        /**< \brief LIN Frame checksum field. */
 }IfxScrUart_LinMasterMessage;
@@ -258,7 +258,7 @@ IFX_INLINE void IfxScrUart_setReloadValue(uint16 reloadValue);
 
 IFX_INLINE void IfxScrUart_doubleMode2Baudrate(Ifx_Functionality enable);
 
-/** \brief Enable or disable the baudrate generator.All baudrate settings must be done with this disabled and enabled after the settings are done..
+/** \brief Enable or disable the baudrate generator.All baudrate settings must be done with this disabled and enabled after the settings are done.
  * \param enable enable or disable the double baudrate in UART mode 2
  * \return None.
  */

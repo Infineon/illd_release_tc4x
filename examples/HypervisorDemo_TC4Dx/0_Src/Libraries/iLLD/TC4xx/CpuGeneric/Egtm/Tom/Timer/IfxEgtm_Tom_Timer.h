@@ -202,7 +202,7 @@ typedef enum
  */
 typedef struct
 {
-    Ifx_Priority    isrPriority;       /**< \brief Interrupt Priority, if 0 the interrupt is disable */
+    Ifx_Priority    isrPriority;       /**< \brief Interrupt Priority, if 0 the interrupt is disabled */
     IfxSrc_Tos      isrProvider;       /**< \brief Interrupt service provider */
     IfxEgtm_IrqMode irqMode;           /**< \brief Interrupt mode */
     IfxSrc_VmId     vmId;              /**< \brief Virtual machine interrupt service provider */

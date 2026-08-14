@@ -2,7 +2,7 @@
  * \file Ifx_Types.h
  * \brief This files defines all types used by the IFX HAL and libraries
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -252,7 +252,10 @@ typedef enum
 #elif defined(__MSVC__)
 #include "Ifx_TypesMsvc.h"
 
-#elif defined(__CCAC__)
+#elif defined(__CCAC__) && defined(__IFX_LLVM__)
+#include "Ifx_TypesLlvm.h"
+
+#elif defined(__CCAC__) && !defined(__IFX_LLVM__)
 #include "Ifx_TypesMw.h"
 #else
 #error Unsupported compiler.

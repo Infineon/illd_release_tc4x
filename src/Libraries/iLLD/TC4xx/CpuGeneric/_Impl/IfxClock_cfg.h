@@ -3,7 +3,7 @@
  * \brief CLOCK on-chip implementation data 
  * \ingroup IfxLld_Clock 
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -47,4 +47,10 @@
 #include "TC4Dx/IfxClock_cfg_TC4Dx.h"
 #endif
 
+/* Default OSCCON.MODE value used when IFX_CFG_CLOCK_EXT_CLOCK is 0. */
+/* This allows the oscillator mode to be selected via configuration (IfxClock_Config.oscConModeVal) */
+/* without relying on the IFX_CFG_CLOCK_EXT_CLOCK compile switch. */
+#ifndef IFX_CFG_CLOCK_OSCCON_MODE
+#    define IFX_CFG_CLOCK_OSCCON_MODE 0U /**< \brief Default OSCCON.MODE (0: oscillator enabled) */
+#endif
 #endif /* IFXCLOCK_CFG_H */

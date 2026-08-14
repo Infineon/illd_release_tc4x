@@ -184,7 +184,7 @@
  * Before proceeding please ensure:
  *     -# Atom/Tom is present in cluster specified
  *     -# Atom/Tom and Dtm (if enabled) clock are properly configured (clock frequency > 0) and enabled
- *     -# Channel number specifed in channel configuration is present in submodule (Atom contains only 8 channels)
+ *     -# Channel number specified in channel configuration is present in submodule (Atom contains only 8 channels)
  *     -# Synchronous channel must always be next to last configured base or sync channel (last channel number + 1) E.g. If base channel is channel 5 then next channel numbers must be 6, 7, ... and so on.
  *     -# If DTM config is attached, then DTM is present for that channel
  *     -# Pin

@@ -71,7 +71,7 @@ boolean IfxEgtm_Atom_Pwm_init(IfxEgtm_Atom_Pwm_Driver *driver, const IfxEgtm_Ato
         /* Do clock update from shadow once */
         else
         {
-            /* After (channel) reset the channel operation will run with CLS[j]_CLK . In order to change the clock source
+            /* After (channel) reset the channel operation will run with CLS[j]_CLK. In order to change the clock source
              * resolution, it is necessary to perform a synchronous update (via CLSi_ATOM_CHx_CTRL_SR.CLK_SRC_SR) before
              * enabling the channel. This can be done by performing the following configuration sequence before enabling
              * the channel: CLSi_ATOM_CHx_CTRL_SR.CLK_SRC_SR=<selected CCM clock source>; CLSi_ATOM_CHx_SR0 = 0H;

@@ -28,6 +28,7 @@ LCF_HEAP_SIZE = 4k;
 LCF_PPU_FLASH_SIZE  = 1M;
 LCF_PPU_LMURAM_SIZE = 512k;
 LCF_PPU_CSM_SIZE    = 512k;
+LCF_PPU_VCCM_SIZE   = 128k;
 
 LCF_DSPR5_START = 0x20000000;
 LCF_DSPR5_SIZE  = 240k;
@@ -180,6 +181,8 @@ MEMORY
 
     ppu_csm : ORIGIN = 0x92080000, len = 512K
     ppu_csm_nc : ORIGIN = 0xb2080000, len = 512K
+
+    ppu_vccm_nc : ORIGIN = 0xb2040000, len = 128K
 }
 
 //
@@ -2237,6 +2240,14 @@ SECTIONS
         .+= MEMENDADDR(ppu_csm_nc) - MEMADDR(ppu_csm_nc);
         PROVIDE(__PPU_CSM_END = .);
     } > ppu_csm_nc
+
+    /* PPUVCCM section reserved for PPU stack/data; ECC-initialized from TriCore */
+    .ppu_vccm   (MEMADDR(ppu_vccm_nc)) CLEAR  ALIGN(4) : 
+    { 
+        PROVIDE(__PPU_VCCM_START = .);
+        .+= MEMENDADDR(ppu_vccm_nc) - MEMADDR(ppu_vccm_nc);
+        PROVIDE(__PPU_VCCM_END = .);
+    } > ppu_vccm_nc
 
 // These special symbols mark the bounds of RAM and ROM memory.
 // They are used by the MULTI debugger.

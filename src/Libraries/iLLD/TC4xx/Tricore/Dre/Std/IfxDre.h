@@ -3,7 +3,7 @@
  * \brief DRE  basic functionality
  * \ingroup IfxLld_Dre
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -387,7 +387,7 @@ typedef struct
     boolean bufferPendingRequest;          /**< \brief Status flag for BPR. Range: 1 indicates a new input Ethernet frame in EIBUF, 0 otherwise */
     boolean ethernetFrameError;            /**< \brief Status flag for FE. Range: 1 if Ethernet frame error, 0 otherwise */
     boolean invalidFrameType;              /**< \brief Status flag for IFT. Range: 1 if the "Subtype" field of NTSCF header has a value other than 0x82, 0 otherwise  */
-    boolean invalidDestinationId;          /**< \brief Status flag for IDID. Range: 1 if no matching Stream ID Filter element and also no matching FWDID Filter element , 0 otherwise */
+    boolean invalidDestinationId;          /**< \brief Status flag for IDID. Range: 1 if no matching Stream ID Filter element and also no matching FWDID Filter element, 0 otherwise */
     boolean avtpLengthMismatchError;       /**< \brief Status flag for LME. Range: 1 if the calculated ACF_PAYLOAD_LENGTH is greater than the "Ntscf_data_length" value of the NTSCF header of input Ethernet frame, 0 otherwise  */
     boolean canFormatError;                /**< \brief Status flag for CFE. Range: 1 if the "ACF_MSG_TYPE" of the CAN frame contained in the input Ethernet frame has a value other than 0x2, 0 otherwise */
     boolean remoteFrameError;              /**< \brief Status flag for RFE. Range: 1 if EIBUF_CONFIG.RRF = 1 and a CAN frame has RTR = 1, 0 otherwise */

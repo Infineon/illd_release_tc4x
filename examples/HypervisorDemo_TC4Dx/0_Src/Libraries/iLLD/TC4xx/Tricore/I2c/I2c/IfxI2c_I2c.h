@@ -158,7 +158,7 @@
  *
  * Interrupts can be enabled from the application by using the APIs provided in the driver,
  * there are APIs available in the driver to enable, disable, clear and read the status of interrupt falgs, along with these,\n
- * APIs to enable the the interrupts are also available.
+ * APIs to enable the interrupts are also available.
  *
  * here is an example of how to use the interrupts in I2C driver.
  *
@@ -535,7 +535,7 @@ typedef struct
  */
 typedef struct
 {
-    IfxI2c_I2c        *i2c;                       /**< \brief Module Pionter */
+    IfxI2c_I2c        *i2c;                       /**< \brief Module Pointer */
     uint16             deviceAddress;             /**< \brief the slave device's address. Range: 0 to 0xFF */
     IfxI2c_AddressMode addressMode;               /**< \brief slave device's address (7 or 10 bits) */
     IfxI2c_Mode        speedMode;                 /**< \brief slave device in Standard/Fast or High Speed mode. */

@@ -24,7 +24,7 @@
  * language governing permissions and limitations under IFASLL.
  *
  *
- */
+ */ 
 
 /******************************************************************************/
 /*----------------------------------Includes----------------------------------*/
@@ -530,13 +530,23 @@ void IfxCan_Can_setExtendedUnicastRouting(IfxCan_Can_Node *node, IfxCan_XtdUnica
     xtdRoutingElement.UCR.B.MODE = 0;
     xtdRoutingElement.UCR.B.DID  = router->destinationId;
 
-    /*To do based on future requirements
-     * CAN Frame Format Modifications*/
-    xtdRoutingElement.UCR.B.FDFM    = 0;
-    xtdRoutingElement.UCR.B.FDF     = 0;
-    xtdRoutingElement.UCR.B.DLC     = 0;
-    xtdRoutingElement.UCR.B.IDXOR   = 0;
-    xtdRoutingElement.UCR.B.IDSHIFT = 0;
+    /*CAN Frame Format Modifications*/
+    if (router->enableFormatModification)
+    {
+        xtdRoutingElement.UCR.B.FDF     = router->frameType;
+        xtdRoutingElement.UCR.B.FDFM    = 1; 
+        xtdRoutingElement.UCR.B.DLC     = router->lengthModifier;
+        xtdRoutingElement.UCR.B.IDXOR   = router->canIdModifier;
+        xtdRoutingElement.UCR.B.IDSHIFT = router->idShift;       
+    }
+    else
+    {
+        xtdRoutingElement.UCR.B.FDF     = 0;
+        xtdRoutingElement.UCR.B.FDFM    = 0; 
+        xtdRoutingElement.UCR.B.DLC     = 0;
+        xtdRoutingElement.UCR.B.IDXOR   = 0;
+        xtdRoutingElement.UCR.B.IDSHIFT = 0;       
+    }
 
     xtdRoutingElementPtr->UCR.U     = xtdRoutingElement.UCR.U;
 }
@@ -902,20 +912,20 @@ void IfxCan_Can_readMessage(IfxCan_Can_Node *node, IfxCan_Message *message, uint
     {
         if (message->readFromRxFifo0)
         {
-            /* get the Tx FIFO 0 ELement address */
+            /* get the Tx FIFO 0 Element address */
             bufferId        = IfxCan_Node_getRxFifo0GetIndex(node->node);
             rxBufferElement = IfxCan_Node_getRxFifo0ElementAddress(node->node, node->messageRAM.baseAddress, node->messageRAM.rxFifo0StartAddress, bufferId);
         }
         else
         {
-            /* get the Tx FIFO 1 ELement address */
+            /* get the Tx FIFO 1 Element address */
             bufferId        = IfxCan_Node_getRxFifo1GetIndex(node->node);
             rxBufferElement = IfxCan_Node_getRxFifo1ElementAddress(node->node, node->messageRAM.baseAddress, node->messageRAM.rxFifo1StartAddress, bufferId);
         }
     }
     else
     {
-        /* get the Rx Bufer ELement address */
+        /* get the Rx Buffer Element address */
         bufferId        = (IfxCan_RxBufferId)message->bufferNumber;
         rxBufferElement = IfxCan_Node_getRxBufferElementAddress(node->node, node->messageRAM.baseAddress, node->messageRAM.rxBuffersStartAddress, bufferId);
     }
@@ -954,9 +964,13 @@ void IfxCan_Can_readMessage(IfxCan_Can_Node *node, IfxCan_Message *message, uint
     }
     else if (node->node->CCCR.B.UTSU == 1)
     {
-        /* Get Timestamp Index from Global Register */
-        timeStampIndex       = IfxCan_Node_getTsuTimeStampPointer(node->node);
-        message->rxTimeStamp = IfxCan_Node_getTsuTimeStamp(node->node, (IfxCan_TsuTimeStampIndex)timeStampIndex);
+        /* Checks the time stamp validity bit R1B.TSC before reading the time stamp */
+        if (rxBufferElement->R1B.B.TSC == 1U)
+        {
+            /* Get Time stamp Index from RX Buffer Element (R1B.RXTSP) */
+            timeStampIndex       = (uint8)rxBufferElement->R1B.B.RXTSP;
+            message->rxTimeStamp = IfxCan_Node_getTsuTimeStamp(node->node, (IfxCan_TsuTimeStampIndex)timeStampIndex);
+        }
     }
 
     /* clear newdata flag after reading */
@@ -985,7 +999,7 @@ IfxCan_Status IfxCan_Can_sendMessage(IfxCan_Can_Node *node, IfxCan_Message *mess
     }
     else
     {
-        /* get the Tx Bufer ELement address */
+        /* get the Tx Buffer Element address */
         Ifx_CAN_TXMSG *txBufferElement = IfxCan_Node_getTxBufferElementAddress(node->node, node->messageRAM.baseAddress, node->messageRAM.txBuffersStartAddress, bufferId);
 
         /*set message Id (ID and XTD) */

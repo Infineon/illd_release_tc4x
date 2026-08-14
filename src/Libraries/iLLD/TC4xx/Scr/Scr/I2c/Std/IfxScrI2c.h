@@ -3,7 +3,7 @@
  * \brief SCR I2c basic functionality
  * \ingroup IfxLld_Scr
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -308,7 +308,7 @@ IFX_INLINE void IfxScrI2c_transmitStop(void);
 IFX_INLINE void IfxScrI2c_transmitStart(void);
 
 /** \brief API to execute address phase
- * \param readWrite set FALSE to to write to the slave and TRUE to read from the slave
+ * \param readWrite set FALSE to write to the slave and TRUE to read from the slave
  * \return None
  */
 IFX_INLINE void IfxScrI2c_sendAddress(uint16 slaveAddress, boolean readWrite);

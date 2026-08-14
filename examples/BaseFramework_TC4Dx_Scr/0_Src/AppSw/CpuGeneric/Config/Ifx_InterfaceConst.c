@@ -9,7 +9,6 @@
  *
  *                                 IMPORTANT NOTICE
  *
- *
  * Infineon Technologies AG (Infineon) licenses this file to you under the
  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
  * this file except in compliance with IFASLL.

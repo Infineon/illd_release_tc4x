@@ -259,7 +259,7 @@ typedef enum
 typedef enum
 {
     IfxAsclin_LinResponseTimeoutMode_frameTimeout    = 0, /**< \brief timeout threshold is for frame */
-    IfxAsclin_LinResponseTimeoutMode_responseTimeout = 1  /**< \brief timeout threshold is for reponse */
+    IfxAsclin_LinResponseTimeoutMode_responseTimeout = 1  /**< \brief timeout threshold is for response */
 } IfxAsclin_LinResponseTimeoutMode;
 
 /** \brief Defines the bit length in ticks in the range of 1 to 16. The lengths of 1 to 3 are not allowed\n
@@ -1698,7 +1698,7 @@ IFX_INLINE void IfxAsclin_enableLinParityErrorFlag(Ifx_ASCLIN *asclin, boolean e
 IFX_INLINE void IfxAsclin_enableLoopBackMode(Ifx_ASCLIN *asclin, boolean enable);
 
 /**
- * \brief Enables/disables the parity bit attachment to tha data bits.
+ * \brief Enables/disables the parity bit attachment to the data bits.
  *
  * \param[inout] asclin Pointer to ASCLIN base SFR address.
  * \param[in] 	 enable Choice (enable/disable).
@@ -1929,7 +1929,7 @@ IFX_INLINE void IfxAsclin_setFrameMode(Ifx_ASCLIN *asclin, IfxAsclin_FrameMode m
 IFX_INLINE void IfxAsclin_setRtsCtsPolarity(Ifx_ASCLIN *asclin, IfxAsclin_RtsCtsPolarity rcpol);
 
 /**
- * \brief Selects the Rx FIFO interupt generation mode.
+ * \brief Selects the Rx FIFO interrupt generation mode.
  *
  * \param[inout] asclin Pointer to ASCLIN base SFR address.
  * \param[in] 	 mode   Mode selction.
@@ -1975,7 +1975,7 @@ IFX_INLINE void IfxAsclin_setSlavePolarity(Ifx_ASCLIN *asclin, IfxAsclin_SlavePo
 IFX_INLINE void IfxAsclin_setSuspendMode(Ifx_ASCLIN *asclin, IfxAsclin_SuspendMode mode);
 
 /**
- * \brief Selects the Tx FIFO interupt generation mode.
+ * \brief Selects the Tx FIFO interrupt generation mode.
  *
  * \param[inout] asclin Pointer to ASCLIN base SFR address.
  * \param[in] 	 mode 	Mode selction.
@@ -2056,7 +2056,7 @@ IFX_INLINE void IfxAsclin_setCircularFifoLevel(Ifx_ASCLIN *asclin, IfxAsclin_Fif
  * \param[in] 	 medianFilter Number of samples per bit (median filter).
  * 							  Range: \ref IfxAsclin_SamplesPerBit
  *
- * \retval TRUE if configuration was successfull, FALSE otherwise.
+ * \retval TRUE if configuration was successful, FALSE otherwise.
  */
 IFX_EXTERN boolean IfxAsclin_setBitTiming(Ifx_ASCLIN *asclin, float32 baudrate, IfxAsclin_OversamplingFactor oversampling, IfxAsclin_SamplePointPosition samplepoint, IfxAsclin_SamplesPerBit medianFilter);
 

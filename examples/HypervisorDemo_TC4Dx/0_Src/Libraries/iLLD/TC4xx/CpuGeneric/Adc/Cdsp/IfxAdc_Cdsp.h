@@ -1010,7 +1010,7 @@ IFX_EXTERN void IfxAdc_Cdsp_initModuleConfig(IfxAdc_Cdsp_Config *config, Ifx_ADC
 
 /** \brief Function to initialize Dsp core
  *
- * Note:By deafult, each filter chain is provided as a single binary image. The exception is FC5 (Luenberger Observer), which uses two binaries.
+ * Note:By default, each filter chain is provided as a single binary image. The exception is FC5 (Luenberger Observer), which uses two binaries.
  * The filter chain binary image is loaded into ICCM memory, and the User configuration table(UCT) is loaded into the DCCM memory.
  * For FC5 - Luenberger observer (LO), there are two images: an ICCM binary and a DCCM LoLut binary. The ICCM binary is loaded into ICCM memory,
  * the User configuration table(UCT) is loaded into the DCCM memory, and the LoLut binary is loaded into DCCM memory at offset \ref IFXADC_CDSP_LOLUT_IMAGE_OFFSET.

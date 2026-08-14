@@ -4,9 +4,9 @@
  *
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
+ * $Date: 2023-10-17 13:08:18
  *
  *                                 IMPORTANT NOTICE
- *
  *
  * Infineon Technologies AG (Infineon) licenses this file to you under the
  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
@@ -65,9 +65,16 @@ void Ifx_Ssw_FwCheck(void)
  * \return none
  */
 #if (IFX_CFG_SSW_ENABLE_PMS_INIT == 1U)
+#include "IfxPmsEvr.h"
+
 void Ifx_Ssw_Pms_Init(void)
 {
-    /* TODO: To be updated as per A3G spec */
+    if (IfxPmsEvr_runInitSequence(&IfxPmsEvr_cfgSequenceDefault) == 0)
+    {
+        Ifx_Ssw_debug();
+    }
+
+    Ifx_Ssw_jumpBackToLink();
 }
 
 
@@ -81,7 +88,12 @@ void Ifx_Ssw_Pms_Init(void)
 #if (IFX_CFG_SSW_ENABLE_PMS_INIT_CHECK == 1U)
 void Ifx_Ssw_Pms_InitCheck(void)
 {
-    /* TODO: To be updated as per A3G spec */
+    if (IfxPmsEvr_areInitValuesRight(&IfxPmsEvr_verifyRegCfgDefault) == 0)
+    {
+        Ifx_Ssw_debug();
+    }
+
+    Ifx_Ssw_jumpBackToLink();
 }
 
 

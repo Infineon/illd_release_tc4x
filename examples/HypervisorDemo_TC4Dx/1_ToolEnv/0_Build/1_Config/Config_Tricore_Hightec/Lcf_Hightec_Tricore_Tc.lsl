@@ -1526,101 +1526,101 @@ SECTIONS
 
 
 
-    .start_tc00 (LCF_STARTPTR_NC_CPU00) : { KEEP (*(.start)); } > pfls00_nc
+    .start_tc00 (LCF_STARTPTR_NC_CPU00) : { KEEP (*(.start .start.*)); } > pfls00_nc
     PROVIDE(__START00 = LCF_STARTPTR_NC_CPU00);	
-    .start_tc01 (LCF_STARTPTR_NC_CPU01) : { KEEP (*(.start_cpu01)); } > pfls01_nc
+    .start_tc01 (LCF_STARTPTR_NC_CPU01) : { KEEP (*(.start_cpu01*)); } > pfls01_nc
     PROVIDE(__START01 = LCF_STARTPTR_NC_CPU01);
-    .start_tc02 (LCF_STARTPTR_NC_CPU02) : { KEEP (*(.start_cpu02)); } > pfls02_nc
+    .start_tc02 (LCF_STARTPTR_NC_CPU02) : { KEEP (*(.start_cpu02*)); } > pfls02_nc
     PROVIDE(__START02 = LCF_STARTPTR_NC_CPU02);
-    .start_tc03 (LCF_STARTPTR_NC_CPU03) : { KEEP (*(.start_cpu03)); } > pfls03_nc
+    .start_tc03 (LCF_STARTPTR_NC_CPU03) : { KEEP (*(.start_cpu03*)); } > pfls03_nc
     PROVIDE(__START03 = LCF_STARTPTR_NC_CPU03);
-    .start_tc04 (LCF_STARTPTR_NC_CPU04) : { KEEP (*(.start_cpu04)); } > pfls04_nc
+    .start_tc04 (LCF_STARTPTR_NC_CPU04) : { KEEP (*(.start_cpu04*)); } > pfls04_nc
     PROVIDE(__START04 = LCF_STARTPTR_NC_CPU04);
-    .start_tc05 (LCF_STARTPTR_NC_CPU05) : { KEEP (*(.start_cpu05)); } > pfls05_nc
+    .start_tc05 (LCF_STARTPTR_NC_CPU05) : { KEEP (*(.start_cpu05*)); } > pfls05_nc
     PROVIDE(__START05 = LCF_STARTPTR_NC_CPU05);
-    .start_tc06 (LCF_STARTPTR_NC_CPU06) : { KEEP (*(.start_cpu06)); } > pfls06_nc
+    .start_tc06 (LCF_STARTPTR_NC_CPU06) : { KEEP (*(.start_cpu06*)); } > pfls06_nc
     PROVIDE(__START06 = LCF_STARTPTR_NC_CPU06);
-    .start_tc07 (LCF_STARTPTR_NC_CPU07) : { KEEP (*(.start_cpu07)); } > pfls07_nc
+    .start_tc07 (LCF_STARTPTR_NC_CPU07) : { KEEP (*(.start_cpu07*)); } > pfls07_nc
     PROVIDE(__START07 = LCF_STARTPTR_NC_CPU07);
-    .start_tc10 (LCF_STARTPTR_NC_CPU10) : { KEEP (*(.start_cpu10)); } > pfls10_nc
+    .start_tc10 (LCF_STARTPTR_NC_CPU10) : { KEEP (*(.start_cpu10*)); } > pfls10_nc
     PROVIDE(__START10 = LCF_STARTPTR_NC_CPU10);
-    .start_tc11 (LCF_STARTPTR_NC_CPU11) : { KEEP (*(.start_cpu11)); } > pfls11_nc
+    .start_tc11 (LCF_STARTPTR_NC_CPU11) : { KEEP (*(.start_cpu11*)); } > pfls11_nc
     PROVIDE(__START11 = LCF_STARTPTR_NC_CPU11);
-    .start_tc12 (LCF_STARTPTR_NC_CPU12) : { KEEP (*(.start_cpu12)); } > pfls12_nc
+    .start_tc12 (LCF_STARTPTR_NC_CPU12) : { KEEP (*(.start_cpu12*)); } > pfls12_nc
     PROVIDE(__START12 = LCF_STARTPTR_NC_CPU12);
-    .start_tc13 (LCF_STARTPTR_NC_CPU13) : { KEEP (*(.start_cpu13)); } > pfls13_nc
+    .start_tc13 (LCF_STARTPTR_NC_CPU13) : { KEEP (*(.start_cpu13*)); } > pfls13_nc
     PROVIDE(__START13 = LCF_STARTPTR_NC_CPU13);
-    .start_tc14 (LCF_STARTPTR_NC_CPU14) : { KEEP (*(.start_cpu14)); } > pfls14_nc
+    .start_tc14 (LCF_STARTPTR_NC_CPU14) : { KEEP (*(.start_cpu14*)); } > pfls14_nc
     PROVIDE(__START14 = LCF_STARTPTR_NC_CPU14);
-    .start_tc15 (LCF_STARTPTR_NC_CPU15) : { KEEP (*(.start_cpu15)); } > pfls15_nc
+    .start_tc15 (LCF_STARTPTR_NC_CPU15) : { KEEP (*(.start_cpu15*)); } > pfls15_nc
     PROVIDE(__START15 = LCF_STARTPTR_NC_CPU15);
-    .start_tc16 (LCF_STARTPTR_NC_CPU16) : { KEEP (*(.start_cpu16)); } > pfls16_nc
+    .start_tc16 (LCF_STARTPTR_NC_CPU16) : { KEEP (*(.start_cpu16*)); } > pfls16_nc
     PROVIDE(__START16 = LCF_STARTPTR_NC_CPU16);
-    .start_tc17 (LCF_STARTPTR_NC_CPU17) : { KEEP (*(.start_cpu17)); } > pfls17_nc
+    .start_tc17 (LCF_STARTPTR_NC_CPU17) : { KEEP (*(.start_cpu17*)); } > pfls17_nc
     PROVIDE(__START17 = LCF_STARTPTR_NC_CPU17);
-    .start_tc20 (LCF_STARTPTR_NC_CPU20) : { KEEP (*(.start_cpu20)); } > pfls20_nc
+    .start_tc20 (LCF_STARTPTR_NC_CPU20) : { KEEP (*(.start_cpu20*)); } > pfls20_nc
     PROVIDE(__START20 = LCF_STARTPTR_NC_CPU20);
-    .start_tc21 (LCF_STARTPTR_NC_CPU21) : { KEEP (*(.start_cpu21)); } > pfls21_nc
+    .start_tc21 (LCF_STARTPTR_NC_CPU21) : { KEEP (*(.start_cpu21*)); } > pfls21_nc
     PROVIDE(__START21 = LCF_STARTPTR_NC_CPU21);
-    .start_tc22 (LCF_STARTPTR_NC_CPU22) : { KEEP (*(.start_cpu22)); } > pfls22_nc
+    .start_tc22 (LCF_STARTPTR_NC_CPU22) : { KEEP (*(.start_cpu22*)); } > pfls22_nc
     PROVIDE(__START22 = LCF_STARTPTR_NC_CPU22);
-    .start_tc23 (LCF_STARTPTR_NC_CPU23) : { KEEP (*(.start_cpu23)); } > pfls23_nc
+    .start_tc23 (LCF_STARTPTR_NC_CPU23) : { KEEP (*(.start_cpu23*)); } > pfls23_nc
     PROVIDE(__START23 = LCF_STARTPTR_NC_CPU23);
-    .start_tc24 (LCF_STARTPTR_NC_CPU24) : { KEEP (*(.start_cpu24)); } > pfls24_nc
+    .start_tc24 (LCF_STARTPTR_NC_CPU24) : { KEEP (*(.start_cpu24*)); } > pfls24_nc
     PROVIDE(__START24 = LCF_STARTPTR_NC_CPU24);
-    .start_tc25 (LCF_STARTPTR_NC_CPU25) : { KEEP (*(.start_cpu25)); } > pfls25_nc
+    .start_tc25 (LCF_STARTPTR_NC_CPU25) : { KEEP (*(.start_cpu25*)); } > pfls25_nc
     PROVIDE(__START25 = LCF_STARTPTR_NC_CPU25);
-    .start_tc26 (LCF_STARTPTR_NC_CPU26) : { KEEP (*(.start_cpu26)); } > pfls26_nc
+    .start_tc26 (LCF_STARTPTR_NC_CPU26) : { KEEP (*(.start_cpu26*)); } > pfls26_nc
     PROVIDE(__START26 = LCF_STARTPTR_NC_CPU26);
-    .start_tc27 (LCF_STARTPTR_NC_CPU27) : { KEEP (*(.start_cpu27)); } > pfls27_nc
+    .start_tc27 (LCF_STARTPTR_NC_CPU27) : { KEEP (*(.start_cpu27*)); } > pfls27_nc
     PROVIDE(__START27 = LCF_STARTPTR_NC_CPU27);
-    .start_tc30 (LCF_STARTPTR_NC_CPU30) : { KEEP (*(.start_cpu30)); } > pfls30_nc
+    .start_tc30 (LCF_STARTPTR_NC_CPU30) : { KEEP (*(.start_cpu30*)); } > pfls30_nc
     PROVIDE(__START30 = LCF_STARTPTR_NC_CPU30);
-    .start_tc31 (LCF_STARTPTR_NC_CPU31) : { KEEP (*(.start_cpu31)); } > pfls31_nc
+    .start_tc31 (LCF_STARTPTR_NC_CPU31) : { KEEP (*(.start_cpu31*)); } > pfls31_nc
     PROVIDE(__START31 = LCF_STARTPTR_NC_CPU31);
-    .start_tc32 (LCF_STARTPTR_NC_CPU32) : { KEEP (*(.start_cpu32)); } > pfls32_nc
+    .start_tc32 (LCF_STARTPTR_NC_CPU32) : { KEEP (*(.start_cpu32*)); } > pfls32_nc
     PROVIDE(__START32 = LCF_STARTPTR_NC_CPU32);
-    .start_tc33 (LCF_STARTPTR_NC_CPU33) : { KEEP (*(.start_cpu33)); } > pfls33_nc
+    .start_tc33 (LCF_STARTPTR_NC_CPU33) : { KEEP (*(.start_cpu33*)); } > pfls33_nc
     PROVIDE(__START33 = LCF_STARTPTR_NC_CPU33);
-    .start_tc34 (LCF_STARTPTR_NC_CPU34) : { KEEP (*(.start_cpu34)); } > pfls34_nc
+    .start_tc34 (LCF_STARTPTR_NC_CPU34) : { KEEP (*(.start_cpu34*)); } > pfls34_nc
     PROVIDE(__START34 = LCF_STARTPTR_NC_CPU34);
-    .start_tc35 (LCF_STARTPTR_NC_CPU35) : { KEEP (*(.start_cpu35)); } > pfls35_nc
+    .start_tc35 (LCF_STARTPTR_NC_CPU35) : { KEEP (*(.start_cpu35*)); } > pfls35_nc
     PROVIDE(__START35 = LCF_STARTPTR_NC_CPU35);
-    .start_tc36 (LCF_STARTPTR_NC_CPU36) : { KEEP (*(.start_cpu36)); } > pfls36_nc
+    .start_tc36 (LCF_STARTPTR_NC_CPU36) : { KEEP (*(.start_cpu36*)); } > pfls36_nc
     PROVIDE(__START36 = LCF_STARTPTR_NC_CPU36);
-    .start_tc37 (LCF_STARTPTR_NC_CPU37) : { KEEP (*(.start_cpu37)); } > pfls37_nc
+    .start_tc37 (LCF_STARTPTR_NC_CPU37) : { KEEP (*(.start_cpu37*)); } > pfls37_nc
     PROVIDE(__START37 = LCF_STARTPTR_NC_CPU37);
-    .start_tc40 (LCF_STARTPTR_NC_CPU40) : { KEEP (*(.start_cpu40)); } > pfls40_nc
+    .start_tc40 (LCF_STARTPTR_NC_CPU40) : { KEEP (*(.start_cpu40*)); } > pfls40_nc
     PROVIDE(__START40 = LCF_STARTPTR_NC_CPU40);
-    .start_tc41 (LCF_STARTPTR_NC_CPU41) : { KEEP (*(.start_cpu41)); } > pfls41_nc
+    .start_tc41 (LCF_STARTPTR_NC_CPU41) : { KEEP (*(.start_cpu41*)); } > pfls41_nc
     PROVIDE(__START41 = LCF_STARTPTR_NC_CPU41);
-    .start_tc42 (LCF_STARTPTR_NC_CPU42) : { KEEP (*(.start_cpu42)); } > pfls42_nc
+    .start_tc42 (LCF_STARTPTR_NC_CPU42) : { KEEP (*(.start_cpu42*)); } > pfls42_nc
     PROVIDE(__START42 = LCF_STARTPTR_NC_CPU42);
-    .start_tc43 (LCF_STARTPTR_NC_CPU43) : { KEEP (*(.start_cpu43)); } > pfls43_nc
+    .start_tc43 (LCF_STARTPTR_NC_CPU43) : { KEEP (*(.start_cpu43*)); } > pfls43_nc
     PROVIDE(__START43 = LCF_STARTPTR_NC_CPU43);
-    .start_tc44 (LCF_STARTPTR_NC_CPU44) : { KEEP (*(.start_cpu44)); } > pfls44_nc
+    .start_tc44 (LCF_STARTPTR_NC_CPU44) : { KEEP (*(.start_cpu44*)); } > pfls44_nc
     PROVIDE(__START44 = LCF_STARTPTR_NC_CPU44);
-    .start_tc45 (LCF_STARTPTR_NC_CPU45) : { KEEP (*(.start_cpu45)); } > pfls45_nc
+    .start_tc45 (LCF_STARTPTR_NC_CPU45) : { KEEP (*(.start_cpu45*)); } > pfls45_nc
     PROVIDE(__START45 = LCF_STARTPTR_NC_CPU45);
-    .start_tc46 (LCF_STARTPTR_NC_CPU46) : { KEEP (*(.start_cpu46)); } > pfls46_nc
+    .start_tc46 (LCF_STARTPTR_NC_CPU46) : { KEEP (*(.start_cpu46*)); } > pfls46_nc
     PROVIDE(__START46 = LCF_STARTPTR_NC_CPU46);
-    .start_tc47 (LCF_STARTPTR_NC_CPU47) : { KEEP (*(.start_cpu47)); } > pfls47_nc
+    .start_tc47 (LCF_STARTPTR_NC_CPU47) : { KEEP (*(.start_cpu47*)); } > pfls47_nc
     PROVIDE(__START47 = LCF_STARTPTR_NC_CPU47);
-    .start_tc50 (LCF_STARTPTR_NC_CPU50) : { KEEP (*(.start_cpu50)); } > pfls50_nc
+    .start_tc50 (LCF_STARTPTR_NC_CPU50) : { KEEP (*(.start_cpu50*)); } > pfls50_nc
     PROVIDE(__START50 = LCF_STARTPTR_NC_CPU50);
-    .start_tc51 (LCF_STARTPTR_NC_CPU51) : { KEEP (*(.start_cpu51)); } > pfls51_nc
+    .start_tc51 (LCF_STARTPTR_NC_CPU51) : { KEEP (*(.start_cpu51*)); } > pfls51_nc
     PROVIDE(__START51 = LCF_STARTPTR_NC_CPU51);
-    .start_tc52 (LCF_STARTPTR_NC_CPU52) : { KEEP (*(.start_cpu52)); } > pfls52_nc
+    .start_tc52 (LCF_STARTPTR_NC_CPU52) : { KEEP (*(.start_cpu52*)); } > pfls52_nc
     PROVIDE(__START52 = LCF_STARTPTR_NC_CPU52);
-    .start_tc53 (LCF_STARTPTR_NC_CPU53) : { KEEP (*(.start_cpu53)); } > pfls53_nc
+    .start_tc53 (LCF_STARTPTR_NC_CPU53) : { KEEP (*(.start_cpu53*)); } > pfls53_nc
     PROVIDE(__START53 = LCF_STARTPTR_NC_CPU53);
-    .start_tc54 (LCF_STARTPTR_NC_CPU54) : { KEEP (*(.start_cpu54)); } > pfls54_nc
+    .start_tc54 (LCF_STARTPTR_NC_CPU54) : { KEEP (*(.start_cpu54*)); } > pfls54_nc
     PROVIDE(__START54 = LCF_STARTPTR_NC_CPU54);
-    .start_tc55 (LCF_STARTPTR_NC_CPU55) : { KEEP (*(.start_cpu55)); } > pfls55_nc
+    .start_tc55 (LCF_STARTPTR_NC_CPU55) : { KEEP (*(.start_cpu55*)); } > pfls55_nc
     PROVIDE(__START55 = LCF_STARTPTR_NC_CPU55);
-    .start_tc56 (LCF_STARTPTR_NC_CPU56) : { KEEP (*(.start_cpu56)); } > pfls56_nc
+    .start_tc56 (LCF_STARTPTR_NC_CPU56) : { KEEP (*(.start_cpu56*)); } > pfls56_nc
     PROVIDE(__START56 = LCF_STARTPTR_NC_CPU56);
-    .start_tc57 (LCF_STARTPTR_NC_CPU57) : { KEEP (*(.start_cpu57)); } > pfls57_nc
+    .start_tc57 (LCF_STARTPTR_NC_CPU57) : { KEEP (*(.start_cpu57*)); } > pfls57_nc
     PROVIDE(__START57 = LCF_STARTPTR_NC_CPU57);
 
     PROVIDE(__ENABLE_INDIVIDUAL_C_INIT_CPU0 = 0); /* Not used */

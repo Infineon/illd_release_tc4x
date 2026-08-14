@@ -14,6 +14,7 @@ LCF_HEAP_SIZE = 4k;
 LCF_PPU_FLASH_SIZE  = 1M;
 LCF_PPU_LMURAM_SIZE = 512k;
 LCF_PPU_CSM_SIZE    = 512k;
+LCF_PPU_VCCM_SIZE   = 128k;
 
 LCF_DSPR5_START = 0x20000000;
 LCF_DSPR5_SIZE  = 240K;
@@ -65,6 +66,8 @@ MEMORY
 
     ppu_csm (w!x): org = 0x92080000, len = 512k
     ppu_csm_nc (w!x): org = 0xb2080000, len = 512k
+
+    ppu_vccm_nc (w!x): org = 0xb2040000, len = 128k
 }
 
 /* map cached and non cached addresses */
@@ -87,7 +90,7 @@ SECTIONS
 
     SECTIONS
     {
-		.start_tc5 (LCF_STARTPTR_NC_CPU5) :  { KEEP (*(.start_cpu5)); } > pfls5_nc
+		.start_tc5 (LCF_STARTPTR_NC_CPU5) :  { KEEP (*(.start_cpu5*)); } > pfls5_nc
         .traptab_tc5 (LCF_TRAPVEC5_START) : { PROVIDE(__TRAPTAB_CPU5 = .); KEEP (*(.traptab_cpu5)); } > pfls5
 		 PROVIDE(__START5 = LCF_STARTPTR_NC_CPU5);
 	}
@@ -347,6 +350,13 @@ SECTIONS
         . += LCF_PPU_CSM_SIZE;
         PROVIDE(__PPU_CSM_END = .);
     } > ppu_csm_nc
+
+    .ppu_vccm (NOLOAD) :
+    {
+        PROVIDE(__PPU_VCCM_START = .);
+        . += LCF_PPU_VCCM_SIZE;
+        PROVIDE(__PPU_VCCM_END = .);
+    } > ppu_vccm_nc
 }
 
 /*Sections located at absolute fixed address*/

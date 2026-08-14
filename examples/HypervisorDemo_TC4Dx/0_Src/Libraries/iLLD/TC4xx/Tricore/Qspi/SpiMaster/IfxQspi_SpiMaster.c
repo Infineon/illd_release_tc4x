@@ -363,7 +363,7 @@ void IfxQspi_SpiMaster_initModule(IfxQspi_SpiMaster *handle, const IfxQspi_SpiMa
     Ifx_QSPI *qspiSFR = config->qspi;
     Ifx_DMA  *dmaSFR  = NULL_PTR;
 
-    if (config->dma.dmaIndex < IFXDMA_NUM_MODULES)
+    if ((config->dma.dmaIndex >= IfxDma_Index_0) && (config->dma.dmaIndex < IFXDMA_NUM_MODULES))
     {
         dmaSFR = (Ifx_DMA *)IfxDma_cfg_indexMap[config->dma.dmaIndex].module;
     }
@@ -552,6 +552,7 @@ void IfxQspi_SpiMaster_initModuleConfig(IfxQspi_SpiMaster_Config *config, Ifx_QS
     config->dma.rxDmaChannelId         = IfxDma_ChannelId_none;
     config->dma.txDmaChannelId         = IfxDma_ChannelId_none;
     config->dma.useDma                 = FALSE;
+    config->dma.dmaIndex               = IfxDma_Index_0;
     config->maximumBaudrate            = 50000000;
     config->useLvds                    = FALSE;
 }

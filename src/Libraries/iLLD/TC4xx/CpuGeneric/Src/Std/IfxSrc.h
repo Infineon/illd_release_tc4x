@@ -3,7 +3,7 @@
  * \brief SRC  basic functionality
  * \ingroup IfxLld_Src
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -445,9 +445,9 @@ IFX_INLINE void IfxSrc_updateGpsrData(volatile Ifx_INT_GPSRG_SWC *src, uint16 da
 IFX_EXTERN void IfxSrc_setOtgbSrnIndex(volatile Ifx_INT *intr, IfxSrc_OtgbSrnIndex srnIndex, IfxSrc_OtgbSrnIndexVal *srnIndexVal);
 
 /** \brief Used to configure the selected triggerSet.
- * 1. for IS triggerSet  , 4 SRN are configured according to the input provided by the user.
- * 2. for SP triggerSet , sp config provided by the user is configured.
- * 3.for SPA triggerSet , no additional configuration required.
+ * 1. for IS triggerSet, 4 SRN are configured according to the input provided by the user.
+ * 2. for SP triggerSet, sp config provided by the user is configured.
+ * 3.for SPA triggerSet, no additional configuration required.
  *
  * \param[inout] intr       ICU module pointer.
  * \param[in]    OtgbConfig Configuration for all the triggerSets.

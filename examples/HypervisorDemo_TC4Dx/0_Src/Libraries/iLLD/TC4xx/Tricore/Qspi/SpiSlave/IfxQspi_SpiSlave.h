@@ -30,7 +30,7 @@
  *
  * The SPI Slave interface driver provides a default QSPI configuration for a bidirectional serial communication of data words.
  *
- * Data transactions are buffered by the hardware based FIFOs. Incoming and outgoing data is transfered in background from/to the QSPI peripheral by interrupt service handlers, which are part of this driver as well. This allows a nonblocking communication without stalling the thread(s) from where data is sent and received.
+ * Data transactions are buffered by the hardware based FIFOs. Incoming and outgoing data is transferred in background from/to the QSPI peripheral by interrupt service handlers, which are part of this driver as well. This allows a nonblocking communication without stalling the thread(s) from where data is sent and received.
  * Optionally Dma can be used for data transfers. Only the interrupt configuration and Module initialisation are different when dma is used.
  *
  * Clock polarity, Clock Phase for slave mode are fixed. Overriding them will cause unexpected behaviour
@@ -329,7 +329,7 @@ typedef struct
 {
     IfxDma_Dma_Channel rxDmaChannel;         /**< \brief receive DMA channel handle */
     IfxDma_Dma_Channel txDmaChannel;         /**< \brief transmit DMA channel handle */
-    IfxDma_ChannelId   rxDmaChannelId;       /**< \brief DMA channel no for the Spi recieve */
+    IfxDma_ChannelId   rxDmaChannelId;       /**< \brief DMA channel no for the Spi receive */
     IfxDma_ChannelId   txDmaChannelId;       /**< \brief DMA channel no for the Spi transmit */
     boolean            useDma;               /**< \brief use Dma for Data transfers. Range: TRUE enable Data transfer, FALSE disable Data transfer. */
     IfxDma_Index       dmaIndex;             /**< \brief Dma Module Index */

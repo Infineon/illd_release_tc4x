@@ -23,7 +23,7 @@
 #                                                                             #
 ###############################################################################
 
-B_HIGHTEC_TRICORE_PATH:= C:\Tools\Compilers\Hightec\toolchains\tricore\v10.2.0
+B_HIGHTEC_TRICORE_PATH:= C:\Tools\Compilers\Hightec\toolchains\tricore\v11.0.0
 
 
 B_HIGHTEC_TRICORE_CC_OPTIONS= -fdata-sections -ffunction-sections -fno-common \

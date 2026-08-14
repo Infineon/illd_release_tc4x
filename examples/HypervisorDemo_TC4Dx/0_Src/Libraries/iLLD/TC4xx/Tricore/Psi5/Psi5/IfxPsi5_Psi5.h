@@ -189,7 +189,7 @@ typedef struct
 {
     boolean                         outputInverterEnabled;         /**< \brief Specifies the pulse polarity of the output */
     boolean                         inputInverterEnabled;          /**< \brief Specifies the pulse polarity of the input */
-    IfxPsi5_DigitalInputFilterDepth digitalInputFilterDepth;       /**< \brief Specifies the the number of port input samples considered for floating average */
+    IfxPsi5_DigitalInputFilterDepth digitalInputFilterDepth;       /**< \brief Specifies the number of port input samples considered for floating average */
 } IfxPsi5_Psi5_InputOutputControl;
 
 /** \brief Psi5 serial message with individual members

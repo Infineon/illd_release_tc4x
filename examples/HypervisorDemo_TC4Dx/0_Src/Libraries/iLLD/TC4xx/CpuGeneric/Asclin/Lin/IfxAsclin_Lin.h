@@ -197,7 +197,7 @@
  * //send response case
  * IfxAsclin_Lin_sendHeader(&linMaster, &txId);
  *
- * if (lin.acknowledgmentFlags.txHeaderEnd == 1) // if the header is been transmitted succesfully
+ * if (lin.acknowledgmentFlags.txHeaderEnd == 1) // if the header is been transmitted successfully
  * {
  *  IfxAsclin_Lin_sendResponse(&linMaster, txData, size);
  * }
@@ -205,7 +205,7 @@
  * //receive response case
  * IfxAsclin_Lin_sendHeader(&linMaster, &rxId);
  *
- * if (lin.acknowledgmentFlags.txHeaderEnd == 1) // if the header is been transmitted succesfully
+ * if (lin.acknowledgmentFlags.txHeaderEnd == 1) // if the header is been transmitted successfully
  * {
  *  IfxAsclin_Lin_receiveResponse(&linMaster, rxData, size);
  * }
@@ -436,9 +436,9 @@ typedef struct
     uint8 headerTimeout : 1;                 /**< \brief Header timeout. Range: 0 - No HEADER_OVERFLOW event, 1 - New HEADER_OVERFLOW event */
     uint8 responseTimeout : 1;               /**< \brief Response timeout. Range: 0 - No timeout event, 1 - New timeout event */
     uint8 breakDetected : 1;                 /**< \brief Break detected. Range: 0 - No Break/Wake/Stuck event, 1 - New  Break/Wake/Stuck event */
-    uint8 linParityError : 1;                /**< \brief Lin parity error. Range: 0 - Last ID received error free , 1 - Last ID received with parity error */
+    uint8 linParityError : 1;                /**< \brief Lin parity error. Range: 0 - Last ID received error free, 1 - Last ID received with parity error */
     uint8 linAutobaudDetectionError : 1;     /**< \brief Lin autobaud detection error. Range: 0 - No autobaud detection error, 1 - Autobaud detection error  */
-    uint8 linChecksumError : 1;              /**< \brief Lin checksum error. Range: 0 - Last checksum error free , 1 - Last checksum shows an error */
+    uint8 linChecksumError : 1;              /**< \brief Lin checksum error. Range: 0 - Last checksum error free, 1 - Last checksum shows an error */
     uint8 collisionDetectionError : 1;       /**< \brief Collision detection error. Range: 0 - No mismatch, 1 - Mismatch detected  */
     uint8 rxFifoOverflow : 1;                /**< \brief Receive FIFO overflow error. Range: 0 - No overflow error occurred, 1 - Overflow error occurred */
     uint8 txFifoOverflow : 1;                /**< \brief Transmit FIFO overflow error. Range: 0 - No overflow error occurred, 1 - Overflow error occurred */
@@ -676,7 +676,7 @@ IFX_EXTERN void IfxAsclin_Lin_receiveResponse(IfxAsclin_Lin *asclin, uint8 *data
  *
  * \retval None
  *
- * \note A coding example of send header in polling mode can be found in \ref IfxLld_Asclin_Lin_Usage. For interrupt mode, this fuction is internally used by \ref IfxAsclin_Lin_sendFrame API and the the polling part is bypassed.
+ * \note A coding example of send header in polling mode can be found in \ref IfxLld_Asclin_Lin_Usage. For interrupt mode, this function is internally used by \ref IfxAsclin_Lin_sendFrame API and the polling part is bypassed.
  *
  */
 IFX_EXTERN void IfxAsclin_Lin_sendHeader(IfxAsclin_Lin *asclin, uint8 *id);
@@ -810,7 +810,7 @@ IFX_EXTERN void IfxAsclin_Lin_checkForTransmittedResponseFlags(IfxAsclin_Lin *as
 IFX_EXTERN void IfxAsclin_Lin_clearFlagsStatus(IfxAsclin_Lin *asclin);
 
 /**
- * \brief waits until receive header end acknowledgemnet or an error  has been detected.
+ * \brief waits until receive header end acknowledgement or an error  has been detected.
  *
  * \param[inout] asclin Module handle.
  *
@@ -819,7 +819,7 @@ IFX_EXTERN void IfxAsclin_Lin_clearFlagsStatus(IfxAsclin_Lin *asclin);
 IFX_EXTERN boolean IfxAsclin_Lin_waitForReceivedHeader(IfxAsclin_Lin *asclin);
 
 /**
- * \brief waits until receive response end acknowledgemnet or an error  has been detected.
+ * \brief waits until receive response end acknowledgement or an error  has been detected.
  *
  * \param[inout] asclin Module handle.
  *
@@ -828,7 +828,7 @@ IFX_EXTERN boolean IfxAsclin_Lin_waitForReceivedHeader(IfxAsclin_Lin *asclin);
 IFX_EXTERN boolean IfxAsclin_Lin_waitForReceivedResponse(IfxAsclin_Lin *asclin);
 
 /**
- * \brief waits until transmit header end acknowledgemnet or an error has been detected.
+ * \brief waits until transmit header end acknowledgement or an error has been detected.
  *
  * \param[inout] asclin Module handle.
  *
@@ -837,7 +837,7 @@ IFX_EXTERN boolean IfxAsclin_Lin_waitForReceivedResponse(IfxAsclin_Lin *asclin);
 IFX_EXTERN boolean IfxAsclin_Lin_waitForTransmittedHeader(IfxAsclin_Lin *asclin);
 
 /**
- * \brief waits until transmit response end acknowledgemnet or an error  has been detected.
+ * \brief waits until transmit response end acknowledgement or an error  has been detected.
  *
  * \param[inout] asclin Module handle.
  *

@@ -73,7 +73,7 @@ typedef struct
     boolean                       irqEnable;                        /**< \brief enable interrupt notification */
     IfxEgtm_IrqMode               irqMode;                          /**< \brief interrupt mode (level/pulse/pulse notify/single pulse) */
     IfxEgtm_Tim_IrqType           irqType;                          /**< \brief interrupt type (new value/ ecnt overflow/ gpr overflow/ cnt overflow / TO detect / glitch detect) */
-    IfxEgtm_Tim_InputSourceSelect inputSourceSelect;                /**< \brief input source selection (mode , Value) */
+    IfxEgtm_Tim_InputSourceSelect inputSourceSelect;                /**< \brief input source selection (mode, Value) */
     boolean                       enableAuxInputSourceSelect;       /**< \brief enable Auxiliary input source selection */
 } IfxEgtm_Tim_Timer_Config;
 

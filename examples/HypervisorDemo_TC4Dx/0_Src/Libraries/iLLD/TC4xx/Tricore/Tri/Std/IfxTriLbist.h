@@ -29,6 +29,10 @@
  * This driver provides LBIST APIs which are used to trigger the Logic BIST module.
  * Caution: Draft implementation, APIs may change.
  *
+ * \defgroup IfxLld_Lbist Lbist
+ * \ingroup IfxLld
+ * \defgroup IfxLld_Lbist_Std Standard Driver
+ * \ingroup IfxLld_Lbist
  * \defgroup IfxLld_Lbist_Std_Lbist Lbist Basic Functionality
  * \ingroup IfxLld_Lbist_Std
  */

@@ -3,7 +3,7 @@
  * \brief GETH  basic functionality
  * \ingroup IfxLld_Geth
  *
- * \version iLLD-TC4-v2.6.0
+ * \version iLLD-TC4-v2.7.0
  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
  *
  *
@@ -654,7 +654,7 @@ typedef enum
 
 /** \brief MTL interrupt flags
  * Definition in Q(i)_INTERRUPT_STATUS.B.TXUNFIS, Q(i)_INTERRUPT_STATUS.B.ABPSIS, Q(i)_INTERRUPT_STATUS.B.RXOVFISRXOVFIS and
- *  Q(i)_INTERRUPT_ENABLE.B.TXUNFIS, Q(i)_INTERRUPT_ENABLE.B.ABPSIS , Q(i)_INTERRUPT_ENABLE.B.RXOVFIS
+ *  Q(i)_INTERRUPT_ENABLE.B.TXUNFIS, Q(i)_INTERRUPT_ENABLE.B.ABPSIS, Q(i)_INTERRUPT_ENABLE.B.RXOVFIS
  */
 typedef enum
 {
@@ -954,8 +954,8 @@ typedef enum
 {
     IfxGeth_VlanTagInclusionControl_none        = 0, /**< \brief No VLAN tag deletion, insertion, or replacement. */
     IfxGeth_VlanTagInclusionControl_deletion    = 1, /**< \brief The MAC removes the VLAN type (bytes 17 and 18) and VLAN tag (bytes 19 and 20) of all transmitted packets with VLAN tags. */
-    IfxGeth_VlanTagInclusionControl_insertion   = 2, /**< \brief The MAC inserts VLT in bytes 19 and 20 of the packet after inserting the Type value (0x8100 or 0x88a8) in bytes 17 and 18. This operation is performed on all transmitted packets, irrespective of whether they already have a VLAN tag.. */
-    IfxGeth_VlanTagInclusionControl_replacement = 3  /**< \brief The MAC replaces VLT in bytes 19 and 20 of all VLAN-type transmitted packets (Bytes 17 and 18 are 0x8100 or 0x88a8).. */
+    IfxGeth_VlanTagInclusionControl_insertion   = 2, /**< \brief The MAC inserts VLT in bytes 19 and 20 of the packet after inserting the Type value (0x8100 or 0x88a8) in bytes 17 and 18. This operation is performed on all transmitted packets, irrespective of whether they already have a VLAN tag. */
+    IfxGeth_VlanTagInclusionControl_replacement = 3  /**< \brief The MAC replaces VLT in bytes 19 and 20 of all VLAN-type transmitted packets (Bytes 17 and 18 are 0x8100 or 0x88a8). */
 } IfxGeth_VlanTagInclusionControl;
 
 /** \brief Option for VLAN Tag Stripping for Received Packets.

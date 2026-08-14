@@ -455,7 +455,7 @@ typedef enum
 {
     IfxAdc_Tmadc_moduleState_unknown          = 0,  /**< \brief unknown state */
     IfxAdc_Tmadc_moduleState_calibration      = 1,  /**< \brief calibration ongoing */
-    IfxAdc_Tmadc_moduleState_calibrationError = 2,  /**< \brief calibration error occured */
+    IfxAdc_Tmadc_moduleState_calibrationError = 2,  /**< \brief calibration error occurred */
     IfxAdc_Tmadc_moduleState_initialized      = 3,  /**< \brief initialized */
     IfxAdc_Tmadc_moduleState_run              = 4,  /**< \brief Run State */
     IfxAdc_Tmadc_moduleState_notPoweredOn     = 5   /**< \brief Module is not powered on or power on sequence is active */
@@ -590,11 +590,11 @@ typedef struct
     uint8                        count;                 /**< \brief Channel count. Range: 0 to 0xF */
     boolean                      emuxCi0;               /**< \brief Range: TRUE: Control interface 0 enabled, FALSE: Control interface 0 disabled */
     boolean                      emuxCi1;               /**< \brief Range: TRUE: Control interface 1 enabled, FALSE: Control interface 1 disabled */
-    IfxAdc_TmadcEmuxCodingScheme exmuxCodeScheme;       /**< \brief TRUE --> EMUX channel selection lines are gray coded */
-    IfxAdc_Tmadc_EmuxPinConfig  *emuxPins;              /**< \brief Emux Pinx configuration */
+    IfxAdc_TmadcEmuxCodingScheme exmuxCodeScheme;       /**< \brief Coding scheme (binary or gray) for the EMUX channel selection lines */
+    IfxAdc_Tmadc_EmuxPinConfig  *emuxPins;              /**< \brief Emux Pins configuration */
 #if IFXADC_TMADC_IS_EMUX_CI2_CI3_AVAILABLE
     boolean                      emuxCi3;               /**< \brief Range: TRUE: Control interface 3 enabled, FALSE: Control interface 3 disabled, */
-    boolean                      emuxCi2;               /**< \brief Range: TRUE: Control interface 2 enabled, FASLSE: Control interface 2 disabled */
+    boolean                      emuxCi2;               /**< \brief Range: TRUE: Control interface 2 enabled, FALSE: Control interface 2 disabled */
 #endif /* #if IFXADC_TMADC_IS_EMUX_CI2_CI3_AVAILABLE */
 } IfxAdc_Tmadc_EmuxConfig;
 
@@ -656,7 +656,7 @@ typedef struct
     IfxAdc_Tmadc_BufferType bufferType;             /**< \brief Type of the buffer */
     uint16                  writeIndex;             /**< \brief Write Index of the buffer. Range: 0 to 0xFFFF */
     uint16                  readIndex;              /**< \brief Read Index of the buffer, Range: 0 to 0xFFFF */
-    uint16                  size;                   /**< \brief Size of the buffer in in words. Range: 0 to 0xFFFF */
+    uint16                  size;                   /**< \brief Size of the buffer in words. Range: 0 to 0xFFFF */
     uint16                  validResult;            /**< \brief Number of valid results. Range: 0 to 0xFFFF */
     boolean                 bufferFull;             /**< \brief Flag to indicate if buffer full, Range: TRUE: Buffer is full, FALSE: Buffer is not full */
     boolean                 queueEnabled;           /**< \brief Range: TRUE: If queue enabled, FALSE: queue disabled  */
@@ -679,7 +679,7 @@ typedef struct
 {
     IfxAdc_TmadcResultReg       resultReg;             /**< \brief Result register associated with channel */
     boolean                     waitForRead;           /**< \brief If set, no conversion happens until value is read. Range: TRUE: Wait-for-read enabled, FALSE: Wait-for-read disabled */
-    boolean                     hysteresisEn;          /**< \brief enable hysteresis mode for bounday check. Range: TRUE:enable hysteresis mode, FALSE: disable hysteresis mode  */
+    boolean                     hysteresisEn;          /**< \brief enable hysteresis mode for boundary check. Range: TRUE:enable hysteresis mode, FALSE: disable hysteresis mode  */
     boolean                     boundMode;             /**< \brief Range: TRUE: set BFL if conversion result outside configured boundary, FALSE: Conversion result within boundary */
     boolean                     enableTimestamp;       /**< \brief Range: TRUE: Timestamp enabled, FALSE: Timestamp disabled */
     IfxAdc_TmadcBoundaryCmpMode boundCmpMode;          /**< \brief Mode of checking boundary */
