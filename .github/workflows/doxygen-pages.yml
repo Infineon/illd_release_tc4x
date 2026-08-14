@@ -3,7 +3,7 @@ name: Publish Doxygen Documentation
 on:
   push:
     branches:
-      - pre-publish/**
+      - main
   workflow_dispatch:
 
 permissions:
