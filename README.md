@@ -23,4 +23,5 @@ iLLD Release version	V2.7.0
 ## Revision History
 For a summary of changes, please refer to Section 3.1 of the release notes in the doc folder.
 
-
+## API Documentation
+The iLLD API reference is published as GitHub Pages: https://infineon.github.io/illd_release_tc4x/
