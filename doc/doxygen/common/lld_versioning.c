@@ -4,7 +4,7 @@
 	\section versionNumber Package version number
 	Each released package is assigned a unique identifier that consists of four numbers that represent the major and the minor version numbers separated by underscores '_'.
 
-	For example: version  1_0_0_0_0
+	For example: version  1.0.0
 
 	With each new release:
 	- either the minor version is incremented
