@@ -17,11 +17,9 @@
 
         The version number is available in the IfxLldVersion.h header file, so that it can be referenced (and compared) by application software. The content:
 \code
-#define IFX_LLD_VERSION_GENERATION        1   /**< \brief Indicates the driver generation */
-#define IFX_LLD_VERSION_MAJOR             0   /**< \brief Informs about changes which could lead to incompatibilities */
-#define IFX_LLD_VERSION_MAJOR_UPDATE      0   /**< \brief Informs about a release for a new derivative without further API changes */
+#define IFX_LLD_VERSION_MAJOR             1   /**< \brief Informs about changes which could lead to incompatibilities */
 #define IFX_LLD_VERSION_MINOR             0   /**< \brief Informs about new additions to the library */
-#define IFX_LLD_VERSION_REVISION          0   /**< \brief Informs about patches and/or documentation changes */
+#define IFX_LLD_VERSION_PATCH             0   /**< \brief Informs about patches and/or documentation changes */
 \endcode
 
 	\section changeSignificance Change significance
