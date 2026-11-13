@@ -2,25 +2,25 @@
 
 \section folders Folder structure
 
-Starting from <B>src/Libraries/</B>:
-    <li> <B>iLLD</B> contains the iLLD files for all derivatives
-            <ol>
-            <li> Inside <B>src/Libraries/iLLD/<DUT>/Tricore</B>:
-            <li> <B>_Impl</B>  contains derivative specific configuration which could also be adapted by the user
-            <li> <B>_PinMap</B>  contains I/O configurations in pin tables
-            <li> <B><module></B> contains the actual peripheral driver
-            <li> Inside <B>src/Libraries/iLLD/<DUT>/CpuGeneric</B>:
-            <li> <B>_Lib</B> contains derivative dependent library functions
-            </ol>
-    <li> <B>Infra</B> contains the header files for all derivatives, compiler specific files and application start-up software files for Aurix2G derivatives
-            <ol>
-            <li> Inside <B>src/Libraries/Infra/Platform/Compilers</B> contains the compiler specific files
-            <li> Inside <B>src/Libraries/Infra/Sfr/<DUT></B> contains the header files
-            <li> Inside <B>src/Libraries/Infra/Ssw/<DUT></B> contains the application start-up software files
-            </ol>
-    <li> <B>Service</B> contains  derivative independent service software sources
+Starting from <B>Src/BaseSw/</B>:
+  <li> <B>iLLD</B> contains the iLLD files for all derivatives
+      <ol>
+      <li> Inside <B>Src/BaseSw/iLLD/<DUT>/Tricore</B>:
+      <li> <B>_Build</B> contains the set of files to be included to build the specific driver. Mostly used by internal tools
+      <li> <B>_Impl</B>  contains derivative specific configuration which could also be adapted by the user
+      <li> <B>_PinMap</B>  contains I/O configurations in pin tables
+      <li> <B>_Lib</B> contains derivative dependent library functions
+      <li> <B><module></B> contains the actual peripheral driver
+      </ol>
+  <li> <B>Infra</B> contains the header files for all derivatives, compiler specific files and application start-up software files for Aurix2G derivatives
+      <ol>
+      <li> Inside <B>Src/BaseSw/Infra/Platform/Tricore/Compilers</B> contains the compiler specific files
+      <li> Inside <B>Src/BaseSw/Infra/Sfr/<DUT></B> contains the header files
+      <li> Inside <B>Src/BaseSw/Infra/Ssw/<DUT>/Tricore</B> contains the application start-up software files
+      </ol>
+  <li> <B>Service</B> contains  derivative independent service software sources
 
-    <li> <B>VERIF_DUT</B> stands for the derivative which should be selected
+  <li> <B>VERIF_DUT</B> stands for the derivative which should be selected
 
 
 \section ifxCfgH Ifx_Cfg.h
@@ -96,21 +96,21 @@ const char* verboseLevelStr[6] = {
 
 If you prefer to use (resp. compile) only a minimal set of drivers for your application, please add at least following "infrastructural resources":
 
-        \li <B>src/Libraries/Infra/Sfr/<DUT></B> directory
-    \li <B>src/Libraries/iLLD/<DUT>/CpuGeneric/_Lib</B> directory
-    \li <B>src/Libraries/Service</B> directory
-    \li CPU driver: <B>src/Libraries/iLLD/<DUT>/Tricore/Cpu</B> and <B>src/Libraries/iLLD/TC4xx/Tricore/_Impl/IfxCpu_cfg.*</B>
-    \li DMA driver: <B>src/Libraries/iLLD/<DUT>/CpuGeneric/Dma</B> and <B>src/Libraries/iLLD/TC4xx/CpuGeneric/_Impl/IfxDma_cfg.*</B>
-    \li Port driver: <B>src/Libraries/iLLD/<DUT>/CpuGeneric/Port</B>, <B>src/Libraries/iLLD/TC4xx/CpuGeneric/_Impl/IfxPort_cfg.*</B> and <B>src/Libraries/iLLD/TC4xx/CpuGeneric/_PinMap/IfxPort_PinMap.*</B>
-    \li SCU driver: <B>src/Libraries/iLLD/<DUT>/Tricore/Scu</B> and <B>src/Libraries/iLLD/TC4xx/Tricore/_Impl/IfxScu_cfg.*</B>
-    \li Src driver: <B>src/Libraries/iLLD/<DUT>/CpuGeneric/Src</B> and <B>src/Libraries/iLLD/TC4xx/CpuGeneric/_Impl/IfxSrc_cfg.*</B>
-    \li Stm driver: <B>src/Libraries/iLLD/<DUT>/Tricore/Stm</B> and <B>src/Libraries/iLLD/TC4xx/Tricore/_Impl/IfxStm_cfg.*</B>
+  \li <B>Src/BaseSw/Infra/Sfr/<DUT>/_Reg</B> directory
+  \li <B>Src/BaseSw/iLLD/<DUT>/Tricore/_Lib</B> directory
+  \li <B>Src/BaseSw/Service</B> directory
+  \li CPU driver: <B>Src/BaseSw/iLLD/<DUT>/Tricore/Cpu</B> and <B>Src/BaseSw/iLLD/<DUT>/Tricore/_Impl/IfxCpu_cfg.*</B>
+  \li DMA driver: <B>Src/BaseSw/iLLD/<DUT>/Tricore/Dma</B> and <B>Src/BaseSw/iLLD/<DUT>/Tricore/_Impl/IfxDma_cfg.*</B>
+  \li Port driver: <B>Src/BaseSw/iLLD/<DUT>/Tricore/Port</B>, <B>Src/BaseSw/iLLD/<DUT>/Tricore/_Impl/IfxPort_cfg.*</B> and <B>src/ifx/\$(VERIF_DUT)/_PinMap/IfxPort_PinMap.*</B>
+  \li SCU driver: <B>Src/BaseSw/iLLD/<DUT>/Tricore/Scu</B> and <B>Src/BaseSw/iLLD/<DUT>/Tricore/_Impl/IfxScu_cfg.*</B>
+  \li Src driver: <B>Src/BaseSw/iLLD/<DUT>/Tricore/Src</B> and <B>Src/BaseSw/iLLD/<DUT>/Tricore/_Impl/IfxSrc_cfg.*</B>
+  \li Stm driver: <B>Src/BaseSw/iLLD/<DUT>/Tricore/Stm</B> and <B>Src/BaseSw/iLLD/<DUT>/Tricore/_Impl/IfxStm_cfg.*</B>
 
 Whenever additional drivers should be added, you typically have to copy following files/directories:
 
-    \li <B>src/Libraries/iLLD/<DUT>/<Tricore>/<driver></B>
-    \li <B>src/Libraries/iLLD/TC4xx/<core>/_Impl/<driver>_cfg.*</B>
-    \li <B>src/Libraries/iLLD/TC4xx/<core>/_PinMap/<driver>_cfg.*</B>
+  \li <B>Src/BaseSw/iLLD/<DUT>/Tricore/<driver></B>
+  \li <B>Src/BaseSw/iLLD/<DUT>/Tricore/_Impl/<driver>_cfg.*</B>
+  \li <B>Src/BaseSw/iLLD/<DUT>/Tricore/_PinMap/<driver>_cfg.*</B>
 
 
 \li For more information you can refer the BIFACES User Manual.

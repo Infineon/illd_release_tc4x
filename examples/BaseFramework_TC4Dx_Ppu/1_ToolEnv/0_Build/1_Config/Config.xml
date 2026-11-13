@@ -542,6 +542,46 @@
 				<argument template="-d ${kw:lt} > $@" />
 			</tool>
 		</toolchain>
+		<toolchain name="Hightec" enable="true"
+			path="$(B_HIGHTEC_ARCEV_PATH)\bin"
+			configFolder="$(B_CONFIG_FILES_FOLDER)/Config_ArcEV_Hightec"
+			configFiles="1_ToolEnv/0_Build/1_Config/Config.mk, Config_Hightec.mk"
+			verbose="false">
+			<tool name="Cc" type="COMPILER" command="clang">
+				<optionSet id="Common">
+					$(B_HIGHTEC_ARCEV_CC_OPTIONS)
+				</optionSet>
+				<optionSet id="KernelOpt">
+					$(B_HIGHTEC_ARCEV_CC_OPTIONS_KERNEL)
+				</optionSet>
+				<argument template="{kw:options} @{kw:incpaths_listfile} -c ${kw:lt} -o $@ -MMD" />
+			</tool>
+			<tool name="As" type="ASSEMBLER" command="clang">
+				<optionSet id="Common">
+					$(B_HIGHTEC_ARCEV_ASM_OPTIONS)
+				</optionSet>
+				<argument template="{kw:options} @{kw:incpaths_listfile} -c ${kw:lt} -o $@" />
+			</tool>
+			<tool name="Ld" type="LINKER" command="clang">
+				<optionSet id="Common">
+					$(B_HIGHTEC_ARCEV_LD_OPTIONS)
+				</optionSet>
+				<argument template="@{kw:objfiles_listfile} {kw:custobjfiles} $(B_HIGHTEC_ARCEV_LIB_INC) $(B_HIGHTEC_ARCEV_LIBS) -o $@" />
+				<argument template="{kw:options} -T {kw:linkerfile} -Wl,-Coutput={kw:mapfile}" />
+			</tool>
+			<tool name="Hex" type="OTHER" command="llvm-objcopy">
+				<argument template="${kw:lt} -O ihex $@" />
+			</tool>
+			<tool name="Srec" type="OTHER" command="llvm-objcopy">
+				<argument template="${kw:lt} -O srec $@" />
+			</tool>
+			<tool name="Ar" type="ARCHIVER" command="llvm-ar">
+				<argument template="rcs $@ @{kw:objfiles_listfile}" />
+			</tool>
+			<tool name="DsAsm" type="OTHER" command="llvm-objdump" verbose="false">
+				<argument template="-d ${kw:lt} > $@" />
+			</tool>
+		</toolchain>
 	</architecture>
 	<sourceFolder paths="../../src/Libraries" />
 	
@@ -549,7 +589,7 @@
 		internalPaths="*/Sfr/*, */Libraries/*/Tricore, */Libraries/*/Platform/Compilers, */Libraries/*/CpuGeneric, */Libraries/Infra/Ipc, */Libraries/*/ArcEV, */Libraries/*/Scr, */Libraries/*/_PinMap"
 		externalPaths="${B_METAWARE_SPEED_PATH}/include/speed/drivers/hal,${B_METAWARE_SPEED_PATH}/include/speed/util,${B_METAWARE_SPEED_PATH}/include/speed/drivers/stu,${B_METAWARE_SPEED_PATH}/include/speed/services/notify,${B_METAWARE_SPEED_PATH}/include/speed/services/control ,${B_METAWARE_SPEED_PATH}/include/speed/services/messaging ,${B_METAWARE_SPEED_PATH}/include/speed/drivers/memaccess,${B_METAWARE_SPEED_PATH}/include/speed/services/execution ,${B_METAWARE_SPEED_PATH}/include/speed/drivers/stu"></specificInclude>
 	<selection enable="true">
-			<discard files="*/Infra/Ipc/*,*/Sfr/TC4Px/*,*/_Impl/TC4Px/*,*/_PinMap/TC4Px/*,*/Sfr/TC4Ex/*,*/Sfr/TC4Zx/*,*/Sfr/TC44x/*,*/Sfr/TC45x/*,*/Sfr/TC46x/*,*/Sfr/TC48x/*,*/Sfr/TC49x/*,*/Sfr/TC49xN/*,*/Sfr/TC48xAA/*,*/Sfr/TC46xAA/*,*/Scr/*, */_PinMap/TC4Ex/*,*/_PinMap/TC4Zx/*,*/_PinMap/TC44x/*,*/_PinMap/TC45x/*,*/_PinMap/TC46x/*,*/_PinMap/TC48x/*,*/_PinMap/TC49x/*,*/_PinMap/TC49xN/*,*/_PinMap/TC48xAA/*,*/_PinMap/TC46xAA/*,*/_Impl/TC4Px/*,*/_Impl/TC4Ex/*,*/_Impl/TC4Zx/*,*/_Impl/TC44x/*,*/_Impl/TC45x/*,*/_Impl/TC46x/*,*/_Impl/TC48x/*,*/_Impl/TC49xN/*,*/_Impl/TC48xAA/*,*/_Impl/TC46xAA/*,*/Sfr/TC49xNAA/*,*/_PinMap/TC49xNAA/*,*/_Impl/TC49xNAA/*" />
+			<discard files="*/Infra/Ipc/*,*/Sfr/TC4Px/*,*/_Impl/TC4Px/*,*/_PinMap/TC4Px/*,*/Sfr/TC4Ex/*,*/Sfr/TC4Zx/*,*/Sfr/TC44x/*,*/Sfr/TC45x/*,*/Sfr/TC46x/*,*/Sfr/TC48x/*,*/Sfr/TC49x/*,*/Sfr/TC49xN/*,*/Sfr/TC48xAA/*,*/Sfr/TC46xAA/*,*/Scr/*, */_PinMap/TC4Ex/*,*/_PinMap/TC4Zx/*,*/_PinMap/TC44x/*,*/_PinMap/TC45x/*,*/_PinMap/TC46x/*,*/_PinMap/TC48x/*,*/_PinMap/TC49x/*,*/_PinMap/TC49xN/*,*/_PinMap/TC48xAA/*,*/_PinMap/TC46xAA/*,*/_Impl/TC4Px/*,*/_Impl/TC4Ex/*,*/_Impl/TC4Zx/*,*/_Impl/TC44x/*,*/_Impl/TC45x/*,*/_Impl/TC46x/*,*/_Impl/TC48x/*,*/_Impl/TC49xN/*,*/_Impl/TC48xAA/*,*/_Impl/TC46xAA/*,*/Sfr/TC49xNAA/*,*/_PinMap/TC49xNAA/*,*/_Impl/TC49xNAA/*,*/Sfr/TC4ZxAB/*,*/_Impl/TC4ZxAB/*,*/_PinMap/TC4ZxAB/*" />
 		<selection enable="true"><!--File selections for target Tc-->
 			<discard files="*/ArcEV/**/Sfr/TC4Px/*,*/Sfr/TC4Ex/*,*/Sfr/TC4Zx/*,*/Sfr/TC44x/*,*/Sfr/TC45x/*,*/Sfr/TC46x/*,*/Sfr/TC48x/*,*/Sfr/TC49x/*,*/Sfr/TC49xN/*,*/Sfr/TC48xAA/*,*/Sfr/TC46xAA/*,*/Scr/*,*/Sfr/TC49xNAA/*,*/_PinMap/TC49xNAA/*,*/_Impl/TC49xNAA/*" />
 			<use files="*/Sfr/TC4Dx/*, */CpuGeneric/*, */Tricore/*" />

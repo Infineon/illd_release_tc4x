@@ -328,7 +328,7 @@
 	<specificInclude
 		internalPaths="*/Sfr/*, */Libraries/*/Tricore, */Libraries/*/Platform, */Libraries/*/CpuGeneric, */Libraries/Infra/Ipc" />
     <selection>
-	<discard files="*/Sfr/TC4Ex/*,*/Sfr/TC4Zx/*,*/Sfr/TC44x/*,*/Sfr/TC45x/*,*/Sfr/TC46x/*,*/Sfr/TC48x/*,*/Sfr/TC49x/*,*/Sfr/TC49xN/*,*/Sfr/TC48xAA/*,*/Sfr/TC46xAA/*,*/Ssw/TC4Ex/*,*/Ssw/TC4Zx/*,*/Ssw/TC44x/*,*/Ssw/TC45x/*,*/Ssw/TC46x/*,*/Ssw/TC48x/*,*/Ssw/TC49x/*,*/Ssw/TC49xN/*,*/Ssw/TC48xAA/*,*/Ssw/TC46xAA/*,*/Scr/*,*/Sfr/TC49xNAA/*,*/_PinMap/TC49xNAA/*,*/_Impl/TC49xNAA/*" />
+	<discard files="*/Sfr/TC4Ex/*,*/Sfr/TC4Zx/*,*/Sfr/TC44x/*,*/Sfr/TC45x/*,*/Sfr/TC46x/*,*/Sfr/TC48x/*,*/Sfr/TC49x/*,*/Sfr/TC49xN/*,*/Sfr/TC48xAA/*,*/Sfr/TC46xAA/*,*/Ssw/TC4Ex/*,*/Ssw/TC4Zx/*,*/Ssw/TC44x/*,*/Ssw/TC45x/*,*/Ssw/TC46x/*,*/Ssw/TC48x/*,*/Ssw/TC49x/*,*/Ssw/TC49xN/*,*/Ssw/TC48xAA/*,*/Ssw/TC46xAA/*,*/Scr/*,*/Sfr/TC49xNAA/*,*/_PinMap/TC49xNAA/*,*/_Impl/TC49xNAA/*,*/Sfr/TC4ZxAB/*,*/_Impl/TC4ZxAB/*,*/_PinMap/TC4ZxAB/*" />
 	<selection>
 		<use files="*.cpp" ></use>
 		<assign optionSets="Tricore/Gnuc/Cc/Cpp" /></selection></selection>

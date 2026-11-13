@@ -102,7 +102,7 @@ REGION_ALIAS( default_rom , pfls4)
     SECTIONS
     {
 		.start_tc4 (LCF_STARTPTR_NC_CPU4) :  { KEEP (*(.start_cpu4*)); } > pfls4_nc
-        .traptab_tc4 (LCF_TRAPVEC4_START) : { PROVIDE(__TRAPTAB_CPU4 = .); KEEP (*(.traptab_cpu4)); } > pfls4
+        .traptab_tc4 (LCF_TRAPVEC4_START) : { PROVIDE(__TRAPTAB_CPU4 = .); KEEP (*(.traptab_cpu4 .traptab_cpu4.*)); } > pfls4
 		 PROVIDE(__START4 = LCF_STARTPTR_NC_CPU4);
 	}
 
@@ -131,17 +131,17 @@ REGION_ALIAS( default_rom , pfls4)
     {
         .zdata_powerOn : ALIGN(4) 
         {
-            *(.zdata.dsprPowerOnInit.cpu4.32bit)
-            *(.zdata.dsprPowerOnInit.cpu4.16bit)
-            *(.zdata.dsprPowerOnInit.cpu4.8bit)
+            *(.zdata.dsprPowerOnInit.cpu4.32bit .zdata.dsprPowerOnInit.cpu4.32bit.*)
+            *(.zdata.dsprPowerOnInit.cpu4.16bit .zdata.dsprPowerOnInit.cpu4.16bit.*)
+            *(.zdata.dsprPowerOnInit.cpu4.8bit .zdata.dsprPowerOnInit.cpu4.8bit.*)
             . = ALIGN(2);
         } > default_ram AT> default_rom
         
         .zdata : ALIGN(4) 
         {
-            *(.zdata.dsprInit.cpu4.32bit)
-            *(.zdata.dsprInit.cpu4.16bit)
-            *(.zdata.dsprInit.cpu4.8bit)
+            *(.zdata.dsprInit.cpu4.32bit .zdata.dsprInit.cpu4.32bit.*)
+            *(.zdata.dsprInit.cpu4.16bit .zdata.dsprInit.cpu4.16bit.*)
+            *(.zdata.dsprInit.cpu4.8bit .zdata.dsprInit.cpu4.8bit.*)
             *(.zdata) *(.zdata.*)
             *(.gnu.linkonce.z.*)
             . = ALIGN(2);
@@ -149,23 +149,23 @@ REGION_ALIAS( default_rom , pfls4)
         
         .zbss_powerOn (NOLOAD) : ALIGN(4)
         {
-            *(.zbss.dsprPowerOnClear.cpu4.32bit)
-            *(.zbss.dsprPowerOnClear.cpu4.16bit)
-            *(.zbss.dsprPowerOnClear.cpu4.8bit)
+            *(.zbss.dsprPowerOnClear.cpu4.32bit .zbss.dsprPowerOnClear.cpu4.32bit.*)
+            *(.zbss.dsprPowerOnClear.cpu4.16bit .zbss.dsprPowerOnClear.cpu4.16bit.*)
+            *(.zbss.dsprPowerOnClear.cpu4.8bit .zbss.dsprPowerOnClear.cpu4.8bit.*)
         } > default_ram
         
         .zbss_noClear (NOLOAD) : ALIGN(4)
         {
-            *(.zbss.dsprNoInit.cpu4.32bit)
-            *(.zbss.dsprNoInit.cpu4.16bit)
-            *(.zbss.dsprNoInit.cpu4.8bit)
+            *(.zbss.dsprNoInit.cpu4.32bit .zbss.dsprNoInit.cpu4.32bit.*)
+            *(.zbss.dsprNoInit.cpu4.16bit .zbss.dsprNoInit.cpu4.16bit.*)
+            *(.zbss.dsprNoInit.cpu4.8bit .zbss.dsprNoInit.cpu4.8bit.*)
         } > default_ram
         
         .zbss (NOLOAD) : ALIGN(4)
         {
-            *(.zbss.dsprClearOnInit.cpu4.32bit)
-            *(.zbss.dsprClearOnInit.cpu4.16bit)
-            *(.zbss.dsprClearOnInit.cpu4.8bit)
+            *(.zbss.dsprClearOnInit.cpu4.32bit .zbss.dsprClearOnInit.cpu4.32bit.*)
+            *(.zbss.dsprClearOnInit.cpu4.16bit .zbss.dsprClearOnInit.cpu4.16bit.*)
+            *(.zbss.dsprClearOnInit.cpu4.8bit .zbss.dsprClearOnInit.cpu4.8bit.*)
             *(.zbss) *(.zbss.*)
             *(.bbss) *(.bbss.*)
             *(.gnu.linkonce.zb.*)
@@ -182,12 +182,12 @@ REGION_ALIAS( default_rom , pfls4)
         *Cpu?_Main.* (.zrodata) *Cpu?_Main.* (.zrodata.*)
         *(.zrodata_cpu?) *(.zrodata_cpu?.*)		
     
-            *(.zrodata.const.cpu4.32bit)
-            *(.zrodata.const.cpu4.16bit)
-            *(.zrodata.const.cpu4.8bit)
-            *(.zrodata.config.cpu4.32bit)
-            *(.zrodata.config.cpu4.16bit)
-            *(.zrodata.config.cpu4.8bit)
+            *(.zrodata.const.cpu4.32bit .zrodata.const.cpu4.32bit.*)
+            *(.zrodata.const.cpu4.16bit .zrodata.const.cpu4.16bit.*)
+            *(.zrodata.const.cpu4.8bit .zrodata.const.cpu4.8bit.*)
+            *(.zrodata.config.cpu4.32bit .zrodata.config.cpu4.32bit.*)
+            *(.zrodata.config.cpu4.16bit .zrodata.config.cpu4.16bit.*)
+            *(.zrodata.config.cpu4.8bit .zrodata.config.cpu4.8bit.*)
             *(.zrodata) *(.zrodata.*)
         } > pfls4
     }
@@ -296,9 +296,9 @@ SECTIONS
     
     .data : ALIGN(4)
     {
-        *(.data.farDsprInit.cpu4.32bit)
-        *(.data.farDsprInit.cpu4.16bit)
-        *(.data.farDsprInit.cpu4.8bit)
+        *(.data.farDsprInit.cpu4.32bit .data.farDsprInit.cpu4.32bit.*)
+        *(.data.farDsprInit.cpu4.16bit .data.farDsprInit.cpu4.16bit.*)
+        *(.data.farDsprInit.cpu4.8bit .data.farDsprInit.cpu4.8bit.*)
         *(.data) *(.data.*)
         *(.gnu.linkonce.d.*)
         . = ALIGN(2);
@@ -306,17 +306,17 @@ SECTIONS
 	
 	.bss_noClear (NOLOAD) : ALIGN(4)
     {
-        *(.bss.farDsprNoInit.cpu4.32bit)
-        *(.bss.farDsprNoInit.cpu4.16bit)
-        *(.bss.farDsprNoInit.cpu4.8bit)
+        *(.bss.farDsprNoInit.cpu4.32bit .bss.farDsprNoInit.cpu4.32bit.*)
+        *(.bss.farDsprNoInit.cpu4.16bit .bss.farDsprNoInit.cpu4.16bit.*)
+        *(.bss.farDsprNoInit.cpu4.8bit .bss.farDsprNoInit.cpu4.8bit.*)
     } > default_ram
 	
     
     .bss (NOLOAD) : ALIGN(4)
     {
-        *(.bss.farDsprClearOnInit.cpu4.32bit)
-        *(.bss.farDsprClearOnInit.cpu4.16bit)
-        *(.bss.farDsprClearOnInit.cpu4.8bit)
+        *(.bss.farDsprClearOnInit.cpu4.32bit .bss.farDsprClearOnInit.cpu4.32bit.*)
+        *(.bss.farDsprClearOnInit.cpu4.16bit .bss.farDsprClearOnInit.cpu4.16bit.*)
+        *(.bss.farDsprClearOnInit.cpu4.8bit .bss.farDsprClearOnInit.cpu4.8bit.*)
         *(.bss) *(.bss.*)
         *(.gnu.linkonce.b.*)
     } > default_ram
@@ -408,9 +408,9 @@ SECTIONS
 {
     .rodata : 
     {
-        *(.rodata.farConst.cpu4.32bit)
-        *(.rodata.farConst.cpu4.16bit)
-        *(.rodata.farConst.cpu4.8bit)
+        *(.rodata.farConst.cpu4.32bit .rodata.farConst.cpu4.32bit.*)
+        *(.rodata.farConst.cpu4.16bit .rodata.farConst.cpu4.16bit.*)
+        *(.rodata.farConst.cpu4.8bit .rodata.farConst.cpu4.8bit.*)
 		*(.rodata) *(.rodata.*)
     *(.gnu.linkonce.r.*)
     /*
@@ -501,11 +501,11 @@ SECTIONS
 {
     .text :
     {
-        *(.text.fast.pfls.cpu4)
-        *(.text.slow.pfls.cpu4)
-        *(.text.5ms.pfls.cpu4)
-        *(.text.10ms.pfls.cpu4)
-        *(.text.callout.pfls.cpu4)
+        *(.text.fast.pfls.cpu4 .text.fast.pfls.cpu4.*)
+        *(.text.slow.pfls.cpu4 .text.slow.pfls.cpu4.*)
+        *(.text.5ms.pfls.cpu4 .text.5ms.pfls.cpu4.*)
+        *(.text.10ms.pfls.cpu4 .text.10ms.pfls.cpu4.*)
+        *(.text.callout.pfls.cpu4 .text.callout.pfls.cpu4.*)
 		*(.text) *(.text.*)
         *(.gnu.linkonce.t.*)
         *(.gnu.warning)        /* .gnu.warning sections are handled specially by elf32.em. */
@@ -630,262 +630,262 @@ SECTIONS
     SECTIONS
     {
         /*CPU4 Interrupt Vector Table*/
-        .inttab_tc4_000 (__INTTAB_CPU4 + 0x0000) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_0  )); } > pfls4
-        .inttab_tc4_001 (__INTTAB_CPU4 + 0x0020) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_1  )); } > pfls4
-        .inttab_tc4_002 (__INTTAB_CPU4 + 0x0040) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_2  )); } > pfls4
-        .inttab_tc4_003 (__INTTAB_CPU4 + 0x0060) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_3  )); } > pfls4
-        .inttab_tc4_004 (__INTTAB_CPU4 + 0x0080) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_4  )); } > pfls4
-        .inttab_tc4_005 (__INTTAB_CPU4 + 0x00A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_5  )); } > pfls4
-        .inttab_tc4_006 (__INTTAB_CPU4 + 0x00C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_6  )); } > pfls4
-        .inttab_tc4_007 (__INTTAB_CPU4 + 0x00E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_7  )); } > pfls4
-        .inttab_tc4_008 (__INTTAB_CPU4 + 0x0100) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_8  )); } > pfls4
-        .inttab_tc4_009 (__INTTAB_CPU4 + 0x0120) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_9  )); } > pfls4
-        .inttab_tc4_00A (__INTTAB_CPU4 + 0x0140) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_10 )); } > pfls4
-        .inttab_tc4_00B (__INTTAB_CPU4 + 0x0160) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_11 )); } > pfls4
-        .inttab_tc4_00C (__INTTAB_CPU4 + 0x0180) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_12 )); } > pfls4
-        .inttab_tc4_00D (__INTTAB_CPU4 + 0x01A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_13 )); } > pfls4
-        .inttab_tc4_00E (__INTTAB_CPU4 + 0x01C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_14 )); } > pfls4
-        .inttab_tc4_00F (__INTTAB_CPU4 + 0x01E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_15 )); } > pfls4
-        .inttab_tc4_010 (__INTTAB_CPU4 + 0x0200) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_16 )); } > pfls4
-        .inttab_tc4_011 (__INTTAB_CPU4 + 0x0220) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_17 )); } > pfls4
-        .inttab_tc4_012 (__INTTAB_CPU4 + 0x0240) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_18 )); } > pfls4
-        .inttab_tc4_013 (__INTTAB_CPU4 + 0x0260) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_19 )); } > pfls4
-        .inttab_tc4_014 (__INTTAB_CPU4 + 0x0280) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_20 )); } > pfls4
-        .inttab_tc4_015 (__INTTAB_CPU4 + 0x02A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_21 )); } > pfls4
-        .inttab_tc4_016 (__INTTAB_CPU4 + 0x02C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_22 )); } > pfls4
-        .inttab_tc4_017 (__INTTAB_CPU4 + 0x02E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_23 )); } > pfls4
-        .inttab_tc4_018 (__INTTAB_CPU4 + 0x0300) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_24 )); } > pfls4
-        .inttab_tc4_019 (__INTTAB_CPU4 + 0x0320) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_25 )); } > pfls4
-        .inttab_tc4_01A (__INTTAB_CPU4 + 0x0340) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_26 )); } > pfls4
-        .inttab_tc4_01B (__INTTAB_CPU4 + 0x0360) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_27 )); } > pfls4
-        .inttab_tc4_01C (__INTTAB_CPU4 + 0x0380) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_28 )); } > pfls4
-        .inttab_tc4_01D (__INTTAB_CPU4 + 0x03A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_29 )); } > pfls4
-        .inttab_tc4_01E (__INTTAB_CPU4 + 0x03C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_30 )); } > pfls4
-        .inttab_tc4_01F (__INTTAB_CPU4 + 0x03E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_31 )); } > pfls4
-        .inttab_tc4_020 (__INTTAB_CPU4 + 0x0400) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_32 )); } > pfls4
-        .inttab_tc4_021 (__INTTAB_CPU4 + 0x0420) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_33 )); } > pfls4
-        .inttab_tc4_022 (__INTTAB_CPU4 + 0x0440) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_34 )); } > pfls4
-        .inttab_tc4_023 (__INTTAB_CPU4 + 0x0460) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_35 )); } > pfls4
-        .inttab_tc4_024 (__INTTAB_CPU4 + 0x0480) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_36 )); } > pfls4
-        .inttab_tc4_025 (__INTTAB_CPU4 + 0x04A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_37 )); } > pfls4
-        .inttab_tc4_026 (__INTTAB_CPU4 + 0x04C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_38 )); } > pfls4
-        .inttab_tc4_027 (__INTTAB_CPU4 + 0x04E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_39 )); } > pfls4
-        .inttab_tc4_028 (__INTTAB_CPU4 + 0x0500) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_40 )); } > pfls4
-        .inttab_tc4_029 (__INTTAB_CPU4 + 0x0520) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_41 )); } > pfls4
-        .inttab_tc4_02A (__INTTAB_CPU4 + 0x0540) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_42 )); } > pfls4
-        .inttab_tc4_02B (__INTTAB_CPU4 + 0x0560) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_43 )); } > pfls4
-        .inttab_tc4_02C (__INTTAB_CPU4 + 0x0580) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_44 )); } > pfls4
-        .inttab_tc4_02D (__INTTAB_CPU4 + 0x05A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_45 )); } > pfls4
-        .inttab_tc4_02E (__INTTAB_CPU4 + 0x05C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_46 )); } > pfls4
-        .inttab_tc4_02F (__INTTAB_CPU4 + 0x05E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_47 )); } > pfls4
-        .inttab_tc4_030 (__INTTAB_CPU4 + 0x0600) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_48 )); } > pfls4
-        .inttab_tc4_031 (__INTTAB_CPU4 + 0x0620) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_49 )); } > pfls4
-        .inttab_tc4_032 (__INTTAB_CPU4 + 0x0640) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_50 )); } > pfls4
-        .inttab_tc4_033 (__INTTAB_CPU4 + 0x0660) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_51 )); } > pfls4
-        .inttab_tc4_034 (__INTTAB_CPU4 + 0x0680) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_52 )); } > pfls4
-        .inttab_tc4_035 (__INTTAB_CPU4 + 0x06A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_53 )); } > pfls4
-        .inttab_tc4_036 (__INTTAB_CPU4 + 0x06C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_54 )); } > pfls4
-        .inttab_tc4_037 (__INTTAB_CPU4 + 0x06E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_55 )); } > pfls4
-        .inttab_tc4_038 (__INTTAB_CPU4 + 0x0700) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_56 )); } > pfls4
-        .inttab_tc4_039 (__INTTAB_CPU4 + 0x0720) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_57 )); } > pfls4
-        .inttab_tc4_03A (__INTTAB_CPU4 + 0x0740) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_58 )); } > pfls4
-        .inttab_tc4_03B (__INTTAB_CPU4 + 0x0760) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_59 )); } > pfls4
-        .inttab_tc4_03C (__INTTAB_CPU4 + 0x0780) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_60 )); } > pfls4
-        .inttab_tc4_03D (__INTTAB_CPU4 + 0x07A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_61 )); } > pfls4
-        .inttab_tc4_03E (__INTTAB_CPU4 + 0x07C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_62 )); } > pfls4
-        .inttab_tc4_03F (__INTTAB_CPU4 + 0x07E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_63 )); } > pfls4
-        .inttab_tc4_040 (__INTTAB_CPU4 + 0x0800) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_64 )); } > pfls4
-        .inttab_tc4_041 (__INTTAB_CPU4 + 0x0820) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_65 )); } > pfls4
-        .inttab_tc4_042 (__INTTAB_CPU4 + 0x0840) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_66 )); } > pfls4
-        .inttab_tc4_043 (__INTTAB_CPU4 + 0x0860) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_67 )); } > pfls4
-        .inttab_tc4_044 (__INTTAB_CPU4 + 0x0880) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_68 )); } > pfls4
-        .inttab_tc4_045 (__INTTAB_CPU4 + 0x08A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_69 )); } > pfls4
-        .inttab_tc4_046 (__INTTAB_CPU4 + 0x08C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_70 )); } > pfls4
-        .inttab_tc4_047 (__INTTAB_CPU4 + 0x08E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_71 )); } > pfls4
-        .inttab_tc4_048 (__INTTAB_CPU4 + 0x0900) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_72 )); } > pfls4
-        .inttab_tc4_049 (__INTTAB_CPU4 + 0x0920) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_73 )); } > pfls4
-        .inttab_tc4_04A (__INTTAB_CPU4 + 0x0940) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_74 )); } > pfls4
-        .inttab_tc4_04B (__INTTAB_CPU4 + 0x0960) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_75 )); } > pfls4
-        .inttab_tc4_04C (__INTTAB_CPU4 + 0x0980) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_76 )); } > pfls4
-        .inttab_tc4_04D (__INTTAB_CPU4 + 0x09A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_77 )); } > pfls4
-        .inttab_tc4_04E (__INTTAB_CPU4 + 0x09C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_78 )); } > pfls4
-        .inttab_tc4_04F (__INTTAB_CPU4 + 0x09E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_79 )); } > pfls4
-        .inttab_tc4_050 (__INTTAB_CPU4 + 0x0A00) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_80 )); } > pfls4
-        .inttab_tc4_051 (__INTTAB_CPU4 + 0x0A20) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_81 )); } > pfls4
-        .inttab_tc4_052 (__INTTAB_CPU4 + 0x0A40) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_82 )); } > pfls4
-        .inttab_tc4_053 (__INTTAB_CPU4 + 0x0A60) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_83 )); } > pfls4
-        .inttab_tc4_054 (__INTTAB_CPU4 + 0x0A80) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_84 )); } > pfls4
-        .inttab_tc4_055 (__INTTAB_CPU4 + 0x0AA0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_85 )); } > pfls4
-        .inttab_tc4_056 (__INTTAB_CPU4 + 0x0AC0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_86 )); } > pfls4
-        .inttab_tc4_057 (__INTTAB_CPU4 + 0x0AE0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_87 )); } > pfls4
-        .inttab_tc4_058 (__INTTAB_CPU4 + 0x0B00) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_88 )); } > pfls4
-        .inttab_tc4_059 (__INTTAB_CPU4 + 0x0B20) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_89 )); } > pfls4
-        .inttab_tc4_05A (__INTTAB_CPU4 + 0x0B40) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_90 )); } > pfls4
-        .inttab_tc4_05B (__INTTAB_CPU4 + 0x0B60) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_91 )); } > pfls4
-        .inttab_tc4_05C (__INTTAB_CPU4 + 0x0B80) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_92 )); } > pfls4
-        .inttab_tc4_05D (__INTTAB_CPU4 + 0x0BA0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_93 )); } > pfls4
-        .inttab_tc4_05E (__INTTAB_CPU4 + 0x0BC0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_94 )); } > pfls4
-        .inttab_tc4_05F (__INTTAB_CPU4 + 0x0BE0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_95 )); } > pfls4
-        .inttab_tc4_060 (__INTTAB_CPU4 + 0x0C00) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_96 )); } > pfls4
-        .inttab_tc4_061 (__INTTAB_CPU4 + 0x0C20) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_97 )); } > pfls4
-        .inttab_tc4_062 (__INTTAB_CPU4 + 0x0C40) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_98 )); } > pfls4
-        .inttab_tc4_063 (__INTTAB_CPU4 + 0x0C60) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_99 )); } > pfls4
-        .inttab_tc4_064 (__INTTAB_CPU4 + 0x0C80) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_100)); } > pfls4
-        .inttab_tc4_065 (__INTTAB_CPU4 + 0x0CA0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_101)); } > pfls4
-        .inttab_tc4_066 (__INTTAB_CPU4 + 0x0CC0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_102)); } > pfls4
-        .inttab_tc4_067 (__INTTAB_CPU4 + 0x0CE0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_103)); } > pfls4
-        .inttab_tc4_068 (__INTTAB_CPU4 + 0x0D00) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_104)); } > pfls4
-        .inttab_tc4_069 (__INTTAB_CPU4 + 0x0D20) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_105)); } > pfls4
-        .inttab_tc4_06A (__INTTAB_CPU4 + 0x0D40) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_106)); } > pfls4
-        .inttab_tc4_06B (__INTTAB_CPU4 + 0x0D60) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_107)); } > pfls4
-        .inttab_tc4_06C (__INTTAB_CPU4 + 0x0D80) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_108)); } > pfls4
-        .inttab_tc4_06D (__INTTAB_CPU4 + 0x0DA0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_109)); } > pfls4
-        .inttab_tc4_06E (__INTTAB_CPU4 + 0x0DC0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_110)); } > pfls4
-        .inttab_tc4_06F (__INTTAB_CPU4 + 0x0DE0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_111)); } > pfls4
-        .inttab_tc4_070 (__INTTAB_CPU4 + 0x0E00) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_112)); } > pfls4
-        .inttab_tc4_071 (__INTTAB_CPU4 + 0x0E20) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_113)); } > pfls4
-        .inttab_tc4_072 (__INTTAB_CPU4 + 0x0E40) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_114)); } > pfls4
-        .inttab_tc4_073 (__INTTAB_CPU4 + 0x0E60) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_115)); } > pfls4
-        .inttab_tc4_074 (__INTTAB_CPU4 + 0x0E80) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_116)); } > pfls4
-        .inttab_tc4_075 (__INTTAB_CPU4 + 0x0EA0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_117)); } > pfls4
-        .inttab_tc4_076 (__INTTAB_CPU4 + 0x0EC0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_118)); } > pfls4
-        .inttab_tc4_077 (__INTTAB_CPU4 + 0x0EE0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_119)); } > pfls4
-        .inttab_tc4_078 (__INTTAB_CPU4 + 0x0F00) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_120)); } > pfls4
-        .inttab_tc4_079 (__INTTAB_CPU4 + 0x0F20) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_121)); } > pfls4
-        .inttab_tc4_07A (__INTTAB_CPU4 + 0x0F40) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_122)); } > pfls4
-        .inttab_tc4_07B (__INTTAB_CPU4 + 0x0F60) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_123)); } > pfls4
-        .inttab_tc4_07C (__INTTAB_CPU4 + 0x0F80) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_124)); } > pfls4
-        .inttab_tc4_07D (__INTTAB_CPU4 + 0x0FA0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_125)); } > pfls4
-        .inttab_tc4_07E (__INTTAB_CPU4 + 0x0FC0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_126)); } > pfls4
-        .inttab_tc4_07F (__INTTAB_CPU4 + 0x0FE0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_127)); } > pfls4
-        .inttab_tc4_080 (__INTTAB_CPU4 + 0x1000) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_128)); } > pfls4
-        .inttab_tc4_081 (__INTTAB_CPU4 + 0x1020) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_129)); } > pfls4
-        .inttab_tc4_082 (__INTTAB_CPU4 + 0x1040) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_130)); } > pfls4
-        .inttab_tc4_083 (__INTTAB_CPU4 + 0x1060) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_131)); } > pfls4
-        .inttab_tc4_084 (__INTTAB_CPU4 + 0x1080) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_132)); } > pfls4
-        .inttab_tc4_085 (__INTTAB_CPU4 + 0x10A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_133)); } > pfls4
-        .inttab_tc4_086 (__INTTAB_CPU4 + 0x10C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_134)); } > pfls4
-        .inttab_tc4_087 (__INTTAB_CPU4 + 0x10E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_135)); } > pfls4
-        .inttab_tc4_088 (__INTTAB_CPU4 + 0x1100) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_136)); } > pfls4
-        .inttab_tc4_089 (__INTTAB_CPU4 + 0x1120) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_137)); } > pfls4
-        .inttab_tc4_08A (__INTTAB_CPU4 + 0x1140) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_138)); } > pfls4
-        .inttab_tc4_08B (__INTTAB_CPU4 + 0x1160) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_139)); } > pfls4
-        .inttab_tc4_08C (__INTTAB_CPU4 + 0x1180) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_140)); } > pfls4
-        .inttab_tc4_08D (__INTTAB_CPU4 + 0x11A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_141)); } > pfls4
-        .inttab_tc4_08E (__INTTAB_CPU4 + 0x11C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_142)); } > pfls4
-        .inttab_tc4_08F (__INTTAB_CPU4 + 0x11E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_143)); } > pfls4
-        .inttab_tc4_090 (__INTTAB_CPU4 + 0x1200) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_144)); } > pfls4
-        .inttab_tc4_091 (__INTTAB_CPU4 + 0x1220) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_145)); } > pfls4
-        .inttab_tc4_092 (__INTTAB_CPU4 + 0x1240) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_146)); } > pfls4
-        .inttab_tc4_093 (__INTTAB_CPU4 + 0x1260) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_147)); } > pfls4
-        .inttab_tc4_094 (__INTTAB_CPU4 + 0x1280) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_148)); } > pfls4
-        .inttab_tc4_095 (__INTTAB_CPU4 + 0x12A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_149)); } > pfls4
-        .inttab_tc4_096 (__INTTAB_CPU4 + 0x12C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_150)); } > pfls4
-        .inttab_tc4_097 (__INTTAB_CPU4 + 0x12E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_151)); } > pfls4
-        .inttab_tc4_098 (__INTTAB_CPU4 + 0x1300) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_152)); } > pfls4
-        .inttab_tc4_099 (__INTTAB_CPU4 + 0x1320) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_153)); } > pfls4
-        .inttab_tc4_09A (__INTTAB_CPU4 + 0x1340) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_154)); } > pfls4
-        .inttab_tc4_09B (__INTTAB_CPU4 + 0x1360) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_155)); } > pfls4
-        .inttab_tc4_09C (__INTTAB_CPU4 + 0x1380) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_156)); } > pfls4
-        .inttab_tc4_09D (__INTTAB_CPU4 + 0x13A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_157)); } > pfls4
-        .inttab_tc4_09E (__INTTAB_CPU4 + 0x13C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_158)); } > pfls4
-        .inttab_tc4_09F (__INTTAB_CPU4 + 0x13E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_159)); } > pfls4
-        .inttab_tc4_0A0 (__INTTAB_CPU4 + 0x1400) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_160)); } > pfls4
-        .inttab_tc4_0A1 (__INTTAB_CPU4 + 0x1420) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_161)); } > pfls4
-        .inttab_tc4_0A2 (__INTTAB_CPU4 + 0x1440) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_162)); } > pfls4
-        .inttab_tc4_0A3 (__INTTAB_CPU4 + 0x1460) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_163)); } > pfls4
-        .inttab_tc4_0A4 (__INTTAB_CPU4 + 0x1480) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_164)); } > pfls4
-        .inttab_tc4_0A5 (__INTTAB_CPU4 + 0x14A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_165)); } > pfls4
-        .inttab_tc4_0A6 (__INTTAB_CPU4 + 0x14C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_166)); } > pfls4
-        .inttab_tc4_0A7 (__INTTAB_CPU4 + 0x14E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_167)); } > pfls4
-        .inttab_tc4_0A8 (__INTTAB_CPU4 + 0x1500) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_168)); } > pfls4
-        .inttab_tc4_0A9 (__INTTAB_CPU4 + 0x1520) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_169)); } > pfls4
-        .inttab_tc4_0AA (__INTTAB_CPU4 + 0x1540) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_170)); } > pfls4
-        .inttab_tc4_0AB (__INTTAB_CPU4 + 0x1560) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_171)); } > pfls4
-        .inttab_tc4_0AC (__INTTAB_CPU4 + 0x1580) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_172)); } > pfls4
-        .inttab_tc4_0AD (__INTTAB_CPU4 + 0x15A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_173)); } > pfls4
-        .inttab_tc4_0AE (__INTTAB_CPU4 + 0x15C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_174)); } > pfls4
-        .inttab_tc4_0AF (__INTTAB_CPU4 + 0x15E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_175)); } > pfls4
-        .inttab_tc4_0B0 (__INTTAB_CPU4 + 0x1600) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_176)); } > pfls4
-        .inttab_tc4_0B1 (__INTTAB_CPU4 + 0x1620) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_177)); } > pfls4
-        .inttab_tc4_0B2 (__INTTAB_CPU4 + 0x1640) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_178)); } > pfls4
-        .inttab_tc4_0B3 (__INTTAB_CPU4 + 0x1660) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_179)); } > pfls4
-        .inttab_tc4_0B4 (__INTTAB_CPU4 + 0x1680) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_180)); } > pfls4
-        .inttab_tc4_0B5 (__INTTAB_CPU4 + 0x16A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_181)); } > pfls4
-        .inttab_tc4_0B6 (__INTTAB_CPU4 + 0x16C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_182)); } > pfls4
-        .inttab_tc4_0B7 (__INTTAB_CPU4 + 0x16E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_183)); } > pfls4
-        .inttab_tc4_0B8 (__INTTAB_CPU4 + 0x1700) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_184)); } > pfls4
-        .inttab_tc4_0B9 (__INTTAB_CPU4 + 0x1720) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_185)); } > pfls4
-        .inttab_tc4_0BA (__INTTAB_CPU4 + 0x1740) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_186)); } > pfls4
-        .inttab_tc4_0BB (__INTTAB_CPU4 + 0x1760) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_187)); } > pfls4
-        .inttab_tc4_0BC (__INTTAB_CPU4 + 0x1780) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_188)); } > pfls4
-        .inttab_tc4_0BD (__INTTAB_CPU4 + 0x17A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_189)); } > pfls4
-        .inttab_tc4_0BE (__INTTAB_CPU4 + 0x17C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_190)); } > pfls4
-        .inttab_tc4_0BF (__INTTAB_CPU4 + 0x17E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_191)); } > pfls4
-        .inttab_tc4_0C0 (__INTTAB_CPU4 + 0x1800) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_192)); } > pfls4
-        .inttab_tc4_0C1 (__INTTAB_CPU4 + 0x1820) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_193)); } > pfls4
-        .inttab_tc4_0C2 (__INTTAB_CPU4 + 0x1840) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_194)); } > pfls4
-        .inttab_tc4_0C3 (__INTTAB_CPU4 + 0x1860) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_195)); } > pfls4
-        .inttab_tc4_0C4 (__INTTAB_CPU4 + 0x1880) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_196)); } > pfls4
-        .inttab_tc4_0C5 (__INTTAB_CPU4 + 0x18A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_197)); } > pfls4
-        .inttab_tc4_0C6 (__INTTAB_CPU4 + 0x18C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_198)); } > pfls4
-        .inttab_tc4_0C7 (__INTTAB_CPU4 + 0x18E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_199)); } > pfls4
-        .inttab_tc4_0C8 (__INTTAB_CPU4 + 0x1900) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_200)); } > pfls4
-        .inttab_tc4_0C9 (__INTTAB_CPU4 + 0x1920) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_201)); } > pfls4
-        .inttab_tc4_0CA (__INTTAB_CPU4 + 0x1940) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_202)); } > pfls4
-        .inttab_tc4_0CB (__INTTAB_CPU4 + 0x1960) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_203)); } > pfls4
-        .inttab_tc4_0CC (__INTTAB_CPU4 + 0x1980) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_204)); } > pfls4
-        .inttab_tc4_0CD (__INTTAB_CPU4 + 0x19A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_205)); } > pfls4
-        .inttab_tc4_0CE (__INTTAB_CPU4 + 0x19C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_206)); } > pfls4
-        .inttab_tc4_0CF (__INTTAB_CPU4 + 0x19E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_207)); } > pfls4
-        .inttab_tc4_0D0 (__INTTAB_CPU4 + 0x1A00) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_208)); } > pfls4
-        .inttab_tc4_0D1 (__INTTAB_CPU4 + 0x1A20) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_209)); } > pfls4
-        .inttab_tc4_0D2 (__INTTAB_CPU4 + 0x1A40) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_210)); } > pfls4
-        .inttab_tc4_0D3 (__INTTAB_CPU4 + 0x1A60) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_211)); } > pfls4
-        .inttab_tc4_0D4 (__INTTAB_CPU4 + 0x1A80) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_212)); } > pfls4
-        .inttab_tc4_0D5 (__INTTAB_CPU4 + 0x1AA0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_213)); } > pfls4
-        .inttab_tc4_0D6 (__INTTAB_CPU4 + 0x1AC0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_214)); } > pfls4
-        .inttab_tc4_0D7 (__INTTAB_CPU4 + 0x1AE0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_215)); } > pfls4
-        .inttab_tc4_0D8 (__INTTAB_CPU4 + 0x1B00) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_216)); } > pfls4
-        .inttab_tc4_0D9 (__INTTAB_CPU4 + 0x1B20) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_217)); } > pfls4
-        .inttab_tc4_0DA (__INTTAB_CPU4 + 0x1B40) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_218)); } > pfls4
-        .inttab_tc4_0DB (__INTTAB_CPU4 + 0x1B60) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_219)); } > pfls4
-        .inttab_tc4_0DC (__INTTAB_CPU4 + 0x1B80) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_220)); } > pfls4
-        .inttab_tc4_0DD (__INTTAB_CPU4 + 0x1BA0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_221)); } > pfls4
-        .inttab_tc4_0DE (__INTTAB_CPU4 + 0x1BC0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_222)); } > pfls4
-        .inttab_tc4_0DF (__INTTAB_CPU4 + 0x1BE0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_223)); } > pfls4
-        .inttab_tc4_0E0 (__INTTAB_CPU4 + 0x1C00) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_224)); } > pfls4
-        .inttab_tc4_0E1 (__INTTAB_CPU4 + 0x1C20) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_225)); } > pfls4
-        .inttab_tc4_0E2 (__INTTAB_CPU4 + 0x1C40) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_226)); } > pfls4
-        .inttab_tc4_0E3 (__INTTAB_CPU4 + 0x1C60) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_227)); } > pfls4
-        .inttab_tc4_0E4 (__INTTAB_CPU4 + 0x1C80) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_228)); } > pfls4
-        .inttab_tc4_0E5 (__INTTAB_CPU4 + 0x1CA0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_229)); } > pfls4
-        .inttab_tc4_0E6 (__INTTAB_CPU4 + 0x1CC0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_230)); } > pfls4
-        .inttab_tc4_0E7 (__INTTAB_CPU4 + 0x1CE0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_231)); } > pfls4
-        .inttab_tc4_0E8 (__INTTAB_CPU4 + 0x1D00) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_232)); } > pfls4
-        .inttab_tc4_0E9 (__INTTAB_CPU4 + 0x1D20) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_233)); } > pfls4
-        .inttab_tc4_0EA (__INTTAB_CPU4 + 0x1D40) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_234)); } > pfls4
-        .inttab_tc4_0EB (__INTTAB_CPU4 + 0x1D60) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_235)); } > pfls4
-        .inttab_tc4_0EC (__INTTAB_CPU4 + 0x1D80) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_236)); } > pfls4
-        .inttab_tc4_0ED (__INTTAB_CPU4 + 0x1DA0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_237)); } > pfls4
-        .inttab_tc4_0EE (__INTTAB_CPU4 + 0x1DC0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_238)); } > pfls4
-        .inttab_tc4_0EF (__INTTAB_CPU4 + 0x1DE0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_239)); } > pfls4
-        .inttab_tc4_0F0 (__INTTAB_CPU4 + 0x1E00) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_240)); } > pfls4
-        .inttab_tc4_0F1 (__INTTAB_CPU4 + 0x1E20) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_241)); } > pfls4
-        .inttab_tc4_0F2 (__INTTAB_CPU4 + 0x1E40) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_242)); } > pfls4
-        .inttab_tc4_0F3 (__INTTAB_CPU4 + 0x1E60) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_243)); } > pfls4
-        .inttab_tc4_0F4 (__INTTAB_CPU4 + 0x1E80) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_244)); } > pfls4
-        .inttab_tc4_0F5 (__INTTAB_CPU4 + 0x1EA0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_245)); } > pfls4
-        .inttab_tc4_0F6 (__INTTAB_CPU4 + 0x1EC0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_246)); } > pfls4
-        .inttab_tc4_0F7 (__INTTAB_CPU4 + 0x1EE0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_247)); } > pfls4
-        .inttab_tc4_0F8 (__INTTAB_CPU4 + 0x1F00) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_248)); } > pfls4
-        .inttab_tc4_0F9 (__INTTAB_CPU4 + 0x1F20) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_249)); } > pfls4
-        .inttab_tc4_0FA (__INTTAB_CPU4 + 0x1F40) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_250)); } > pfls4
-        .inttab_tc4_0FB (__INTTAB_CPU4 + 0x1F60) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_251)); } > pfls4
-        .inttab_tc4_0FC (__INTTAB_CPU4 + 0x1F80) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_252)); } > pfls4
-        .inttab_tc4_0FD (__INTTAB_CPU4 + 0x1FA0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_253)); } > pfls4
-        .inttab_tc4_0FE (__INTTAB_CPU4 + 0x1FC0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_254)); } > pfls4
-        .inttab_tc4_0FF (__INTTAB_CPU4 + 0x1FE0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_255)); } > pfls4
+        .inttab_tc4_000 (__INTTAB_CPU4 + 0x0000) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_0 .intvec_tc4_0.*  )); } > pfls4
+        .inttab_tc4_001 (__INTTAB_CPU4 + 0x0020) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_1 .intvec_tc4_1.*  )); } > pfls4
+        .inttab_tc4_002 (__INTTAB_CPU4 + 0x0040) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_2 .intvec_tc4_2.*  )); } > pfls4
+        .inttab_tc4_003 (__INTTAB_CPU4 + 0x0060) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_3 .intvec_tc4_3.*  )); } > pfls4
+        .inttab_tc4_004 (__INTTAB_CPU4 + 0x0080) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_4 .intvec_tc4_4.*  )); } > pfls4
+        .inttab_tc4_005 (__INTTAB_CPU4 + 0x00A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_5 .intvec_tc4_5.*  )); } > pfls4
+        .inttab_tc4_006 (__INTTAB_CPU4 + 0x00C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_6 .intvec_tc4_6.*  )); } > pfls4
+        .inttab_tc4_007 (__INTTAB_CPU4 + 0x00E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_7 .intvec_tc4_7.*  )); } > pfls4
+        .inttab_tc4_008 (__INTTAB_CPU4 + 0x0100) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_8 .intvec_tc4_8.*  )); } > pfls4
+        .inttab_tc4_009 (__INTTAB_CPU4 + 0x0120) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_9 .intvec_tc4_9.*  )); } > pfls4
+        .inttab_tc4_00A (__INTTAB_CPU4 + 0x0140) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_10 .intvec_tc4_10.* )); } > pfls4
+        .inttab_tc4_00B (__INTTAB_CPU4 + 0x0160) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_11 .intvec_tc4_11.* )); } > pfls4
+        .inttab_tc4_00C (__INTTAB_CPU4 + 0x0180) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_12 .intvec_tc4_12.* )); } > pfls4
+        .inttab_tc4_00D (__INTTAB_CPU4 + 0x01A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_13 .intvec_tc4_13.* )); } > pfls4
+        .inttab_tc4_00E (__INTTAB_CPU4 + 0x01C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_14 .intvec_tc4_14.* )); } > pfls4
+        .inttab_tc4_00F (__INTTAB_CPU4 + 0x01E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_15 .intvec_tc4_15.* )); } > pfls4
+        .inttab_tc4_010 (__INTTAB_CPU4 + 0x0200) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_16 .intvec_tc4_16.* )); } > pfls4
+        .inttab_tc4_011 (__INTTAB_CPU4 + 0x0220) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_17 .intvec_tc4_17.* )); } > pfls4
+        .inttab_tc4_012 (__INTTAB_CPU4 + 0x0240) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_18 .intvec_tc4_18.* )); } > pfls4
+        .inttab_tc4_013 (__INTTAB_CPU4 + 0x0260) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_19 .intvec_tc4_19.* )); } > pfls4
+        .inttab_tc4_014 (__INTTAB_CPU4 + 0x0280) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_20 .intvec_tc4_20.* )); } > pfls4
+        .inttab_tc4_015 (__INTTAB_CPU4 + 0x02A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_21 .intvec_tc4_21.* )); } > pfls4
+        .inttab_tc4_016 (__INTTAB_CPU4 + 0x02C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_22 .intvec_tc4_22.* )); } > pfls4
+        .inttab_tc4_017 (__INTTAB_CPU4 + 0x02E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_23 .intvec_tc4_23.* )); } > pfls4
+        .inttab_tc4_018 (__INTTAB_CPU4 + 0x0300) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_24 .intvec_tc4_24.* )); } > pfls4
+        .inttab_tc4_019 (__INTTAB_CPU4 + 0x0320) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_25 .intvec_tc4_25.* )); } > pfls4
+        .inttab_tc4_01A (__INTTAB_CPU4 + 0x0340) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_26 .intvec_tc4_26.* )); } > pfls4
+        .inttab_tc4_01B (__INTTAB_CPU4 + 0x0360) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_27 .intvec_tc4_27.* )); } > pfls4
+        .inttab_tc4_01C (__INTTAB_CPU4 + 0x0380) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_28 .intvec_tc4_28.* )); } > pfls4
+        .inttab_tc4_01D (__INTTAB_CPU4 + 0x03A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_29 .intvec_tc4_29.* )); } > pfls4
+        .inttab_tc4_01E (__INTTAB_CPU4 + 0x03C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_30 .intvec_tc4_30.* )); } > pfls4
+        .inttab_tc4_01F (__INTTAB_CPU4 + 0x03E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_31 .intvec_tc4_31.* )); } > pfls4
+        .inttab_tc4_020 (__INTTAB_CPU4 + 0x0400) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_32 .intvec_tc4_32.* )); } > pfls4
+        .inttab_tc4_021 (__INTTAB_CPU4 + 0x0420) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_33 .intvec_tc4_33.* )); } > pfls4
+        .inttab_tc4_022 (__INTTAB_CPU4 + 0x0440) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_34 .intvec_tc4_34.* )); } > pfls4
+        .inttab_tc4_023 (__INTTAB_CPU4 + 0x0460) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_35 .intvec_tc4_35.* )); } > pfls4
+        .inttab_tc4_024 (__INTTAB_CPU4 + 0x0480) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_36 .intvec_tc4_36.* )); } > pfls4
+        .inttab_tc4_025 (__INTTAB_CPU4 + 0x04A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_37 .intvec_tc4_37.* )); } > pfls4
+        .inttab_tc4_026 (__INTTAB_CPU4 + 0x04C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_38 .intvec_tc4_38.* )); } > pfls4
+        .inttab_tc4_027 (__INTTAB_CPU4 + 0x04E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_39 .intvec_tc4_39.* )); } > pfls4
+        .inttab_tc4_028 (__INTTAB_CPU4 + 0x0500) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_40 .intvec_tc4_40.* )); } > pfls4
+        .inttab_tc4_029 (__INTTAB_CPU4 + 0x0520) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_41 .intvec_tc4_41.* )); } > pfls4
+        .inttab_tc4_02A (__INTTAB_CPU4 + 0x0540) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_42 .intvec_tc4_42.* )); } > pfls4
+        .inttab_tc4_02B (__INTTAB_CPU4 + 0x0560) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_43 .intvec_tc4_43.* )); } > pfls4
+        .inttab_tc4_02C (__INTTAB_CPU4 + 0x0580) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_44 .intvec_tc4_44.* )); } > pfls4
+        .inttab_tc4_02D (__INTTAB_CPU4 + 0x05A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_45 .intvec_tc4_45.* )); } > pfls4
+        .inttab_tc4_02E (__INTTAB_CPU4 + 0x05C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_46 .intvec_tc4_46.* )); } > pfls4
+        .inttab_tc4_02F (__INTTAB_CPU4 + 0x05E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_47 .intvec_tc4_47.* )); } > pfls4
+        .inttab_tc4_030 (__INTTAB_CPU4 + 0x0600) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_48 .intvec_tc4_48.* )); } > pfls4
+        .inttab_tc4_031 (__INTTAB_CPU4 + 0x0620) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_49 .intvec_tc4_49.* )); } > pfls4
+        .inttab_tc4_032 (__INTTAB_CPU4 + 0x0640) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_50 .intvec_tc4_50.* )); } > pfls4
+        .inttab_tc4_033 (__INTTAB_CPU4 + 0x0660) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_51 .intvec_tc4_51.* )); } > pfls4
+        .inttab_tc4_034 (__INTTAB_CPU4 + 0x0680) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_52 .intvec_tc4_52.* )); } > pfls4
+        .inttab_tc4_035 (__INTTAB_CPU4 + 0x06A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_53 .intvec_tc4_53.* )); } > pfls4
+        .inttab_tc4_036 (__INTTAB_CPU4 + 0x06C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_54 .intvec_tc4_54.* )); } > pfls4
+        .inttab_tc4_037 (__INTTAB_CPU4 + 0x06E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_55 .intvec_tc4_55.* )); } > pfls4
+        .inttab_tc4_038 (__INTTAB_CPU4 + 0x0700) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_56 .intvec_tc4_56.* )); } > pfls4
+        .inttab_tc4_039 (__INTTAB_CPU4 + 0x0720) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_57 .intvec_tc4_57.* )); } > pfls4
+        .inttab_tc4_03A (__INTTAB_CPU4 + 0x0740) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_58 .intvec_tc4_58.* )); } > pfls4
+        .inttab_tc4_03B (__INTTAB_CPU4 + 0x0760) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_59 .intvec_tc4_59.* )); } > pfls4
+        .inttab_tc4_03C (__INTTAB_CPU4 + 0x0780) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_60 .intvec_tc4_60.* )); } > pfls4
+        .inttab_tc4_03D (__INTTAB_CPU4 + 0x07A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_61 .intvec_tc4_61.* )); } > pfls4
+        .inttab_tc4_03E (__INTTAB_CPU4 + 0x07C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_62 .intvec_tc4_62.* )); } > pfls4
+        .inttab_tc4_03F (__INTTAB_CPU4 + 0x07E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_63 .intvec_tc4_63.* )); } > pfls4
+        .inttab_tc4_040 (__INTTAB_CPU4 + 0x0800) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_64 .intvec_tc4_64.* )); } > pfls4
+        .inttab_tc4_041 (__INTTAB_CPU4 + 0x0820) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_65 .intvec_tc4_65.* )); } > pfls4
+        .inttab_tc4_042 (__INTTAB_CPU4 + 0x0840) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_66 .intvec_tc4_66.* )); } > pfls4
+        .inttab_tc4_043 (__INTTAB_CPU4 + 0x0860) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_67 .intvec_tc4_67.* )); } > pfls4
+        .inttab_tc4_044 (__INTTAB_CPU4 + 0x0880) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_68 .intvec_tc4_68.* )); } > pfls4
+        .inttab_tc4_045 (__INTTAB_CPU4 + 0x08A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_69 .intvec_tc4_69.* )); } > pfls4
+        .inttab_tc4_046 (__INTTAB_CPU4 + 0x08C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_70 .intvec_tc4_70.* )); } > pfls4
+        .inttab_tc4_047 (__INTTAB_CPU4 + 0x08E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_71 .intvec_tc4_71.* )); } > pfls4
+        .inttab_tc4_048 (__INTTAB_CPU4 + 0x0900) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_72 .intvec_tc4_72.* )); } > pfls4
+        .inttab_tc4_049 (__INTTAB_CPU4 + 0x0920) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_73 .intvec_tc4_73.* )); } > pfls4
+        .inttab_tc4_04A (__INTTAB_CPU4 + 0x0940) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_74 .intvec_tc4_74.* )); } > pfls4
+        .inttab_tc4_04B (__INTTAB_CPU4 + 0x0960) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_75 .intvec_tc4_75.* )); } > pfls4
+        .inttab_tc4_04C (__INTTAB_CPU4 + 0x0980) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_76 .intvec_tc4_76.* )); } > pfls4
+        .inttab_tc4_04D (__INTTAB_CPU4 + 0x09A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_77 .intvec_tc4_77.* )); } > pfls4
+        .inttab_tc4_04E (__INTTAB_CPU4 + 0x09C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_78 .intvec_tc4_78.* )); } > pfls4
+        .inttab_tc4_04F (__INTTAB_CPU4 + 0x09E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_79 .intvec_tc4_79.* )); } > pfls4
+        .inttab_tc4_050 (__INTTAB_CPU4 + 0x0A00) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_80 .intvec_tc4_80.* )); } > pfls4
+        .inttab_tc4_051 (__INTTAB_CPU4 + 0x0A20) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_81 .intvec_tc4_81.* )); } > pfls4
+        .inttab_tc4_052 (__INTTAB_CPU4 + 0x0A40) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_82 .intvec_tc4_82.* )); } > pfls4
+        .inttab_tc4_053 (__INTTAB_CPU4 + 0x0A60) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_83 .intvec_tc4_83.* )); } > pfls4
+        .inttab_tc4_054 (__INTTAB_CPU4 + 0x0A80) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_84 .intvec_tc4_84.* )); } > pfls4
+        .inttab_tc4_055 (__INTTAB_CPU4 + 0x0AA0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_85 .intvec_tc4_85.* )); } > pfls4
+        .inttab_tc4_056 (__INTTAB_CPU4 + 0x0AC0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_86 .intvec_tc4_86.* )); } > pfls4
+        .inttab_tc4_057 (__INTTAB_CPU4 + 0x0AE0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_87 .intvec_tc4_87.* )); } > pfls4
+        .inttab_tc4_058 (__INTTAB_CPU4 + 0x0B00) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_88 .intvec_tc4_88.* )); } > pfls4
+        .inttab_tc4_059 (__INTTAB_CPU4 + 0x0B20) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_89 .intvec_tc4_89.* )); } > pfls4
+        .inttab_tc4_05A (__INTTAB_CPU4 + 0x0B40) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_90 .intvec_tc4_90.* )); } > pfls4
+        .inttab_tc4_05B (__INTTAB_CPU4 + 0x0B60) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_91 .intvec_tc4_91.* )); } > pfls4
+        .inttab_tc4_05C (__INTTAB_CPU4 + 0x0B80) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_92 .intvec_tc4_92.* )); } > pfls4
+        .inttab_tc4_05D (__INTTAB_CPU4 + 0x0BA0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_93 .intvec_tc4_93.* )); } > pfls4
+        .inttab_tc4_05E (__INTTAB_CPU4 + 0x0BC0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_94 .intvec_tc4_94.* )); } > pfls4
+        .inttab_tc4_05F (__INTTAB_CPU4 + 0x0BE0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_95 .intvec_tc4_95.* )); } > pfls4
+        .inttab_tc4_060 (__INTTAB_CPU4 + 0x0C00) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_96 .intvec_tc4_96.* )); } > pfls4
+        .inttab_tc4_061 (__INTTAB_CPU4 + 0x0C20) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_97 .intvec_tc4_97.* )); } > pfls4
+        .inttab_tc4_062 (__INTTAB_CPU4 + 0x0C40) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_98 .intvec_tc4_98.* )); } > pfls4
+        .inttab_tc4_063 (__INTTAB_CPU4 + 0x0C60) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_99 .intvec_tc4_99.* )); } > pfls4
+        .inttab_tc4_064 (__INTTAB_CPU4 + 0x0C80) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_100 .intvec_tc4_100.*)); } > pfls4
+        .inttab_tc4_065 (__INTTAB_CPU4 + 0x0CA0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_101 .intvec_tc4_101.*)); } > pfls4
+        .inttab_tc4_066 (__INTTAB_CPU4 + 0x0CC0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_102 .intvec_tc4_102.*)); } > pfls4
+        .inttab_tc4_067 (__INTTAB_CPU4 + 0x0CE0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_103 .intvec_tc4_103.*)); } > pfls4
+        .inttab_tc4_068 (__INTTAB_CPU4 + 0x0D00) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_104 .intvec_tc4_104.*)); } > pfls4
+        .inttab_tc4_069 (__INTTAB_CPU4 + 0x0D20) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_105 .intvec_tc4_105.*)); } > pfls4
+        .inttab_tc4_06A (__INTTAB_CPU4 + 0x0D40) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_106 .intvec_tc4_106.*)); } > pfls4
+        .inttab_tc4_06B (__INTTAB_CPU4 + 0x0D60) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_107 .intvec_tc4_107.*)); } > pfls4
+        .inttab_tc4_06C (__INTTAB_CPU4 + 0x0D80) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_108 .intvec_tc4_108.*)); } > pfls4
+        .inttab_tc4_06D (__INTTAB_CPU4 + 0x0DA0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_109 .intvec_tc4_109.*)); } > pfls4
+        .inttab_tc4_06E (__INTTAB_CPU4 + 0x0DC0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_110 .intvec_tc4_110.*)); } > pfls4
+        .inttab_tc4_06F (__INTTAB_CPU4 + 0x0DE0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_111 .intvec_tc4_111.*)); } > pfls4
+        .inttab_tc4_070 (__INTTAB_CPU4 + 0x0E00) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_112 .intvec_tc4_112.*)); } > pfls4
+        .inttab_tc4_071 (__INTTAB_CPU4 + 0x0E20) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_113 .intvec_tc4_113.*)); } > pfls4
+        .inttab_tc4_072 (__INTTAB_CPU4 + 0x0E40) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_114 .intvec_tc4_114.*)); } > pfls4
+        .inttab_tc4_073 (__INTTAB_CPU4 + 0x0E60) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_115 .intvec_tc4_115.*)); } > pfls4
+        .inttab_tc4_074 (__INTTAB_CPU4 + 0x0E80) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_116 .intvec_tc4_116.*)); } > pfls4
+        .inttab_tc4_075 (__INTTAB_CPU4 + 0x0EA0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_117 .intvec_tc4_117.*)); } > pfls4
+        .inttab_tc4_076 (__INTTAB_CPU4 + 0x0EC0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_118 .intvec_tc4_118.*)); } > pfls4
+        .inttab_tc4_077 (__INTTAB_CPU4 + 0x0EE0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_119 .intvec_tc4_119.*)); } > pfls4
+        .inttab_tc4_078 (__INTTAB_CPU4 + 0x0F00) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_120 .intvec_tc4_120.*)); } > pfls4
+        .inttab_tc4_079 (__INTTAB_CPU4 + 0x0F20) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_121 .intvec_tc4_121.*)); } > pfls4
+        .inttab_tc4_07A (__INTTAB_CPU4 + 0x0F40) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_122 .intvec_tc4_122.*)); } > pfls4
+        .inttab_tc4_07B (__INTTAB_CPU4 + 0x0F60) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_123 .intvec_tc4_123.*)); } > pfls4
+        .inttab_tc4_07C (__INTTAB_CPU4 + 0x0F80) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_124 .intvec_tc4_124.*)); } > pfls4
+        .inttab_tc4_07D (__INTTAB_CPU4 + 0x0FA0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_125 .intvec_tc4_125.*)); } > pfls4
+        .inttab_tc4_07E (__INTTAB_CPU4 + 0x0FC0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_126 .intvec_tc4_126.*)); } > pfls4
+        .inttab_tc4_07F (__INTTAB_CPU4 + 0x0FE0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_127 .intvec_tc4_127.*)); } > pfls4
+        .inttab_tc4_080 (__INTTAB_CPU4 + 0x1000) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_128 .intvec_tc4_128.*)); } > pfls4
+        .inttab_tc4_081 (__INTTAB_CPU4 + 0x1020) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_129 .intvec_tc4_129.*)); } > pfls4
+        .inttab_tc4_082 (__INTTAB_CPU4 + 0x1040) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_130 .intvec_tc4_130.*)); } > pfls4
+        .inttab_tc4_083 (__INTTAB_CPU4 + 0x1060) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_131 .intvec_tc4_131.*)); } > pfls4
+        .inttab_tc4_084 (__INTTAB_CPU4 + 0x1080) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_132 .intvec_tc4_132.*)); } > pfls4
+        .inttab_tc4_085 (__INTTAB_CPU4 + 0x10A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_133 .intvec_tc4_133.*)); } > pfls4
+        .inttab_tc4_086 (__INTTAB_CPU4 + 0x10C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_134 .intvec_tc4_134.*)); } > pfls4
+        .inttab_tc4_087 (__INTTAB_CPU4 + 0x10E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_135 .intvec_tc4_135.*)); } > pfls4
+        .inttab_tc4_088 (__INTTAB_CPU4 + 0x1100) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_136 .intvec_tc4_136.*)); } > pfls4
+        .inttab_tc4_089 (__INTTAB_CPU4 + 0x1120) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_137 .intvec_tc4_137.*)); } > pfls4
+        .inttab_tc4_08A (__INTTAB_CPU4 + 0x1140) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_138 .intvec_tc4_138.*)); } > pfls4
+        .inttab_tc4_08B (__INTTAB_CPU4 + 0x1160) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_139 .intvec_tc4_139.*)); } > pfls4
+        .inttab_tc4_08C (__INTTAB_CPU4 + 0x1180) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_140 .intvec_tc4_140.*)); } > pfls4
+        .inttab_tc4_08D (__INTTAB_CPU4 + 0x11A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_141 .intvec_tc4_141.*)); } > pfls4
+        .inttab_tc4_08E (__INTTAB_CPU4 + 0x11C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_142 .intvec_tc4_142.*)); } > pfls4
+        .inttab_tc4_08F (__INTTAB_CPU4 + 0x11E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_143 .intvec_tc4_143.*)); } > pfls4
+        .inttab_tc4_090 (__INTTAB_CPU4 + 0x1200) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_144 .intvec_tc4_144.*)); } > pfls4
+        .inttab_tc4_091 (__INTTAB_CPU4 + 0x1220) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_145 .intvec_tc4_145.*)); } > pfls4
+        .inttab_tc4_092 (__INTTAB_CPU4 + 0x1240) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_146 .intvec_tc4_146.*)); } > pfls4
+        .inttab_tc4_093 (__INTTAB_CPU4 + 0x1260) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_147 .intvec_tc4_147.*)); } > pfls4
+        .inttab_tc4_094 (__INTTAB_CPU4 + 0x1280) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_148 .intvec_tc4_148.*)); } > pfls4
+        .inttab_tc4_095 (__INTTAB_CPU4 + 0x12A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_149 .intvec_tc4_149.*)); } > pfls4
+        .inttab_tc4_096 (__INTTAB_CPU4 + 0x12C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_150 .intvec_tc4_150.*)); } > pfls4
+        .inttab_tc4_097 (__INTTAB_CPU4 + 0x12E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_151 .intvec_tc4_151.*)); } > pfls4
+        .inttab_tc4_098 (__INTTAB_CPU4 + 0x1300) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_152 .intvec_tc4_152.*)); } > pfls4
+        .inttab_tc4_099 (__INTTAB_CPU4 + 0x1320) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_153 .intvec_tc4_153.*)); } > pfls4
+        .inttab_tc4_09A (__INTTAB_CPU4 + 0x1340) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_154 .intvec_tc4_154.*)); } > pfls4
+        .inttab_tc4_09B (__INTTAB_CPU4 + 0x1360) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_155 .intvec_tc4_155.*)); } > pfls4
+        .inttab_tc4_09C (__INTTAB_CPU4 + 0x1380) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_156 .intvec_tc4_156.*)); } > pfls4
+        .inttab_tc4_09D (__INTTAB_CPU4 + 0x13A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_157 .intvec_tc4_157.*)); } > pfls4
+        .inttab_tc4_09E (__INTTAB_CPU4 + 0x13C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_158 .intvec_tc4_158.*)); } > pfls4
+        .inttab_tc4_09F (__INTTAB_CPU4 + 0x13E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_159 .intvec_tc4_159.*)); } > pfls4
+        .inttab_tc4_0A0 (__INTTAB_CPU4 + 0x1400) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_160 .intvec_tc4_160.*)); } > pfls4
+        .inttab_tc4_0A1 (__INTTAB_CPU4 + 0x1420) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_161 .intvec_tc4_161.*)); } > pfls4
+        .inttab_tc4_0A2 (__INTTAB_CPU4 + 0x1440) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_162 .intvec_tc4_162.*)); } > pfls4
+        .inttab_tc4_0A3 (__INTTAB_CPU4 + 0x1460) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_163 .intvec_tc4_163.*)); } > pfls4
+        .inttab_tc4_0A4 (__INTTAB_CPU4 + 0x1480) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_164 .intvec_tc4_164.*)); } > pfls4
+        .inttab_tc4_0A5 (__INTTAB_CPU4 + 0x14A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_165 .intvec_tc4_165.*)); } > pfls4
+        .inttab_tc4_0A6 (__INTTAB_CPU4 + 0x14C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_166 .intvec_tc4_166.*)); } > pfls4
+        .inttab_tc4_0A7 (__INTTAB_CPU4 + 0x14E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_167 .intvec_tc4_167.*)); } > pfls4
+        .inttab_tc4_0A8 (__INTTAB_CPU4 + 0x1500) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_168 .intvec_tc4_168.*)); } > pfls4
+        .inttab_tc4_0A9 (__INTTAB_CPU4 + 0x1520) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_169 .intvec_tc4_169.*)); } > pfls4
+        .inttab_tc4_0AA (__INTTAB_CPU4 + 0x1540) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_170 .intvec_tc4_170.*)); } > pfls4
+        .inttab_tc4_0AB (__INTTAB_CPU4 + 0x1560) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_171 .intvec_tc4_171.*)); } > pfls4
+        .inttab_tc4_0AC (__INTTAB_CPU4 + 0x1580) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_172 .intvec_tc4_172.*)); } > pfls4
+        .inttab_tc4_0AD (__INTTAB_CPU4 + 0x15A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_173 .intvec_tc4_173.*)); } > pfls4
+        .inttab_tc4_0AE (__INTTAB_CPU4 + 0x15C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_174 .intvec_tc4_174.*)); } > pfls4
+        .inttab_tc4_0AF (__INTTAB_CPU4 + 0x15E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_175 .intvec_tc4_175.*)); } > pfls4
+        .inttab_tc4_0B0 (__INTTAB_CPU4 + 0x1600) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_176 .intvec_tc4_176.*)); } > pfls4
+        .inttab_tc4_0B1 (__INTTAB_CPU4 + 0x1620) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_177 .intvec_tc4_177.*)); } > pfls4
+        .inttab_tc4_0B2 (__INTTAB_CPU4 + 0x1640) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_178 .intvec_tc4_178.*)); } > pfls4
+        .inttab_tc4_0B3 (__INTTAB_CPU4 + 0x1660) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_179 .intvec_tc4_179.*)); } > pfls4
+        .inttab_tc4_0B4 (__INTTAB_CPU4 + 0x1680) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_180 .intvec_tc4_180.*)); } > pfls4
+        .inttab_tc4_0B5 (__INTTAB_CPU4 + 0x16A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_181 .intvec_tc4_181.*)); } > pfls4
+        .inttab_tc4_0B6 (__INTTAB_CPU4 + 0x16C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_182 .intvec_tc4_182.*)); } > pfls4
+        .inttab_tc4_0B7 (__INTTAB_CPU4 + 0x16E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_183 .intvec_tc4_183.*)); } > pfls4
+        .inttab_tc4_0B8 (__INTTAB_CPU4 + 0x1700) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_184 .intvec_tc4_184.*)); } > pfls4
+        .inttab_tc4_0B9 (__INTTAB_CPU4 + 0x1720) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_185 .intvec_tc4_185.*)); } > pfls4
+        .inttab_tc4_0BA (__INTTAB_CPU4 + 0x1740) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_186 .intvec_tc4_186.*)); } > pfls4
+        .inttab_tc4_0BB (__INTTAB_CPU4 + 0x1760) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_187 .intvec_tc4_187.*)); } > pfls4
+        .inttab_tc4_0BC (__INTTAB_CPU4 + 0x1780) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_188 .intvec_tc4_188.*)); } > pfls4
+        .inttab_tc4_0BD (__INTTAB_CPU4 + 0x17A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_189 .intvec_tc4_189.*)); } > pfls4
+        .inttab_tc4_0BE (__INTTAB_CPU4 + 0x17C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_190 .intvec_tc4_190.*)); } > pfls4
+        .inttab_tc4_0BF (__INTTAB_CPU4 + 0x17E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_191 .intvec_tc4_191.*)); } > pfls4
+        .inttab_tc4_0C0 (__INTTAB_CPU4 + 0x1800) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_192 .intvec_tc4_192.*)); } > pfls4
+        .inttab_tc4_0C1 (__INTTAB_CPU4 + 0x1820) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_193 .intvec_tc4_193.*)); } > pfls4
+        .inttab_tc4_0C2 (__INTTAB_CPU4 + 0x1840) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_194 .intvec_tc4_194.*)); } > pfls4
+        .inttab_tc4_0C3 (__INTTAB_CPU4 + 0x1860) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_195 .intvec_tc4_195.*)); } > pfls4
+        .inttab_tc4_0C4 (__INTTAB_CPU4 + 0x1880) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_196 .intvec_tc4_196.*)); } > pfls4
+        .inttab_tc4_0C5 (__INTTAB_CPU4 + 0x18A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_197 .intvec_tc4_197.*)); } > pfls4
+        .inttab_tc4_0C6 (__INTTAB_CPU4 + 0x18C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_198 .intvec_tc4_198.*)); } > pfls4
+        .inttab_tc4_0C7 (__INTTAB_CPU4 + 0x18E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_199 .intvec_tc4_199.*)); } > pfls4
+        .inttab_tc4_0C8 (__INTTAB_CPU4 + 0x1900) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_200 .intvec_tc4_200.*)); } > pfls4
+        .inttab_tc4_0C9 (__INTTAB_CPU4 + 0x1920) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_201 .intvec_tc4_201.*)); } > pfls4
+        .inttab_tc4_0CA (__INTTAB_CPU4 + 0x1940) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_202 .intvec_tc4_202.*)); } > pfls4
+        .inttab_tc4_0CB (__INTTAB_CPU4 + 0x1960) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_203 .intvec_tc4_203.*)); } > pfls4
+        .inttab_tc4_0CC (__INTTAB_CPU4 + 0x1980) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_204 .intvec_tc4_204.*)); } > pfls4
+        .inttab_tc4_0CD (__INTTAB_CPU4 + 0x19A0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_205 .intvec_tc4_205.*)); } > pfls4
+        .inttab_tc4_0CE (__INTTAB_CPU4 + 0x19C0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_206 .intvec_tc4_206.*)); } > pfls4
+        .inttab_tc4_0CF (__INTTAB_CPU4 + 0x19E0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_207 .intvec_tc4_207.*)); } > pfls4
+        .inttab_tc4_0D0 (__INTTAB_CPU4 + 0x1A00) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_208 .intvec_tc4_208.*)); } > pfls4
+        .inttab_tc4_0D1 (__INTTAB_CPU4 + 0x1A20) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_209 .intvec_tc4_209.*)); } > pfls4
+        .inttab_tc4_0D2 (__INTTAB_CPU4 + 0x1A40) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_210 .intvec_tc4_210.*)); } > pfls4
+        .inttab_tc4_0D3 (__INTTAB_CPU4 + 0x1A60) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_211 .intvec_tc4_211.*)); } > pfls4
+        .inttab_tc4_0D4 (__INTTAB_CPU4 + 0x1A80) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_212 .intvec_tc4_212.*)); } > pfls4
+        .inttab_tc4_0D5 (__INTTAB_CPU4 + 0x1AA0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_213 .intvec_tc4_213.*)); } > pfls4
+        .inttab_tc4_0D6 (__INTTAB_CPU4 + 0x1AC0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_214 .intvec_tc4_214.*)); } > pfls4
+        .inttab_tc4_0D7 (__INTTAB_CPU4 + 0x1AE0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_215 .intvec_tc4_215.*)); } > pfls4
+        .inttab_tc4_0D8 (__INTTAB_CPU4 + 0x1B00) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_216 .intvec_tc4_216.*)); } > pfls4
+        .inttab_tc4_0D9 (__INTTAB_CPU4 + 0x1B20) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_217 .intvec_tc4_217.*)); } > pfls4
+        .inttab_tc4_0DA (__INTTAB_CPU4 + 0x1B40) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_218 .intvec_tc4_218.*)); } > pfls4
+        .inttab_tc4_0DB (__INTTAB_CPU4 + 0x1B60) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_219 .intvec_tc4_219.*)); } > pfls4
+        .inttab_tc4_0DC (__INTTAB_CPU4 + 0x1B80) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_220 .intvec_tc4_220.*)); } > pfls4
+        .inttab_tc4_0DD (__INTTAB_CPU4 + 0x1BA0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_221 .intvec_tc4_221.*)); } > pfls4
+        .inttab_tc4_0DE (__INTTAB_CPU4 + 0x1BC0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_222 .intvec_tc4_222.*)); } > pfls4
+        .inttab_tc4_0DF (__INTTAB_CPU4 + 0x1BE0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_223 .intvec_tc4_223.*)); } > pfls4
+        .inttab_tc4_0E0 (__INTTAB_CPU4 + 0x1C00) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_224 .intvec_tc4_224.*)); } > pfls4
+        .inttab_tc4_0E1 (__INTTAB_CPU4 + 0x1C20) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_225 .intvec_tc4_225.*)); } > pfls4
+        .inttab_tc4_0E2 (__INTTAB_CPU4 + 0x1C40) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_226 .intvec_tc4_226.*)); } > pfls4
+        .inttab_tc4_0E3 (__INTTAB_CPU4 + 0x1C60) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_227 .intvec_tc4_227.*)); } > pfls4
+        .inttab_tc4_0E4 (__INTTAB_CPU4 + 0x1C80) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_228 .intvec_tc4_228.*)); } > pfls4
+        .inttab_tc4_0E5 (__INTTAB_CPU4 + 0x1CA0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_229 .intvec_tc4_229.*)); } > pfls4
+        .inttab_tc4_0E6 (__INTTAB_CPU4 + 0x1CC0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_230 .intvec_tc4_230.*)); } > pfls4
+        .inttab_tc4_0E7 (__INTTAB_CPU4 + 0x1CE0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_231 .intvec_tc4_231.*)); } > pfls4
+        .inttab_tc4_0E8 (__INTTAB_CPU4 + 0x1D00) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_232 .intvec_tc4_232.*)); } > pfls4
+        .inttab_tc4_0E9 (__INTTAB_CPU4 + 0x1D20) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_233 .intvec_tc4_233.*)); } > pfls4
+        .inttab_tc4_0EA (__INTTAB_CPU4 + 0x1D40) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_234 .intvec_tc4_234.*)); } > pfls4
+        .inttab_tc4_0EB (__INTTAB_CPU4 + 0x1D60) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_235 .intvec_tc4_235.*)); } > pfls4
+        .inttab_tc4_0EC (__INTTAB_CPU4 + 0x1D80) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_236 .intvec_tc4_236.*)); } > pfls4
+        .inttab_tc4_0ED (__INTTAB_CPU4 + 0x1DA0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_237 .intvec_tc4_237.*)); } > pfls4
+        .inttab_tc4_0EE (__INTTAB_CPU4 + 0x1DC0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_238 .intvec_tc4_238.*)); } > pfls4
+        .inttab_tc4_0EF (__INTTAB_CPU4 + 0x1DE0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_239 .intvec_tc4_239.*)); } > pfls4
+        .inttab_tc4_0F0 (__INTTAB_CPU4 + 0x1E00) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_240 .intvec_tc4_240.*)); } > pfls4
+        .inttab_tc4_0F1 (__INTTAB_CPU4 + 0x1E20) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_241 .intvec_tc4_241.*)); } > pfls4
+        .inttab_tc4_0F2 (__INTTAB_CPU4 + 0x1E40) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_242 .intvec_tc4_242.*)); } > pfls4
+        .inttab_tc4_0F3 (__INTTAB_CPU4 + 0x1E60) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_243 .intvec_tc4_243.*)); } > pfls4
+        .inttab_tc4_0F4 (__INTTAB_CPU4 + 0x1E80) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_244 .intvec_tc4_244.*)); } > pfls4
+        .inttab_tc4_0F5 (__INTTAB_CPU4 + 0x1EA0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_245 .intvec_tc4_245.*)); } > pfls4
+        .inttab_tc4_0F6 (__INTTAB_CPU4 + 0x1EC0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_246 .intvec_tc4_246.*)); } > pfls4
+        .inttab_tc4_0F7 (__INTTAB_CPU4 + 0x1EE0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_247 .intvec_tc4_247.*)); } > pfls4
+        .inttab_tc4_0F8 (__INTTAB_CPU4 + 0x1F00) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_248 .intvec_tc4_248.*)); } > pfls4
+        .inttab_tc4_0F9 (__INTTAB_CPU4 + 0x1F20) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_249 .intvec_tc4_249.*)); } > pfls4
+        .inttab_tc4_0FA (__INTTAB_CPU4 + 0x1F40) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_250 .intvec_tc4_250.*)); } > pfls4
+        .inttab_tc4_0FB (__INTTAB_CPU4 + 0x1F60) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_251 .intvec_tc4_251.*)); } > pfls4
+        .inttab_tc4_0FC (__INTTAB_CPU4 + 0x1F80) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_252 .intvec_tc4_252.*)); } > pfls4
+        .inttab_tc4_0FD (__INTTAB_CPU4 + 0x1FA0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_253 .intvec_tc4_253.*)); } > pfls4
+        .inttab_tc4_0FE (__INTTAB_CPU4 + 0x1FC0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_254 .intvec_tc4_254.*)); } > pfls4
+        .inttab_tc4_0FF (__INTTAB_CPU4 + 0x1FE0) : { . = ALIGN(8) ; KEEP (*(.intvec_tc4_255 .intvec_tc4_255.*)); } > pfls4
     }
 
 
